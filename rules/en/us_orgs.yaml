@@ -1,0 +1,16 @@
+name: en-ukcompanies
+description: English (UK) companies identifiers
+context: companies
+lang: en
+rules:
+  encompanynamebypostfix:
+    key: encompanyname
+    name: US name of the company
+    maxlen: 120
+    minlen: 10
+    priority: 1
+    match: func
+    type: data
+    rule: metacrafterext.rules.en.orgs.is_us_orgname
+
+  

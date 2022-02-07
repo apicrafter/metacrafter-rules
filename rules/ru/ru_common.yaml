@@ -1,0 +1,31 @@
+name: ru-common
+description: Russian common identifiers
+context: common
+lang: ru
+rules:
+  rusyesnobool:
+    key: boolean
+    name: Russian yes no boolean
+    match: text
+    type: data
+    rule: да,нет
+  ruphoneknown:
+    key: phone
+    piikey: phone
+    name: Russian phone code
+    rule: телефон,факс,publicphone,chiefphone,контактный телефон,telefon,номер телефона,рабочий телефон,номер факса
+    type: field
+    match: text
+  ruurlknown:
+    key: url
+    name: Russian website/url field names
+    rule: сайт,адрес сайта,adres_sayta,официальный сайт,адрес официального сайта,веб-сайт,sayt
+    type: field
+    match: text
+  ruemail:
+    key: email
+    piikey: phone
+    name: Russian email field names
+    rule: адрес электронной почты,электронная почта,электронный адрес,adres_elektronnoy_pochty,эл.почта,эл. почта
+    type: field
+    match: text

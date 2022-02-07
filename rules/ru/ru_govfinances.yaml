@@ -1,0 +1,108 @@
+name: ru-govfinances
+description: Russian known field names used in government finances
+context: government
+lang: ru
+rules:
+  rubudgetcode:
+    key: budgetcode
+    name: Russian budget code
+    rule: budgetcode
+    type: field
+    match: text
+  rubudgetname:
+    key: budgetname
+    name: Russian budget name
+    rule: budgetname
+    type: field
+    match: text
+  rugrbscode:
+    key: fedgrbs
+    name: Code of GRBS by known name
+    rule: grbs_code,grbs,grbscode,codegrbs
+    type: field
+    match: text
+  rukbkcode:
+    key: kbk
+    name: Russian KBK code
+    rule: kbk,кбк
+    type: field
+    match: text
+  rukbkcoodefull:
+    key: kbk
+    name: Russian KBK code by known full name
+    rule: код бюджетной классификации
+    type: field
+    match: text
+  tofkcode:
+    key: tofkcode
+    name: Russian TOFK (Treasury) code
+    rule: tofkcode,tofk_code
+    type: field
+    match: text
+  tofkname:
+    key: tofkname
+    name: Russian TOFK (Treasury) name
+    rule: tofkname
+    type: field
+    match: text
+  tofkcodepat:
+    key: tofkcode
+    name: Russian TOFK (Treasury) code by pattern value
+    match: ppr
+    type: data
+    rule: Word(nums, exact=4)
+    fieldrule: tofk
+    fieldrulematch: text
+  ruikucode:
+    key: ruikuiko
+    name: Russian government customer uniq number (IKU/IKO) by pat and func
+    maxlen: 20
+    minlen: 20
+    priority: 1
+    match: ppr
+    rule: Word(nums, exact=20)
+    type: data
+    validator: metacrafterext.rules.ru.govfinances.is_iku_iko_code
+  ruikzcode:
+    key: ruikz
+    name: Russian government purchase code (IKZ) by pat and func
+    maxlen: 36
+    minlen: 36
+    priority: 1
+    match: ppr
+    rule: Word(nums, exact=20)
+    type: data
+    validator: metacrafterext.rules.ru.govfinances.is_ikz_code
+  ruskvrcode:
+    key: kvrcode
+    name: Russian budget KVR code
+    rule: kvrcode,kvr_code
+    type: field
+    match: text
+  rucsrcode:
+    key: csrcode
+    name: Russian budget CSR code
+    rule: csrcode,csr_code
+    type: field
+    match: text
+  ruskosgucode:
+    key: kosgucode
+    name: Russian KOSGU code
+    rule: Word(nums, exact=20)
+    type: data
+    match: ppr
+    fieldrulematch: text
+    fieldrule: kosgu,kosgucode
+  ruppocode:
+    key: ppocode
+    name: Russian public legal entities (PPO) code
+    rule: ppocode
+    type: field
+    match: text
+  rupponame:
+    key: pponame
+    name: Russian public legal entities (PPO) name
+    rule: pponame
+    type: field
+    match: text
+

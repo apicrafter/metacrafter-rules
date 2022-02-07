@@ -1,0 +1,129 @@
+name: common
+description: Common data types (email, url's and etc)
+context: common
+lang: common
+rules:
+  url:
+    key: url
+    name: Web URL
+    maxlen: 1024
+    minlen: 5
+    priority: 1
+    match: func
+    type: data
+    rule: metacrafterext.rules.common.common._validate_url
+  email:
+    key: email
+    piikey: phone
+    name: Email
+    maxlen: 1024
+    minlen: 3
+    priority: 1
+    type: data
+    match: func
+    rule: metacrafterext.rules.common.common._validate_email
+  filenamebyvalue:
+    key: filename
+    name: Name of the file
+    maxlen: 512
+    minlen: 5
+    priority: 1
+    match: func
+    type: data
+    rule: metacrafterext.rules.common.common._validate_filename
+  filenamebyknown:
+    key: filename
+    name: Name of the file by known name
+    maxlen: 512
+    minlen: 5
+    priority: 1
+    match: text
+    type: data
+    rule: filename,file_name
+  phone:
+    key: phone
+    piikey: phone
+    name: Phone number
+    maxlen: 100
+    minlen: 3
+    priority: 1
+    type: data
+    match: func
+    rule: metacrafterext.rules.common.common._validate_phone
+  mimetypebyknown:
+    key: mimetype
+    name: Mimetype / content type by known names
+    priority: 1
+    match: text
+    type: field
+    rule: mimetype,mime_type,content_type
+  mimetypebyvalue:
+    key: mimetype
+    name: Mimetype / content type by value
+    priority: 1
+    maxlen: 100
+    minlen: 10
+    match: text
+    type: data
+    rule: application/pdf,application/json,application/octet-stream,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.wordprocessingml.document,image/jpeg,image/tiff
+  phoneknown:
+    key: phone
+    piikey: phone
+    name: Phone number by known name
+    rule: phone,fax,phoneNumber,contact_phone,telephone,phone number,phone_number,
+    type: field
+    match: text
+  phoneknownpat:
+    key: phone
+    piikey: phone
+    name: Phone number by known pattern
+    rule: Word(printables) + "phone" +  lineEnd
+    type: field
+    match: ppr
+  phoneknownprefix:
+    key: phone
+    piikey: phone
+    name: Phone number by known pattern
+    rule: '"phone" + Word(printables) + lineEnd'
+    type: field
+    match: ppr
+  faxknownpat:
+    key: phone
+    piikey: phone
+    name: Phone number by known pattern (Fax)
+    rule: Word(printables) + "fax" +  lineEnd
+    type: field
+    match: ppr
+  emailknown:
+    key: email
+    piikey: phone
+    name: Email
+    rule: email,e_mail,e-mail,contact e-mail,email address,contactemail,
+    type: field
+    match: text
+  emailknownpat:
+    key: email
+    piikey: phone
+    name: Email by pattern
+    rule: Word(alphanums) + "email" +  lineEnd
+    type: field
+    match: ppr
+  emailknownprefix:
+    key: email
+    piikey: phone
+    name: Email by prefix pat
+    rule: '"email_" + Word(alphanums) +  lineEnd'
+    type: field
+    match: ppr
+  websiteknown:
+    key: url
+    name: URL/website by known name
+    rule: url,website,uri,web_site,website address,website_address,
+    type: field
+    match: text
+  urlknownpat:
+    key: url
+    name: URL/website by known name pattern
+    rule: Word(printables) + "url" +  lineEnd
+    type: field
+    match: ppr

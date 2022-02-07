@@ -1,0 +1,27 @@
+name: ru-gov
+description: Russian government related identifiers
+context: government
+lang: ru
+rules:
+  runpabyfunc:
+    key: runpa
+    name: Russian legal act / law
+    maxlen: 500
+    minlen: 3
+    priority: 1
+    match: func
+    type: data
+    rule: metacrafterext.rules.ru.gov.is_ru_law
+  runpakindbydata:
+    key: runpakind
+    name: Russian legal act / law type (order, act, law, bill and e.t.c)
+    priority: 1
+    match: text
+    type: data
+    rule: закон,постановление,распоряжение,федеральный закон,приказ,указ,кодекс,постановление правительства,постановление правительства рф,распоряжение правительства рф
+  runpabyknown:
+    key: runpa
+    name: Russian legal act / law by known field name
+    match: text
+    type: field
+    rule: нормативно-правовой акт,нормативный правовой акт,наименование нормативного правового акта,наименование нпа
