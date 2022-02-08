@@ -10,7 +10,7 @@ rules:
     minlen: 5
     priority: 1
     match: func
-    type: data
+   iii type: data
     rule: metacrafterext.rules.common.common._validate_url
   email:
     key: email
@@ -65,7 +65,7 @@ rules:
     minlen: 10
     match: text
     type: data
-    rule: application/pdf,application/json,application/octet-stream,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.wordprocessingml.document,image/jpeg,image/tiff
+    rule: application/pdf,application/json,application/octet-stream,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.wordprocessingml.document,image/jpeg,image/tiff,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/zip,text/csv,text/plain,application/vnd.google-earth.kml+xml,application/x-zip-compressed,application/vnd.geo+json,application/vnd.ms-excel.sheet.macroenabled.12,application/vnd.openxmlformats-officedocument.presentationml.presentation,text/xml
   phoneknown:
     key: phone
     piikey: phone
