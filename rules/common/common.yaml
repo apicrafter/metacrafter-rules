@@ -10,7 +10,7 @@ rules:
     minlen: 5
     priority: 1
     match: func
-   iii type: data
+    type: data
     rule: metacrafterext.rules.common.common._validate_url
   email:
     key: email
