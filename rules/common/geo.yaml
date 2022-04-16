@@ -5,7 +5,7 @@ lang: common
 rules:
   addressknown:
     key: address
-    piikey: address
+    is_pii: True
     name: Address
     rule: address,postaladdress,actualaddress,fulladdress,address_legal,legaladdress,postal address,post address
     type: field
@@ -60,21 +60,21 @@ rules:
     fieldrulematch: ppr
   postindexknown:
     key: postindex
-    piikey: postindex
+    is_pii: True
     name: Post index code (ZIP code and e.t.c) by known name
     rule: postindex,postIndex,post_index,postcode,zip_code,zipcode,postalcode,post index
     match: text
     type: field
   streetknown:
     key: street
-    piikey: street
+    is_pii: True
     name: Street name by field name
     rule: street,street name,streetname,street_name
     match: text
     type: field
   cityknown:
     key: city
-    piikey: city
+    is_pii: True
     name: City/town name by field name
     rule: town,city,cityname,location (city)
     match: text

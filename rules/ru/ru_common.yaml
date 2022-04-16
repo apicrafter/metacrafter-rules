@@ -11,7 +11,7 @@ rules:
     rule: да,нет
   ruphoneknown:
     key: phone
-    piikey: phone
+    is_pii: True
     name: Russian phone code
     rule: телефон,факс,publicphone,chiefphone,контактный телефон,telefon,номер телефона,рабочий телефон,номер факса
     type: field
@@ -24,7 +24,7 @@ rules:
     match: text
   ruemail:
     key: email
-    piikey: phone
+    is_pii: True
     name: Russian email field names
     rule: адрес электронной почты,электронная почта,электронный адрес,adres_elektronnoy_pochty,эл.почта,эл. почта
     type: field
