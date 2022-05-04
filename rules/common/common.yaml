@@ -70,7 +70,7 @@ rules:
     key: phone
     is_pii: True
     name: Phone number by known name
-    rule: phone,fax,phoneNumber,contact_phone,telephone,phone number,phone_number,
+    rule: phone,fax,phoneNumber,contact_phone,telephone,phone number,phone_number,business_phone,phonenumber,phone_no,contactphone,phone_1,phone1,phone2,fax_number,contact_fax
     type: field
     match: text
   phoneknownpat:
@@ -98,7 +98,7 @@ rules:
     key: email
     is_pii: True
     name: Email
-    rule: email,e_mail,e-mail,contact e-mail,email address,contactemail,
+    rule: email,e_mail,e-mail,contact e-mail,email address,contactemail,email_address,contact_email,email_comercial
     type: field
     match: text
   emailknownpat:

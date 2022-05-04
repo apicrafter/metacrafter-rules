@@ -1,0 +1,22 @@
+name: us-geo
+description: US geographic identifiers
+context: geo
+lang: en
+rules:
+  usfips52known:
+    key: fips52
+    is_pii: False
+    name: US State FIPS 5-2 code
+    rule: state_fips_code,state_fips,statefips,fips_state,cntyfips,stfips,fips_state_code,fips_state,st_fips
+    match: text
+    type: field
+  usfips64known:
+    key: fips54
+    is_pii: False
+    name: US State FIPS 6-4 code
+    rule: county_fips_code,fips_county_code,countyfips,fips_county,cnty_fips,fips_count,county_fips,local_fips,city_fips
+    match: text
+    type: field
+  
+
+

@@ -7,7 +7,7 @@ rules:
     key: address
     is_pii: True
     name: Address
-    rule: address,postaladdress,actualaddress,fulladdress,address_legal,legaladdress,postal address,post address
+    rule: address,postaladdress,actualaddress,fulladdress,address_legal,legaladdress,postal address,post address,location_address,location_1_address,address_1
     type: field
     match: text
   latitude:
@@ -62,7 +62,7 @@ rules:
     key: postindex
     is_pii: True
     name: Post index code (ZIP code and e.t.c) by known name
-    rule: postindex,postIndex,post_index,postcode,zip_code,zipcode,postalcode,post index
+    rule: postindex,postIndex,post_index,postcode,zip_code,zipcode,postalcode,post index,zip_code,postal_code,location_zip,address_zip
     match: text
     type: field
   streetknown:
@@ -76,7 +76,7 @@ rules:
     key: city
     is_pii: True
     name: City/town name by field name
-    rule: town,city,cityname,location (city)
+    rule: town,city,cityname,location (city),location_city,location_1_city,address_city,address_city
     match: text
     type: field
   countryknown:
@@ -85,3 +85,4 @@ rules:
     rule: country,countryname,country_name
     match: text
     type: field
+ 

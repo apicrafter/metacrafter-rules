@@ -14,7 +14,7 @@ rules:
     name: English day of week by fieldname
     match: text
     type: field
-    rule: weekday,dayofweek,day_of_week
+    rule: weekday,dayofweek,day_of_week,week_day
   enmonth:
     key: enmonth
     name: English month
@@ -27,4 +27,10 @@ rules:
     match: text
     type: data
     rule: jan,feb,mar,apr,may,jun,jul,aug,sep,oct,nov,dec
+  usyearknown:
+    key: year
+    name: Year by known name common in US
+    rule: fiscal_year,schoolyear,mmwr_yearcalendar_year,school_year,report_year,reporting_year,census_year,tax_year,periodyear
+    type: field
+    match: text
 
