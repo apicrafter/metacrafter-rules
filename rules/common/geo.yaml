@@ -3,6 +3,12 @@ description: Common geodata
 context: geo
 lang: common
 rules:
+  geopointbyname:
+    key: geopoint
+    name: Geopoint by knownname
+    rule: geo_point_2d,point_geo,geopoint,geo_point,position_geographique,geo_coordinates,coordonnees_geographiques
+    type: field
+    match: text
   addressknown:
     key: address
     is_pii: True
@@ -85,4 +91,5 @@ rules:
     rule: country,countryname,country_name
     match: text
     type: field
+
  
