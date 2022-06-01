@@ -3,25 +3,6 @@ description: Common data types (email, url's and etc)
 context: common
 lang: common
 rules:
-  url:
-    key: url
-    name: Web URL
-    maxlen: 1024
-    minlen: 5
-    priority: 1
-    match: func
-    type: data
-    rule: metacrafterext.rules.common.common._validate_url
-  email:
-    key: email
-    is_pii: True
-    name: Email
-    maxlen: 1024
-    minlen: 3
-    priority: 1
-    type: data
-    match: func
-    rule: metacrafterext.rules.common.common._validate_email
   filenamebyvalue:
     key: filename
     name: Name of the file
@@ -94,36 +75,10 @@ rules:
     rule: Word(printables) + "fax" +  lineEnd
     type: field
     match: ppr
-  emailknown:
-    key: email
-    is_pii: True
-    name: Email
-    rule: email,e_mail,e-mail,contact e-mail,email address,contactemail,email_address,contact_email,email_comercial
-    type: field
+  uniqueidbyknown:
+    key: id
+    name: Unique id by known names
+    priority: 1
     match: text
-  emailknownpat:
-    key: email
-    is_pii: True
-    name: Email by pattern
-    rule: Word(alphanums) + "email" +  lineEnd
     type: field
-    match: ppr
-  emailknownprefix:
-    key: email
-    is_pii: True
-    name: Email by prefix pat
-    rule: '"email_" + Word(alphanums) +  lineEnd'
-    type: field
-    match: ppr
-  websiteknown:
-    key: url
-    name: URL/website by known name
-    rule: url,website,uri,web_site,website address,website_address,
-    type: field
-    match: text
-  urlknownpat:
-    key: url
-    name: URL/website by known name pattern
-    rule: Word(printables) + "url" +  lineEnd
-    type: field
-    match: ppr
+    rule: id,uniqueid,unique_id,uniqid,uniq_id,unique_key,uniquekey,uniqkey,object_id,record_id,objectid,object_id,id_unique,id_uniq,globalid

@@ -3,6 +3,12 @@ description: Russian geographic identifiers
 context: geo
 lang: ru
 rules:
+  rugeopointbyname:
+    key: geopoint
+    name: Russian geopoint by knownname
+    rule: географические координаты
+    type: field
+    match: text
   ruokatoknown:
     key: okato
     name: Russian OKATO classifier by known name
