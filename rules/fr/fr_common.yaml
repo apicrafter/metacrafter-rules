@@ -18,7 +18,7 @@ rules:
   frdescriptionknown:
     key: description
     name: French description by known
-    rule: description_fr,descriptif
+    rule: description_fr,descriptif,description_longue,descriptionlongue
     type: field
     match: text
   frcategoryknown:
@@ -27,7 +27,3 @@ rules:
     rule: categorie
     type: field
     match: text
-
-
-
-

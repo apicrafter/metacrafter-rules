@@ -81,4 +81,4 @@ rules:
     priority: 1
     match: text
     type: field
-    rule: id,uniqueid,unique_id,uniqid,uniq_id,unique_key,uniquekey,uniqkey,object_id,record_id,objectid,object_id,id_unique,id_uniq,globalid
+    rule: id,uniqueid,unique_id,uniqid,uniq_id,unique_key,uniquekey,uniqkey,record_id,objectid,object_id,id_unique,id_uniq,globalid
