@@ -3,11 +3,16 @@ description: Internet infrastructure identifiers
 context: internet
 lang: common
 rules:
+  domainname:
+    key: domainname
+    name: Domain or host name
+    rule: domainname,domain_name,host_name,hostname
+    match: text
+    type: field
   ipvaddr:
     key: ipaddr
     name: IP address (IPv4 or IPv6)
     rule: ipaddr,ipaddress,ip_addr,ip_address
-    match: ppr
     type: field
     match: text
     is_pii: True
@@ -68,7 +73,7 @@ rules:
   websiteknown:
     key: url
     name: URL/website by known name
-    rule: url,website,uri,web_site,website address,website_address,
+    rule: url,website,uri,web_site,website address,website_address,website_url,image_url,download_url,site_url
     type: field
     match: text
   urlknownpat:
