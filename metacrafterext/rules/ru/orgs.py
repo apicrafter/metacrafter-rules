@@ -86,9 +86,10 @@ RU_GOVBODIES_PREFIXES = [
 
 RU_ALL_ORG_PREFIXES = RU_ORG_PREFIXES + RU_GOVBODIES_PREFIXES
 
-RU_ORGNAME_RULES = oneOf(RU_ALL_ORG_PREFIXES) + Word(printables, min=5)
+RU_ORGNAME_RULES = oneOf(RU_ALL_ORG_PREFIXES) #+ Word(printables, min=5)
 
 def is_ru_orgname(s):
+    s = s.strip('\"')
     try:
         res = RU_ORGNAME_RULES.parseString(s.lower())
         return True

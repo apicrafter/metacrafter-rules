@@ -3,6 +3,15 @@ description: US geographic identifiers
 context: geo
 lang: en
 rules:
+  uszipcodebyname:
+    key: uszipcode
+    is_pii: False
+    name: US ZIP code by pattern
+    rule: Word(nums, exact=5)
+    type: field
+    match: ppr
+    fieldrule: Literal('_').suppress() + (Literal('zip') ^ Literal('zipcode') ^ Literal('zip_code'))
+    fieldrulematch: ppr
   usfips52known:
     key: fips52
     is_pii: False
