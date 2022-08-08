@@ -68,5 +68,5 @@ rules:
     priority: 1
     match: text
     type: data
-    fieldrule: Word(alphanums) + Optional("_") + CaselessLiteral('flag')
+    fieldrule: Word(alphanums) + Optional("_") + CaselessLiteral("flag")
     fieldrulematch: ppr

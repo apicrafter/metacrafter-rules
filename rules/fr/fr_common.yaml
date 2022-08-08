@@ -4,7 +4,7 @@ context: common
 lang: fr
 rules:
   frtitleknown:
-    key: title
+    key: name
     name: French name/title by name
     rule: title_fr,nom,intitule,titre
     type: field

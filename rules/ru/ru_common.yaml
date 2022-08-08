@@ -17,7 +17,7 @@ rules:
     type: field
     match: text
   rutitleknown:
-    key: title
+    key: name
     name: Russian name/title by name
     rule: наименование,naimenovanie,полное наименование,название,краткое наименование,polnoe_naimenovanie,sokrashchennoe_naimenovanie,naimenovanie_obekta,наименование объекта,короткое название
     type: field
