@@ -12,7 +12,7 @@ rules:
     match: func
     type: data
     rule: metacrafterext.rules.common.common._validate_filename
-  phone:
+  phonebyvalue:
     key: phone
     is_pii: True
     name: Phone number
