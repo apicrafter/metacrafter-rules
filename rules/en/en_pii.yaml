@@ -1,0 +1,13 @@
+name: en-pii
+description: Person identifiable information (PII) in English
+context: pii
+lang: en
+rules:
+  ennationalitybyvalue:
+    key: ennationality
+    name: Nationality in English by value
+    rule: Belarusian,Russian,Italian,Israeli,Nigerian,French,British,English,Armenian,Moldovan,Kittitian,Ukrainian,Latvian,Indian,Serbian,Azerbaijani,Turkish,Canadian,Croatian,Chinese,Pakistani,Vietnamese,Syrian,Danish,Lithuanian,Bulgarian
+    maxlen: 11
+    minlen: 6
+    type: data
+    match: text

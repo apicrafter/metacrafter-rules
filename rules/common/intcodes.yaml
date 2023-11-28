@@ -35,7 +35,7 @@ rules:
     priority: 1
     match: text
     type: data
-    imprecise: 1
+#    imprecise: 1
 # This rule generates a lot of False positives so it marked as imprecise rule and could be filtered if it's set
   iso3166-alpha3imprecise:
     key: countrycode_alpha3
