@@ -1,0 +1,12 @@
+name: es-pii
+description: Person identifiable information (PII) for Spanish language
+context: pii
+lang: es
+rules:
+  esgenderknown:
+    key: gender
+    is_pii: True
+    name: Spanish birthday by known field names
+    rule: masculino,femenino
+    match: text
+    type: data

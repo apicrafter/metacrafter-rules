@@ -11,3 +11,11 @@ rules:
     minlen: 4
     type: data
     match: text
+  encontinentbyname:
+    key: continent
+    name: Continent name by value
+    rule: Americas,South America,North America,Asia,Europe,Eurasia,Africa,Antarctica
+    maxlen: 13
+    minlen: 6
+    type: data
+    match: text

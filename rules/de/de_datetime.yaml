@@ -1,0 +1,17 @@
+name: de-datetime
+description: German date and time common patterns
+context: datetime
+lang: de
+rules:
+  deyearname:
+    key: year
+    name: German year name
+    match: text
+    type: field
+    rule: jahr
+  dedatetimename:
+    key: datetime
+    name: Date name in German
+    match: text
+    type: field
+    rule: datum
