@@ -13,7 +13,7 @@ rules:
     key: phone
     is_pii: True
     name: Russian phone code
-    rule: телефон,факс,publicphone,chiefphone,контактный телефон,telefon,номер телефона,рабочий телефон,номер факса
+    rule: телефон,факс,publicphone,chiefphone,контактный телефон,telefon,номер телефона,рабочий телефон,номер факса,kontaktnyy_telefon,telefon_rukovoditelya,nomer_telefona,obshchiy_telefon,телефон/факс,факс (номер)
     type: field
     match: text
   rutitleknown:

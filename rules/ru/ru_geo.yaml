@@ -18,13 +18,13 @@ rules:
   rulongitudeknown:
     key: longitude
     name: Russian longitude
-    rule: долгота
+    rule: долгота,coord_dolgota,koordinaty_wgs_84_dolgota,dolgota
     type: field
     match: text
   rulatitutdeknown:
     key: latitude
     name: Russian latitude
-    rule: широта
+    rule: широта,coord_shirota,koordinaty_wgs_84_shirota,shirota
     type: field
     match: text
   ruoktmoknown:

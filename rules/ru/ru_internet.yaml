@@ -6,13 +6,13 @@ rules:
   ruurlknown:
     key: url
     name: Russian website/url field names
-    rule: сайт,адрес сайта,adres_sayta,официальный сайт,адрес официального сайта,веб-сайт,sayt
+    rule: сайт,адрес сайта,adres_sayta,официальный сайт,адрес официального сайта,веб-сайт,sayt,адрес официального сайта,адрес официального сайта в сети Интернет,сайт учреждения,интернет сайт
     type: field
     match: text
   ruemail:
     key: email
     is_pii: True
     name: Russian email field names
-    rule: адрес электронной почты,электронная почта,электронный адрес,adres_elektronnoy_pochty,эл.почта,эл. почта
+    rule: адрес электронной почты,электронная почта,электронный адрес,adres_elektronnoy_pochty,эл.почта,эл. почта,е-mail контактного лица,e-mail адрес юридического лица,адрес электронной почты организации,адрес электронной почты учреждения,электронная почта для связи
     type: field
     match: text
