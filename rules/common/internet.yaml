@@ -74,7 +74,7 @@ rules:
   websiteknown:
     key: url
     name: URL/website by known name
-    rule: url,website,uri,web_site,website address,website_address,website_url,image_url,download_url,site_url
+    rule: url,website,uri,web_site,website address,website_address,website_url,image_url,download_url,site_url,site_internet
     type: field
     match: text
   urlknownpat:

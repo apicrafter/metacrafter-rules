@@ -15,7 +15,7 @@ rules:
     is_pii: False
     name: French INSEE code
     match: text
-    rule: code_insee, insee, insee_com,  code_insee_region,code_insee_commune, codeinsee,com_insee,insee_reg,insee_dep,code_insee_etab,code_insee_into,code_commune_insee,commune_insee,code_insee_ancienne_commune,insee_commune,city_insee_code,code_insee_departement,region_insee_code,department_insee_code,num_insee,code_insee_de_la_commune,codinsee
+    rule: code_insee,insee,insee_com,code_insee_region,code_insee_commune,codeinsee,com_insee,insee_reg,insee_dep,code_insee_etab,code_insee_into,code_commune_insee,commune_insee,code_insee_ancienne_commune,insee_commune,city_insee_code,code_insee_departement,region_insee_code,department_insee_code,num_insee,code_insee_de_la_commune,codinsee
     type: field
   frepcicodebyknown:
     key: epcicode

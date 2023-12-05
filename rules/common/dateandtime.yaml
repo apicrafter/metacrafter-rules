@@ -6,13 +6,13 @@ rules:
   datetimeknown:
     key: datetime
     name: DateTime known names
-    rule: created_at,updated_at,created,updated,createdAt,updatedAt,creat_dt,createddate,deleted_at,creation_date,end_date
+    rule: created_at,updated_at,created,updated,createdAt,updatedAt,creat_dt,deleted_at,datetime
     type: field
     match: text
   dateknown:
     key: date
     name: Date by known name
-    rule: date
+    rule: date,created_date,creation_date,end_date,responsedate,createddate,completiondatem,start_date,end_date,report_date,actiondate,issue_date,closed_date,due_date,date_of_last_change,claimdate
     type: field
     match: text
   yearbydatafiltered:
