@@ -32,7 +32,7 @@ rules:
     key: phone
     is_pii: True
     name: Phone number by known name
-    rule: phone,fax,contact_phone,telephone,phone number,phone_number,business_phone,phonenumber,phone_no,contactphone,phone_1,phone1,phone2,fax_number,contact_fax
+    rule: phone,fax,contact_phone,telephone,phone number,phone_number,business_phone,phonenumber,phone_no,contactphone,phone_1,phone1,phone2,fax_number,contact_fax,cellphon
     type: field
     match: text
   phoneknownpat:

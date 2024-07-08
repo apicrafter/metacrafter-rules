@@ -1,0 +1,12 @@
+name: nl-datetime
+description: Dutch date and time common patterns
+context: datetime
+lang: nl
+rules:
+  nlyearknown:
+    key: year
+    name: Year by known name common in Dutch
+    rule: jaar
+    type: field
+    match: text
+

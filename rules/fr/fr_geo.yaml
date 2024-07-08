@@ -22,7 +22,7 @@ rules:
     is_pii: False
     name: French EPCI code
     match: text
-    rule: code_epci_metropole,code_epci,nom_epci,epci_code,epci_metropole,epci_current_code,epci_area_code,nom_officiel_epci,code_insee_epci,code_officiel_epci,epci_nom
+    rule: code_epci_metropole,code_epci,nom_epci,epci_code,epci_metropole,epci_current_code,epci_area_code,nom_officiel_epci,code_insee_epci,code_officiel_epci,epci_nom,codeepci
     type: field
   frsiretcodeknown:
     key: siretcode
@@ -30,3 +30,9 @@ rules:
     rule: coll_siret,siret,num_siret,numero_siret,code_siret
     type: field
     match: text  
+  frgeopointbyname:
+    key: geopoint
+    name: French geopoint by knownname
+    rule: position_geographique,coordonnees_geographiques,coordonnees,coordonnees_geo
+    type: field
+    match: text

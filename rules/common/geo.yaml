@@ -6,7 +6,7 @@ rules:
   geopointbyname:
     key: geopoint
     name: Geopoint by knownname
-    rule: geo_point_2d,point_geo,geopoint,geo_point,position_geographique,geo_coordinates,coordonnees_geographiques
+    rule: geo_point_2d,point_geo,geopoint,geo_point,geo_coordinates
     type: field
     match: text
   addressknown:

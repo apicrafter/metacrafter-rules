@@ -54,7 +54,7 @@ rules:
     key: email
     is_pii: True
     name: Email
-    rule: email,e_mail,e-mail,contact e-mail,email address,contactemail,email_address,contact_email,email_comercial
+    rule: email,e_mail,e-mail,contact e-mail,email address,contactemail,email_address,contact_email,email_comercial,emailaddress,wstemail,contact email,reportemail,recipientemail,electronicmailaddress,email_addr,emailcontact 
     type: field
     match: text
   emailknownpat:

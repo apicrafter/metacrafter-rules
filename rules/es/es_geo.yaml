@@ -1,0 +1,35 @@
+name: es-geo
+description: Spanish geographic identifiers
+context: geo
+lang: es
+rules:
+  eslatitudebyname:
+    key: latitude
+    name: Spanish latitude by name
+    rule: latitud
+    type: field
+    match: text
+  eslongitudebyname:
+    key: longitude
+    name: Spanish longitude by name
+    rule: longitud
+    type: field
+    match: text
+  espostindexknown:
+    key: postindex
+    is_pii: True
+    name: Post index code (ZIP code and e.t.c) by known name in Spanish
+    rule: codigo_postal,codigopostal,cod_postal,codigo_postal_argentino
+    match: text
+    type: field
+  esgeopointbyname:
+    key: geopoint
+    name: Spanish geopoint by knownname
+    rule: coordenadas
+    type: field
+    match: text
+
+
+
+
+

@@ -1,0 +1,32 @@
+name: es-datetime
+description: Spanish date and time common patterns
+context: datetime
+lang: es
+rules:
+  esyearbydatafiltered:
+    key: year
+    name: Spanish Modern years in range 1001-2199 by data and fieldname
+    maxlen: 4
+    minlen: 4
+    rule: (Literal('1') + Word(nums, exact=3)) ^ (Literal('2') + Word('01', exact=1) + Word(nums, exact=2))
+    match: ppr
+    type: data
+    fieldrule: ano,anio
+    fieldrulematch: text
+  esmonthbydatafiltered:
+    key: year
+    name: Spanish month by fieldname and value
+    maxlen: 1
+    minlen: 2
+    rule: Word(nums, exact=1) ^ (Literal('1') + (Literal('1') ^ Literal('2')))
+    match: ppr
+    type: data
+    fieldrule: mes
+    fieldrulematch: text
+  esdatetimename:
+    key: datetime
+    name: Spanish date name
+    match: text
+    type: field
+    rule: fecha_data,fecha
+

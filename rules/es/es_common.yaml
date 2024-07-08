@@ -1,0 +1,12 @@
+name: es-common
+description: Spanish common identifiers
+context: common
+lang: es
+rules:
+  esphoneknown:
+    key: phone
+    is_pii: True
+    name: Spanish phone number by known name
+    rule: telefono,telefono_de_contacto
+    type: field
+    match: text

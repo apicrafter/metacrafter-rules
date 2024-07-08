@@ -1,0 +1,12 @@
+name: de-internet
+description: German Internet codes
+context: internet
+lang: de
+rules:
+  ruurlknown:
+    key: url
+    name: German website/url field names
+    rule: webseite
+    type: field
+    match: text
+

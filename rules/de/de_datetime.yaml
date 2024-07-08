@@ -14,4 +14,4 @@ rules:
     name: Date name in German
     match: text
     type: field
-    rule: datum
+    rule: datum,ereignisdatum

@@ -1,0 +1,12 @@
+name: pt-common
+description: Portugenese common identifiers
+context: common
+lang: pt
+rules:
+  ptdescriptionknown:
+    key: description
+    is_pii: True
+    name: Portugenese description as known
+    rule: descricao
+    type: field
+    match: text

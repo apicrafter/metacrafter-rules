@@ -1,0 +1,18 @@
+name: it-datetime
+description: Italian date and time common patterns
+context: datetime
+lang: it
+rules:
+  ityearknown:
+    key: year
+    name: Year by known name common in Italian
+    rule: anno
+    type: field
+    match: text
+  itdeathdayname:
+    key: deathday
+    name: Italian death day
+    match: text
+    type: field
+    rule: data_morte
+

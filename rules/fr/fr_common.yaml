@@ -27,3 +27,11 @@ rules:
     rule: categorie
     type: field
     match: text
+  frphoneknown:
+    key: phone
+    is_pii: True
+    name: French phone number by known name
+    rule: telephone_du_lieu,numero de telephone,numero_de_telephone
+    type: field
+    match: text
+

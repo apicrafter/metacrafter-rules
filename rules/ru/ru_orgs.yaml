@@ -50,6 +50,7 @@ rules:
     rule: metacrafterext.rules.ru.orgs._check_inn
   rukpp:
     key: kpp
+    name: Russian KPP tax identifier
     maxlen: 9
     minlen: 9
     priority: 1

@@ -19,7 +19,7 @@ UK_ALL_ORG_POSTFIXES = UK_ORG_POSTFIXES + UK_GOVBODIES_POSTFIXES
 def is_uk_orgname(s):
     s = s.strip().lower()
     parts = s.split()
-    if len(parts) == 1:
+    if len(parts) < 2:
         return False
     key = parts[-1]
     return key in UK_ALL_ORG_POSTFIXES

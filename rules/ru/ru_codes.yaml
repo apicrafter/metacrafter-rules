@@ -69,16 +69,16 @@ rules:
     maxlen: 3
     minlen: 3
     rule: российский рубль,евро,доллар сша,фунт стерлингов,юань
-  ruokpdcode:
-    key: okpd
-    name: Russian OKPD code by known name and value
-    match: ppr
-    type: data
-    maxlen: 12
-    minlen: 4
-    rule: (Word(nums, exact=2) + Literal('.') + Word(nums, min=1, max=2)) ^ (Word(nums, exact=2) + Literal('.') + Word(nums, min=1, max=2) + Literal('.') + Word(nums, min=1, max=2)) ^ (Word(nums, exact=2) + Literal('.') + Word(nums, min=1, max=2) + Literal('.') + Word(nums, min=1, max=2) + Literal('.') + Word(nums, exact=3))
-    fieldrule: Optional(Word(printables)) + Literal('okpd', caseless=True) + Optional(Word(printables))
-    fieldrilematch: ppr
+#  ruokpdcode:
+#    key: okpd
+#    name: Russian OKPD code by known name and value
+#    match: ppr
+#    type: data
+#    maxlen: 12
+#    minlen: 4
+#    rule: (Word(nums, exact=2) + Literal('.') + Word(nums, min=1, max=2)) ^ (Word(nums, exact=2) + Literal('.') + Word(nums, min=1, max=2) + Literal('.') + Word(nums, min=1, max=2)) ^ (Word(nums, exact=2) + Literal('.') + Word(nums, min=1, max=2) + Literal('.') + Word(nums, min=1, max=2) + Literal('.') + Word(nums, exact=3))
+#    fieldrule: Optional(Word(printables)) + Literal('okpd', caseless=True) + Optional(Word(printables))
+#    fieldrilematch: ppr
   ruookvedcodepat:
     key: okved
     name: Russian OKVED code by known name and value

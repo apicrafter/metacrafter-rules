@@ -6,7 +6,19 @@ rules:
   esgenderknown:
     key: gender
     is_pii: True
-    name: Spanish birthday by known field names
+    name: Spanish gender by known field names
     rule: masculino,femenino
     match: text
     type: data
+  esgenderknown:
+    key: birthday
+    is_pii: True
+    name: Spanish birthday by known field names
+    rule: anio_nacimiento
+    match: text
+    type: data
+
+
+
+
+

@@ -18,9 +18,15 @@ rules:
     rule: uuid
     match: text
     type: field
+  guidbyname:
+    key: guid
+    name: Globally unique identifier (GUID) by name
+    rule: guid
+    match: text
+    type: field
   guid:
     key: guid
-    name: Globally unique identifier (GUID)
+    name: Globally unique identifier (GUID) by value
     rule: Literal('{').suppress() + Word(hexnums, exact=8) + Literal('-').suppress() + Word(hexnums, exact=4) + Literal('-').suppress() + Word(hexnums, exact=4) + Literal('-').suppress() + Word(hexnums, exact=4) + Literal('-').suppress() + Word(hexnums, exact=12) + Literal('}').suppress()
     maxlen: 38
     minlen: 38
