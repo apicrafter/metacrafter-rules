@@ -60,7 +60,7 @@ extras_require = {
 
 
 def long_description():
-    with codecs.open('README.ьв', encoding='utf8') as f:
+    with codecs.open('README.md', encoding='utf8') as f:
         return f.read()
 
 
@@ -68,7 +68,7 @@ setup(
     name='metacrafter-rules',
     version=metacrafterext.rules.__version__,
     description=metacrafterext.rules.__doc__.strip(),
-    long_description=long_description,
+    long_description=long_description(),
     long_description_content_type='text/markdown',
     url='https://github.com/apicrafter/metacrafter-rules/',
     download_url='https://github.com/apicrafter/metacrafter-rules/',
