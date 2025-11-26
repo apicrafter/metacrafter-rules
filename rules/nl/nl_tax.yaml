@@ -1,0 +1,38 @@
+name: nl-tax
+description: Nederlandse belastingidentificaties (BTW, BSN)
+context: finances
+lang: nl
+country_code: nl
+rules:
+  nlbtwfield:
+    key: nlbtw
+    is_pii: True
+    name: BTW-nummer op veldnaam
+    rule: btw,btw_nummer,btw-nummer,btwidentificatienummer
+    type: field
+    match: text
+  nlbtwvalue:
+    key: nlbtw
+    is_pii: True
+    name: BTW-nummer op patroon
+    match: ppr
+    type: data
+    rule: Literal('NL') + Word(alphanums, exact=12)
+    maxlen: 14
+    minlen: 14
+  nlbsnfield:
+    key: bsn
+    is_pii: True
+    name: Burgerservicenummer op veldnaam
+    rule: bsn,burgerservicenummer,persoonsnummer
+    type: field
+    match: text
+  nlbsnvalue:
+    key: bsn
+    is_pii: True
+    name: Burgerservicenummer op patroon
+    match: ppr
+    type: data
+    rule: Word(nums, exact=9)
+    maxlen: 9
+    minlen: 9

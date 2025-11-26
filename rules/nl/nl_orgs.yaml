@@ -1,0 +1,40 @@
+name: nl-orgs
+description: Nederlandse organisatie-identificaties (KvK, RSIN)
+context: companies
+lang: nl
+country_code: nl
+rules:
+  nlkvkfield:
+    key: kvk
+    name: KvK-nummer op veldnaam
+    rule: kvk,kvk_nummer,kvknummer,kamer_van_koophandel
+    type: field
+    match: text
+  nlkvkvalue:
+    key: kvk
+    name: KvK-nummer op patroon
+    match: ppr
+    type: data
+    rule: Word(nums, min=8, max=8)
+    maxlen: 8
+    minlen: 8
+  nlrsinfield:
+    key: rsin
+    name: RSIN op veldnaam
+    rule: rsin,rsin_nummer,fiscaal_nummer
+    type: field
+    match: text
+  nlrsinvalue:
+    key: rsin
+    name: RSIN op patroon
+    match: ppr
+    type: data
+    rule: Word(nums, exact=9)
+    maxlen: 9
+    minlen: 9
+  nlorgnaamfield:
+    key: orgname
+    name: Organisatienaam op veldnaam
+    rule: organisatie,organisatie_naam,bedrijfsnaam,naam_instelling
+    type: field
+    match: text

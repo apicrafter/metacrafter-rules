@@ -1,0 +1,74 @@
+name: gb-persons
+description: UK person identifiers
+context: persons
+lang: en
+country_code: gb
+rules:
+  ukninofield:
+    key: uknino
+    is_pii: True
+    name: UK National Insurance number by field name
+    rule: nino,national_insurance_number,ni_number,insurance_number
+    type: field
+    match: text
+  ukninovalue:
+    key: uknino
+    is_pii: True
+    name: UK National Insurance number by pattern
+    match: ppr
+    type: data
+    rule: Word(alphas, exact=2) + Word(nums, exact=6) + Word(alphas, exact=1)
+    maxlen: 9
+    minlen: 9
+  
+  ukutrfield:
+    key: ukutr
+    is_pii: True
+    name: UK UTR by field name
+    rule: utr,unique_taxpayer_reference,tax_reference,taxpayer_reference
+    type: field
+    match: text
+  ukutrvalue:
+    key: ukutr
+    is_pii: True
+    name: UK UTR by pattern
+    match: ppr
+    type: data
+    rule: Word(nums, exact=10)
+    maxlen: 10
+    minlen: 10
+  
+  ukpassportfield:
+    key: ukpassport
+    is_pii: True
+    name: UK passport by field name
+    rule: passport,passport_number,uk_passport,british_passport
+    type: field
+    match: text
+  ukpassportvalue:
+    key: ukpassport
+    is_pii: True
+    name: UK passport by pattern
+    match: ppr
+    type: data
+    rule: Word(nums, exact=9)
+    maxlen: 9
+    minlen: 9
+  
+  uknhsnumfield:
+    key: uknhsnum
+    is_pii: True
+    name: UK NHS Number by field name
+    rule: nhs_number,nhs_num,national_health_service_number
+    type: field
+    match: text
+  uknhsnumvalue:
+    key: uknhsnum
+    is_pii: True
+    name: UK NHS Number by pattern
+    match: ppr
+    type: data
+    rule: Word(nums, exact=3) + Optional(Literal('-') | Literal(' ')) + Word(nums, exact=3) + Optional(Literal('-') | Literal(' ')) + Word(nums, exact=4)
+    maxlen: 12
+    minlen: 10
+

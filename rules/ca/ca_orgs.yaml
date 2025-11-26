@@ -1,0 +1,48 @@
+name: ca-orgs
+description: Canadian organization identifiers
+context: companies
+lang: ca
+country_code: ca
+rules:
+  cacorpfield:
+    key: cacorp
+    name: Federal corporation number by field name
+    rule: corporation_number,corp_number,federal_corp,corp_no
+    type: field
+    match: text
+  cacorpvalue:
+    key: cacorp
+    name: Federal corporation number by value
+    match: ppr
+    type: data
+    rule: Word(nums, min=7, max=9)
+    maxlen: 9
+    minlen: 7
+  caextraProvfield:
+    key: caextra
+    name: Extra-provincial registration number by field name
+    rule: extra_provincial_number,epn,registration_no
+    type: field
+    match: text
+  caextraProvvalue:
+    key: caextra
+    name: Extra-provincial registration number by value
+    match: ppr
+    type: data
+    rule: Word('ABCDEFGHIJKLMNOPQRSTUVWXYZ', exact=2) + Literal('-').suppress() + Word(nums, min=4, max=6)
+    maxlen: 9
+    minlen: 7
+  cabuslicfield:
+    key: cabizlic
+    name: Business licence number by field name
+    rule: business_licence,business_license,licence_number,licence_no
+    type: field
+    match: text
+  cabuslicvalue:
+    key: cabizlic
+    name: Business licence number by value
+    match: ppr
+    type: data
+    rule: Word('ABCDEFGHIJKLMNOPQRSTUVWXYZ', min=1, max=3) + Word(nums, min=4, max=7)
+    maxlen: 10
+    minlen: 5

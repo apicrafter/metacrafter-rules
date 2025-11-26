@@ -2,6 +2,7 @@ name: en-ukcompanies
 description: English (UK) companies identifiers
 context: companies
 lang: en
+country_code: gb
 rules:
   encompanynamebypostfix:
     key: encompanyname

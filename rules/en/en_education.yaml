@@ -1,0 +1,55 @@
+name: en-education
+description: Education identifiers (US/UK)
+context: education
+lang: en
+country_code: xx
+rules:
+  ennecsfield:
+    key: ncesid
+    name: US NCES school identifier by field name
+    rule: nces_id,nces_school_id,ncesdistrictid
+    type: field
+    match: text
+  ennecsvalue:
+    key: ncesid
+    name: US NCES school identifier by value
+    match: ppr
+    type: data
+    rule: Word(nums, exact=7)
+    maxlen: 7
+    minlen: 7
+  enukurnfield:
+    key: ukurn
+    name: UK school URN by field name
+    rule: urn,uk_urn,school_urn
+    type: field
+    match: text
+  enukurnvalue:
+    key: ukurn
+    name: UK school URN by value pattern
+    match: ppr
+    type: data
+    rule: Word(nums, exact=6)
+    maxlen: 6
+    minlen: 6
+  enukprnfield:
+    key: ukprn
+    name: UK provider UKPRN by field name
+    rule: ukprn,uk_prn
+    type: field
+    match: text
+  enukprnvalue:
+    key: ukprn
+    name: UK provider UKPRN by value
+    match: ppr
+    type: data
+    rule: Word(nums, exact=8)
+    maxlen: 8
+    minlen: 8
+  enstudentfield:
+    key: studentid
+    is_pii: True
+    name: Student identifier by field name
+    rule: student_id,studentid,pupil_id
+    type: field
+    match: text

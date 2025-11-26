@@ -1,0 +1,62 @@
+name: eu-procurement
+description: EU-wide procurement identifiers (TED, OJ, NUTS)
+context: government
+lang: en
+country_code: eu
+rules:
+  tednoticefield:
+    key: tednoticeid
+    name: TED notice id by field name
+    rule: ted_notice_id,tednotice,ted_id,ted_reference
+    type: field
+    match: text
+  tednoticevalue:
+    key: tednoticeid
+    name: TED notice id by pattern
+    match: ppr
+    type: data
+    rule: Word(nums, exact=4) + Literal('-').suppress() + Word(nums, min=1, max=8)
+    maxlen: 13
+    minlen: 6
+  ojreferencefield:
+    key: ojreference
+    name: Official Journal reference by field name
+    rule: oj_reference,ojref,oj_notice,oj_id
+    type: field
+    match: text
+  ojreferencevalue:
+    key: ojreference
+    name: Official Journal reference by pattern
+    match: ppr
+    type: data
+    rule: Literal('OJ/S').suppress() + Optional(Literal(' ')) + Word(nums, min=1, max=4) + Literal('/').suppress() + Word(nums, min=1, max=4)
+    maxlen: 11
+    minlen: 5
+  contractawardfield:
+    key: awardnotice
+    name: Contract award notice id by field name
+    rule: award_notice_id,contract_award_id,contractnotice
+    type: field
+    match: text
+  contractawardvalue:
+    key: awardnotice
+    name: Contract award notice id by pattern
+    match: ppr
+    type: data
+    rule: Word(nums, exact=4) + Literal('/S').suppress() + Word(nums, min=1, max=3) + Literal('-').suppress() + Word(nums, min=1, max=5)
+    maxlen: 15
+    minlen: 8
+  nutsfield:
+    key: nutsregion
+    name: NUTS region code by field name
+    rule: nuts,nuts_code,region_nuts
+    type: field
+    match: text
+  nutsvalue:
+    key: nutsregion
+    name: NUTS region code by value
+    match: ppr
+    type: data
+    rule: Word('ABCDEFGHIJKLMNOPQRSTUVWXYZ', exact=2) + Word(alphanums, min=1, max=3)
+    maxlen: 5
+    minlen: 3

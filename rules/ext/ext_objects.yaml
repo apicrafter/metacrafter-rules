@@ -2,6 +2,7 @@ name: objects-ext
 description: Objects unique identifiers (extended ruleset)
 context: objectids
 lang: common
+country_code: xx
 rules:
   isbn13:
     key: isbn13

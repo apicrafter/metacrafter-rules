@@ -2,7 +2,15 @@ name: en-pii
 description: Person identifiable information (PII) in English
 context: pii
 lang: en
+country_code: xx
 rules:
+  enbirthdayknown:
+    key: birthday
+    is_pii: True
+    name: Birthday by English field name
+    rule: dob,dateofbirth,date_of_birth
+    type: field
+    match: text
   ennationalitybyvalue:
     key: ennationality
     name: Nationality in English by value
@@ -11,3 +19,67 @@ rules:
     minlen: 6
     type: data
     match: text
+  enpassportfield:
+    key: passport
+    is_pii: True
+    name: Passport number by English field name
+    rule: passport,passport_no,passport_number,passportnum,passportnumbr
+    type: field
+    match: text
+  ennhsfield:
+    key: nhsnumber
+    is_pii: True
+    name: NHS number by field name
+    rule: nhs_number,nhsnumber,nhs_no
+    type: field
+    match: text
+  ennhsvalue:
+    key: nhsnumber
+    is_pii: True
+    name: NHS number by pattern
+    match: ppr
+    type: data
+    rule: Word(nums, exact=3) + Optional(Literal(' ').suppress()) + Word(nums, exact=3) + Optional(Literal(' ').suppress()) + Word(nums, exact=4)
+    maxlen: 13
+    minlen: 10
+  enssnfield:
+    key: ssn
+    is_pii: True
+    name: US Social Security Number by field name
+    rule: ssn,socialsecuritynumber,social_security_number,social_security_no
+    type: field
+    match: text
+  enssnvalue:
+    key: ssn
+    is_pii: True
+    name: US Social Security Number by pattern
+    match: ppr
+    type: data
+    rule: Word(nums, exact=3) + Literal('-').suppress() + Word(nums, exact=2) + Literal('-').suppress() + Word(nums, exact=4)
+    maxlen: 11
+    minlen: 11
+  enniifield:
+    key: ninumber
+    is_pii: True
+    name: UK National Insurance Number by field name
+    rule: ni_number,ni number,nationalinsurance,national_insurance_number,nino
+    type: field
+    match: text
+  enniivalue:
+    key: ninumber
+    is_pii: True
+    name: UK National Insurance Number by pattern
+    match: ppr
+    type: data
+    rule: Word("ABCEGHJKLMNPRSTWXYZ", exact=2) + Word(nums, exact=6) + Optional(Word("ABCD", exact=1))
+    maxlen: 9
+    minlen: 8
+  enpassportvalue:
+    key: passport
+    is_pii: True
+    name: Passport number by common English patterns
+    match: ppr
+    type: data
+    rule: (Word(alphanums, exact=9)) | (Word(nums, exact=9))
+    maxlen: 9
+    minlen: 9

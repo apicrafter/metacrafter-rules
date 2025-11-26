@@ -2,6 +2,7 @@ name: internet-ext
 description: Internet infrastructure identifiers (extended ruleset)
 context: internet
 lang: common
+country_code: xx
 rules: 
   ipv4:
     key: ipv4

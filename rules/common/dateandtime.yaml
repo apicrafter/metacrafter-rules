@@ -2,6 +2,7 @@ name: commondateandtime
 description: Common date and time related rules
 context: datetime
 lang: common
+country_code: xx
 rules:
   datetimeknown:
     key: datetime

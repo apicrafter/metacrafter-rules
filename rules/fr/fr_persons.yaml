@@ -1,0 +1,57 @@
+name: fr-persons
+description: French person identifiers
+context: persons
+lang: fr
+country_code: fr
+rules:
+  frnirfield:
+    key: frnir
+    is_pii: True
+    name: French NIR by field name
+    rule: nir,numéro_inscription_répertoire,numero_inscription_repertoire,social_security_number
+    type: field
+    match: text
+  frnirvalue:
+    key: frnir
+    is_pii: True
+    name: French NIR by pattern
+    match: ppr
+    type: data
+    rule: Word(nums, exact=13)
+    maxlen: 13
+    minlen: 13
+  
+  frcnifield:
+    key: frcni
+    is_pii: True
+    name: French CNI by field name
+    rule: cni,carte_nationale_identité,carte_nationale_identite,identity_card
+    type: field
+    match: text
+  frcnivalue:
+    key: frcni
+    is_pii: True
+    name: French CNI by pattern
+    match: ppr
+    type: data
+    rule: Word(nums, exact=12)
+    maxlen: 12
+    minlen: 12
+  
+  frpassportfield:
+    key: frpassport
+    is_pii: True
+    name: French passport by field name
+    rule: passport,passeport,passport_number,numero_passeport
+    type: field
+    match: text
+  frpassportvalue:
+    key: frpassport
+    is_pii: True
+    name: French passport by pattern
+    match: ppr
+    type: data
+    rule: Word(nums, exact=2) + Word(alphas, exact=2) + Word(nums, exact=5)
+    maxlen: 9
+    minlen: 9
+

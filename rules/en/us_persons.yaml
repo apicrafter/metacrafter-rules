@@ -1,0 +1,91 @@
+name: us-persons
+description: US person identifiers
+context: persons
+lang: en
+country_code: us
+rules:
+  usssnfield:
+    key: usssn
+    is_pii: True
+    name: US Social Security Number by field name
+    rule: ssn,social_security_number,ss_number,ssn_number,social_security,ssn_id
+    type: field
+    match: text
+  usssnvalue:
+    key: usssn
+    is_pii: True
+    name: US Social Security Number by pattern
+    match: ppr
+    type: data
+    rule: Word(nums, exact=3) + Optional(Literal('-') | Literal(' ') | Literal('.')) + Word(nums, exact=2) + Optional(Literal('-') | Literal(' ') | Literal('.')) + Word(nums, exact=4)
+    maxlen: 11
+    minlen: 9
+  
+  useinfield:
+    key: usein
+    is_pii: True
+    name: US EIN by field name
+    rule: ein,employer_id,employer_identification_number,ein_number
+    type: field
+    match: text
+  useinvalue:
+    key: usein
+    is_pii: True
+    name: US EIN by pattern
+    match: ppr
+    type: data
+    rule: Word(nums, exact=9)
+    maxlen: 9
+    minlen: 9
+  
+  usitinfield:
+    key: usitin
+    is_pii: True
+    name: US ITIN by field name
+    rule: itin,individual_taxpayer_id,individual_taxpayer_identification_number
+    type: field
+    match: text
+  usitinvalue:
+    key: usitin
+    is_pii: True
+    name: US ITIN by pattern
+    match: ppr
+    type: data
+    rule: Literal('9') + Word(nums, exact=2) + Optional(Literal('-') | Literal(' ')) + Word('7890123456789', exact=2) + Optional(Literal('-') | Literal(' ')) + Word(nums, exact=4)
+    maxlen: 11
+    minlen: 9
+  
+  uspassportfield:
+    key: uspassport
+    is_pii: True
+    name: US passport by field name
+    rule: passport,passport_number,us_passport,passport_id
+    type: field
+    match: text
+  uspassportvalue:
+    key: uspassport
+    is_pii: True
+    name: US passport by pattern
+    match: ppr
+    type: data
+    rule: Word(nums, exact=9)
+    maxlen: 9
+    minlen: 9
+  
+  usdriverlicfield:
+    key: usdriverlic
+    is_pii: True
+    name: US driver license by field name
+    rule: driver_license,drivers_license,dl_number,license_number,driving_license
+    type: field
+    match: text
+  usdriverlicvalue:
+    key: usdriverlic
+    is_pii: True
+    name: US driver license by pattern
+    match: ppr
+    type: data
+    rule: Word(alphanums, min=6, max=18)
+    maxlen: 18
+    minlen: 6
+

@@ -2,6 +2,7 @@ name: en-common
 description: English common data types detection
 context: common
 lang: en
+country_code: xx
 rules:
   enitemnameknown:
     key: name
@@ -27,7 +28,6 @@ rules:
     rule: category
     type: field
     match: text
-
 
 
 

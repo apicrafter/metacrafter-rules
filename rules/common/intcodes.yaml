@@ -2,6 +2,7 @@ name: intcodes
 description: Internationaly recognized codes
 context: geo
 lang: common
+country_code: xx
 rules:
   iso3166-alpha2:
     key: countrycode_alpha2

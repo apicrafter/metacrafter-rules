@@ -1,0 +1,48 @@
+name: fr-medical
+description: Codes médicaux (CIM-10, ATC, CCAM)
+context: medical
+lang: fr
+country_code: fr
+rules:
+  fricd10field:
+    key: icd10code
+    name: Code CIM-10 selon le nom du champ
+    rule: cim10,code_cim10,diagnostic_cim10,code_diagnostic
+    type: field
+    match: text
+  fricd10value:
+    key: icd10code
+    name: Code CIM-10 selon la valeur
+    match: ppr
+    type: data
+    rule: Word('ABCDEFGHIJKLMNOPQRSTUVWXYZ', exact=1) + Word(nums, exact=2) + Optional(Literal('.').suppress() + Word(nums, min=1, max=2))
+    maxlen: 7
+    minlen: 3
+  fratcfield:
+    key: atccode
+    name: Code ATC selon le nom du champ
+    rule: code_atc,atc,code_medicament_atc
+    type: field
+    match: text
+  fratcvalue:
+    key: atccode
+    name: Code ATC selon la valeur
+    match: ppr
+    type: data
+    rule: Word('ABCDEFGHIJKLMNOPQRSTUVWXYZ', exact=1) + Word(nums, exact=2) + Word('ABCDEFGHIJKLMNOPQRSTUVWXYZ', exact=1) + Word(nums, exact=2)
+    maxlen: 7
+    minlen: 7
+  frccamfield:
+    key: ccamcode
+    name: Code CCAM selon le nom du champ
+    rule: ccam,code_ccam,acte_ccam
+    type: field
+    match: text
+  frccamvalue:
+    key: ccamcode
+    name: Code CCAM selon la valeur
+    match: ppr
+    type: data
+    rule: Word('ABCDEFGHIJKLMNOPQRSTUVWXYZ', exact=1) + Word(nums, exact=2) + Word('ABCDEFGHIJKLMNOPQRSTUVWXYZ', exact=1)
+    maxlen: 4
+    minlen: 4

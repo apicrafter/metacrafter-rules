@@ -2,6 +2,7 @@ name: fr-datetime
 description: French date and time common patterns
 context: datetime
 lang: fr
+country_code: fr
 rules:
   fryearknown:
     key: year
@@ -15,4 +16,3 @@ rules:
     match: text
     type: field
     rule: date_debut,date_maj,date_fin,date_de_publication,delib_date,date_immatriculation,date_ouverture
-

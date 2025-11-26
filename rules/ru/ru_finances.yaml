@@ -2,6 +2,7 @@ name: ru-finances
 description: Russian known field names used in finances/banking
 context: finances
 lang: ru
+country_code: ru
 rules:
   bikcodepat:
     key: bik
@@ -47,3 +48,31 @@ rules:
     rule: hvbkrummspb,cnovrummxxx,eabirummxxx,mukzrup1xxx,imbkrummpet,persrummxxx,amoorumixxx,prmsrummxxx,blicrummxxx,minnrummxxx,sjscrummprm,tembrummxxx,orbgru3sxxx,cetbrummxxx,apabrummxxx,pyharummxxx,newmrummxxx,alalrummxxx,ndearummxxx,indmrummxxx,icbmrummxxx,ruforummxxx,cogkrum1,riirrumm,slacrummxxx,platrummxxx,vrbmrummxxx,sjscrummxxx,prmirummxxx,smbcrummxxx,ibecrummxxx,ubrdru4exxx,ontoru22xxx,umtnrumm,citirumxxxx,ccivru2rxxx,eabrkzkaxxx,noobru55xxx,toybrummxxx,vtbrrum2kra,sabrrummna1,rtsbrummxxx,almzru8yxxx,avjsrummxxx,inuorummxxx,icfirummxxx,sabrrummsp1,alefrummxxx,badjrummspb,stajru22xxx,sabrrummra1,nadorummxxx,rfcbrummxxx,gcojrum1xxx,koexrumm,ingbrummxxx,sabrrummse1,uitbrummxxx,colkrummxxx,prmtru8vxxx,frflrummxxx,tjsbrummxxx,rosyru2pxxx,hranrummxxx,prsbru2pxxx,cflorummxxx,zwcbru4yxxx,fabarummxxx,ibazrummxxx,abslrummxxx,bpirrummxxx,badjrummvld,clokrummxxx,unrsrum1,ubswrummxxx,otpvrummxxx,mhccrummxxx,crduru4cxxx,trsnrummxxx,nccbrummxxx,mocsrum1,rcacrummxxx,botkrummxxx,sabrru2p,isbkrummxxx,mbrdrummxxx,ckbbrummxxx,rzbmrummxxx,ricirummxxx,vtbrrum2ns3,gazprummxxx,vtbrrummxxx,exirrummxxx,szipru2pxxx,jcamrummxxx,moccrummxxx,ikbarummxxx,fcbrrummxxx,icbkrummxxx,jsbcru4nxxx,eliaru22xxx,bbanru2rxxx,narnrummxxx,inearummxxx,cbnnrummxxx,crokrummxxx,nvobru21,itroru8yxxx,ptcbru8vxxx,nechru2kxxx,bcsbru55xxx,unskrummxxx,gazprumm024,rsbnrummxxx,mjsbrummxxx,tjscrummxxx,ruagrummxxx,rsjsrummxxx,rudlrummxxx,vbnkrummxxx,sgubru5sxxx,sabrru66cht,sabrrummea1,sabrrummtn1,itehru2pxxx,komxrummxxx,fribrummxxx,alfarummxxx,sabrrummkr1,sabrru66xxx,jivaru21xxx,krasru3axxx,sabrrummvh1,prioru2jxxx,zemcru22xxx,sabrru8kxxx,sabrrummma1,sabrru2p920,tambru21xxx,sgazru22xxx,sebpru2pxxx,modbru22,jxibru2pxxx,moswrum2xxx,nbtrrummmos,bijoru66xxx,nedvcnsh,forhru33xxx,rudvrummxxx,bdrfrummxxx,derzrummxxx,slabru21,avtbrummxxx,sinyru21xxx,vtbrrum2sa3,khzaru99xxx,dlnbrummxxx,byjsru33xxx,mobkrummxxx,ticsrummxxx,agcorummxxx,sabrrummnh1,gazprumm029,ajscru55xxx,abocrummxxx,fmosrummxxx,levbru55xxx,badjrummxxx,nbsxrumm,colkrummnsb,alfarumm,cupcru55,mbrdrummkha,evrfrummxxx,zajcru2kxxx,unebru2pxxx,psocru2pxxx,jcforummxxx,crlyru2pxxx,sgubru5s053,somrrumm030,coakrum1,sjsmrummxxx,enebru2pxxx,vtbrrum2nwr,vstarummxxx,brecru2sxxx,faebru8vxxx,runbrummxxx,bfearummxxx,wumtrummxxx,siserummxxx,ruidrummxxx,sisnru55xxx,khmuru55xxx,akoaru22xxx,chasrumxxxx,sldrru3sxxx,arrsru2kxxx,engoru21mos,engoru2kxxx,bratru6bxxx,asojru2nxxx,unepru8vxxx,vtbrrum2sp3,tavrru2pxxx,aresrummxxx,klucru4exxx,sabrrumm,sabrrumm012,micurummxxx,dalvru8xxxx,posbrumm,toglru3txxx,zenirummxxx,bnparummxxx,koshru3sxxx,timeru2k,kaboru2kxxx,tmkpru5txxx,gazprumm011,rsbnrummszf,mtibrummxxx,doliru8yxxx,somrrumm010,bkchrummkhb,itcurummxxx,sksbrummxxx,cresrummxxx,kaooru3cxxx,senrru31,vtbrrum2nin,vtbrrum2vrn,vtbrrum2eka,vtbrrum2rnd,vtbrrum2sta,vtbrrum2kha,vtbrrum2ms3,nfcbrummxxx,somrrummxxx,sjscrummvrn,nbdbru2nxxx,vtbrrum2ms2,ugzaru55xxx,mcrbrummxxx,expnrummxxx,saoaru2pxxx,vitaru2pxxx,ruagrum1035,vtbrrum2ek3,vtbrrum2kh3,vtbrrum2kd3,vtbrrum2vr3,vkngru2p,prmsrummyab,prmsrummnnv,prmsrummspb,prmsrummvgg,prmsrum1hab,prmsrummnsb,crosrummxxx,imbkrummxxx,chinru4cxxx,snezru4cxxx,asanru8xxxx,gainrummxxx,sjscrummrnd,codlrumm,sldbrummxxx,hvbkrummxxx,fnmmrummxxx,mtkcrummxxx,psocrua1mos,cingrummxxx,unclru2p,jscoru4pxxx,pvrbru4vxxx,skberu4exxx,alilrumm,intprumm,pshbrummxxx,tsdbru22xxx,snkbrumm,rrdbrummxxx,nbtrrummxxx,cobarummxxx,kukrru22xxx,cecbru2kxxx,gazprumm001,gazprumm002,gazprumm004,gazprumm007,gazprumm015,gazprumm025,gazprumm026,gazprumm032,gazprumm034,chlbru4cxxx,vowarummxxx,gazprumm036,gazprumm037,gazprumm038,gazprumm042,gazprumm047,gazprumm048,gazprumm049,bmwfrummxxx,deutrummxxx,smbkrummxxx,bkchrummxxx,somrrumm020,sjscrummnng,trryrummxxx,runirummxxx,scbmrummxxx,krasru3amos,atbtrummxxx,goldrummxxx,obibrummxxx,jscvrum2,niizrummxxx,rsirrum1xxx,incbru55xxx,comsrusmxxx,noksru2vxxx,otpvrummoms,ndomrummxxx,irbaru22xxx,belerummxxx,cpgbru2p,retlrummxxx,cbmwrummxxx,svibrummxxx,ivdcrummxxx,crlyru2pmsc,rosfru2axxx,sjscrummtvr,asijrummxxx,hcfbrummxxx,tczbrummxxx,risbrummxxx,rnbkrummxxx,sikprusmxxx,vizirummxxx,fojsrummxxx,csmmrummxxx,rosorummxxx,jsnmrummxxx,prokrummxxx,sprcru2pxxx,pcbcrummxxx,inknrum2xxx,jsbsru2pxxx,citvru2p,sezarum1xxx,kmbbrummxxx,avgrru22xxx,trcbru2kxxx,kremrummxxx,nasprummxxx,lsncrum1xxx,ruecrummxxx,bkavru2kxxx,jsnmrummnnv,caiwrummxxx,natxrummxxx
     fieldrule: swift,swbic
     fieldrulematch: text
+  rusbankaccountfield:
+    key: rusbankaccount
+    name: Russian bank account by field name
+    rule: bank_account,account_number,расчетный_счет,raschetnyy_schet,счет,schet
+    type: field
+    match: text
+  rusbankaccountvalue:
+    key: rusbankaccount
+    name: Russian bank account by pattern
+    match: ppr
+    type: data
+    rule: Word(nums, exact=20)
+    maxlen: 20
+    minlen: 20
+  rueqsecregfield:
+    key: rueqsecreg
+    name: Russian equity securities registration by field name
+    rule: гос_регистрация_выпуска,gos_registratsiya_vypuska
+    type: field
+    match: text
+  rueqsecregvalue:
+    key: rueqsecreg
+    name: Russian equity securities registration by pattern
+    match: ppr
+    type: data
+    rule: Word(nums, exact=1) + Word(nums, exact=5) + Word(alphas, exact=1)
+    maxlen: 7
+    minlen: 7

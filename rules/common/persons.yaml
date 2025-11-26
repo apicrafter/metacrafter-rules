@@ -2,6 +2,7 @@ name: persons
 description: Persons identifiers
 context: persons
 lang: common
+country_code: xx
 rules:
   fullname:
     key: person_fullname

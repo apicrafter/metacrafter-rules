@@ -2,6 +2,7 @@ name: ru-geo
 description: Russian geographic identifiers
 context: geo
 lang: ru
+country_code: ru
 rules:
   rugeopointbyname:
     key: geopoint

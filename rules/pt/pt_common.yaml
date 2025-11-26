@@ -2,6 +2,7 @@ name: pt-common
 description: Portugenese common identifiers
 context: common
 lang: pt
+country_code: pt
 rules:
   ptdescriptionknown:
     key: description

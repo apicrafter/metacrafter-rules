@@ -2,6 +2,7 @@ name: ru-orgs
 description: Russian organizations identifiers
 context: companies
 lang: ru
+country_code: ru
 rules:
   ruokpoknown:
     key: okpo

@@ -1,0 +1,48 @@
+name: es-medical
+description: Códigos médicos (CIE-10, ATC, CUP)
+context: medical
+lang: es
+country_code: es
+rules:
+  esicd10field:
+    key: icd10code
+    name: Código CIE-10 según el nombre del campo
+    rule: cie10,codigo_cie10,diagnostico_cie10,cod_diag
+    type: field
+    match: text
+  esicd10value:
+    key: icd10code
+    name: Código CIE-10 según el valor
+    match: ppr
+    type: data
+    rule: Word('ABCDEFGHIJKLMNOPQRSTUVWXYZ', exact=1) + Word(nums, exact=2) + Optional(Literal('.').suppress() + Word(nums, min=1, max=2))
+    maxlen: 7
+    minlen: 3
+  esatcfield:
+    key: atccode
+    name: Código ATC según el nombre del campo
+    rule: codigo_atc,atc,atc_medicamento
+    type: field
+    match: text
+  esatcvalue:
+    key: atccode
+    name: Código ATC según el valor
+    match: ppr
+    type: data
+    rule: Word('ABCDEFGHIJKLMNOPQRSTUVWXYZ', exact=1) + Word(nums, exact=2) + Word('ABCDEFGHIJKLMNOPQRSTUVWXYZ', exact=1) + Word(nums, exact=2)
+    maxlen: 7
+    minlen: 7
+  escupfield:
+    key: cupscode
+    name: Código CUP/CUPS según el nombre del campo
+    rule: cup,cups,codigo_cups
+    type: field
+    match: text
+  escupvalue:
+    key: cupscode
+    name: Código CUP/CUPS según el valor
+    match: ppr
+    type: data
+    rule: Word(nums, exact=3) + Word(nums, exact=2) + Optional(Literal('.').suppress() + Word(nums, min=2, max=3))
+    maxlen: 8
+    minlen: 5

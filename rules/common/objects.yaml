@@ -2,6 +2,7 @@ name: objects
 description: Objects unique identifiers
 context: objectids
 lang: common
+country_code: xx
 rules:
   isbnbyname:
     key: isbn13

@@ -2,6 +2,7 @@ name: it-datetime
 description: Italian date and time common patterns
 context: datetime
 lang: it
+country_code: it
 rules:
   ityearknown:
     key: year
@@ -15,4 +16,3 @@ rules:
     match: text
     type: field
     rule: data_morte
-

@@ -2,6 +2,7 @@ name: es-geo
 description: Spanish geographic identifiers
 context: geo
 lang: es
+country_code: es
 rules:
   eslatitudebyname:
     key: latitude
@@ -28,7 +29,20 @@ rules:
     rule: coordenadas
     type: field
     match: text
-
+  espostcodefield:
+    key: espostcode
+    name: Spanish postal code by field name
+    rule: postcode,postal_code,codigo_postal,codigopostal
+    type: field
+    match: text
+  espostcodevalue:
+    key: espostcode
+    name: Spanish postal code by pattern
+    match: ppr
+    type: data
+    rule: Word(nums, exact=5)
+    maxlen: 5
+    minlen: 5
 
 
 

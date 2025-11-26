@@ -2,6 +2,7 @@ name: ru-common
 description: Russian common identifiers
 context: common
 lang: ru
+country_code: ru
 rules:
   rusyesnobool:
     key: boolean

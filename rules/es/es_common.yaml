@@ -2,6 +2,7 @@ name: es-common
 description: Spanish common identifiers
 context: common
 lang: es
+country_code: es
 rules:
   esphoneknown:
     key: phone

@@ -1,0 +1,104 @@
+name: crossborder-finance
+description: Cross-border banking and payment identifiers
+context: finances
+lang: common
+country_code: xx
+rules:
+  ibanfield:
+    key: iban
+    name: International Bank Account Number by field name
+    rule: iban,iban_account,iban_number,international_bank_account
+    type: field
+    match: text
+  ibanvalue:
+    key: iban
+    name: International Bank Account Number by value pattern
+    match: ppr
+    type: data
+    rule: Word('ABCDEFGHIJKLMNOPQRSTUVWXYZ', exact=2) + Word(nums, exact=2) + Word(alphanums, min=10, max=28)
+    maxlen: 34
+    minlen: 14
+  bicfield:
+    key: bic
+    name: SWIFT/BIC code by field name
+    rule: bic,swift,swift_code,swiftbic
+    type: field
+    match: text
+  bicvalue:
+    key: bic
+    name: SWIFT/BIC code by value pattern
+    match: ppr
+    type: data
+    rule: Word('ABCDEFGHIJKLMNOPQRSTUVWXYZ', exact=4) + Word('ABCDEFGHIJKLMNOPQRSTUVWXYZ', exact=2) + Word('ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789', exact=2) + Optional(Word('ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789', exact=3))
+    maxlen: 11
+    minlen: 8
+  abafield:
+    key: aba
+    name: US ABA routing number by field name
+    rule: aba,routing_number,aba_number,bank_routing
+    type: field
+    match: text
+  ababankvalue:
+    key: aba
+    name: US ABA routing number by value pattern
+    match: ppr
+    type: data
+    rule: Word(nums, exact=9)
+    maxlen: 9
+    minlen: 9
+  sortcodefield:
+    key: uksortcode
+    name: UK sort code by field name
+    rule: sortcode,sort_code,uk_sortcode
+    type: field
+    match: text
+  sortcodevalue:
+    key: uksortcode
+    name: UK sort code by value pattern
+    match: ppr
+    type: data
+    rule: Word(nums, exact=2) + Optional(Literal('-').suppress()) + Word(nums, exact=2) + Optional(Literal('-').suppress()) + Word(nums, exact=2)
+    maxlen: 8
+    minlen: 6
+  clabefield:
+    key: clabe
+    name: Mexican CLABE by field name
+    rule: clabe,clabe_number,clabe_account
+    type: field
+    match: text
+  clabevalue:
+    key: clabe
+    name: Mexican CLABE by value pattern
+    match: ppr
+    type: data
+    rule: Word(nums, exact=18)
+    maxlen: 18
+    minlen: 18
+  ifscfield:
+    key: ifsc
+    name: Indian IFSC code by field name
+    rule: ifsc,ifsc_code,bank_ifsc
+    type: field
+    match: text
+  ifscvalue:
+    key: ifsc
+    name: Indian IFSC code by value pattern
+    match: ppr
+    type: data
+    rule: Word('ABCDEFGHIJKLMNOPQRSTUVWXYZ', exact=4) + Literal('0').suppress() + Word(alphanums, exact=6)
+    maxlen: 11
+    minlen: 11
+  catransitfield:
+    key: catransit
+    name: Canadian branch transit number by field name
+    rule: transit_number,canada_transit,branch_transit
+    type: field
+    match: text
+  catransitvalue:
+    key: catransit
+    name: Canadian branch transit number by value pattern
+    match: ppr
+    type: data
+    rule: Optional(Literal('0').suppress()) + Word(nums, exact=5) + Optional(Literal('-').suppress() + Word(nums, exact=3))
+    maxlen: 9
+    minlen: 5

@@ -2,6 +2,7 @@ name: sciencecommon
 description: Scientific identifiers
 context: science
 lang: common
+country_code: xx
 rules:
   orcidbyknown:
     key: orcid

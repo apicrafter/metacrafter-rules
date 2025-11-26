@@ -2,6 +2,7 @@ name: en-ukmedical
 description: English (UK) medical codes
 context: medical
 lang: en
+country_code: gb
 rules:
   bnfcode:
     key: ukbnfcode

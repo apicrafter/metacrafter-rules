@@ -2,6 +2,7 @@ name: de-geo
 description: Geographic names in German
 context: geo
 lang: de
+country_code: de
 rules:
   destreetknown:
     key: street

@@ -2,6 +2,7 @@ name: vehicles
 description: Vehicles related classification codes
 context: vehicles
 lang: common
+country_code: xx
 rules:
   vehiclenumberbyfieldname:
     key: vehiclenumber

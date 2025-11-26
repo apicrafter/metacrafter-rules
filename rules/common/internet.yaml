@@ -2,6 +2,7 @@ name: internet
 description: Internet infrastructure identifiers
 context: internet
 lang: common
+country_code: xx
 rules: 
   subnetbyknown:
     key: ipsubnet

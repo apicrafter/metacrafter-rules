@@ -2,6 +2,7 @@ name: commongeo
 description: Common geodata
 context: geo
 lang: common
+country_code: xx
 rules:
   geopointbyname:
     key: geopoint

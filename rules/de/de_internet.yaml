@@ -2,6 +2,7 @@ name: de-internet
 description: German Internet codes
 context: internet
 lang: de
+country_code: de
 rules:
   ruurlknown:
     key: url
@@ -9,4 +10,3 @@ rules:
     rule: webseite
     type: field
     match: text
-

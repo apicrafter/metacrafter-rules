@@ -2,6 +2,7 @@ name: commondateandtime-ext
 description: Common date and time related rules (extended ruleset)
 context: datetime
 lang: common
+country_code: xx
 rules:
   timebypat:
     key: time

@@ -2,6 +2,7 @@ name: fr-geo
 description: French geographic identifiers
 context: geo
 lang: fr
+country_code: fr
 rules:
   frpostindexbyknown:
     key: postindex

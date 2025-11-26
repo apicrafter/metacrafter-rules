@@ -2,6 +2,7 @@ name: fr-common
 description: French common data types detection
 context: common
 lang: fr
+country_code: fr
 rules:
   frtitleknown:
     key: name
@@ -34,4 +35,3 @@ rules:
     rule: telephone_du_lieu,numero de telephone,numero_de_telephone
     type: field
     match: text
-

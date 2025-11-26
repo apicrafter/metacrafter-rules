@@ -2,6 +2,7 @@ name: en-datetime
 description: English date and time common patterns
 context: datetime
 lang: en
+country_code: xx
 rules:
   endayofweek:
     key: endayofweek
@@ -33,4 +34,3 @@ rules:
     rule: fiscal_year,schoolyear,mmwr_yearcalendar_year,school_year,report_year,reporting_year,census_year,tax_year,periodyear
     type: field
     match: text
-

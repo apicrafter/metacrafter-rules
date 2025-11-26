@@ -2,6 +2,7 @@ name: common
 description: Common data types (email, urls and etc)
 context: common
 lang: common
+country_code: xx
 rules:
   filenamebyknown:
     key: filename

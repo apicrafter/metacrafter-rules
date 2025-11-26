@@ -2,6 +2,7 @@ name: ru-internet
 description: Russian Internet codes
 context: internet
 lang: ru
+country_code: ru
 rules:
   ruurlknown:
     key: url

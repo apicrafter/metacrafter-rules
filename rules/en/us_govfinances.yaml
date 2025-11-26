@@ -2,6 +2,7 @@ name: us-govfinances
 description: US known field names used in government finances
 context: government
 lang: en
+country_code: us
 rules:
  cfdanumberbyknown:
     key: cfdanumber

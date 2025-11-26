@@ -2,6 +2,7 @@ name: pii
 description: Person identifiable information (PII)
 context: pii
 lang: common
+country_code: xx
 rules:
   birthdayknown:
     key: birthday

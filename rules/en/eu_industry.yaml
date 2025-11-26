@@ -2,6 +2,7 @@ name: eu-industry
 description: EU industry classifiers and identifiers
 context: industry
 lang: en
+country_code: eu
 rules:
   cpvcodeknown:
     key: cpvcode

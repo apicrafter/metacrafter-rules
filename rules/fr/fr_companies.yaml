@@ -1,0 +1,21 @@
+name: fr-companies
+description: French company identifiers
+context: companies
+lang: fr
+country_code: fr
+rules:
+  sirenfield:
+    key: sirencode
+    name: SIREN by field name
+    rule: siren,siren_code,numero_siren
+    type: field
+    match: text
+  sirenvalue:
+    key: sirencode
+    name: SIREN by pattern
+    match: ppr
+    type: data
+    rule: Word(nums, exact=9)
+    maxlen: 9
+    minlen: 9
+

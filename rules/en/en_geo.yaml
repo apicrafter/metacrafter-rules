@@ -2,6 +2,7 @@ name: en-geo
 description: Geographic names in English
 context: geo
 lang: en
+country_code: xx
 rules:
   encountrynamebyvalue:
     key: encountryname

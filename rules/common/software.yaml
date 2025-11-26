@@ -2,6 +2,7 @@ name: softwarecommon
 description: Software identifiers
 context: software
 lang: common
+country_code: xx
 rules:
   filesizebyknown:
     key: filesize

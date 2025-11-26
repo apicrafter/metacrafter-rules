@@ -2,6 +2,7 @@ name: en-ukgeo
 description: English (UK) geographic locations and codes
 context: geo
 lang: en
+country_code: gb
 rules:
   ukwardcodebyknown:
     key: ukwardcode

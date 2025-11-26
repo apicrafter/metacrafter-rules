@@ -1,0 +1,62 @@
+name: en-medical
+description: English medical identifiers and dictionaries
+context: medical
+lang: en
+country_code: xx
+rules:
+  enicd10field:
+    key: icd10code
+    name: ICD-10 code by English field name
+    rule: icd10,icd_10,diagnosis_code,diagnostic_code
+    type: field
+    match: text
+  enicd10value:
+    key: icd10code
+    name: ICD-10 code by value
+    match: ppr
+    type: data
+    rule: Word('ABCDEFGHIJKLMNOPQRSTUVWXYZ', exact=1) + Word(nums, exact=2) + Optional(Literal('.').suppress() + Word(nums, min=1, max=2))
+    maxlen: 7
+    minlen: 3
+  enatcfield:
+    key: atccode
+    name: ATC drug code by field name
+    rule: atc_code,atccode,drug_atc,who_atc
+    type: field
+    match: text
+  enatcvalue:
+    key: atccode
+    name: ATC drug code by value
+    match: ppr
+    type: data
+    rule: Word('ABCDEFGHIJKLMNOPQRSTUVWXYZ', exact=1) + Word(nums, exact=2) + Word('ABCDEFGHIJKLMNOPQRSTUVWXYZ', exact=1) + Word(nums, exact=2)
+    maxlen: 7
+    minlen: 7
+  ensnomedfield:
+    key: snomedcode
+    name: SNOMED CT concept code by field name
+    rule: snomed,snomed_ct,snomed_code,snomedid
+    type: field
+    match: text
+  ensnomedvalue:
+    key: snomedcode
+    name: SNOMED CT concept code by value
+    match: ppr
+    type: data
+    rule: Word(nums, min=6, max=10)
+    maxlen: 10
+    minlen: 6
+  encptfield:
+    key: cptcode
+    name: CPT/HCPCS procedure code by field name
+    rule: cpt_code,cptcode,procedure_cpt,hcpcs_code
+    type: field
+    match: text
+  encptvalue:
+    key: cptcode
+    name: CPT/HCPCS procedure code by value
+    match: ppr
+    type: data
+    rule: Word(nums, exact=5)
+    maxlen: 5
+    minlen: 5

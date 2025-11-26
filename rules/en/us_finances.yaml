@@ -1,0 +1,36 @@
+name: us-finances
+description: US financial identifiers
+context: finances
+lang: en
+country_code: us
+rules:
+  abaroutingfield:
+    key: abaroutingnum
+    name: ABA routing number by field name
+    rule: routing_number,aba_routing,aba_number,routing_num,bank_routing
+    type: field
+    match: text
+  abaroutingvalue:
+    key: abaroutingnum
+    name: ABA routing number by pattern
+    match: ppr
+    type: data
+    rule: Word('0123678', exact=1) + Word(nums, exact=3) + Optional(Literal('-')) + Word(nums, exact=4) + Optional(Literal('-')) + Word(nums, exact=1)
+    maxlen: 11
+    minlen: 9
+  
+  cusipfield:
+    key: cusip
+    name: CUSIP by field name
+    rule: cusip,cusip_id,cusip_number
+    type: field
+    match: text
+  cusipvalue:
+    key: cusip
+    name: CUSIP by pattern
+    match: ppr
+    type: data
+    rule: Word(nums, exact=3) + Word(alphanums, exact=2) + Word(alphanums + '*@#', exact=3) + Word(nums, exact=1)
+    maxlen: 9
+    minlen: 9
+

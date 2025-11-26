@@ -2,6 +2,7 @@ name: common-ext
 description: Common data types like email, urls and etc. (extended ruleset)
 context: common
 lang: common
+country_code: xx
 rules:
   filenamebyvalue:
     key: filename

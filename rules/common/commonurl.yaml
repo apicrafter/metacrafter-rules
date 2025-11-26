@@ -2,6 +2,7 @@ name: commonurl
 description: Common URL data types
 context: common
 lang: common
+country_code: xx
 rules:
   fqdnbyvalidators:
     key: fqdn

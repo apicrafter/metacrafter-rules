@@ -2,6 +2,7 @@ name: ru-codes
 description: Russian classifier codes
 context: common
 lang: ru
+country_code: ru
 rules:
   rutnvedknown:
     key: tnved

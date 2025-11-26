@@ -2,6 +2,7 @@ name: us-geo
 description: US geographic identifiers
 context: geo
 lang: en
+country_code: us
 rules:
   uszipcodebyname:
     key: uszipcode
@@ -42,5 +43,4 @@ rules:
     minlen: 4
     type: data
     match: text
-
 

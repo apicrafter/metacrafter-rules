@@ -1,0 +1,48 @@
+name: de-medical
+description: Deutsche medizinische Kataloge und Codes
+context: medical
+lang: de
+country_code: de
+rules:
+  deicd10field:
+    key: icd10code
+    name: ICD-10-Code anhand deutscher Feldnamen
+    rule: icd10,icd_10,diagnosecode,diagnose_code
+    type: field
+    match: text
+  deicd10value:
+    key: icd10code
+    name: ICD-10-Code anhand des Wertes
+    match: ppr
+    type: data
+    rule: Word('ABCDEFGHIJKLMNOPQRSTUVWXYZ', exact=1) + Word(nums, exact=2) + Optional(Literal('.').suppress() + Word(nums, min=1, max=2))
+    maxlen: 7
+    minlen: 3
+  deatcfield:
+    key: atccode
+    name: ATC-Code anhand deutscher Feldnamen
+    rule: atc_code,atccode,arzneimittel_atc,who_atc
+    type: field
+    match: text
+  deatcvalue:
+    key: atccode
+    name: ATC-Code anhand des Wertes
+    match: ppr
+    type: data
+    rule: Word('ABCDEFGHIJKLMNOPQRSTUVWXYZ', exact=1) + Word(nums, exact=2) + Word('ABCDEFGHIJKLMNOPQRSTUVWXYZ', exact=1) + Word(nums, exact=2)
+    maxlen: 7
+    minlen: 7
+  deopsfield:
+    key: opscode
+    name: OPS-Prozedurcode anhand Feldnamen
+    rule: ops_code,opscode,ops,prozedur_code
+    type: field
+    match: text
+  deopsvalue:
+    key: opscode
+    name: OPS-Prozedurcode anhand des Wertes
+    match: ppr
+    type: data
+    rule: Word(nums, exact=1) + Word(nums, exact=1) + Word(nums, exact=2) + Optional(Literal('.').suppress() + Word(nums, min=1, max=2))
+    maxlen: 7
+    minlen: 4

@@ -2,6 +2,7 @@ name: commonboolean
 description: Common known boolean
 context: common
 lang: common
+country_code: xx
 rules:
   booleancommon:
     key: boolean

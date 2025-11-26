@@ -1,0 +1,50 @@
+name: eu-tax
+description: EU-wide VAT and taxpayer identifiers
+context: finances
+lang: en
+country_code: eu
+rules:
+  vatfield:
+    key: euvat
+    is_pii: True
+    name: VAT number by field name
+    rule: vat,vatnumber,vat_number,eu_vat,vatid
+    type: field
+    match: text
+  vatvalue:
+    key: euvat
+    is_pii: True
+    name: VAT number by value pattern
+    match: ppr
+    type: data
+    rule: Word('ABCDEFGHIJKLMNOPQRSTUVWXYZ', exact=2) + Word(alphanums, min=6, max=12)
+    maxlen: 14
+    minlen: 8
+  euidfield:
+    key: euid
+    name: European Unique Identifier (EUID) by field name
+    rule: euid,eu_id,european_unique_id
+    type: field
+    match: text
+  euidvalue:
+    key: euid
+    name: European Unique Identifier (EUID) by pattern
+    match: ppr
+    type: data
+    rule: Word('ABCDEFGHIJKLMNOPQRSTUVWXYZ', exact=2) + Word(alphanums, min=4, max=18)
+    maxlen: 20
+    minlen: 6
+  ibanfield:
+    key: iban
+    name: IBAN by field name
+    rule: iban,iban_account,iban_number
+    type: field
+    match: text
+  ibanvalue:
+    key: iban
+    name: IBAN by value pattern
+    match: ppr
+    type: data
+    rule: Word('ABCDEFGHIJKLMNOPQRSTUVWXYZ', exact=2) + Word(nums, exact=2) + Word(alphanums, min=10, max=28)
+    maxlen: 34
+    minlen: 14

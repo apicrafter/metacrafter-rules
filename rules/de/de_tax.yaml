@@ -1,0 +1,52 @@
+name: de-tax
+description: Deutsche Steuer- und Unternehmenskennungen
+context: finances
+lang: de
+country_code: de
+rules:
+  deustfield:
+    key: deust
+    is_pii: True
+    name: USt-IdNr. anhand Feldname
+    rule: ust_idnr,ustid,de_vat,ust_id,ustidnr
+    type: field
+    match: text
+  deustvalue:
+    key: deust
+    is_pii: True
+    name: USt-IdNr. anhand Wert
+    match: ppr
+    type: data
+    rule: Literal('DE') + Word(nums, exact=9)
+    maxlen: 11
+    minlen: 11
+  detaxidfield:
+    key: steuerid
+    is_pii: True
+    name: Steuer-ID anhand Feldname
+    rule: steuer_id,steuerid,steueridentifikationsnummer
+    type: field
+    match: text
+  detaxidvalue:
+    key: steuerid
+    is_pii: True
+    name: Steuer-ID anhand Wert
+    match: ppr
+    type: data
+    rule: Word(nums, exact=11)
+    maxlen: 11
+    minlen: 11
+  dehrbfield:
+    key: handelsregisternr
+    name: Handelsregisternummer anhand Feldname
+    rule: hrb,handelsregisternr,handelsregister_nr
+    type: field
+    match: text
+  dehrbvalue:
+    key: handelsregisternr
+    name: Handelsregisternummer anhand Wert
+    match: ppr
+    type: data
+    rule: Word('ABCDEFGHIJKLMNOPQRSTUVWXYZ', exact=1) + Word(nums, min=1, max=6)
+    maxlen: 7
+    minlen: 2

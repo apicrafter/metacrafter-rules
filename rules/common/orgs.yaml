@@ -2,6 +2,7 @@ name: orgs
 description: Companies identifiers
 context: companies
 lang: common
+country_code: xx
 rules:
   companynameknown:
     key: orgname

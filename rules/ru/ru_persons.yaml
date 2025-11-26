@@ -2,6 +2,7 @@ name: ru-persons
 description: Russian persons identifiers
 context: persons
 lang: ru
+country_code: ru
 rules:
   rupfioknown:
     key: person_fullname
@@ -77,5 +78,40 @@ rules:
     key: rusworkposition
     name: Person field names of common positions
     rule: должность,должность руководителя,chiefposition,dolzhnost,наименование должности,должность руководителя учреждения
+    type: field
+    match: text
+  rupassportfield:
+    key: rupassport
+    is_pii: True
+    name: Russian passport foreign number by field name
+    rule: passport,passport_number,загранпаспорт,номер_загранпаспорта
+    type: field
+    match: text
+  russurnamefieldext:
+    key: russurname
+    is_pii: True
+    name: Russian surname by field name (extended)
+    rule: surname,lastname,last_name,фамилия,familiya
+    type: field
+    match: text
+  rusfirstnamefieldext:
+    key: rusfirstname
+    is_pii: True
+    name: Russian first name by field name (extended)
+    rule: firstname,first_name,имя,imya
+    type: field
+    match: text
+  rusmidnamefieldext:
+    key: rusmidname
+    is_pii: True
+    name: Russian middle name by field name (extended)
+    rule: middlename,middle_name,отчество,otchestvo
+    type: field
+    match: text
+  rusfullnamefieldext:
+    key: rusfullname
+    is_pii: True
+    name: Russian full name by field name (extended)
+    rule: fullname,full_name,полное_имя,polnoe_imya,фио,fio
     type: field
     match: text

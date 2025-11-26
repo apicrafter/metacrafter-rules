@@ -1,0 +1,50 @@
+name: fr-tax
+description: Identifiants fiscaux français (SIREN, SIRET, TVA)
+context: finances
+lang: fr
+country_code: fr
+rules:
+  frsirenfield:
+    key: siren
+    name: Code SIREN par nom de champ
+    rule: siren,code_siren,num_siren
+    type: field
+    match: text
+  frsirenvalue:
+    key: siren
+    name: Code SIREN par motif
+    match: ppr
+    type: data
+    rule: Word(nums, exact=9)
+    maxlen: 9
+    minlen: 9
+  frsiretfield:
+    key: siret
+    name: Code SIRET par nom de champ
+    rule: siret,code_siret,num_siret
+    type: field
+    match: text
+  frsiretvalue:
+    key: siret
+    name: Code SIRET par motif
+    match: ppr
+    type: data
+    rule: Word(nums, exact=14)
+    maxlen: 14
+    minlen: 14
+  frvatfield:
+    key: frvat
+    is_pii: True
+    name: TVA intracommunautaire par nom de champ
+    rule: tva,tva_intra,numero_tva
+    type: field
+    match: text
+  frvatvalue:
+    key: frvat
+    is_pii: True
+    name: TVA intracommunautaire par valeur
+    match: ppr
+    type: data
+    rule: Literal('FR') + Word(alphanums, exact=11)
+    maxlen: 13
+    minlen: 13

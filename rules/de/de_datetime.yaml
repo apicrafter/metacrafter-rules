@@ -2,6 +2,7 @@ name: de-datetime
 description: German date and time common patterns
 context: datetime
 lang: de
+country_code: de
 rules:
   deyearname:
     key: year

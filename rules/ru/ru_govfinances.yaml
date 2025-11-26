@@ -2,6 +2,7 @@ name: ru-govfinances
 description: Russian known field names used in government finances
 context: government
 lang: ru
+country_code: ru
 rules:
   rubudgetcode:
     key: budgetcode
@@ -105,4 +106,3 @@ rules:
     rule: pponame
     type: field
     match: text
-

@@ -2,6 +2,7 @@ name: es-datetime
 description: Spanish date and time common patterns
 context: datetime
 lang: es
+country_code: es
 rules:
   esyearbydatafiltered:
     key: year
@@ -29,4 +30,3 @@ rules:
     match: text
     type: field
     rule: fecha_data,fecha
-

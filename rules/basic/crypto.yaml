@@ -2,6 +2,7 @@ name: crypto
 description: Cryptographic identifiers
 context: crypto
 lang: common
+country_code: xx
 rules:
   sha256hash:
     key: sha256hash

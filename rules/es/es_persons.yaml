@@ -1,0 +1,57 @@
+name: es-persons
+description: Spanish person identifiers
+context: persons
+lang: es
+country_code: es
+rules:
+  espassportfield:
+    key: espassport
+    is_pii: True
+    name: Spanish passport by field name
+    rule: passport,pasaporte,numero_pasaporte
+    type: field
+    match: text
+  espassportvalue:
+    key: espassport
+    is_pii: True
+    name: Spanish passport by pattern
+    match: ppr
+    type: data
+    rule: Word(alphanums, min=2, max=3) + Word(nums, exact=6)
+    maxlen: 9
+    minlen: 8
+  
+  esniefield:
+    key: esnie
+    is_pii: True
+    name: Spanish NIE by field name
+    rule: nie,numero_identidad_extranjero,foreigner_id
+    type: field
+    match: text
+  esnievalue:
+    key: esnie
+    is_pii: True
+    name: Spanish NIE by pattern
+    match: ppr
+    type: data
+    rule: (Literal('X') + Optional(Literal('-') | Literal('.')) + Optional(Literal('0')) + Word(nums, exact=7) + Optional(Literal('-') | Literal('.')) + Word(alphas, exact=1)) | (Word(alphas, exact=1) + Optional(Literal('-') | Literal('.')) + Word(nums, exact=7) + Optional(Literal('-') | Literal('.')) + Word(alphanums, exact=1)) | (Word(nums, exact=8) + Optional(Literal('-') | Literal('.')) + Word(alphas, exact=1))
+    maxlen: 12
+    minlen: 9
+  
+  esniffield:
+    key: esnif
+    is_pii: True
+    name: Spanish NIF by field name
+    rule: nif,dni,numero_identificacion_fiscal
+    type: field
+    match: text
+  esnifvalue:
+    key: esnif
+    is_pii: True
+    name: Spanish NIF by pattern
+    match: ppr
+    type: data
+    rule: Optional(Word(nums, exact=1)) + Word(nums, exact=7) + Optional(Literal('-')) + Word(alphas, exact=1)
+    maxlen: 9
+    minlen: 8
+

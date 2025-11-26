@@ -1,0 +1,54 @@
+name: es-tax
+description: Identificadores fiscales españoles (NIF, CIF, IVA)
+context: finances
+lang: es
+country_code: es
+rules:
+  esniffield:
+    key: nif
+    is_pii: True
+    name: NIF por nombre de campo
+    rule: nif,numero_nif,dni
+    type: field
+    match: text
+  esnifvalue:
+    key: nif
+    is_pii: True
+    name: NIF por patrón
+    match: pprrd(nums, exact=7) + Word('TRWAGMYFPDXBNJZSQVHLCK
+    type: data
+    rule: Word('XYZKLM', exact=1) + WoE', exact=1)
+    maxlen: 9
+    minlen: 9
+  esciffield:
+    key: cif
+    is_pii: True
+    name: CIF por nombre de campo
+    rule: cif,numero_cif,cif_empresa
+    type: field
+    match: text
+  escifvalue:
+    key: cif
+    is_pii: True
+    name: CIF por patrón
+    match: ppr
+    type: data
+    rule: Word('ABCDEFGHJKLMNPQRSUVW', exact=1) + Word(nums, exact=7) + Word(alphanums, exact=1)
+    maxlen: 9
+    minlen: 9
+  esvatfield:
+    key: esvat
+    is_pii: True
+    name: IVA intracomunitario por nombre de campo
+    rule: iva,iva_intra,numero_iva,es_vat
+    type: field
+    match: text
+  esvatvalue:
+    key: esvat
+    is_pii: True
+    name: IVA intracomunitario por valor
+    match: ppr
+    type: data
+    rule: Literal('ES') + Word(alphanums, exact=9)
+    maxlen: 11
+    minlen: 11

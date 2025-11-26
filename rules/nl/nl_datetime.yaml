@@ -2,6 +2,7 @@ name: nl-datetime
 description: Dutch date and time common patterns
 context: datetime
 lang: nl
+country_code: nl
 rules:
   nlyearknown:
     key: year
@@ -9,4 +10,23 @@ rules:
     rule: jaar
     type: field
     match: text
-
+  nldatefield:
+    key: date
+    name: Date field by Dutch names
+    rule: datum,startdatum,einddatum,aanmaakdatum,laatst_bijgewerkt
+    type: field
+    match: text
+  nltimefield:
+    key: time
+    name: Time field by Dutch names
+    rule: tijd,starttijd,eindtijd
+    type: field
+    match: text
+  nldatetimepattern:
+    key: datetime
+    name: DateTime pattern in Dutch format
+    match: ppr
+    type: data
+    rule: Word(nums, exact=2) + Literal('-').suppress() + Word(nums, exact=2) + Literal('-').suppress() + Word(nums, exact=4) + Optional(Literal(' ').suppress() + Word(nums, exact=2) + Literal(':').suppress() + Word(nums, exact=2))
+    maxlen: 16
+    minlen: 10

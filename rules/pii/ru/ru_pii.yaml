@@ -2,6 +2,7 @@ name: ru-pii
 description: Person identifiable information (PII) for Russian language and Russian data
 context: pii
 lang: ru
+country_code: ru
 rules:
   rubirthdayknown:
     key: birthday
@@ -48,3 +49,38 @@ rules:
     priority: 1
     match: ppr
     type: data
+  rupassportforeignfield:
+    key: rupassport
+    is_pii: True
+    name: Russian passport foreign number by field name
+    rule: passport,passport_number,загранпаспорт,номер_загранпаспорта
+    type: field
+    match: text
+  russurnamefield:
+    key: russurname
+    is_pii: True
+    name: Russian surname by field name
+    rule: surname,lastname,last_name,фамилия,familiya
+    type: field
+    match: text
+  rusfirstnamefield:
+    key: rusfirstname
+    is_pii: True
+    name: Russian first name by field name
+    rule: firstname,first_name,имя,imya
+    type: field
+    match: text
+  rusmidnamefield:
+    key: rusmidname
+    is_pii: True
+    name: Russian middle name by field name
+    rule: middlename,middle_name,отчество,otchestvo
+    type: field
+    match: text
+  rusfullnamefield:
+    key: rusfullname
+    is_pii: True
+    name: Russian full name by field name
+    rule: fullname,full_name,полное_имя,polnoe_imya,фио,fio
+    type: field
+    match: text

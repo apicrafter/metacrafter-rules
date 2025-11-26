@@ -2,6 +2,7 @@ name: values
 description: Numerical/float values
 context: values
 lang: common
+country_code: xx
 rules:
   percentagebyfield:
     key: percentage

@@ -2,6 +2,7 @@ name: identifiers
 description: Basic identifiers
 context: identifiers
 lang: common
+country_code: xx
 rules:
   uuidbyvalue:
     key: uuid

@@ -1,0 +1,78 @@
+name: ca-tax
+description: Canadian tax identifiers (BN, GST/HST, SIN)
+context: finances
+lang: ca
+country_code: ca
+rules:
+  cabnfield:
+    key: cabn
+    name: Canada Business Number by field name
+    rule: business_number,bn,canada_bn,cra_bn
+    type: field
+    match: text
+  cabnvalue:
+    key: cabn
+    name: Canada Business Number by value
+    match: ppr
+    type: data
+    rule: Word(nums, exact=9)
+    maxlen: 9
+    minlen: 9
+  cagstfield:
+    key: cagst
+    name: GST/HST account number by field name
+    rule: gst_number,gst_hst_number,gsthst,canada_gst
+    type: field
+    match: text
+  cagstvalue:
+    key: cagst
+    name: GST/HST account number by value
+    match: ppr
+    type: data
+    rule: Word(nums, exact=9) + Literal('RT').suppress() + Word(nums, exact=4)
+    maxlen: 15
+    minlen: 15
+  caprogramfield:
+    key: caprogramacct
+    name: CRA program account number by field name
+    rule: program_account,program_account_number,cra_program
+    type: field
+    match: text
+  caprogramvalue:
+    key: caprogramacct
+    name: CRA program account number by value
+    match: ppr
+    type: data
+    rule: Word(nums, exact=9) + Word('RTSCAMRP', exact=2) + Word(nums, exact=4)
+    maxlen: 15
+    minlen: 15
+  cacharityfield:
+    key: cacharity
+    name: Charity registration number by field name
+    rule: charity_number,charity_registration,charity_bn
+    type: field
+    match: text
+  cacharityvalue:
+    key: cacharity
+    name: Charity registration number by value
+    match: ppr
+    type: data
+    rule: Word(nums, exact=9) + Literal('RR').suppress() + Word(nums, exact=4)
+    maxlen: 15
+    minlen: 15
+  casinfield:
+    key: casin
+    is_pii: True
+    name: Social Insurance Number by field name
+    rule: sin,sin_number,canadian_sin
+    type: field
+    match: text
+  casinvalue:
+    key: casin
+    is_pii: True
+    name: Social Insurance Number by value
+    match: ppr
+    type: data
+    rule: Word(nums, exact=9)
+    maxlen: 9
+    minlen: 9
