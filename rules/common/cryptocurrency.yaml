@@ -1,0 +1,177 @@
+name: cryptocurrency
+description: Cryptocurrency addresses and keys
+context: cryptocurrency
+lang: common
+country_code: xx
+rules:
+  # Bitcoin P2PKH Address (starts with '1')
+  p2pkhaddr_by_field:
+    key: p2pkhaddr
+    name: Bitcoin P2PKH address by field name
+    rule: bitcoin_address,btc_address,wallet_address,bitcoin_wallet,btc_wallet,bitcoin_addr,btc_addr
+    match: text
+    type: field
+    priority: 1
+  p2pkhaddr:
+    key: p2pkhaddr
+    name: Bitcoin P2PKH address
+    maxlen: 35
+    minlen: 26
+    priority: 1
+    match: ppr
+    type: data
+    rule: Literal('1') + Word('123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz', min=25, max=34)
+    validator: metacrafterext.rules.common.crypto.validate_base58_checksum
+  # Bitcoin P2SH Address (starts with '3')
+  p2shaddr_by_field:
+    key: p2shaddr
+    name: Bitcoin P2SH address by field name
+    rule: bitcoin_p2sh,btc_p2sh,p2sh_address,script_hash_address
+    match: text
+    type: field
+    priority: 1
+  p2shaddr:
+    key: p2shaddr
+    name: Bitcoin P2SH address
+    maxlen: 35
+    minlen: 26
+    priority: 1
+    match: ppr
+    type: data
+    rule: Literal('3') + Word('123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz', min=25, max=34)
+    validator: metacrafterext.rules.common.crypto.validate_base58_checksum
+  # Bitcoin P2WPKH Address (Bech32, starts with 'bc1')
+  p2wpkhaddr_by_field:
+    key: p2wpkhaddr
+    name: Bitcoin P2WPKH address by field name
+    rule: bitcoin_segwit,btc_segwit,p2wpkh_address,bech32_address
+    match: text
+    type: field
+    priority: 1
+  p2wpkhaddr:
+    key: p2wpkhaddr
+    name: Bitcoin P2WPKH address (Bech32)
+    maxlen: 62
+    minlen: 14
+    priority: 1
+    match: ppr
+    type: data
+    rule: Literal('bc1') + Word('qpzry9x8gf2tvdw0s3jn54khce6mua7l', min=6, max=59)
+    validator: metacrafterext.rules.common.crypto.validate_bech32_checksum
+  # Bitcoin P2WSH Address (Bech32, starts with 'bc1')
+  p2wshaddr_by_field:
+    key: p2wshaddr
+    name: Bitcoin P2WSH address by field name
+    rule: bitcoin_p2wsh,btc_p2wsh,p2wsh_address
+    match: text
+    type: field
+    priority: 1
+  p2wshaddr:
+    key: p2wshaddr
+    name: Bitcoin P2WSH address (Bech32)
+    maxlen: 62
+    minlen: 14
+    priority: 1
+    match: ppr
+    type: data
+    rule: Literal('bc1') + Word('qpzry9x8gf2tvdw0s3jn54khce6mua7l', min=6, max=59)
+    validator: metacrafterext.rules.common.crypto.validate_bech32_checksum
+  # Ethereum Address
+  ethereum_address_by_field:
+    key: ethereum_address
+    name: Ethereum address by field name
+    rule: ethereum_address,eth_address,eth_wallet,ethereum_wallet,eth_addr,ethereum_addr
+    match: text
+    type: field
+    priority: 1
+  ethereum_address:
+    key: ethereum_address
+    name: Ethereum address
+    maxlen: 42
+    minlen: 42
+    priority: 1
+    match: ppr
+    type: data
+    rule: Literal('0x') + Word(hexnums, exact=40)
+    validator: metacrafterext.rules.common.crypto.validate_ethereum_address
+  # WIF Compressed Private Key (starts with 'K' or 'L')
+  wifaddrcomp_by_field:
+    key: wifaddrcomp
+    name: WIF compressed private key by field name
+    rule: wif_compressed,wif_comp,private_key_compressed,bitcoin_private_key_compressed
+    match: text
+    type: field
+    priority: 1
+  wifaddrcomp:
+    key: wifaddrcomp
+    name: WIF compressed private key
+    maxlen: 52
+    minlen: 51
+    priority: 1
+    match: ppr
+    type: data
+    rule: Word('KL', exact=1) + Word('123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz', exact=50)
+    validator: metacrafterext.rules.common.crypto.validate_base58_checksum
+  # WIF Uncompressed Private Key (starts with '5')
+  wifaddruncomp_by_field:
+    key: wifaddruncomp
+    name: WIF uncompressed private key by field name
+    rule: wif_uncompressed,wif_uncomp,private_key_uncompressed,bitcoin_private_key_uncompressed
+    match: text
+    type: field
+    priority: 1
+  wifaddruncomp:
+    key: wifaddruncomp
+    name: WIF uncompressed private key
+    maxlen: 52
+    minlen: 51
+    priority: 1
+    match: ppr
+    type: data
+    rule: Literal('5') + Word('123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz', exact=50)
+    validator: metacrafterext.rules.common.crypto.validate_base58_checksum
+  # BIP-32 Extended Key (starts with 'xprv' or 'xpub')
+  bip32addr_by_field:
+    key: bip32addr
+    name: BIP-32 extended key by field name
+    rule: bip32_key,bip32_extended_key,xprv,xpub,hd_wallet_key,extended_private_key,extended_public_key
+    match: text
+    type: field
+    priority: 1
+  bip32addr_xprv:
+    key: bip32addr
+    name: BIP-32 extended private key (xprv)
+    maxlen: 111
+    minlen: 111
+    priority: 1
+    match: ppr
+    type: data
+    rule: Literal('xprv') + Word('123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz', exact=107)
+    validator: metacrafterext.rules.common.crypto.validate_base58_checksum
+  bip32addr_xpub:
+    key: bip32addr
+    name: BIP-32 extended public key (xpub)
+    maxlen: 111
+    minlen: 111
+    priority: 1
+    match: ppr
+    type: data
+    rule: Literal('xpub') + Word('123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz', exact=107)
+    validator: metacrafterext.rules.common.crypto.validate_base58_checksum
+  # Generic cryptocurrency address fields
+  crypto_address_by_field:
+    key: crypto_address
+    name: Cryptocurrency address by field name (generic)
+    rule: crypto_address,cryptocurrency_address,wallet_address,blockchain_address,digital_wallet
+    match: text
+    type: field
+    priority: 2
+  # Private key fields (generic)
+  private_key_by_field:
+    key: private_key
+    name: Private key by field name (generic)
+    rule: private_key,privatekey,privkey,secret_key,seed,mnemonic,wallet_seed
+    match: text
+    type: field
+    priority: 2
+

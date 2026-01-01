@@ -1,0 +1,23 @@
+name: am-transport
+description: Armenian transport identifiers
+context: transport
+lang: hy
+country_code: am
+rules:
+  amvehicleplatefield:
+    key: am_vehicle_plate
+    name: Armenian vehicle registration plate by field name
+    rule: arm_vehicle_plate,am_vehicle_plate,armenian_plate,license_plate_am,vehicle_plate_am,reg_plate_am,համարանիշ,մեքենայի_համարանիշ
+    type: field
+    match: text
+  amvehicleplatevalue:
+    key: am_vehicle_plate
+    name: Armenian vehicle registration plate by pattern
+    match: ppr
+    type: data
+    rule: (Word(nums, min=2, max=3) + Word(alphas, exact=2) + Word(nums, min=2, max=3)) | (Word(nums, exact=2) + Word(alphas, exact=2) + Word(nums, exact=3))
+    maxlen: 8
+    minlen: 7
+    priority: 1
+    validator: metacrafterext.rules.am.transport.validate_am_vehicle_plate
+

@@ -11,6 +11,7 @@ rules:
     rule: birthday,dayofbirth,date_of_birth,birth_day,birth_date,birthdate,dateofbirth
     type: field
     match: text
+    priority: 1
   deathdayknown:
     key: deathday
     is_pii: True
@@ -18,6 +19,7 @@ rules:
     rule: deathday,day_of_death,date_of_death,death_date,deathdate
     type: field
     match: text
+    priority: 1
   genderbyknown:
     key: gender
     is_pii: True
@@ -25,6 +27,7 @@ rules:
     rule: gender
     type: field
     match: text
+    priority: 1
   nationalitybyknown:
     key: nationality
     is_pii: True
@@ -32,6 +35,7 @@ rules:
     rule: nationality
     type: field
     match: text
+    priority: 1
   passwordbyknown:
     key: password
     is_pii: True
@@ -39,6 +43,7 @@ rules:
     rule: password,passwd,user_password,encrypted_password,user_password,password_digest,password_salt,password_hash,encryptedpassword,passwordfieldZ
     type: field
     match: text
+    priority: 1
   passportbyknown:
     key: passport
     is_pii: True
@@ -46,6 +51,7 @@ rules:
     rule: passport
     type: field
     match: text
+    priority: 1
   creditcardbyknown:
     key: bankcard
     is_pii: True
@@ -53,6 +59,7 @@ rules:
     rule: creditcard,credit_card
     type: field
     match: text
+    priority: 1
   usernamebyknown:
     key: username
     is_pii: True
@@ -60,3 +67,29 @@ rules:
     rule: username,userid,login,user_name,user_id,user_nm,login_username,usernamefield
     type: field
     match: text
+    priority: 1
+  enbirthdayknown:
+    key: birthday
+    is_pii: True
+    name: Birthday by English field name
+    rule: dob,dateofbirth,date_of_birth
+    type: field
+    match: text
+    priority: 1
+  ennationalitybyvalue:
+    key: ennationality
+    name: Nationality in English by value
+    rule: Belarusian,Russian,Italian,Israeli,Nigerian,French,British,English,Armenian,Moldovan,Kittitian,Ukrainian,Latvian,Indian,Serbian,Azerbaijani,Turkish,Canadian,Croatian,Chinese,Pakistani,Vietnamese,Syrian,Danish,Lithuanian,Bulgarian
+    maxlen: 11
+    minlen: 6
+    type: data
+    match: text
+    priority: 2
+  enpassportfield:
+    key: passport
+    is_pii: True
+    name: Passport number by English field name
+    rule: passport,passport_no,passport_number,passportnum,passportnumbr
+    type: field
+    match: text
+    priority: 1

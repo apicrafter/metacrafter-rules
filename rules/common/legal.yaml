@@ -1,0 +1,42 @@
+name: legal
+description: Legal and compliance identifiers
+context: legal
+lang: common
+country_code: xx
+rules:
+  contractidknown:
+    key: contract_id
+    name: Contract identifier by known name
+    rule: contract_id,contract_number,contract_no,agreement_id,agreement_number
+    type: field
+    match: text
+    priority: 1
+  casenumberknown:
+    key: case_number
+    name: Case number by known name
+    rule: case_number,case_no,case_id,legal_case_number,court_case_number
+    type: field
+    match: text
+    priority: 1
+  legaldocumentknown:
+    key: legal_document
+    name: Legal document type by known name
+    rule: legal_document,document_type,legal_doc_type,contract_type,agreement_type
+    type: field
+    match: text
+    priority: 1
+  compliancestatusknown:
+    key: compliance_status
+    name: Compliance status by known name
+    rule: compliance_status,compliance_flag,gdpr_compliant,ccpa_compliant,regulatory_compliance
+    type: field
+    match: text
+    priority: 1
+  licensenumberknown:
+    key: license_number
+    name: License number by known name
+    rule: license_number,license_no,licence_number,permit_number,registration_number
+    type: field
+    match: text
+    priority: 1
+

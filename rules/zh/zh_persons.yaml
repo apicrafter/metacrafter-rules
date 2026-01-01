@@ -1,0 +1,31 @@
+name: zh-persons
+description: Chinese person name patterns
+context: persons
+lang: zh
+country_code: xx
+rules:
+  zhpersonnameknown:
+    key: person_name
+    is_pii: True
+    name: Chinese person name by known name
+    rule: 姓名,名字,全名,中文名,真实姓名,用户姓名
+    type: field
+    match: text
+    priority: 1
+  zhfirstnameknown:
+    key: firstname
+    is_pii: True
+    name: Chinese first name by known name
+    rule: 名,名字,名
+    type: field
+    match: text
+    priority: 1
+  zhlastnameknown:
+    key: lastname
+    is_pii: True
+    name: Chinese last name by known name
+    rule: 姓,姓氏
+    type: field
+    match: text
+    priority: 1
+

@@ -25,6 +25,8 @@ rules:
     rule: passport,pasaporte,numero_pasaporte
     type: field
     match: text
+# This rule generates a lot of False positives because the pattern Word(alphanums, min=2, max=3) matches many common 2-3 character codes
+# It is marked as imprecise and could be filtered if it's set
   espassportvalue:
     key: espassport
     is_pii: True
@@ -34,6 +36,8 @@ rules:
     rule: Word(alphanums, min=2, max=3) + Word(nums, exact=6)
     maxlen: 9
     minlen: 8
+    validator: metacrafterext.rules.es.validators.validate_es_passport
+    imprecise: 1
   esniefield:
     key: esnie
     is_pii: True

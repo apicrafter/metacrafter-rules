@@ -4,9 +4,422 @@ context: software
 lang: common
 country_code: xx
 rules:
+  # File/Data Size Detection
   filesizebyknown:
     key: filesize
     name: File size by name
-    rule: file_size,filesize
+    rule: file_size,filesize,file_size_bytes,file_size_mb,file_size_gb
     type: field
     match: text
+    priority: 1
+  datasizebyknown:
+    key: datasize
+    name: Data size by name
+    rule: data_size,datasize,size,data_size_bytes,data_size_mb,data_size_gb,dataset_size,software_size
+    type: field
+    match: text
+    priority: 1
+  datasizebyvalue:
+    key: datasize
+    name: Data size by value pattern
+    match: ppr
+    type: data
+    rule: Word(nums) + Optional(Literal('.') + Word(nums)) + Optional(Word(alphas, min=1, max=4))
+    minlen: 2
+    maxlen: 20
+    priority: 1
+    validator: metacrafterext.rules.common.software.validate_datasize
+    imprecise: 1
+  filesizebyvalue:
+    key: filesize
+    name: File size by value pattern
+    match: ppr
+    type: data
+    rule: Word(nums) + Optional(Literal('.') + Word(nums)) + Optional(Word(alphas, min=1, max=4))
+    minlen: 2
+    maxlen: 20
+    priority: 1
+    validator: metacrafterext.rules.common.software.validate_datasize
+    imprecise: 1
+
+  # Programming Language Detection
+  programminglangbyknown:
+    key: programminglang
+    name: Programming language by field name
+    rule: language,programming_language,lang,code_language,programming_lang,prog_language,dev_language
+    type: field
+    match: text
+    priority: 1
+  programminglangbyvalue:
+    key: programminglang
+    name: Programming language by value
+    match: ppr
+    type: data
+    rule: Word(alphas + '-+', min=1, max=30)
+    minlen: 1
+    maxlen: 30
+    priority: 2
+    validator: metacrafterext.rules.common.software.validate_programming_language
+    imprecise: 1
+
+  # Hash Detection - MD5/SHA formats
+  imphashbyknown:
+    key: imphash
+    name: Import hash (imphash) by field name
+    rule: imphash,import_hash,pe_import_hash,imp_hash
+    type: field
+    match: text
+    priority: 1
+  imphashbyvalue:
+    key: imphash
+    name: Import hash (imphash) by value
+    match: ppr
+    type: data
+    rule: Word(hexnums, exact=32)
+    minlen: 32
+    maxlen: 32
+    priority: 1
+    fieldrule: imphash,import_hash,pe_import_hash
+    fieldrulematch: text
+  authentihashbyknown:
+    key: authentihash
+    name: Authentihash by field name
+    rule: authentihash,auth_hash,authenticode_hash,pe_auth_hash
+    type: field
+    match: text
+    priority: 1
+  authentihashbyvalue:
+    key: authentihash
+    name: Authentihash by value
+    match: ppr
+    type: data
+    rule: Word(hexnums, exact=64)
+    minlen: 64
+    maxlen: 64
+    priority: 1
+    fieldrule: authentihash,auth_hash,authenticode_hash
+    fieldrulematch: text
+  sha1hashbyvalue:
+    key: sha1
+    name: SHA-1 hash by value
+    match: ppr
+    type: data
+    rule: Word(hexnums, exact=40)
+    minlen: 40
+    maxlen: 40
+    priority: 2
+    fieldrule: sha1,sha1_hash,sha_1
+    fieldrulematch: text
+  sha256hashbyvalue:
+    key: sha256
+    name: SHA-256 hash by value
+    match: ppr
+    type: data
+    rule: Word(hexnums, exact=64)
+    minlen: 64
+    maxlen: 64
+    priority: 2
+    fieldrule: sha256,sha256_hash,sha_256
+    fieldrulematch: text
+  md5hashbyvalue:
+    key: md5
+    name: MD5 hash by value
+    match: ppr
+    type: data
+    rule: Word(hexnums, exact=32)
+    minlen: 32
+    maxlen: 32
+    priority: 2
+    fieldrule: md5,md5_hash,md5sum
+    fieldrulematch: text
+  ssdeepbyknown:
+    key: ssdeep
+    name: SSDEEP hash by field name
+    rule: ssdeep,ssdeep_hash,ssdeep_hash_value,similarity_hash
+    type: field
+    match: text
+    priority: 1
+  ssdeepbyvalue:
+    key: ssdeep
+    name: SSDEEP hash by value pattern
+    match: ppr
+    type: data
+    rule: Word(nums) + Literal(':') + Word(alphanums + '+/=', min=1) + Literal(':') + Word(alphanums + '+/=', min=1)
+    minlen: 10
+    maxlen: 200
+    priority: 1
+    fieldrule: ssdeep,ssdeep_hash,similarity_hash
+    fieldrulematch: text
+    validator: metacrafterext.rules.common.software.validate_hash_format
+  tlshbyknown:
+    key: tlsh
+    name: TLSH hash by field name
+    rule: tlsh,tlsh_hash,trend_micro_hash
+    type: field
+    match: text
+    priority: 1
+  tlshbyvalue:
+    key: tlsh
+    name: TLSH hash by value
+    match: ppr
+    type: data
+    rule: Literal('T1') + Word(hexnums, min=68, max=70)
+    minlen: 70
+    maxlen: 72
+    priority: 1
+    fieldrule: tlsh,tlsh_hash
+    fieldrulematch: text
+    validator: metacrafterext.rules.common.software.validate_hash_format
+  telfhashbyknown:
+    key: telfhash
+    name: telfhash by field name
+    rule: telfhash,telf_hash,trend_elf_hash
+    type: field
+    match: text
+    priority: 1
+  telfhashbyvalue:
+    key: telfhash
+    name: telfhash by value
+    match: ppr
+    type: data
+    rule: Word(hexnums, min=32, max=64)
+    minlen: 32
+    maxlen: 64
+    priority: 1
+    fieldrule: telfhash,telf_hash
+    fieldrulematch: text
+    validator: metacrafterext.rules.common.software.validate_hash_format
+  vhashbyknown:
+    key: vhash
+    name: VHash by field name
+    rule: vhash,v_hash,virustotal_hash
+    type: field
+    match: text
+    priority: 1
+  vhashbyvalue:
+    key: vhash
+    name: VHash by value
+    match: ppr
+    type: data
+    rule: Word(hexnums, min=16, max=128)
+    minlen: 16
+    maxlen: 128
+    priority: 1
+    fieldrule: vhash,v_hash
+    fieldrulematch: text
+    validator: metacrafterext.rules.common.software.validate_hash_format
+  richpeheaderhashbyknown:
+    key: richpeheaderhash
+    name: Rich PE Header hash by field name
+    rule: rich_pe_header,rich_pe_header_hash,rich_header_hash,pe_rich_header
+    type: field
+    match: text
+    priority: 1
+  richpeheaderhashbyvalue:
+    key: richpeheaderhash
+    name: Rich PE Header hash by value
+    match: ppr
+    type: data
+    rule: Word(hexnums, min=16, max=128)
+    minlen: 16
+    maxlen: 128
+    priority: 1
+    fieldrule: rich_pe_header,rich_header_hash
+    fieldrulematch: text
+    validator: metacrafterext.rules.common.software.validate_hash_format
+
+  # Windows Registry Key Detection
+  winregkeybyknown:
+    key: winregkey
+    name: Windows Registry key by field name
+    rule: registry_key,regkey,registry_path,reg_path,windows_registry_key,registry_entry
+    type: field
+    match: text
+    priority: 1
+  winregkeybyvalue:
+    key: winregkey
+    name: Windows Registry key by value pattern
+    match: ppr
+    type: data
+    rule: Literal('HKEY_') + Word(alphas + '_', min=1) + Optional(Literal('\\') + Word(printables, min=1))
+    minlen: 6
+    maxlen: 500
+    priority: 1
+    validator: metacrafterext.rules.common.software.validate_winregkey
+
+  # Version Number Detection
+  versionbyknown:
+    key: version
+    name: Software version by field name
+    rule: version,ver,app_version,software_version,product_version,version_number,app_ver,sw_version,pkg_version
+    type: field
+    match: text
+    priority: 1
+  semverbyvalue:
+    key: semver
+    name: Semantic version by value
+    match: ppr
+    type: data
+    rule: Word(nums) + Literal('.') + Word(nums) + Literal('.') + Word(nums) + Optional(Literal('-') + Word(alphanums + '-.', min=1)) + Optional(Literal('+') + Word(alphanums + '.', min=1))
+    minlen: 5
+    maxlen: 50
+    priority: 1
+    validator: metacrafterext.rules.common.software.validate_semver
+  versionbyvalue:
+    key: version
+    name: Version number by value pattern
+    match: ppr
+    type: data
+    rule: Optional(Literal('v') | Literal('V')) + Word(nums) + Optional(Literal('.') + Word(nums)) + Optional(Literal('.') + Word(nums)) + Optional(Literal('.') + Word(nums))
+    minlen: 1
+    maxlen: 30
+    priority: 2
+    validator: metacrafterext.rules.common.software.validate_version
+    imprecise: 1
+  dateversionbyvalue:
+    key: version
+    name: Date-based version by value
+    match: ppr
+    type: data
+    rule: Word(nums, exact=4) + Literal('.') + Word(nums, min=1, max=2) + Optional(Literal('.') + Word(nums, min=1, max=2))
+    minlen: 6
+    maxlen: 10
+    priority: 2
+    validator: metacrafterext.rules.common.software.validate_version
+    imprecise: 1
+
+  # Package Identifier Detection
+  packagebyknown:
+    key: package_name
+    name: Package name by field name
+    rule: package,package_name,package_id,dependency,dep,module_name,library_name
+    type: field
+    match: text
+    priority: 1
+  npmpackagebyvalue:
+    key: package_name
+    name: npm package by value
+    match: ppr
+    type: data
+    rule: Optional(Literal('@') + Word(alphanums + '-_', min=1) + Literal('/')) + Word(alphanums + '-_.', min=1) + Optional(Literal('@') + Word(printables, min=1))
+    minlen: 1
+    maxlen: 200
+    priority: 1
+    fieldrule: package,package_name,npm_package
+    fieldrulematch: text
+    validator: metacrafterext.rules.common.software.validate_npm_package
+    imprecise: 1
+  pypipackagebyvalue:
+    key: package_name
+    name: PyPI package by value
+    match: ppr
+    type: data
+    rule: Word(alphanums + '-_.', min=1) + Optional(Word('=<>!~', min=1, max=3) + Word(printables, min=1))
+    minlen: 1
+    maxlen: 200
+    priority: 1
+    fieldrule: package,package_name,pypi_package,python_package
+    fieldrulematch: text
+    validator: metacrafterext.rules.common.software.validate_pypi_package
+    imprecise: 1
+  mavenpackagebyvalue:
+    key: package_name
+    name: Maven coordinate by value
+    match: ppr
+    type: data
+    rule: Word(printables, min=1) + Literal(':') + Word(printables, min=1) + Optional(Literal(':') + Word(printables, min=1))
+    minlen: 3
+    maxlen: 200
+    priority: 1
+    fieldrule: package,package_name,maven_coordinate,maven_package
+    fieldrulematch: text
+    validator: metacrafterext.rules.common.software.validate_maven_coordinate
+    imprecise: 1
+  dockerimagebyvalue:
+    key: package_name
+    name: Docker image by value
+    match: ppr
+    type: data
+    rule: Word(alphanums + '-_./', min=1) + Optional(Literal(':') + Word(alphanums + '-_.', min=1)) + Optional(Literal('@') + Word('sha', exact=3) + Literal(':') + Word(hexnums, min=32))
+    minlen: 1
+    maxlen: 300
+    priority: 1
+    fieldrule: docker_image,docker_image_name,container_image,image_name
+    fieldrulematch: text
+    validator: metacrafterext.rules.common.software.validate_docker_image
+    imprecise: 1
+
+  # Software License Detection
+  licensebyknown:
+    key: software_license
+    name: Software license by field name
+    rule: license,licence,software_license,license_type,lic_type,spdx_license,open_source_license
+    type: field
+    match: text
+    priority: 1
+  spdxlicensebyvalue:
+    key: software_license
+    name: SPDX license identifier by value
+    match: ppr
+    type: data
+    rule: Word(alphanums + '-.', min=1, max=50)
+    minlen: 2
+    maxlen: 50
+    priority: 1
+    fieldrule: license,licence,software_license,spdx_license
+    fieldrulematch: text
+    validator: metacrafterext.rules.common.software.validate_spdx_license
+    imprecise: 1
+
+  # Build/CI Identifiers
+  commithashbyknown:
+    key: commit_hash
+    name: Git commit hash by field name
+    rule: commit_hash,commit,git_commit,commit_id,revision,rev,sha,commit_sha
+    type: field
+    match: text
+    priority: 1
+  commithashbyvalue:
+    key: commit_hash
+    name: Git commit hash by value
+    match: ppr
+    type: data
+    rule: Word(hexnums, min=7, max=64)
+    minlen: 7
+    maxlen: 64
+    priority: 1
+    fieldrule: commit_hash,commit,git_commit,sha,commit_sha
+    fieldrulematch: text
+    validator: metacrafterext.rules.common.software.validate_commit_hash
+  buildnumberbyknown:
+    key: build_number
+    name: Build number by field name
+    rule: build_number,build,build_id,build_num,ci_build,jenkins_build,travis_build
+    type: field
+    match: text
+    priority: 1
+  buildnumberbyvalue:
+    key: build_number
+    name: Build number by value
+    match: ppr
+    type: data
+    rule: Optional(Word('build-BUILD', exact=5) | Literal('r') | Literal('REV-') | Literal('rev-')) + Word(alphanums + '-_', min=1)
+    minlen: 1
+    maxlen: 50
+    priority: 1
+    fieldrule: build_number,build,build_id,ci_build
+    fieldrulematch: text
+    validator: metacrafterext.rules.common.software.validate_build_number
+    imprecise: 1
+  releasetagbyvalue:
+    key: version
+    name: Release tag by value
+    match: ppr
+    type: data
+    rule: (Literal('v') | Literal('V') | Literal('release-') | Literal('RELEASE-')) + Word(alphanums + '-_.', min=1)
+    minlen: 2
+    maxlen: 50
+    priority: 2
+    fieldrule: tag,release_tag,version_tag,git_tag
+    fieldrulematch: text
+    imprecise: 1

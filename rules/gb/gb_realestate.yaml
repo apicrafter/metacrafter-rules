@@ -1,0 +1,35 @@
+name: gb-realestate
+description: UK real estate and property identifiers
+context: realestate
+lang: en
+country_code: gb
+rules:
+  gbuprnfield:
+    key: gbuprn
+    name: UK UPRN by field name
+    rule: uprn,unique_property_reference_number,property_reference,property_reference_number,uprn_number
+    type: field
+    match: text
+  gbuprnvalue:
+    key: gbuprn
+    name: UK UPRN by pattern
+    match: ppr
+    type: data
+    rule: Word(nums, exact=12)
+    maxlen: 12
+    minlen: 12
+  gbpostcodefield:
+    key: gbpostcode
+    name: UK postal code by field name (for property identification)
+    rule: postcode,postal_code,zip_code,uk_postcode,property_postcode
+    type: field
+    match: text
+  gbpostcodevalue:
+    key: gbpostcode
+    name: UK postal code by pattern
+    match: ppr
+    type: data
+    rule: Word(alphas, min=1, max=2) + Word(nums, min=1, max=2) + Optional(Word(nums, exact=1)) + Optional(Literal(' ')) + Word(nums, exact=1) + Word(alphas, exact=2)
+    maxlen: 8
+    minlen: 5
+

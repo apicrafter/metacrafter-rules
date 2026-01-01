@@ -1,0 +1,51 @@
+name: eg-finances
+description: Egyptian financial identifiers
+context: finances
+lang: ar
+country_code: eg
+rules:
+  egtaxnumberfield:
+    key: egtaxnumber
+    name: Egyptian tax number by field name
+    rule: tax_number,tax_id,vat_number,egyptian_tax,الرقم_الضريبي
+    type: field
+    match: text
+  egtaxnumbervalue:
+    key: egtaxnumber
+    name: Egyptian tax number by pattern
+    match: ppr
+    type: data
+    rule: Word(nums, min=9, max=15)
+    maxlen: 15
+    minlen: 9
+    imprecise: 1
+  egbankaccountfield:
+    key: egbankaccount
+    name: Egyptian bank account by field name
+    rule: bank_account,account_number,iban,egyptian_iban,رقم_الحساب
+    type: field
+    match: text
+  egbankaccountvalue:
+    key: egbankaccount
+    name: Egyptian bank account by pattern
+    match: ppr
+    type: data
+    rule: Literal('EG') + Word(nums, exact=2) + Word(alphanums, exact=4) + Word(nums, min=16, max=24)
+    maxlen: 30
+    minlen: 28
+    imprecise: 1
+  egibanfield:
+    key: egiban
+    name: Egyptian IBAN by field name
+    rule: iban,iban_number,egyptian_iban
+    type: field
+    match: text
+  egibanvalue:
+    key: egiban
+    name: Egyptian IBAN by pattern
+    match: ppr
+    type: data
+    rule: Literal('EG') + Word(nums, exact=2) + Word(alphanums, exact=4) + Word(nums, min=16, max=24)
+    maxlen: 30
+    minlen: 28
+

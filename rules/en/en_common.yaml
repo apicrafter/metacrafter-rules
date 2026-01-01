@@ -10,24 +10,28 @@ rules:
     rule: title,name,shortname,fullname,short name,title_en
     type: field
     match: text
+    priority: 1
   encommentknown:
     key: comment
     name: English comment/note by known
     rule: comment,note,notes,comments,remarks
     type: field
     match: text
+    priority: 1
   endescriptionknown:
     key: description
     name: English description by known
     rule: description,details
     type: field
     match: text
+    priority: 1
   encategoryknown:
     key: category
     name: English category by known
     rule: category
     type: field
     match: text
+    priority: 1
 
 
 

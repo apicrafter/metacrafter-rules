@@ -1,0 +1,41 @@
+name: kr-geo
+description: Korean geographic identifiers
+context: geo
+lang: ko
+country_code: kr
+rules:
+  krpostcodefield:
+    key: krpostcode
+    name: Korean postal code by field name
+    rule: postcode,우편번호,postal_code,zip_code,zipcode
+    type: field
+    match: text
+  krpostcodevalue:
+    key: krpostcode
+    name: Korean postal code by pattern
+    match: ppr
+    type: data
+    rule: Word(nums, exact=5) | (Word(nums, exact=5) + Literal('-') + Word(nums, exact=3))
+    maxlen: 9
+    minlen: 5
+  krprovincefield:
+    key: krprovince
+    name: Korean province by field name
+    rule: province,도,province_name,도명
+    type: field
+    match: text
+  krprovincevalue:
+    key: krprovince
+    name: Korean province name by value
+    rule: Seoul,Busan,Daegu,Incheon,Gwangju,Daejeon,Ulsan,Sejong,Gyeonggi,Gangwon,North Chungcheong,South Chungcheong,North Jeolla,South Jeolla,North Gyeongsang,South Gyeongsang,Jeju
+    maxlen: 20
+    minlen: 4
+    type: data
+    match: text
+  krcityfield:
+    key: krcity
+    name: Korean city name by field name
+    rule: city,시,city_name,시명
+    type: field
+    match: text
+

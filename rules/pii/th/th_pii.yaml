@@ -1,0 +1,56 @@
+name: th-pii
+description: Thai person identifiable information (PII)
+context: pii
+lang: th
+country_code: th
+rules:
+  thidcardfield:
+    key: thidcard
+    is_pii: True
+    name: Thai ID card by field name
+    rule: thai_id,thai_id_card,บัตรประชาชน,เลขบัตรประชาชน,เลขประจำตัวประชาชน
+    type: field
+    match: text
+  thidcardvalue:
+    key: thidcard
+    is_pii: True
+    name: Thai ID card by pattern
+    match: ppr
+    type: data
+    rule: Word(nums, exact=13)
+    maxlen: 13
+    minlen: 13
+  thpassportfield:
+    key: thpassport
+    is_pii: True
+    name: Thai passport by field name
+    rule: thai_passport,passport_thai,หนังสือเดินทาง,เลขหนังสือเดินทาง
+    type: field
+    match: text
+  thpassportvalue:
+    key: thpassport
+    is_pii: True
+    name: Thai passport by pattern
+    match: ppr
+    type: data
+    rule: Word(alphas, exact=1) + Word(nums, exact=7)
+    maxlen: 8
+    minlen: 8
+  thdriverlicfield:
+    key: thdriverlic
+    is_pii: True
+    name: Thai driver license by field name
+    rule: thai_driver_license,ใบขับขี่,เลขใบขับขี่,ใบอนุญาตขับขี่
+    type: field
+    match: text
+  thdriverlicvalue:
+    key: thdriverlic
+    is_pii: True
+    name: Thai driver license by pattern
+    match: ppr
+    type: data
+    rule: Word(alphas, exact=2) + Word(nums, exact=6)
+    maxlen: 8
+    minlen: 8
+    imprecise: 1
+

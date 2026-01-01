@@ -1,0 +1,23 @@
+name: nl-pii
+description: Dutch PII identifiers
+context: pii
+lang: nl
+country_code: nl
+rules:
+  nlphoneknown:
+    key: phone
+    is_pii: True
+    name: Dutch phone number by known name
+    rule: telefoon,telefoonnummer,mobiel,mobielnummer,contactnummer
+    type: field
+    match: text
+    priority: 1
+  nlbirthdayknown:
+    key: birthday
+    is_pii: True
+    name: Dutch birthday by known name
+    rule: geboortedatum,geboorte_datum,dob
+    type: field
+    match: text
+    priority: 1
+

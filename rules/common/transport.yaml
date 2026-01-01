@@ -1,0 +1,103 @@
+name: transport
+description: Transport identifiers (airline, airport, maritime)
+context: transport
+lang: common
+country_code: xx
+rules:
+  iataairlinecodefield:
+    key: iataairlinecode
+    name: IATA airline code by field name
+    rule: iata_airline_code,iata_code,airline_code,airline_iata,airline_code_iata
+    type: field
+    match: text
+    priority: 1
+  iataairlinecodevalue:
+    key: iataairlinecode
+    name: IATA airline code by value pattern
+    match: ppr
+    type: data
+    rule: Word('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ', exact=2)
+    maxlen: 2
+    minlen: 2
+    priority: 1
+  icaoairlinecodefield:
+    key: icaoairlinecode
+    name: ICAO airline code by field name
+    rule: icao_airline_code,icao_code,airline_icao,airline_code_icao
+    type: field
+    match: text
+    priority: 1
+  icaoairlinecodevalue:
+    key: icaoairlinecode
+    name: ICAO airline code by value pattern
+    match: ppr
+    type: data
+    rule: Word('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ', exact=3)
+    maxlen: 3
+    minlen: 3
+    priority: 1
+  iataairportcodefield:
+    key: iataairportcode
+    name: IATA airport code by field name
+    rule: iata_airport_code,airport_code,airport_iata,airport_code_iata
+    type: field
+    match: text
+    priority: 1
+  iataairportcodevalue:
+    key: iataairportcode
+    name: IATA airport code by value pattern
+    match: ppr
+    type: data
+    rule: Word('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ', exact=3)
+    maxlen: 3
+    minlen: 3
+    priority: 1
+  icaoairportcodefield:
+    key: icaoairportcode
+    name: ICAO airport code by field name
+    rule: icao_airport_code,airport_icao,airport_code_icao
+    type: field
+    match: text
+    priority: 1
+  icaoairportcodevalue:
+    key: icaoairportcode
+    name: ICAO airport code by value pattern
+    match: ppr
+    type: data
+    rule: Word('ABCDEFGHIJKLMNOPQRSTUVWXYZ', exact=4)
+    maxlen: 4
+    minlen: 4
+    priority: 1
+  imonumberfield:
+    key: imonumber
+    name: IMO ship number by field name
+    rule: imo,imo_number,imo_num,ship_imo,imo_ship_number
+    type: field
+    match: text
+    priority: 1
+  imonumbervalue:
+    key: imonumber
+    name: IMO ship number by value pattern
+    match: ppr
+    type: data
+    rule: Word('123456789', exact=1) + Word(nums, exact=6)
+    maxlen: 7
+    minlen: 7
+    priority: 1
+  mmsifield:
+    key: mmsi
+    name: Maritime Mobile Service Identity (MMSI) by field name
+    rule: mmsi,mmsi_number,mmsi_num,maritime_mobile_service_identity
+    type: field
+    match: text
+    priority: 1
+  mmsivalue:
+    key: mmsi
+    name: Maritime Mobile Service Identity (MMSI) by value pattern
+    match: ppr
+    type: data
+    rule: Word(nums, exact=9)
+    maxlen: 9
+    minlen: 9
+    priority: 1
+

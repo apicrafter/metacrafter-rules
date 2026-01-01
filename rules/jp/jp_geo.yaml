@@ -1,0 +1,28 @@
+name: jp-geo
+description: Japanese geographic identifiers
+context: geo
+lang: ja
+country_code: jp
+rules:
+  jppostcodeknown:
+    key: postcode
+    name: Japanese postal code (郵便番号) by known name
+    rule: 郵便番号,郵番,郵便番号コード
+    type: field
+    match: text
+    priority: 1
+  jpcityknown:
+    key: city
+    name: Japanese city by known name
+    rule: 市区町村,市,都市,市区
+    type: field
+    match: text
+    priority: 1
+  jpprefectureknown:
+    key: prefecture
+    name: Japanese prefecture by known name
+    rule: 都道府県,県,都,道,府
+    type: field
+    match: text
+    priority: 1
+

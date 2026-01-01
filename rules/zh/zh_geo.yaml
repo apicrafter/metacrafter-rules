@@ -1,0 +1,35 @@
+name: zh-geo
+description: Chinese geographic identifiers
+context: geo
+lang: zh
+country_code: xx
+rules:
+  zhcityknown:
+    key: city
+    name: Chinese city by known name
+    rule: 城市,市,城市名称
+    type: field
+    match: text
+    priority: 1
+  zhprovinceknown:
+    key: province
+    name: Chinese province by known name
+    rule: 省,省份,省区,省级
+    type: field
+    match: text
+    priority: 1
+  zhdistrictknown:
+    key: district
+    name: Chinese district by known name
+    rule: 区,县,区县,区域
+    type: field
+    match: text
+    priority: 1
+  zhpostcodeknown:
+    key: postcode
+    name: Chinese postal code by known name
+    rule: 邮编,邮政编码,邮编号码
+    type: field
+    match: text
+    priority: 1
+

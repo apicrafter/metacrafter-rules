@@ -1,0 +1,36 @@
+name: au-finances
+description: Australian financial identifiers
+context: finances
+lang: en
+country_code: au
+rules:
+  autfnknown:
+    key: tfn
+    is_pii: True
+    name: Australian TFN (Tax File Number) by known name
+    rule: tfn,tax_file_number,tfn_number
+    type: field
+    match: text
+    priority: 1
+  auabnknown:
+    key: abn
+    name: Australian ABN (Australian Business Number) by known name
+    rule: abn,australian_business_number,abn_number
+    type: field
+    match: text
+    priority: 1
+  aubankaccountknown:
+    key: bankaccount
+    name: Australian bank account by known name
+    rule: bank_account,account_number,bsb_account,bsb_number
+    type: field
+    match: text
+    priority: 1
+  aubsbknown:
+    key: bsb
+    name: Australian BSB (Bank State Branch) code by known name
+    rule: bsb,bsb_code,bank_state_branch
+    type: field
+    match: text
+    priority: 1
+

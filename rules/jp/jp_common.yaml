@@ -1,0 +1,51 @@
+name: jp-common
+description: Japanese common identifiers
+context: common
+lang: ja
+country_code: jp
+rules:
+  jpphoneknown:
+    key: phone
+    is_pii: True
+    name: Japanese phone number by known name
+    rule: 電話,電話番号,携帯電話,固定電話,連絡先電話
+    type: field
+    match: text
+    priority: 1
+  jpemailknown:
+    key: email
+    is_pii: True
+    name: Japanese email by known name
+    rule: メール,電子メール,メールアドレス,メールアドレス
+    type: field
+    match: text
+    priority: 1
+  jpnameknown:
+    key: name
+    name: Japanese name/title by name
+    rule: 名前,名称,タイトル,フルネーム
+    type: field
+    match: text
+    priority: 1
+  jpaddressknown:
+    key: address
+    name: Japanese address by known name
+    rule: 住所,詳細住所,連絡先住所,郵送先住所
+    type: field
+    match: text
+    priority: 1
+  jpdescriptionknown:
+    key: description
+    name: Japanese description by known
+    rule: 説明,詳細,概要,詳細説明
+    type: field
+    match: text
+    priority: 1
+  jpcommentknown:
+    key: comment
+    name: Japanese comment/note by known
+    rule: コメント,備考,注釈,意見
+    type: field
+    match: text
+    priority: 1
+

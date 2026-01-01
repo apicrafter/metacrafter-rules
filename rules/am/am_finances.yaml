@@ -1,0 +1,55 @@
+name: am-finances
+description: Armenian financial identifiers
+context: finances
+lang: hy
+country_code: am
+rules:
+  amtinfield:
+    key: am_tin
+    name: Armenian Taxpayer Identification Number by field name
+    rule: arm_tin,am_tin,armenian_tin,tin_am,tin_armenia,հարկ_վճարողի_նույնականացման_համար,հարկային_համար
+    type: field
+    match: text
+  amtinvalue:
+    key: am_tin
+    name: Armenian Taxpayer Identification Number by pattern
+    match: ppr
+    type: data
+    rule: Word(nums, exact=8)
+    maxlen: 8
+    minlen: 8
+    priority: 1
+    imprecise: 1
+  ambankaccountfield:
+    key: am_bank_account
+    name: Armenian bank account by field name
+    rule: arm_bank_account,am_bank_account,armenian_bank_account,bank_account_am,bank_account_armenia,բանկային_հաշիվ,հաշվեհամար_am
+    type: field
+    match: text
+  ambankaccountvalue:
+    key: am_bank_account
+    name: Armenian bank account by pattern
+    match: ppr
+    type: data
+    rule: Word(nums, min=10, max=20)
+    maxlen: 20
+    minlen: 10
+    priority: 1
+    imprecise: 1
+  amorgtinfield:
+    key: am_org_tin
+    name: Armenian organization TIN by field name
+    rule: arm_org_tin,am_org_tin,armenian_org_tin,org_tin_am,company_tin_am,business_tin_am,կազմակերպության_հարկային_համար
+    type: field
+    match: text
+  amorgtinvalue:
+    key: am_org_tin
+    name: Armenian organization TIN by pattern
+    match: ppr
+    type: data
+    rule: Word(nums, min=8, max=12)
+    maxlen: 12
+    minlen: 8
+    priority: 1
+    imprecise: 1
+

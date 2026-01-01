@@ -1,0 +1,28 @@
+name: mx-geo
+description: Mexican geographic identifiers
+context: geo
+lang: es
+country_code: mx
+rules:
+  mxpostcodeknown:
+    key: postcode
+    name: Mexican postal code (Código Postal) by known name
+    rule: codigo_postal,cp,postal_code,zip_code
+    type: field
+    match: text
+    priority: 1
+  mxcityknown:
+    key: city
+    name: Mexican city by known name
+    rule: ciudad,municipio
+    type: field
+    match: text
+    priority: 1
+  mxstateknown:
+    key: state
+    name: Mexican state by known name
+    rule: estado,estado_mexicano
+    type: field
+    match: text
+    priority: 1
+

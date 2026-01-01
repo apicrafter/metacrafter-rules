@@ -10,6 +10,7 @@ rules:
     rule: geo_point_2d,point_geo,geopoint,geo_point,geo_coordinates
     type: field
     match: text
+    priority: 1
   addressknown:
     key: address
     is_pii: True
@@ -17,18 +18,21 @@ rules:
     rule: address,postaladdress,actualaddress,fulladdress,address_legal,legaladdress,postal address,post address,location_address,location_1_address,address_1
     type: field
     match: text
+    priority: 1
   latitude:
     key: latitude
     name: Latitude by known name
     rule: latitude,latitude_wgs84,geodata_latitude,poi_latitude,coordinates_latitude
     type: field
     match: text
+    priority: 1
   longitude:
     key: longitude
     name: Longitude by known name
     rule: longitude,longitude_wgs84,geodata_longtitude,poi_longitude,coordinates_longitude
     type: field
     match: text
+    priority: 1
   latitudepat:
     key: latitude
     name: Latitude by known name pattern
@@ -37,6 +41,7 @@ rules:
     rule: Word(printables) + Optional('_') + "latitude"
     type: field
     match: ppr
+    priority: 2
   longitudepat:
     key: longitude
     name: Longitude by known name pattern
@@ -45,6 +50,7 @@ rules:
     rule: Word(printables) + Optional('_') + "longitude"
     type: field
     match: ppr
+    priority: 2
   latitudevalue:
     key: latitude
     name: Latitude by data pattern and name
@@ -55,6 +61,7 @@ rules:
     match: ppr
     fieldrule: Optional(Word(printables)) + Optional('_') + "lat"
     fieldrulematch: ppr
+    priority: 2
   longitudevalue:
     key: longitude
     name: Longitude by data pattern and name
@@ -65,6 +72,7 @@ rules:
     match: ppr
     fieldrule: Optional(Word(printables)) + Optional('_') + (Literal("lon") ^ Literal("lng"))
     fieldrulematch: ppr
+    priority: 2
   postindexknown:
     key: postindex
     is_pii: True
@@ -72,6 +80,7 @@ rules:
     rule: postindex,postIndex,post_index,postcode,zip_code,zipcode,postalcode,post index,zip_code,postal_code,location_zip,address_zip
     match: text
     type: field
+    priority: 1
   streetknown:
     key: street
     is_pii: True
@@ -79,6 +88,7 @@ rules:
     rule: street,street name,streetname,street_name
     match: text
     type: field
+    priority: 1
   cityknown:
     key: city
     is_pii: True
@@ -86,17 +96,53 @@ rules:
     rule: town,city,cityname,location (city),location_city,location_1_city,address_city,city_name
     match: text
     type: field
+    priority: 1
   countryknown:
     key: country
     name: Country name by field name
     rule: country,countryname,country_name
     match: text
     type: field
+    priority: 1
   wbregionbyvalue:
     key: wbregion
     name: World Bank region
     rule: South Asia,Europe & Central Asia,Sub-Saharan Africa,Latin America & Caribbean,East Asia & Pacific,North America,Middle East & North Africa
     match: text
     type: data
+    priority: 2
+  glnfield:
+    key: gln
+    name: Global Location Number (GLN) by field name
+    rule: gln,global_location_number,location_id,location_number,gln_code
+    type: field
+    match: text
+    priority: 1
+  glnvalue:
+    key: gln
+    name: Global Location Number (GLN) by value pattern
+    match: ppr
+    type: data
+    rule: Word(nums, exact=13)
+    maxlen: 13
+    minlen: 13
+    priority: 1
+    validator: metacrafterext.rules.common.identifiers.validate_gln
+  unlocodefield:
+    key: unlocode
+    name: UN/LOCODE by field name
+    rule: unlocode,un_locode,locode,un_location_code
+    type: field
+    match: text
+    priority: 1
+  unlocodevalue:
+    key: unlocode
+    name: UN/LOCODE by value pattern
+    match: ppr
+    type: data
+    rule: Word('ABCDEFGHIJKLMNOPQRSTUVWXYZ', exact=2) + Word('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ', exact=3)
+    maxlen: 5
+    minlen: 5
+    priority: 1
 
  

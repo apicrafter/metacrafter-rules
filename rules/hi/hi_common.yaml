@@ -1,0 +1,29 @@
+name: hi-common
+description: Hindi common identifiers
+context: common
+lang: hi
+country_code: xx
+rules:
+  hiphoneknown:
+    key: phone
+    is_pii: True
+    name: Hindi phone number by known name
+    rule: फोन,फ़ोन_नंबर,मोबाइल,मोबाइल_नंबर,संपर्क_नंबर
+    type: field
+    match: text
+    priority: 1
+  hinameknown:
+    key: name
+    name: Hindi name/title by name
+    rule: नाम,नाम_पूरा,शीर्षक,उपाधि
+    type: field
+    match: text
+    priority: 1
+  hiaddressknown:
+    key: address
+    name: Hindi address by known name
+    rule: पता,पूरा_पता,निवास_पता,संपर्क_पता
+    type: field
+    match: text
+    priority: 1
+

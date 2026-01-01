@@ -1,0 +1,56 @@
+name: vn-persons
+description: Vietnamese person identifiers
+context: persons
+lang: vi
+country_code: vn
+rules:
+  vncccdfield:
+    key: vncccd
+    is_pii: True
+    name: Vietnamese CCCD by field name
+    rule: cccd,can_cuoc_cong_dan,so_cccd,cccd_number,vietnamese_id,national_id
+    type: field
+    match: text
+  vncccdvalue:
+    key: vncccd
+    is_pii: True
+    name: Vietnamese CCCD by pattern
+    match: ppr
+    type: data
+    rule: Word(nums, exact=12)
+    maxlen: 12
+    minlen: 12
+  vnpassportfield:
+    key: vnpassport
+    is_pii: True
+    name: Vietnamese passport by field name
+    rule: ho_chieu,so_ho_chieu,ho_chieu_no
+    type: field
+    match: text
+  vnpassportvalue:
+    key: vnpassport
+    is_pii: True
+    name: Vietnamese passport by pattern
+    match: ppr
+    type: data
+    rule: Word(alphas, exact=1) + Word(nums, min=7, max=8)
+    maxlen: 9
+    minlen: 8
+  vndriverlicfield:
+    key: vndriverlic
+    is_pii: True
+    name: Vietnamese driver license by field name
+    rule: bang_lai,so_bang_lai,bang_lai_xe
+    type: field
+    match: text
+  vndriverlicvalue:
+    key: vndriverlic
+    is_pii: True
+    name: Vietnamese driver license by pattern
+    match: ppr
+    type: data
+    rule: Word(alphas, exact=2) + Word(nums, min=10, max=12)
+    maxlen: 14
+    minlen: 12
+    imprecise: 1
+

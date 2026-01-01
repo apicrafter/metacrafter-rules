@@ -1,0 +1,42 @@
+name: zh-datetime
+description: Chinese date and time common patterns
+context: datetime
+lang: zh
+country_code: xx
+rules:
+  zhdateknown:
+    key: date
+    name: Chinese date name
+    rule: 日期,时间,日期时间,创建日期,更新日期,注册日期
+    type: field
+    match: text
+    priority: 1
+  zhyearknown:
+    key: year
+    name: Chinese year name
+    rule: 年,年份
+    type: field
+    match: text
+    priority: 1
+  zhmonthknown:
+    key: month
+    name: Chinese month name
+    rule: 月,月份
+    type: field
+    match: text
+    priority: 1
+  zhdayknown:
+    key: day
+    name: Chinese day name
+    rule: 日,天,日期
+    type: field
+    match: text
+    priority: 1
+  zhtimeknown:
+    key: time
+    name: Chinese time name
+    rule: 时间,时刻,时分
+    type: field
+    match: text
+    priority: 1
+

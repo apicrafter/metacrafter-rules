@@ -1,0 +1,28 @@
+name: it-geo
+description: Italian geographic identifiers
+context: geo
+lang: it
+country_code: it
+rules:
+  itpostcodeknown:
+    key: postcode
+    name: Italian postal code (CAP) by known name
+    rule: cap,codice_postale,postal_code
+    type: field
+    match: text
+    priority: 1
+  itcityknown:
+    key: city
+    name: Italian city by known name
+    rule: citta,comune,municipio
+    type: field
+    match: text
+    priority: 1
+  itprovinceknown:
+    key: province
+    name: Italian province by known name
+    rule: provincia,provincia_italiana
+    type: field
+    match: text
+    priority: 1
+

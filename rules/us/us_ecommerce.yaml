@@ -1,0 +1,43 @@
+name: us-ecommerce
+description: US e-commerce identifiers
+context: ecommerce
+lang: en
+country_code: us
+rules:
+  usorderidfield:
+    key: usorderid
+    name: US order ID by field name
+    rule: us_order_id,order_id_us,amazon_order_id,ebay_order_id,shopify_order_id
+    type: field
+    match: text
+  usorderidvalue:
+    key: usorderid
+    name: US order ID by pattern
+    match: ppr
+    type: data
+    rule: Word(alphanums, min=8, max=20)
+    maxlen: 20
+    minlen: 8
+    fieldrule: us_order_id,order_id_us,amazon_order_id,ebay_order_id,shopify_order_id
+    fieldrulematch: text
+    imprecise: 1
+    priority: 3
+  usamazonorderfield:
+    key: usamazonorder
+    name: Amazon order ID by field name
+    rule: amazon_order_id,amazon_order,amzn_order_id
+    type: field
+    match: text
+  usamazonordervalue:
+    key: usamazonorder
+    name: Amazon order ID by pattern
+    match: ppr
+    type: data
+    rule: Literal('112') + Word(nums, exact=7) + Word(nums, exact=7) | (Word(alphas, exact=3) + Word(nums, exact=7) + Word(nums, exact=7))
+    maxlen: 17
+    minlen: 17
+    fieldrule: amazon_order_id,amazon_order,amzn_order_id
+    fieldrulematch: text
+    imprecise: 1
+    priority: 3
+

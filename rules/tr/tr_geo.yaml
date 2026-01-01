@@ -1,0 +1,35 @@
+name: tr-geo
+description: Turkish geographic identifiers
+context: geo
+lang: tr
+country_code: tr
+rules:
+  trpostcodefield:
+    key: trpostcode
+    name: Turkish postal code by field name
+    rule: postcode,posta_kodu,postal_code,zip_code,zipcode
+    type: field
+    match: text
+  trpostcodevalue:
+    key: trpostcode
+    name: Turkish postal code by pattern
+    match: ppr
+    type: data
+    rule: Word(nums, exact=5)
+    maxlen: 5
+    minlen: 5
+  trcityfield:
+    key: trcity
+    name: Turkish city name by field name
+    rule: city,şehir,il,city_name,şehir_adı
+    type: field
+    match: text
+  trcityvalue:
+    key: trcity
+    name: Turkish city name by value
+    rule: İstanbul,Ankara,İzmir,Bursa,Antalya,Adana,Konya,Gaziantep,Mersin,Kayseri,Eskişehir,Diyarbakır,Samsun,Denizli,Şanlıurfa,Malatya,Erzurum,Van,Batman,Elazığ,İnegöl,Balıkesir,Kahramanmaraş,Trabzon,Sakarya,Sivas,Aydın,Yozgat,Afyonkarahisar,Çorum,Muğla,Manisa,Osmaniye,Kırıkkale,Tekirdağ,Çanakkale,Edirne,Kırklareli,Kastamonu,Ordu,Tokat,Amasya,Zonguldak,Bolu,Bartın,Karabük,Düzce,Sinop,Giresun,Rize,Artvin,Ardahan,Iğdır,Kars,Ağrı,Erzincan,Bingöl,Tunceli,Elazığ,Malatya,Adıyaman,Gaziantep,Kilis,Şanlıurfa,Diyarbakır,Mardin,Batman,Siirt,Şırnak,Hakkari,Van,Mus,Bitlis,Ağrı,Iğdır,Ardahan,Kars,Erzurum,Erzincan,Bayburt,Gümüşhane,Trabzon,Rize,Artvin,Giresun,Ordu,Ünye,Fatsa,Terme,Çarşamba,Bafra,Samsun,Alaçam,Vezirköprü,Havza,Ladik,Amasya,Merzifon,Suluova,Taşova,Gümüşhacıköy,Çorum,Osmancık,İskilip,Mecitözü,Alaca,Ortaköy,Sungurlu,Boğazkale,Yozgat,Sorgun,Şefaatli,Yerköy,Çayıralan,Çekerek,Sarıkaya,Saraykent,Akdağmadeni,Kadışehri,Yerköy,Boğazlıyan,Çandır,Yenifakılı,Saraykent,Akdağmadeni
+    maxlen: 20
+    minlen: 4
+    type: data
+    match: text
+

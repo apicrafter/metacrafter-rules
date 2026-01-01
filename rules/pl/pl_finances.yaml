@@ -1,0 +1,64 @@
+name: pl-finances
+description: Polish financial identifiers
+context: finances
+lang: pl
+country_code: pl
+rules:
+  plnipfield:
+    key: plnip
+    name: Polish NIP by field name
+    rule: nip,nip_number,nip_no,polish_tax_number,numer_identyfikacji_podatkowej
+    type: field
+    match: text
+  plnipvalue:
+    key: plnip
+    name: Polish NIP by pattern
+    match: ppr
+    type: data
+    rule: Word(nums, exact=10)
+    maxlen: 10
+    minlen: 10
+  plregonfield:
+    key: plregon
+    name: Polish REGON by field name
+    rule: regon,regon_number,regon_no,business_id,polish_business_id,numer_regon
+    type: field
+    match: text
+  plregonvalue:
+    key: plregon
+    name: Polish REGON by pattern
+    match: ppr
+    type: data
+    rule: Word(nums, min=9, max=14)
+    maxlen: 14
+    minlen: 9
+  plbankaccountfield:
+    key: plbankaccount
+    name: Polish bank account by field name
+    rule: numer_konta,polish_iban
+    type: field
+    match: text
+  plbankaccountvalue:
+    key: plbankaccount
+    name: Polish bank account by pattern
+    match: ppr
+    type: data
+    rule: Word(nums, min=24, max=26)
+    maxlen: 26
+    minlen: 24
+    imprecise: 1
+  plibanfield:
+    key: pliban
+    name: Polish IBAN by field name
+    rule: polish_iban
+    type: field
+    match: text
+  plibanvalue:
+    key: pliban
+    name: Polish IBAN by pattern
+    match: ppr
+    type: data
+    rule: Literal('PL') + Word(nums, exact=2) + Word(alphanums, exact=4) + Word(nums, min=16, max=24)
+    maxlen: 30
+    minlen: 28
+

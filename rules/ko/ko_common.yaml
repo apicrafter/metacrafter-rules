@@ -1,0 +1,37 @@
+name: ko-common
+description: Korean common identifiers
+context: common
+lang: ko
+country_code: xx
+rules:
+  kophoneknown:
+    key: phone
+    is_pii: True
+    name: Korean phone number by known name
+    rule: 전화,전화번호,휴대전화,연락처,전화_번호
+    type: field
+    match: text
+    priority: 1
+  koemailknown:
+    key: email
+    is_pii: True
+    name: Korean email by known name
+    rule: 이메일,전자우편,이메일주소,메일주소
+    type: field
+    match: text
+    priority: 1
+  konameknown:
+    key: name
+    name: Korean name/title by name
+    rule: 이름,성명,제목,이름_전체
+    type: field
+    match: text
+    priority: 1
+  koaddressknown:
+    key: address
+    name: Korean address by known name
+    rule: 주소,상세주소,거주지주소,연락처주소
+    type: field
+    match: text
+    priority: 1
+

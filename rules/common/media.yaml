@@ -1,0 +1,107 @@
+name: media
+description: Media and entertainment identifiers
+context: media
+lang: common
+country_code: xx
+rules:
+  isbnfield:
+    key: isbn
+    name: ISBN by field name
+    rule: isbn,isbn_number,isbn_code,isbn_10,isbn_13,book_isbn
+    type: field
+    match: text
+  isbnvalue:
+    key: isbn
+    name: ISBN by pattern
+    match: ppr
+    type: data
+    rule: (Word(nums, exact=10) | (Word(nums, exact=9) + Word('Xx', exact=1))) | (Literal('978') + Word(nums, exact=10) | Literal('979') + Word(nums, exact=10))
+    maxlen: 13
+    minlen: 10
+  issnfield:
+    key: issn
+    name: ISSN by field name
+    rule: issn,issn_number,issn_code,periodical_issn,journal_issn
+    type: field
+    match: text
+  issnvalue:
+    key: issn
+    name: ISSN by pattern
+    match: ppr
+    type: data
+    rule: Word(nums, exact=4) + Literal('-') + Word(nums, exact=4) | (Word(nums, exact=7) + Word('Xx', exact=1))
+    maxlen: 9
+    minlen: 8
+  doifield:
+    key: doi
+    name: DOI by field name
+    rule: doi,digital_object_identifier,doi_number,doi_code
+    type: field
+    match: text
+  doivalue:
+    key: doi
+    name: DOI by pattern
+    match: ppr
+    type: data
+    rule: Literal('10.') + Word(nums, min=4, max=9) + Literal('/') + Word(printables, min=1, max=200)
+    maxlen: 220
+    minlen: 10
+    imprecise: 1
+  youtubevideoidfield:
+    key: youtubevideoid
+    name: YouTube video ID by field name
+    rule: youtube_id,youtube_video_id,video_id,youtube_url
+    type: field
+    match: text
+  youtubevideoidvalue:
+    key: youtubevideoid
+    name: YouTube video ID by pattern
+    match: ppr
+    type: data
+    rule: Word(alphanums + '-_', exact=11)
+    maxlen: 11
+    minlen: 11
+  vimeovideoidfield:
+    key: vimeovideoid
+    name: Vimeo video ID by field name
+    rule: vimeo_id,vimeo_video_id,vimeo_url
+    type: field
+    match: text
+  vimeovideoidvalue:
+    key: vimeovideoid
+    name: Vimeo video ID by pattern
+    match: ppr
+    type: data
+    rule: Word(nums, min=7, max=10)
+    maxlen: 10
+    minlen: 7
+    imprecise: 1
+  isrcfield:
+    key: isrc
+    name: ISRC by field name
+    rule: isrc,isrc_code,isrc_number,international_standard_recording_code
+    type: field
+    match: text
+  isrcvalue:
+    key: isrc
+    name: ISRC by pattern
+    match: ppr
+    type: data
+    rule: Word(alphas, exact=2) + Word(alphanums, exact=3) + Word(nums, exact=7) + Word(alphanums, exact=2)
+    maxlen: 12
+    minlen: 12
+  eanfield:
+    key: ean
+    name: EAN by field name
+    rule: ean,ean_code,ean_number,ean_13,ean_8,european_article_number
+    type: field
+    match: text
+  eanvalue:
+    key: ean
+    name: EAN by pattern
+    match: ppr
+    type: data
+    rule: Word(nums, exact=13) | Word(nums, exact=8)
+    maxlen: 13
+    minlen: 8
+

@@ -38,6 +38,10 @@ rules:
     rule: ops_code,opscode,ops,prozedur_code
     type: field
     match: text
+# This rule generates a lot of False positives because the pattern matches any 4-digit number (with optional decimal)
+# Many common values match this pattern: years (2023, 2024), product codes, reference numbers, version numbers, etc.
+# It is marked as imprecise and could be filtered if it's set
+# Validator added to reduce false positives by filtering out year patterns
   deopsvalue:
     key: opscode
     name: OPS-Prozedurcode anhand des Wertes
@@ -46,3 +50,6 @@ rules:
     rule: Word(nums, exact=1) + Word(nums, exact=1) + Word(nums, exact=2) + Optional(Literal('.').suppress() + Word(nums, min=1, max=2))
     maxlen: 7
     minlen: 4
+    validator: metacrafterext.rules.de.validators.validate_de_ops
+    imprecise: 1
+    priority: 2

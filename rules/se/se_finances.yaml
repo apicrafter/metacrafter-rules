@@ -1,0 +1,36 @@
+name: se-finances
+description: Swedish financial identifiers
+context: finances
+lang: sv
+country_code: se
+rules:
+  seorgnumberfield:
+    key: seorgnumber
+    name: Swedish organization number by field name
+    rule: swedish_org_number,organisationsnummer,org_number_se,orgnr_se
+    type: field
+    match: text
+  seorgnumbervalue:
+    key: seorgnumber
+    name: Swedish organization number by pattern
+    match: ppr
+    type: data
+    rule: Word(nums, exact=6) + Literal('-') + Word(nums, exact=4)
+    maxlen: 11
+    minlen: 11
+  sebankaccountfield:
+    key: sebankaccount
+    name: Swedish bank account by field name
+    rule: swedish_bank_account,bankkonto_se,clearingnummer,kontonummer_se
+    type: field
+    match: text
+  sebankaccountvalue:
+    key: sebankaccount
+    name: Swedish bank account by pattern
+    match: ppr
+    type: data
+    rule: Word(nums, min=4, max=5) + Word(nums, min=7, max=10)
+    maxlen: 15
+    minlen: 11
+    imprecise: 1
+

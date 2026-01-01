@@ -1,0 +1,44 @@
+name: br-finances
+description: Brazilian financial identifiers
+context: finances
+lang: pt
+country_code: br
+rules:
+  brcpfknown:
+    key: cpf
+    is_pii: True
+    name: Brazilian CPF (Cadastro de Pessoa Física) by known name
+    rule: cpf,cpf_number,cpf_numero,numero_cpf
+    type: field
+    match: text
+    priority: 1
+  brcnpjknown:
+    key: cnpj
+    name: Brazilian CNPJ (Cadastro Nacional de Pessoa Jurídica) by known name
+    rule: cnpj,cnpj_number,cnpj_numero,numero_cnpj
+    type: field
+    match: text
+    priority: 1
+  brbankaccountknown:
+    key: bankaccount
+    name: Brazilian bank account by known name
+    rule: conta_bancaria,conta,numero_conta,conta_corrente,conta_poupanca
+    type: field
+    match: text
+    priority: 1
+  brbankcardknown:
+    key: bankcard
+    is_pii: True
+    name: Brazilian bank card by known name
+    rule: cartao,numero_cartao,cartao_credito,cartao_debito
+    type: field
+    match: text
+    priority: 1
+  brtaxidknown:
+    key: taxid
+    name: Brazilian tax ID by known name
+    rule: inscricao_estadual,ie,inscricao_estadual_number
+    type: field
+    match: text
+    priority: 1
+

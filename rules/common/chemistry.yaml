@@ -1,0 +1,73 @@
+name: chemistrycommon
+description: Chemical identifiers
+context: chemistry
+lang: common
+country_code: xx
+rules:
+  inchibyfieldname:
+    key: inchl
+    name: International Chemical Identifier (InChI) by field name
+    rule: inchi,inchi_id,international_chemical_identifier,inchl,inchl_id
+    type: field
+    match: text
+    priority: 1
+  inchibyvalue:
+    key: inchl
+    name: International Chemical Identifier (InChI) by value pattern
+    match: ppr
+    type: data
+    rule: Literal("InChI=") + Optional(Literal("1S")) + Literal("/") + Word(alphanums + "ub.", min=1) + Optional(Literal("/") + Word(alphanums + "+-(),.*;?", min=1)) + Optional(Literal("/") + Word(alphanums + "+-(),.*;?", min=1)) + Optional(Literal("/") + Word(alphanums + "+-(),.*;?", min=1)) + Optional(Literal("/") + Word(alphanums + "+-(),.*;?", min=1)) + Optional(Literal("/") + Word(alphanums + "+-(),.*;?", min=1)) + Optional(Literal("/") + Word(alphanums + "+-(),.*;?", min=1))
+    minlen: 10
+    priority: 1
+    validator: metacrafterext.rules.common.chemistry.validate_inchi
+  inchikeybyfieldname:
+    key: inchlkey
+    name: International Chemical Identifier Key (InChIKey) by field name
+    rule: inchikey,inchi_key,inchi_key_id,inchlkey,inchl_key
+    type: field
+    match: text
+    priority: 1
+  inchikeybyvalue:
+    key: inchlkey
+    name: International Chemical Identifier Key (InChIKey) by value pattern
+    match: ppr
+    type: data
+    rule: Word(alphas, exact=14) + Literal("-") + Word(alphas, exact=10) + Literal("-") + Word(alphas, exact=1)
+    minlen: 27
+    maxlen: 27
+    priority: 1
+    validator: metacrafterext.rules.common.chemistry.validate_inchikey
+  pubchemidbyfieldname:
+    key: pubchemid
+    name: PubChem Substance ID by field name
+    rule: pubchem_id,pubchemid,pubchem_substance_id,pubchem_sid
+    type: field
+    match: text
+    priority: 1
+  pubchemidbyvalue:
+    key: pubchemid
+    name: PubChem Substance ID by value pattern
+    match: ppr
+    type: data
+    rule: Word('123456789', exact=1) + Word(nums, min=0)
+    minlen: 1
+    priority: 2
+    note: May have false positives as it matches any positive integer
+  molformulabyfieldname:
+    key: molformula
+    name: Molecular Formula by field name
+    rule: molecular_formula,molformula,molecular_formula_string,chemical_formula
+    type: field
+    match: text
+    priority: 1
+  molformulabyvalue:
+    key: molformula
+    name: Molecular Formula by value pattern
+    match: ppr
+    type: data
+    rule: Word(alphas + nums + "()[].,-+", min=1)
+    minlen: 1
+    priority: 2
+    validator: metacrafterext.rules.common.chemistry.validate_molecular_formula
+    note: Complex pattern - validates basic structure but may need refinement
+

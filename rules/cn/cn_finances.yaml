@@ -1,0 +1,21 @@
+name: cn-finances
+description: Chinese financial identifiers
+context: finances
+lang: zh
+country_code: cn
+rules:
+  cnbankaccountknown:
+    key: bankaccount
+    name: Chinese bank account by known name
+    rule: 银行账号,账户,账号,银行账户,账户号码
+    type: field
+    match: text
+    priority: 1
+  cntaxidknown:
+    key: taxid
+    name: Chinese tax ID (统一社会信用代码) by known name
+    rule: 统一社会信用代码,税号,税务登记号,纳税人识别号,组织机构代码
+    type: field
+    match: text
+    priority: 1
+

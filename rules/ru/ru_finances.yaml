@@ -10,8 +10,10 @@ rules:
     match: ppr
     type: data
     rule: Word(nums, exact=6)
+    validator: metacrafterext.rules.ru.validators.validate_ru_bik
     fieldrule: bik,bankbic
     fieldrulematch: text
+    priority: 1
   bankaccount:
     key: bankaccount
     name: Russian bank account
@@ -76,3 +78,7 @@ rules:
     rule: Word(nums, exact=1) + Word(nums, exact=5) + Word(alphas, exact=1)
     maxlen: 7
     minlen: 7
+    validator: metacrafterext.rules.ru.validators.validate_ru_equity_securities_reg
+    fieldrule: гос_регистрация_выпуска,gos_registratsiya_vypuska
+    fieldrulematch: text
+    priority: 1

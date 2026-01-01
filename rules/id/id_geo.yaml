@@ -1,0 +1,41 @@
+name: id-geo
+description: Indonesian geographic identifiers
+context: geo
+lang: id
+country_code: id
+rules:
+  idpostcodefield:
+    key: idpostcode
+    name: Indonesian postal code by field name
+    rule: postcode,kode_pos,postal_code,zip_code,zipcode
+    type: field
+    match: text
+  idpostcodevalue:
+    key: idpostcode
+    name: Indonesian postal code by pattern
+    match: ppr
+    type: data
+    rule: Word(nums, exact=5)
+    maxlen: 5
+    minlen: 5
+  idprovincefield:
+    key: idprovince
+    name: Indonesian province by field name
+    rule: province,provinsi,province_name,nama_provinsi
+    type: field
+    match: text
+  idprovincevalue:
+    key: idprovince
+    name: Indonesian province name by value
+    rule: Aceh,Sumatera Utara,Sumatera Barat,Riau,Kepulauan Riau,Jambi,Sumatera Selatan,Bangka Belitung,Bengkulu,Lampung,DKI Jakarta,Jawa Barat,Jawa Tengah,DI Yogyakarta,Jawa Timur,Banten,Bali,Nusa Tenggara Barat,Nusa Tenggara Timur,Kalimantan Barat,Kalimantan Tengah,Kalimantan Selatan,Kalimantan Timur,Kalimantan Utara,Sulawesi Utara,Sulawesi Tengah,Sulawesi Selatan,Sulawesi Tenggara,Gorontalo,Sulawesi Barat,Maluku,Maluku Utara,Papua Barat,Papua
+    maxlen: 20
+    minlen: 4
+    type: data
+    match: text
+  idcityfield:
+    key: idcity
+    name: Indonesian city name by field name
+    rule: city,kota,city_name,nama_kota,kabupaten
+    type: field
+    match: text
+

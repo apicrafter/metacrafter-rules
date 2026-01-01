@@ -1,0 +1,39 @@
+name: au-pii
+description: Australian PII identifiers
+context: pii
+lang: en
+country_code: au
+rules:
+  autfnknown:
+    key: tfn
+    is_pii: True
+    name: Australian TFN (Tax File Number) by known name
+    rule: tfn,tax_file_number,tfn_number
+    type: field
+    match: text
+    priority: 1
+  aumedicareknown:
+    key: medicare
+    is_pii: True
+    name: Australian Medicare number by known name
+    rule: medicare,medicare_number,medicare_card_number
+    type: field
+    match: text
+    priority: 1
+  auphoneknown:
+    key: phone
+    is_pii: True
+    name: Australian phone number by known name
+    rule: phone,phone_number,mobile,mobile_number,contact_number
+    type: field
+    match: text
+    priority: 1
+  aubirthdayknown:
+    key: birthday
+    is_pii: True
+    name: Australian birthday by known name
+    rule: date_of_birth,dob,birth_date,birthday
+    type: field
+    match: text
+    priority: 1
+

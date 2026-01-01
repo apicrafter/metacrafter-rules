@@ -1,0 +1,25 @@
+name: am-geo
+description: Armenian geographic identifiers
+context: geo
+lang: hy
+country_code: am
+rules:
+  ampostalcodefield:
+    key: am_postal_code
+    is_pii: True
+    name: Armenian postal code by field name
+    rule: arm_postal_code,am_postal_code,armenian_postal_code,postal_code_am,postcode_am,zip_am,փոստային_ինդեքս,փոստային_կոդ
+    type: field
+    match: text
+  ampostalcodevalue:
+    key: am_postal_code
+    is_pii: True
+    name: Armenian postal code by pattern
+    match: ppr
+    type: data
+    rule: Word(nums, exact=4)
+    maxlen: 4
+    minlen: 4
+    priority: 1
+    imprecise: 1
+

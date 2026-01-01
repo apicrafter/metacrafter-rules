@@ -28,6 +28,8 @@ rules:
     match: ppr
     type: data
     rule: ((Literal("ЛС") | Literal("ЛП")) + Literal("-") + Word(nums, exact=6)) | (Literal("ЛСР") + Literal("-") + Word(nums, exact=6) + Literal("\\/") + Word(nums, exact=2))
+    validator: metacrafterext.rules.ru.validators.validate_ru_medicine_reg
+    priority: 1
   rumedicineatcbyknown:
     key: atccode
     name: Russian ATC code name by field name

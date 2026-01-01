@@ -1,12 +1,74 @@
 name: vehicles
 description: Vehicles related classification codes
-context: vehicles
+context: transport
 lang: common
 country_code: xx
 rules:
   vehiclenumberbyfieldname:
     key: vehiclenumber
     name: Vehicle number by known fieldnames
-    rule: vehiclenumber,vehicle number,vehicle_number
+    rule: vehiclenumber,vehicle number,vehicle_number,license_plate,plate_number,registration_plate,reg_plate,vehicle_id,car_number,auto_number,vehicle_registration,plate,license,registration,vehicle_plate_number
     match: text
+    type: field
+    priority: 1
+  vehiclenumberbyvalue:
+    key: vehiclenumber
+    name: Vehicle number by value pattern (generic alphanumeric)
+    match: ppr
     type: data
+    rule: Word(alphanums, min=4, max=12)
+    minlen: 4
+    maxlen: 12
+    priority: 2
+    imprecise: 1
+  vinbyfieldname:
+    key: vin
+    name: Vehicle Identification Number by field name
+    rule: vin,vehicle_identification_number,vehicle_id,chassis_number,frame_number,serial_number,vin_number,vin_code
+    match: text
+    type: field
+    priority: 1
+  vinbyvalue:
+    key: vin
+    name: Vehicle Identification Number by value pattern
+    match: ppr
+    type: data
+    rule: Word(alphanums, exact=17)
+    minlen: 17
+    maxlen: 17
+    priority: 1
+    validator: metacrafterext.rules.common.vehicles.validate_vin
+  chassisnumberbyfieldname:
+    key: chassis_number
+    name: Chassis number by field name
+    rule: chassis_number,chassis,chassis_id,frame_number,frame_id
+    match: text
+    type: field
+    priority: 1
+  chassisnumberbyvalue:
+    key: chassis_number
+    name: Chassis number by value pattern
+    match: ppr
+    type: data
+    rule: Word(alphanums, min=6, max=20)
+    minlen: 6
+    maxlen: 20
+    priority: 2
+    imprecise: 1
+  enginenumberbyfieldname:
+    key: engine_number
+    name: Engine number by field name
+    rule: engine_number,engine,engine_id,engine_serial,engine_serial_number,motor_number
+    match: text
+    type: field
+    priority: 1
+  enginenumberbyvalue:
+    key: engine_number
+    name: Engine number by value pattern
+    match: ppr
+    type: data
+    rule: Word(alphanums, min=4, max=20)
+    minlen: 4
+    maxlen: 20
+    priority: 2
+    imprecise: 1

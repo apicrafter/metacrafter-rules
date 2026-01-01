@@ -1,0 +1,42 @@
+name: ecommerce
+description: E-commerce identifiers
+context: ecommerce
+lang: common
+country_code: xx
+rules:
+  ordernumberknown:
+    key: order_number
+    name: Order number by known name
+    rule: order_number,order_no,order_id,order_id_number,purchase_order_number
+    type: field
+    match: text
+    priority: 1
+  skuknown:
+    key: sku
+    name: SKU (Stock Keeping Unit) by known name
+    rule: sku,sku_number,product_sku,item_sku,stock_keeping_unit
+    type: field
+    match: text
+    priority: 1
+  transactionidknown:
+    key: transaction_id
+    name: Payment transaction ID by known name
+    rule: transaction_id,transaction_number,payment_transaction_id,payment_id,payment_reference
+    type: field
+    match: text
+    priority: 1
+  customerloyaltyknown:
+    key: loyalty_number
+    name: Customer loyalty number by known name
+    rule: loyalty_number,loyalty_id,customer_loyalty_number,reward_number,membership_number
+    type: field
+    match: text
+    priority: 1
+  cartidknown:
+    key: cart_id
+    name: Shopping cart ID by known name
+    rule: cart_id,shopping_cart_id,cart_number,basket_id
+    type: field
+    match: text
+    priority: 1
+

@@ -71,4 +71,26 @@ rules:
     rule: Word(nums, exact=3) + Optional(Literal('-') | Literal(' ')) + Word(nums, exact=3) + Optional(Literal('-') | Literal(' ')) + Word(nums, exact=4)
     maxlen: 12
     minlen: 10
-
+  enniifield:
+    key: ninumber
+    is_pii: True
+    name: UK National Insurance Number by field name
+    rule: ni_number,ni number,nationalinsurance,national_insurance_number,nino
+    type: field
+    match: text
+    ennhsfield:
+    key: nhsnumber
+    is_pii: True
+    name: NHS number by field name
+    rule: nhs_number,nhsnumber,nhs_no
+    type: field
+    match: text
+  ennhsvalue:
+    key: nhsnumber
+    is_pii: True
+    name: NHS number by pattern
+    match: ppr
+    type: data
+    rule: Word(nums, exact=3) + Optional(Literal(' ').suppress()) + Word(nums, exact=3) + Optional(Literal(' ').suppress()) + Word(nums, exact=4)
+    maxlen: 13
+    minlen: 10

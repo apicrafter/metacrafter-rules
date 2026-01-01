@@ -1,0 +1,28 @@
+name: au-geo
+description: Australian geographic identifiers
+context: geo
+lang: en
+country_code: au
+rules:
+  aupostcodeknown:
+    key: postcode
+    name: Australian postcode by known name
+    rule: postcode,postal_code,zip_code,australian_postcode
+    type: field
+    match: text
+    priority: 1
+  aucityknown:
+    key: city
+    name: Australian city by known name
+    rule: city,city_name,town,suburb
+    type: field
+    match: text
+    priority: 1
+  austateknown:
+    key: state
+    name: Australian state/territory by known name
+    rule: state,state_name,territory,territory_name
+    type: field
+    match: text
+    priority: 1
+

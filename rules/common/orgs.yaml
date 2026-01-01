@@ -10,3 +10,20 @@ rules:
     rule: legalname,companyname,orgname,org_name,company_name,organization_name,legal_name,organizationname,company name
     type: field
     match: text
+  dunsfield:
+    key: duns
+    name: Data Universal Numbering System (DUNS) by field name
+    rule: duns,duns_number,duns_num,d_u_n_s,dun_number
+    type: field
+    match: text
+    priority: 1
+  dunsvalue:
+    key: duns
+    name: Data Universal Numbering System (DUNS) by value pattern
+    match: ppr
+    type: data
+    rule: Word(nums, exact=9)
+    maxlen: 9
+    minlen: 9
+    priority: 1
+    validator: metacrafterext.rules.common.identifiers.validate_duns

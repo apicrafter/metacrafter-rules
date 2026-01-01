@@ -20,6 +20,8 @@ rules:
     rule: Literal('NL') + Word(alphanums, exact=12)
     maxlen: 14
     minlen: 14
+    validator: metacrafterext.rules.nl.validators.validate_nl_vat
+    priority: 1
   nlbsnfield:
     key: bsn
     is_pii: True

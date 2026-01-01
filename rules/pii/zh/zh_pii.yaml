@@ -1,0 +1,31 @@
+name: zh-pii
+description: Chinese PII identifiers
+context: pii
+lang: zh
+country_code: xx
+rules:
+  zhpassportknown:
+    key: passport
+    is_pii: True
+    name: Chinese passport by known name
+    rule: 护照,护照号,护照号码
+    type: field
+    match: text
+    priority: 1
+  zhidcardknown:
+    key: idcard
+    is_pii: True
+    name: Chinese ID card by known name
+    rule: 身份证,身份证号,身份证号码,居民身份证
+    type: field
+    match: text
+    priority: 1
+  zhbirthdayknown:
+    key: birthday
+    is_pii: True
+    name: Chinese birthday by known name
+    rule: 生日,出生日期,出生年月,生日日期
+    type: field
+    match: text
+    priority: 1
+

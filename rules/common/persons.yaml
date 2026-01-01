@@ -11,6 +11,7 @@ rules:
     rule: applicant_fullname,owner_fullname,person_fullname
     type: field
     match: text
+    priority: 1
   surname:
     key: person_surname
     is_pii: True
@@ -18,6 +19,7 @@ rules:
     rule: surname,lastname,sur_name,last_name,name_last,owner_last_name,familyname
     type: field
     match: text
+    priority: 1
   firstname:
     key: person_firstname
     is_pii: True
@@ -25,6 +27,7 @@ rules:
     rule: firstname,forename,first_name,candidate_first_name,owner_first_name,client_first_name,givenname,First Name
     type: field
     match: text
+    priority: 1
   midname:
     key: person_midname
     is_pii: True
@@ -32,6 +35,7 @@ rules:
     rule: midname,secondname,middlename,mid_name,middle_name,second_name,patronymicname,Last Name
     type: field
     match: text
+    priority: 1
   firstnamepat:
     key: person_firstname
     is_pii: True
@@ -39,6 +43,7 @@ rules:
     rule: Word(printables) + "firstname" +  lineEnd
     type: field
     match: ppr
+    priority: 2
   surnamepat:
     key: person_surname
     is_pii: True
@@ -46,6 +51,7 @@ rules:
     rule: Word(printables) + "surname" +  lineEnd
     type: field
     match: ppr
+    priority: 2
   lastnamepat:
     key: person_surname
     is_pii: True
@@ -53,6 +59,7 @@ rules:
     rule: Word(printables) + "lastname" +  lineEnd
     type: field
     match: ppr
+    priority: 2
   midnamepat:
     key: person_midname
     is_pii: True
@@ -60,3 +67,4 @@ rules:
     rule: Word(printables) + "midname" +  lineEnd
     type: field
     match: ppr
+    priority: 2

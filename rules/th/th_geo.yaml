@@ -1,0 +1,35 @@
+name: th-geo
+description: Thai geographic identifiers
+context: geo
+lang: th
+country_code: th
+rules:
+  thpostcodefield:
+    key: thpostcode
+    name: Thai postal code by field name
+    rule: thai_postcode,รหัสไปรษณีย์,รหัสไปรษณีย์ไทย
+    type: field
+    match: text
+  thpostcodevalue:
+    key: thpostcode
+    name: Thai postal code by pattern
+    match: ppr
+    type: data
+    rule: Word(nums, exact=5)
+    maxlen: 5
+    minlen: 5
+  thprovincefield:
+    key: thprovince
+    name: Thai province by field name
+    rule: thai_province,จังหวัด,ชื่อจังหวัด
+    type: field
+    match: text
+  thprovincevalue:
+    key: thprovince
+    name: Thai province name by value
+    rule: Bangkok,Chiang Mai,Phuket,Pattaya,Hat Yai,Nakhon Ratchasima,Udon Thani,Khon Kaen,Surat Thani,Chonburi,Nonthaburi,Nakhon Si Thammarat,Phitsanulok,Chiang Rai,Lampang,Songkhla,Kanchanaburi,Ayutthaya,Rayong,Trat,Chanthaburi,Prachuap Khiri Khan,Hua Hin,Cha-am,Phetchaburi,Ratchaburi,Samut Sakhon,Samut Prakan,Pathum Thani,Nakhon Pathom,Saraburi,Lopburi,Suphan Buri,Kamphaeng Phet,Tak,Sukhothai,Phrae,Nan,Phayao,Mae Hong Son
+    maxlen: 25
+    minlen: 4
+    type: data
+    match: text
+

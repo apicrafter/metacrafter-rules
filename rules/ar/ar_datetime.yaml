@@ -1,0 +1,35 @@
+name: ar-datetime
+description: Arabic date and time common patterns
+context: datetime
+lang: ar
+country_code: xx
+rules:
+  ardateknown:
+    key: date
+    name: Arabic date name
+    rule: تاريخ,التاريخ,تاريخ_الإنشاء,تاريخ_التحديث
+    type: field
+    match: text
+    priority: 1
+  aryearknown:
+    key: year
+    name: Arabic year name
+    rule: سنة,السنة,عام
+    type: field
+    match: text
+    priority: 1
+  armonthknown:
+    key: month
+    name: Arabic month name
+    rule: شهر,الشهر,شهر_ميلادي
+    type: field
+    match: text
+    priority: 1
+  artimeknown:
+    key: time
+    name: Arabic time name
+    rule: وقت,الوقت,الساعة,الزمن
+    type: field
+    match: text
+    priority: 1
+

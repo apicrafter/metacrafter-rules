@@ -1,0 +1,24 @@
+name: fr-transport
+description: French transport identifiers
+context: transport
+lang: fr
+country_code: fr
+rules:
+  frvehicleplatefield:
+    key: fr_vehicle_plate
+    name: French vehicle license plate by field name
+    rule: plaque_immatriculation,immatriculation,plaque,license_plate,registration_plate,fr_plate
+    type: field
+    match: text
+    priority: 1
+  frvehicleplatevalue:
+    key: fr_vehicle_plate
+    name: French vehicle license plate by pattern
+    match: ppr
+    type: data
+    rule: Word(alphas, exact=2) + Literal('-').suppress() + Word(nums, exact=3) + Literal('-').suppress() + Word(alphas, exact=2)
+    minlen: 9
+    maxlen: 9
+    priority: 1
+    validator: metacrafterext.rules.fr.transport.validate_fr_vehicle_plate
+

@@ -1,0 +1,21 @@
+name: gb-finance 
+description: United Kingdom banking and payment identifiers
+context: finances
+lang: en
+country_code: uk
+rules:
+  sortcodefield:
+    key: uksortcode
+    name: UK sort code by field name
+    rule: sortcode,sort_code,uk_sortcode
+    type: field
+    match: text
+  sortcodevalue:
+    key: uksortcode
+    name: UK sort code by value pattern
+    match: ppr
+    type: data
+    rule: Word(nums, exact=2) + Optional(Literal('-').suppress()) + Word(nums, exact=2) + Optional(Literal('-').suppress()) + Word(nums, exact=2)
+    maxlen: 8
+    minlen: 6
+

@@ -1,0 +1,50 @@
+name: vn-finances
+description: Vietnamese financial identifiers
+context: finances
+lang: vi
+country_code: vn
+rules:
+  vntaxcodefield:
+    key: vntaxcode
+    name: Vietnamese tax code by field name
+    rule: ma_so_thue,mst,vietnamese_tax_number
+    type: field
+    match: text
+  vntaxcodevalue:
+    key: vntaxcode
+    name: Vietnamese tax code by pattern
+    match: ppr
+    type: data
+    rule: Word(nums, exact=10) | (Word(nums, exact=10) + Literal('-') + Word(nums, exact=3))
+    maxlen: 14
+    minlen: 10
+  vnbankaccountfield:
+    key: vnbankaccount
+    name: Vietnamese bank account by field name
+    rule: so_tai_khoan,so_tk,tai_khoan_ngan_hang
+    type: field
+    match: text
+  vnbankaccountvalue:
+    key: vnbankaccount
+    name: Vietnamese bank account by pattern
+    match: ppr
+    type: data
+    rule: Word(nums, min=8, max=16)
+    maxlen: 16
+    minlen: 8
+    imprecise: 1
+  vnibanfield:
+    key: vniban
+    name: Vietnamese IBAN by field name
+    rule: vietnamese_iban
+    type: field
+    match: text
+  vnibanvalue:
+    key: vniban
+    name: Vietnamese IBAN by pattern
+    match: ppr
+    type: data
+    rule: Literal('VN') + Word(nums, exact=2) + Word(alphanums, exact=4) + Word(nums, min=16, max=24)
+    maxlen: 30
+    minlen: 28
+

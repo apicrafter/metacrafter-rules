@@ -1,0 +1,128 @@
+name: shipping
+description: Shipping and delivery identifiers
+context: shipping
+lang: common
+country_code: xx
+rules:
+  trackingnumberfield:
+    key: trackingnumber
+    name: Shipping tracking number by field name
+    rule: tracking_number,tracking_no,tracking_id,tracking_code,shipment_id,delivery_tracking,consignment_number
+    type: field
+    match: text
+  trackingnumbervalue:
+    key: trackingnumber
+    name: Shipping tracking number by pattern
+    match: ppr
+    type: data
+    rule: Word(alphanums, min=8, max=35)
+    maxlen: 35
+    minlen: 8
+    imprecise: 1
+  upstrackingfield:
+    key: upstracking
+    name: UPS tracking number by field name
+    rule: ups_tracking,ups_tracking_number,ups_tracking_no,ups_shipment
+    type: field
+    match: text
+  upstrackingvalue:
+    key: upstracking
+    name: UPS tracking number by pattern
+    match: ppr
+    type: data
+    rule: Literal('1Z') + Word(alphanums, exact=16)
+    maxlen: 18
+    minlen: 18
+    fieldrule: ups_tracking,ups_tracking_number,ups_tracking_no,ups_shipment
+    fieldrulematch: text
+    priority: 2
+  fedextrackingfield:
+    key: fedextracking
+    name: FedEx tracking number by field name
+    rule: fedex_tracking,fedex_tracking_number,fedex_tracking_no,fedex_shipment
+    type: field
+    match: text
+  fedextrackingvalue:
+    key: fedextracking
+    name: FedEx tracking number by pattern
+    match: ppr
+    type: data
+    rule: Word(nums, exact=12) | Word(nums, exact=14) | Word(nums, exact=15) | (Word(nums, exact=12) + Literal('-') + Word(nums, exact=4))
+    maxlen: 17
+    minlen: 12
+    fieldrule: fedex_tracking,fedex_tracking_number,fedex_tracking_no,fedex_shipment
+    fieldrulematch: text
+    imprecise: 1
+    priority: 3
+  dhltrackingfield:
+    key: dhltracking
+    name: DHL tracking number by field name
+    rule: dhl_tracking,dhl_tracking_number,dhl_tracking_no,dhl_shipment,dhl_awb
+    type: field
+    match: text
+  dhltrackingvalue:
+    key: dhltracking
+    name: DHL tracking number by pattern
+    match: ppr
+    type: data
+    rule: Word(nums, exact=10) | Word(nums, exact=11)
+    maxlen: 11
+    minlen: 10
+    fieldrule: dhl_tracking,dhl_tracking_number,dhl_tracking_no,dhl_shipment,dhl_awb
+    fieldrulematch: text
+    imprecise: 1
+    priority: 3
+  uspstrackingfield:
+    key: uspstracking
+    name: USPS tracking number by field name
+    rule: usps_tracking,usps_tracking_number,usps_tracking_no,usps_shipment
+    type: field
+    match: text
+  uspstrackingvalue:
+    key: uspstracking
+    name: USPS tracking number by pattern
+    match: ppr
+    type: data
+    rule: Word(nums, exact=20) | Word(nums, exact=22) | (Word(alphas, exact=2) + Word(nums, exact=9) + Literal('US'))
+    maxlen: 26
+    minlen: 20
+    fieldrule: usps_tracking,usps_tracking_number,usps_tracking_no,usps_shipment
+    fieldrulematch: text
+    imprecise: 1
+    priority: 3
+  awbnumberfield:
+    key: awbnumber
+    name: Air Waybill number by field name
+    rule: awb,air_waybill,awb_number,air_waybill_number,airbill_number
+    type: field
+    match: text
+  awbnumbervalue:
+    key: awbnumber
+    name: Air Waybill number by pattern
+    match: ppr
+    type: data
+    rule: Word(nums, exact=11)
+    maxlen: 11
+    minlen: 11
+    fieldrule: awb,air_waybill,awb_number,air_waybill_number,airbill_number
+    fieldrulematch: text
+    imprecise: 1
+    priority: 3
+  containernumberfield:
+    key: containernumber
+    name: Shipping container number by field name
+    rule: container_number,container_no,container_id,iso_container_number
+    type: field
+    match: text
+  containernumbervalue:
+    key: containernumber
+    name: Shipping container number by pattern
+    match: ppr
+    type: data
+    rule: Word(alphas, exact=4) + Word(nums, exact=7)
+    maxlen: 11
+    minlen: 11
+    fieldrule: container_number,container_no,container_id,iso_container_number
+    fieldrulematch: text
+    priority: 2
+

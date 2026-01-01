@@ -1,0 +1,22 @@
+name: mx-finances
+description: Mexican banking and payment identifiers
+context: finances
+lang: es
+country_code: mx
+rules:
+  clabefield:
+    key: clabe
+    name: Mexican CLABE by field name
+    rule: clabe,clabe_number,clabe_account
+    type: field
+    match: text
+  clabevalue:
+    key: clabe
+    name: Mexican CLABE by value pattern
+    match: ppr
+    type: data
+    rule: Word(nums, exact=18)
+    maxlen: 18
+    minlen: 18
+    validator: metacrafterext.rules.mx.validators.validate_clabe
+    priority: 1

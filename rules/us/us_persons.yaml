@@ -1,0 +1,141 @@
+name: us-persons
+description: US person identifiers
+context: persons
+lang: en
+country_code: us
+rules:
+  usssnfield:
+    key: usssn
+    is_pii: True
+    name: US Social Security Number by field name
+    rule: ssn,social_security_number,ss_number,ssn_number,social_security,ssn_id
+    type: field
+    match: text
+  usssnvalue:
+    key: usssn
+    is_pii: True
+    name: US Social Security Number by pattern
+    match: ppr
+    type: data
+    rule: Word(nums, exact=3) + Optional(Literal('-') | Literal(' ') | Literal('.')) + Word(nums, exact=2) + Optional(Literal('-') | Literal(' ') | Literal('.')) + Word(nums, exact=4)
+    maxlen: 11
+    minlen: 9
+    validator: metacrafterext.rules.us.validators.validate_us_ssn
+    priority: 1
+  
+  useinfield:
+    key: usein
+    is_pii: True
+    name: US EIN by field name
+    rule: ein,employer_id,employer_identification_number,ein_number
+    type: field
+    match: text
+  useinvalue:
+    key: usein
+    is_pii: True
+    name: US EIN by pattern
+    match: ppr
+    type: data
+    rule: Word(nums, exact=9)
+    maxlen: 9
+    minlen: 9
+    validator: metacrafterext.rules.us.validators.validate_us_ein
+    priority: 1
+  
+  usitinfield:
+    key: usitin
+    is_pii: True
+    name: US ITIN by field name
+    rule: itin,individual_taxpayer_id,individual_taxpayer_identification_number
+    type: field
+    match: text
+  usitinvalue:
+    key: usitin
+    is_pii: True
+    name: US ITIN by pattern
+    match: ppr
+    type: data
+    rule: Literal('9') + Word(nums, exact=2) + Optional(Literal('-') | Literal(' ')) + Word('7890123456789', exact=2) + Optional(Literal('-') | Literal(' ')) + Word(nums, exact=4)
+    maxlen: 11
+    minlen: 9
+    validator: metacrafterext.rules.us.validators.validate_us_itin
+    priority: 1
+  uspassportfield:
+    key: uspassport
+    is_pii: True
+    name: US passport by field name
+    rule: passport,passport_number,us_passport,passport_id
+    type: field
+    match: text
+  uspassportvalue:
+    key: uspassport
+    is_pii: True
+    name: US passport by pattern
+    match: ppr
+    type: data
+    rule: Word(nums, exact=9)
+    maxlen: 9
+    minlen: 9
+    validator: metacrafterext.rules.us.validators.validate_us_passport
+    priority: 1
+  usdriverlicfield:
+    key: usdriverlic
+    is_pii: True
+    name: US driver license by field name
+    rule: driver_license,drivers_license,dl_number,license_number,driving_license
+    type: field
+    match: text
+# This rule generates a lot of False positives because Word(alphanums, min=6, max=18) matches almost any alphanumeric string
+# Many identifiers, codes, and other values match this pattern but are not driver license numbers
+# It is marked as imprecise and could be filtered if it's set
+  usdriverlicvalue:
+    key: usdriverlic
+    is_pii: True
+    name: US driver license by pattern
+    match: ppr
+    type: data
+    rule: Word(alphanums, min=6, max=18)
+    maxlen: 18
+    minlen: 6
+    validator: metacrafterext.rules.us.validators.validate_us_driver_license
+    imprecise: 1
+  ennpiField:
+    key: npi
+    is_pii: True
+    name: US NPI identifier by field name
+    rule: npi,npi_number,npiid
+    type: field
+    match: text
+  ennpivalue:
+    key: npi
+    is_pii: True
+    name: US NPI identifier by value
+    match: ppr
+    type: data
+    rule: Word(nums, exact=10)
+    maxlen: 10
+    minlen: 10
+  enupinfield:
+    key: upin
+    is_pii: True
+    name: US UPIN identifier by field name
+    rule: upin,upin_number
+    type: field
+    match: text
+# DEPRECATED: UPIN (Universal Physician Identification Number) was replaced by NPI (National Provider Identifier) in 2007
+# This rule is kept for backward compatibility but should not be used for new implementations
+# Consider using NPI rules instead: ennpiField, ennpiValue
+# This rule generates a lot of False positives because Word(alphanums, exact=6) matches any 6-character alphanumeric string
+# Many codes, identifiers, and other values match this pattern but are not UPIN numbers
+# It is marked as imprecise and deprecated
+  enupinvalue:
+    key: upin
+    is_pii: True
+    name: US UPIN identifier by value (DEPRECATED - use NPI instead)
+    match: ppr
+    type: data
+    rule: Word(alphanums, exact=6)
+    maxlen: 6
+    minlen: 6
+    imprecise: 1
+    deprecated: true

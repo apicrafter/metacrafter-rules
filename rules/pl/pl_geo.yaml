@@ -1,0 +1,35 @@
+name: pl-geo
+description: Polish geographic identifiers
+context: geo
+lang: pl
+country_code: pl
+rules:
+  plpostcodefield:
+    key: plpostcode
+    name: Polish postal code by field name
+    rule: kod_pocztowy
+    type: field
+    match: text
+  plpostcodevalue:
+    key: plpostcode
+    name: Polish postal code by pattern
+    match: ppr
+    type: data
+    rule: Word(nums, exact=2) + Literal('-') + Word(nums, exact=3)
+    maxlen: 6
+    minlen: 6
+  plcityfield:
+    key: plcity
+    name: Polish city name by field name
+    rule: miasto,nazwa_miasta
+    type: field
+    match: text
+  plcityvalue:
+    key: plcity
+    name: Polish city name by value
+    rule: Warsaw,Kraków,Łódź,Wrocław,Poznań,Gdańsk,Szczecin,Bydgoszcz,Lublin,Katowice,Białystok,Gdynia,Częstochowa,Radom,Sosnowiec,Toruń,Kielce,Gliwice,Zabrze,Bytom,Olsztyn,Bielsko-Biała,Rzeszów,Ruda Śląska,Rybnik,Tychy,Dąbrowa Górnicza,Elbląg,Opole,Gorzów Wielkopolski,Płock,Wałbrzych,Włocławek,Tarnów,Chorzów,Kalisz,Koszalin,Legnica,Grudziądz,Słupsk,Jaworzno,Jastrzębie-Zdrój,Jelenia Góra,Nowy Sącz,Jędrzejów,Konin,Piotrków Trybunalski,Lubin,Inowrocław,Ostrołęka,Stargard,Mielec,Płock,Pabianice,Gniezno,Pruszków,Żory,Łomża,Tomaszów Mazowiecki,Przemyśl,Mława,Stalowa Wola,Tczew,Będzin,Zawiercie,Żywiec,Tarnowskie Góry,Świętochłowice,Świnoujście,Oława,Nowa Sól,Kołobrzeg,Ostrów Wielkopolski,Starachowice,Puławy,Gostyń,Skarżysko-Kamienna,Śrem,Radomsko,Zduńska Wola,Świecie,Żyrardów,Chojnice,Mysłowice,Piła,Ostróda,Giżycko,Augustów,Siedlce,Łuków,Chełm,Zamość,Biłgoraj,Hrubieszów,Tomaszów Lubelski,Krasnystaw,Lubartów,Puławy,Kraśnik,Świdnik,Bełżyce,Opole Lubelskie,Józefów,Łęczna,Łęczna,Łęczna
+    maxlen: 25
+    minlen: 4
+    type: data
+    match: text
+

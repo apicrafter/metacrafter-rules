@@ -1,0 +1,20 @@
+name: ca-finances
+description: Canadian banking and payment identifiers
+context: finances
+lang: common
+country_code: ca
+rules:
+  catransitfield:
+    key: catransit
+    name: Canadian branch transit number by field name
+    rule: transit_number,canada_transit,branch_transit
+    type: field
+    match: text
+  catransitvalue:
+    key: catransit
+    name: Canadian branch transit number by value pattern
+    match: ppr
+    type: data
+    rule: Optional(Literal('0').suppress()) + Word(nums, exact=5) + Optional(Literal('-').suppress() + Word(nums, exact=3))
+    maxlen: 9
+    minlen: 5

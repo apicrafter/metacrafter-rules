@@ -1,0 +1,29 @@
+name: jp-finances
+description: Japanese financial identifiers
+context: finances
+lang: ja
+country_code: jp
+rules:
+  jpbankaccountknown:
+    key: bankaccount
+    name: Japanese bank account by known name
+    rule: 銀行口座,口座,口座番号,銀行口座番号
+    type: field
+    match: text
+    priority: 1
+  jpbankcardknown:
+    key: bankcard
+    is_pii: True
+    name: Japanese bank card by known name
+    rule: カード,カード番号,クレジットカード,デビットカード
+    type: field
+    match: text
+    priority: 1
+  jptaxidknown:
+    key: taxid
+    name: Japanese tax ID by known name
+    rule: 税務番号,納税者番号,法人番号
+    type: field
+    match: text
+    priority: 1
+

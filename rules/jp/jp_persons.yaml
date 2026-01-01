@@ -1,0 +1,39 @@
+name: jp-persons
+description: Japanese person identifiers
+context: persons
+lang: ja
+country_code: jp
+rules:
+  jppersonnameknown:
+    key: person_name
+    is_pii: True
+    name: Japanese person name by known name
+    rule: 氏名,名前,フルネーム,本名,ユーザー名
+    type: field
+    match: text
+    priority: 1
+  jpfirstnameknown:
+    key: firstname
+    is_pii: True
+    name: Japanese first name by known name
+    rule: 名,名前,ファーストネーム
+    type: field
+    match: text
+    priority: 1
+  jplastnameknown:
+    key: lastname
+    is_pii: True
+    name: Japanese last name by known name
+    rule: 姓,名字,苗字,ラストネーム
+    type: field
+    match: text
+    priority: 1
+  jpmynumberknown:
+    key: mynumber
+    is_pii: True
+    name: Japanese My Number (マイナンバー) by known name
+    rule: マイナンバー,個人番号,マイナンバー番号
+    type: field
+    match: text
+    priority: 1
+

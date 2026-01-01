@@ -1,0 +1,141 @@
+name: dublincore
+description: Dublin Core metadata elements
+context: dublincore
+lang: common
+country_code: xx
+rules:
+  # Dublin Core Title
+  dctitlefield:
+    key: dc_title
+    name: Dublin Core title by field name
+    rule: dc_title,dctitle,dc:title,dcterms:title,dcterms_title,dublin_core_title,dc.title
+    type: field
+    match: text
+    priority: 1
+
+  # Dublin Core Creator
+  dccreatorfield:
+    key: dc_creator
+    name: Dublin Core creator by field name
+    rule: dc_creator,dccreator,dc:creator,dcterms:creator,dcterms_creator,dublin_core_creator,dc.creator
+    type: field
+    match: text
+    priority: 1
+
+  # Dublin Core Subject
+  dcsubjectfield:
+    key: dc_subject
+    name: Dublin Core subject by field name
+    rule: dc_subject,dcsubject,dc:subject,dcterms:subject,dcterms_subject,dublin_core_subject,dc.subject
+    type: field
+    match: text
+    priority: 1
+
+  # Dublin Core Description
+  dcdescriptionfield:
+    key: dc_description
+    name: Dublin Core description by field name
+    rule: dc_description,dcdescription,dc:description,dcterms:description,dcterms_description,dublin_core_description,dc.description
+    type: field
+    match: text
+    priority: 1
+
+  # Dublin Core Publisher
+  dcpublisherfield:
+    key: dc_publisher
+    name: Dublin Core publisher by field name
+    rule: dc_publisher,dcpublisher,dc:publisher,dcterms:publisher,dcterms_publisher,dublin_core_publisher,dc.publisher
+    type: field
+    match: text
+    priority: 1
+
+  # Dublin Core Contributor
+  dccontributorfield:
+    key: dc_contributor
+    name: Dublin Core contributor by field name
+    rule: dc_contributor,dccontributor,dc:contributor,dcterms:contributor,dcterms_contributor,dublin_core_contributor,dc.contributor
+    type: field
+    match: text
+    priority: 1
+
+  # Dublin Core Date
+  dcdatefield:
+    key: dc_date
+    name: Dublin Core date by field name
+    rule: dc_date,dcdate,dc:date,dcterms:date,dcterms_date,dublin_core_date,dc.date
+    type: field
+    match: text
+    priority: 1
+
+  # Dublin Core Type
+  dctypefield:
+    key: dc_type
+    name: Dublin Core type by field name
+    rule: dc_type,dctype,dc:type,dcterms:type,dcterms_type,dublin_core_type,dc.type
+    type: field
+    match: text
+    priority: 1
+
+  # Dublin Core Format
+  dcformatfield:
+    key: dc_format
+    name: Dublin Core format by field name
+    rule: dc_format,dcformat,dc:format,dcterms:format,dcterms_format,dublin_core_format,dc.format
+    type: field
+    match: text
+    priority: 1
+
+  # Dublin Core Identifier
+  dcidentifierfield:
+    key: dc_identifier
+    name: Dublin Core identifier by field name
+    rule: dc_identifier,dcidentifier,dc:identifier,dcterms:identifier,dcterms_identifier,dublin_core_identifier,dc.identifier
+    type: field
+    match: text
+    priority: 1
+
+  # Dublin Core Source
+  dcsourcefield:
+    key: dc_source
+    name: Dublin Core source by field name
+    rule: dc_source,dcsource,dc:source,dcterms:source,dcterms_source,dublin_core_source,dc.source
+    type: field
+    match: text
+    priority: 1
+
+  # Dublin Core Language
+  dclanguagefield:
+    key: dc_language
+    name: Dublin Core language by field name
+    rule: dc_language,dclanguage,dc:language,dcterms:language,dcterms_language,dublin_core_language,dc.language
+    type: field
+    match: text
+    priority: 1
+
+  # Dublin Core Relation
+  dcrelationfield:
+    key: dc_relation
+    name: Dublin Core relation by field name
+    rule: dc_relation,dcrelation,dc:relation,dcterms:relation,dcterms_relation,dublin_core_relation,dc.relation
+    type: field
+    match: text
+    priority: 1
+
+  # Dublin Core Coverage
+  dccoveragefield:
+    key: dc_coverage
+    name: Dublin Core coverage by field name
+    rule: dc_coverage,dccoverage,dc:coverage,dcterms:coverage,dcterms_coverage,dublin_core_coverage,dc.coverage
+    type: field
+    match: text
+    priority: 1
+
+  # Dublin Core Rights
+  dcrightsfield:
+    key: dc_rights
+    name: Dublin Core rights by field name
+    rule: dc_rights,dcrights,dc:rights,dcterms:rights,dcterms_rights,dublin_core_rights,dc.rights
+    type: field
+    match: text
+    priority: 1
+

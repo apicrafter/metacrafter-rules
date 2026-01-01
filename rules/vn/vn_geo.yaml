@@ -1,0 +1,41 @@
+name: vn-geo
+description: Vietnamese geographic identifiers
+context: geo
+lang: vi
+country_code: vn
+rules:
+  vnpostcodefield:
+    key: vnpostcode
+    name: Vietnamese postal code by field name
+    rule: ma_buu_chinh,ma_buu_dien
+    type: field
+    match: text
+  vnpostcodevalue:
+    key: vnpostcode
+    name: Vietnamese postal code by pattern
+    match: ppr
+    type: data
+    rule: Word(nums, exact=5) | (Word(nums, exact=5) + Literal('-') + Word(nums, exact=4))
+    maxlen: 10
+    minlen: 5
+  vnprovincefield:
+    key: vnprovince
+    name: Vietnamese province by field name
+    rule: tinh,ten_tinh
+    type: field
+    match: text
+  vnprovincevalue:
+    key: vnprovince
+    name: Vietnamese province name by value
+    rule: An Giang,Bà Rịa - Vũng Tàu,Bạc Liêu,Bắc Giang,Bắc Kạn,Bắc Ninh,Bến Tre,Bình Định,Bình Dương,Bình Phước,Bình Thuận,Cà Mau,Cao Bằng,Đắk Lắk,Đắk Nông,Điện Biên,Đồng Nai,Đồng Tháp,Gia Lai,Hà Giang,Hà Nam,Hà Tĩnh,Hải Dương,Hậu Giang,Hòa Bình,Hưng Yên,Khánh Hòa,Kiên Giang,Kon Tum,Lai Châu,Lâm Đồng,Lạng Sơn,Lào Cai,Long An,Nam Định,Nghệ An,Ninh Bình,Ninh Thuận,Phú Thọ,Phú Yên,Quảng Bình,Quảng Nam,Quảng Ngãi,Quảng Ninh,Quảng Trị,Sóc Trăng,Sơn La,Tây Ninh,Thái Bình,Thái Nguyên,Thanh Hóa,Thừa Thiên Huế,Tiền Giang,Trà Vinh,Tuyên Quang,Vĩnh Long,Vĩnh Phúc,Yên Bái,Đà Nẵng,Hải Phòng,Hà Nội,TP Hồ Chí Minh,Cần Thơ
+    maxlen: 25
+    minlen: 4
+    type: data
+    match: text
+  vncityfield:
+    key: vncity
+    name: Vietnamese city name by field name
+    rule: thanh_pho,ten_thanh_pho
+    type: field
+    match: text
+

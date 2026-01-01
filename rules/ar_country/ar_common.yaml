@@ -1,0 +1,23 @@
+name: ar-common
+description: Argentine common identifiers
+context: common
+lang: es
+country_code: ar
+rules:
+  arphoneknown:
+    key: phone
+    is_pii: True
+    name: Argentine phone number by known name
+    rule: telefono,telefono_celular,numero_telefone
+    type: field
+    match: text
+    priority: 1
+  arpersonnameknown:
+    key: person_name
+    is_pii: True
+    name: Argentine person name by known name
+    rule: nombre_completo,nombre,nombre_persona
+    type: field
+    match: text
+    priority: 1
+

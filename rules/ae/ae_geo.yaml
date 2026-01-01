@@ -1,0 +1,36 @@
+name: ae-geo
+description: UAE geographic identifiers
+context: geo
+lang: ar
+country_code: ae
+rules:
+  aepostcodefield:
+    key: aepostcode
+    name: UAE postal code by field name
+    rule: postcode,postal_code,zip_code,uae_postcode,po_box,po_box_number,صندوق_البريد
+    type: field
+    match: text
+  aepostcodevalue:
+    key: aepostcode
+    name: UAE postal code by pattern
+    match: ppr
+    type: data
+    rule: Word(nums, min=4, max=6)
+    maxlen: 6
+    minlen: 4
+    imprecise: 1
+  aecityfield:
+    key: aecity
+    name: UAE city name by field name
+    rule: city,city_name,emirate,المدينة,اسم_المدينة,الإمارة
+    type: field
+    match: text
+  aecityvalue:
+    key: aecity
+    name: UAE city name by value
+    rule: Dubai,Abu Dhabi,Sharjah,Ajman,Umm Al Quwain,Ras Al Khaimah,Fujairah,Al Ain,Al Dhafra,Madinat Zayed,Liwa Oasis,Al Gharbia,Al Shamal
+    maxlen: 20
+    minlen: 4
+    type: data
+    match: text
+

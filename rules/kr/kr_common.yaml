@@ -1,0 +1,22 @@
+name: kr-common
+description: South Korean common identifiers
+context: common
+lang: ko
+country_code: kr
+rules:
+  krphoneknown:
+    key: phone
+    is_pii: True
+    name: Korean phone number by known name
+    rule: 전화,전화번호,휴대전화,연락처,전화_번호
+    type: field
+    match: text
+    priority: 1
+  krpostcodeknown:
+    key: postcode
+    name: Korean postal code (우편번호) by known name
+    rule: 우편번호,우편_번호,우편번호코드
+    type: field
+    match: text
+    priority: 1
+

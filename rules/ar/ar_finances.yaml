@@ -1,0 +1,21 @@
+name: ar-finances
+description: Argentine financial identifiers
+context: finances
+lang: es
+country_code: ar
+rules:
+  arcuitknown:
+    key: cuit
+    name: Argentine CUIT (Clave Única de Identificación Tributaria) by known name
+    rule: cuit,cuit_number,numero_cuit
+    type: field
+    match: text
+    priority: 1
+  arbankaccountknown:
+    key: bankaccount
+    name: Argentine bank account by known name
+    rule: cuenta_bancaria,cuenta,numero_cuenta
+    type: field
+    match: text
+    priority: 1
+

@@ -1,0 +1,37 @@
+name: fr-realestate
+description: French real estate and property identifiers
+context: realestate
+lang: fr
+country_code: fr
+rules:
+  frcadastralfield:
+    key: frcadastral
+    name: French cadastral reference by field name
+    rule: cadastral,cadastre,reference_cadastrale,numero_cadastral,parcelle_cadastrale
+    type: field
+    match: text
+  frcadastralvalue:
+    key: frcadastral
+    name: French cadastral reference by pattern
+    match: ppr
+    type: data
+    rule: Word(alphanums, min=10, max=20)
+    maxlen: 20
+    minlen: 10
+    imprecise: 1
+  frpropertynumberfield:
+    key: frpropertynumber
+    name: French property number by field name
+    rule: property_number,numero_propriete,identifiant_propriete,reference_propriete
+    type: field
+    match: text
+  frpropertynumbervalue:
+    key: frpropertynumber
+    name: French property number by pattern
+    match: ppr
+    type: data
+    rule: Word(alphanums, min=8, max=18)
+    maxlen: 18
+    minlen: 8
+    imprecise: 1
+

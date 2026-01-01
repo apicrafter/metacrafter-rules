@@ -1,0 +1,35 @@
+name: in-geo
+description: Indian geographic identifiers
+context: geo
+lang: en
+country_code: in
+rules:
+  inpinknown:
+    key: postcode
+    name: Indian PIN code (Postal Index Number) by known name
+    rule: pin,pin_code,postal_code,postcode,postal_index_number
+    type: field
+    match: text
+    priority: 1
+  incityknown:
+    key: city
+    name: Indian city by known name
+    rule: city,city_name,town
+    type: field
+    match: text
+    priority: 1
+  instateknown:
+    key: state
+    name: Indian state by known name
+    rule: state,state_name,province
+    type: field
+    match: text
+    priority: 1
+  indistrictknown:
+    key: district
+    name: Indian district by known name
+    rule: district,district_name
+    type: field
+    match: text
+    priority: 1
+

@@ -1,0 +1,31 @@
+name: nl-persons
+description: Dutch person identifiers
+context: persons
+lang: nl
+country_code: nl
+rules:
+  nlpersonnameknown:
+    key: person_name
+    is_pii: True
+    name: Dutch person name by known name
+    rule: volledige_naam,naam,persoonsnaam,klantnaam
+    type: field
+    match: text
+    priority: 1
+  nlfirstnameknown:
+    key: firstname
+    is_pii: True
+    name: Dutch first name by known name
+    rule: voornaam,voornamen
+    type: field
+    match: text
+    priority: 1
+  nllastnameknown:
+    key: lastname
+    is_pii: True
+    name: Dutch last name by known name
+    rule: achternaam,achternamen,familienaam
+    type: field
+    match: text
+    priority: 1
+

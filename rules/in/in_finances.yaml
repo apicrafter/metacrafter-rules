@@ -1,0 +1,23 @@
+name: in-finances
+description: Indian banking and payment identifiers
+context: finances
+lang: en
+country_code: in
+rules:
+  ifscfield:
+    key: ifsc
+    name: Indian IFSC code by field name
+    rule: ifsc,ifsc_code,bank_ifsc
+    type: field
+    match: text
+  ifscvalue:
+    key: ifsc
+    name: Indian IFSC code by value pattern
+    match: ppr
+    type: data
+    rule: Word('ABCDEFGHIJKLMNOPQRSTUVWXYZ', exact=4) + Literal('0').suppress() + Word(alphanums, exact=6)
+    maxlen: 11
+    minlen: 11
+    validator: metacrafterext.rules.in.validators.validate_ifsc
+    priority: 1
+

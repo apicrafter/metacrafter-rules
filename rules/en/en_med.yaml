@@ -10,6 +10,7 @@ rules:
     rule: icd10,icd_10,diagnosis_code,diagnostic_code
     type: field
     match: text
+    priority: 1
   enicd10value:
     key: icd10code
     name: ICD-10 code by value
@@ -18,12 +19,14 @@ rules:
     rule: Word('ABCDEFGHIJKLMNOPQRSTUVWXYZ', exact=1) + Word(nums, exact=2) + Optional(Literal('.').suppress() + Word(nums, min=1, max=2))
     maxlen: 7
     minlen: 3
+    priority: 2
   enatcfield:
     key: atccode
     name: ATC drug code by field name
     rule: atc_code,atccode,drug_atc,who_atc
     type: field
     match: text
+    priority: 1
   enatcvalue:
     key: atccode
     name: ATC drug code by value
@@ -32,12 +35,14 @@ rules:
     rule: Word('ABCDEFGHIJKLMNOPQRSTUVWXYZ', exact=1) + Word(nums, exact=2) + Word('ABCDEFGHIJKLMNOPQRSTUVWXYZ', exact=1) + Word(nums, exact=2)
     maxlen: 7
     minlen: 7
+    priority: 2
   ensnomedfield:
     key: snomedcode
     name: SNOMED CT concept code by field name
     rule: snomed,snomed_ct,snomed_code,snomedid
     type: field
     match: text
+    priority: 1
   ensnomedvalue:
     key: snomedcode
     name: SNOMED CT concept code by value
@@ -46,12 +51,14 @@ rules:
     rule: Word(nums, min=6, max=10)
     maxlen: 10
     minlen: 6
+    priority: 2
   encptfield:
     key: cptcode
     name: CPT/HCPCS procedure code by field name
     rule: cpt_code,cptcode,procedure_cpt,hcpcs_code
     type: field
     match: text
+    priority: 1
   encptvalue:
     key: cptcode
     name: CPT/HCPCS procedure code by value
@@ -60,3 +67,4 @@ rules:
     rule: Word(nums, exact=5)
     maxlen: 5
     minlen: 5
+    priority: 2

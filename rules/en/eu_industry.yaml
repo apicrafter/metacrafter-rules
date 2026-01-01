@@ -11,3 +11,4 @@ rules:
     rule: codecpv,codecpv_original,cpv_code,code_cpv_principal,cpv,code_cpv
     match: text
     type: field
+    priority: 1

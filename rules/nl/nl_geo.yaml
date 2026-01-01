@@ -1,0 +1,28 @@
+name: nl-geo
+description: Dutch geographic identifiers
+context: geo
+lang: nl
+country_code: nl
+rules:
+  nlpostcodeknown:
+    key: postcode
+    name: Dutch postal code by known name
+    rule: postcode,postal_code,postcode_nl
+    type: field
+    match: text
+    priority: 1
+  nlcityknown:
+    key: city
+    name: Dutch city by known name
+    rule: stad,gemeente,plaats
+    type: field
+    match: text
+    priority: 1
+  nlprovinceknown:
+    key: province
+    name: Dutch province by known name
+    rule: provincie
+    type: field
+    match: text
+    priority: 1
+

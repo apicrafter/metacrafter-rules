@@ -28,3 +28,4 @@ rules:
     rule: Word(printables) + "url" +  lineEnd
     type: field
     match: ppr
+    priority: 2

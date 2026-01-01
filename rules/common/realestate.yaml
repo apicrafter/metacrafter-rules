@@ -1,0 +1,79 @@
+name: realestate
+description: Real estate and property identifiers
+context: realestate
+lang: common
+country_code: xx
+rules:
+  propertyidfield:
+    key: propertyid
+    name: Property ID by field name
+    rule: property_id,propertyid,property_number,parcel_id,parcel_number,lot_number,lot_id
+    type: field
+    match: text
+  propertyidvalue:
+    key: propertyid
+    name: Property ID by pattern
+    match: ppr
+    type: data
+    rule: Word(alphanums, min=4, max=20)
+    maxlen: 20
+    minlen: 4
+    fieldrule: property_id,propertyid,property_number,parcel_id,parcel_number,lot_number,lot_id
+    fieldrulematch: text
+    imprecise: 1
+    priority: 3
+  cadastralnumberfield:
+    key: cadastralnumber
+    name: Cadastral number by field name
+    rule: cadastral_number,cadastral_no,cadastral_id,cadastre_number,parcel_cadastral
+    type: field
+    match: text
+  cadastralnumbervalue:
+    key: cadastralnumber
+    name: Cadastral number by pattern
+    match: ppr
+    type: data
+    rule: Word(alphanums, min=6, max=25)
+    maxlen: 25
+    minlen: 6
+    fieldrule: cadastral_number,cadastral_no,cadastral_id,cadastre_number,parcel_cadastral
+    fieldrulematch: text
+    imprecise: 1
+    priority: 3
+  parcelnumberfield:
+    key: parcelnumber
+    name: Parcel number by field name
+    rule: parcel_number,parcel_no,parcel_id,lot_parcel,apn,assessor_parcel_number
+    type: field
+    match: text
+  parcelnumbervalue:
+    key: parcelnumber
+    name: Parcel number by pattern
+    match: ppr
+    type: data
+    rule: Word(alphanums, min=5, max=20)
+    maxlen: 20
+    minlen: 5
+    fieldrule: parcel_number,parcel_no,parcel_id,lot_parcel,apn,assessor_parcel_number
+    fieldrulematch: text
+    imprecise: 1
+    priority: 3
+  buildingnumberfield:
+    key: buildingnumber
+    name: Building number by field name
+    rule: building_number,building_no,building_id,structure_number
+    type: field
+    match: text
+  buildingnumbervalue:
+    key: buildingnumber
+    name: Building number by pattern
+    match: ppr
+    type: data
+    rule: Word(alphanums, min=3, max=15)
+    maxlen: 15
+    minlen: 3
+    fieldrule: building_number,building_no,building_id,structure_number
+    fieldrulematch: text
+    imprecise: 1
+    priority: 3
+

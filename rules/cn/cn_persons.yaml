@@ -1,0 +1,23 @@
+name: cn-persons
+description: Chinese person identifiers
+context: persons
+lang: zh
+country_code: cn
+rules:
+  cnidcardknown:
+    key: idcard
+    is_pii: True
+    name: Chinese ID card (身份证) by known name
+    rule: 身份证,身份证号,身份证号码,居民身份证,身份证件号码
+    type: field
+    match: text
+    priority: 1
+  cnpersonnameknown:
+    key: person_name
+    is_pii: True
+    name: Chinese person name by known name
+    rule: 姓名,名字,全名,中文名,真实姓名,用户姓名
+    type: field
+    match: text
+    priority: 1
+

@@ -1,0 +1,31 @@
+name: mx-persons
+description: Mexican person identifiers
+context: persons
+lang: es
+country_code: mx
+rules:
+  mxpersonnameknown:
+    key: person_name
+    is_pii: True
+    name: Mexican person name by known name
+    rule: nombre_completo,nombre,nombre_persona,nombre_cliente
+    type: field
+    match: text
+    priority: 1
+  mxcurpknown:
+    key: curp
+    is_pii: True
+    name: Mexican CURP (Clave Única de Registro de Población) by known name
+    rule: curp,curp_number,numero_curp
+    type: field
+    match: text
+    priority: 1
+  mxrfcknown:
+    key: rfc
+    is_pii: True
+    name: Mexican RFC (Registro Federal de Contribuyentes) by known name
+    rule: rfc,rfc_number,numero_rfc
+    type: field
+    match: text
+    priority: 1
+

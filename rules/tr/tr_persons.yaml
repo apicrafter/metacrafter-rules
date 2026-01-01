@@ -1,0 +1,56 @@
+name: tr-persons
+description: Turkish person identifiers
+context: persons
+lang: tr
+country_code: tr
+rules:
+  trtckimlikfield:
+    key: trtckimlik
+    is_pii: True
+    name: Turkish TC Kimlik No by field name
+    rule: tc_kimlik,tc_kimlik_no,tckimlik,tc_no,turkish_id,national_id,turkish_national_id
+    type: field
+    match: text
+  trtckimlikvalue:
+    key: trtckimlik
+    is_pii: True
+    name: Turkish TC Kimlik No by pattern
+    match: ppr
+    type: data
+    rule: Word(nums, exact=11)
+    maxlen: 11
+    minlen: 11
+  trpassportfield:
+    key: trpassport
+    is_pii: True
+    name: Turkish passport by field name
+    rule: pasaport,passport_number,pasaport_numarası,pasaport_no
+    type: field
+    match: text
+  trpassportvalue:
+    key: trpassport
+    is_pii: True
+    name: Turkish passport by pattern
+    match: ppr
+    type: data
+    rule: Word(alphanums, min=6, max=9)
+    maxlen: 9
+    minlen: 6
+  trdriverlicfield:
+    key: trdriverlic
+    is_pii: True
+    name: Turkish driver license by field name
+    rule: sürücü_belgesi,sürücü_belge_no,ehliyet,ehliyet_no
+    type: field
+    match: text
+  trdriverlicvalue:
+    key: trdriverlic
+    is_pii: True
+    name: Turkish driver license by pattern
+    match: ppr
+    type: data
+    rule: Word(alphanums, min=8, max=12)
+    maxlen: 12
+    minlen: 8
+    imprecise: 1
+

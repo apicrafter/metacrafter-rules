@@ -1,0 +1,27 @@
+name: us-education
+description: Education identifiers in United States
+context: education
+lang: en
+country_code: us
+rules:
+  ennecsfield:
+    key: ncesid
+    name: US NCES school identifier by field name
+    rule: nces_id,nces_school_id,ncesdistrictid
+    type: field
+    match: text
+  ennecsvalue:
+    key: ncesid
+    name: US NCES school identifier by value
+    match: ppr
+    type: data
+    rule: Word(nums, exact=7)
+    maxlen: 7
+    minlen: 7
+  enstudentfield:
+    key: studentid
+    is_pii: True
+    name: Student identifier by field name
+    rule: student_id,studentid,pupil_id
+    type: field
+    match: text

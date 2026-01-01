@@ -1,0 +1,56 @@
+name: pl-persons
+description: Polish person identifiers
+context: persons
+lang: pl
+country_code: pl
+rules:
+  plpeselfield:
+    key: plpesel
+    is_pii: True
+    name: Polish PESEL by field name
+    rule: pesel,pesel_number,pesel_no,polish_id,national_id,polish_national_id
+    type: field
+    match: text
+  plpeselvalue:
+    key: plpesel
+    is_pii: True
+    name: Polish PESEL by pattern
+    match: ppr
+    type: data
+    rule: Word(nums, exact=11)
+    maxlen: 11
+    minlen: 11
+  plpassportfield:
+    key: plpassport
+    is_pii: True
+    name: Polish passport by field name
+    rule: passport,paszport,passport_number,numer_paszportu,paszport_no
+    type: field
+    match: text
+  plpassportvalue:
+    key: plpassport
+    is_pii: True
+    name: Polish passport by pattern
+    match: ppr
+    type: data
+    rule: Word(alphas, exact=2) + Word(nums, exact=7)
+    maxlen: 9
+    minlen: 9
+  pldriverlicfield:
+    key: pldriverlic
+    is_pii: True
+    name: Polish driver license by field name
+    rule: driver_license,prawo_jazdy,numer_prawa_jazdy,license_number,driving_license
+    type: field
+    match: text
+  pldriverlicvalue:
+    key: pldriverlic
+    is_pii: True
+    name: Polish driver license by pattern
+    match: ppr
+    type: data
+    rule: Word(alphas, exact=3) + Word(nums, exact=6)
+    maxlen: 9
+    minlen: 9
+    imprecise: 1
+

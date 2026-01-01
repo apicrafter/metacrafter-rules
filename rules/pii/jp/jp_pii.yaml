@@ -1,0 +1,31 @@
+name: jp-pii
+description: Japanese PII identifiers
+context: pii
+lang: ja
+country_code: jp
+rules:
+  jpmynumberknown:
+    key: mynumber
+    is_pii: True
+    name: Japanese My Number (マイナンバー) by known name
+    rule: マイナンバー,個人番号,マイナンバー番号
+    type: field
+    match: text
+    priority: 1
+  jpphoneknown:
+    key: phone
+    is_pii: True
+    name: Japanese phone number by known name
+    rule: 電話,電話番号,携帯電話,固定電話,連絡先電話
+    type: field
+    match: text
+    priority: 1
+  jpbirthdayknown:
+    key: birthday
+    is_pii: True
+    name: Japanese birthday by known name
+    rule: 生年月日,誕生日,生年月日
+    type: field
+    match: text
+    priority: 1
+

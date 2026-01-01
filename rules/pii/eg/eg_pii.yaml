@@ -1,0 +1,39 @@
+name: eg-pii
+description: Egyptian person identifiable information (PII)
+context: pii
+lang: ar
+country_code: eg
+rules:
+  egnationalidfield:
+    key: egnationalid
+    is_pii: True
+    name: Egyptian National ID by field name
+    rule: national_id,egyptian_id,id_number,identity_number,الرقم_القومي,البطاقة_الوطنية
+    type: field
+    match: text
+  egnationalidvalue:
+    key: egnationalid
+    is_pii: True
+    name: Egyptian National ID by pattern
+    match: ppr
+    type: data
+    rule: Word(nums, exact=14)
+    maxlen: 14
+    minlen: 14
+  egpassportfield:
+    key: egpassport
+    is_pii: True
+    name: Egyptian passport by field name
+    rule: passport,passport_number,egyptian_passport,جواز_السفر,رقم_جواز_السفر
+    type: field
+    match: text
+  egpassportvalue:
+    key: egpassport
+    is_pii: True
+    name: Egyptian passport by pattern
+    match: ppr
+    type: data
+    rule: Word(alphanums, min=8, max=9)
+    maxlen: 9
+    minlen: 8
+

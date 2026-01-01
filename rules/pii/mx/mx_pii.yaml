@@ -1,0 +1,31 @@
+name: mx-pii
+description: Mexican PII identifiers
+context: pii
+lang: es
+country_code: mx
+rules:
+  mxcurpknown:
+    key: curp
+    is_pii: True
+    name: Mexican CURP (Clave Única de Registro de Población) by known name
+    rule: curp,curp_number,numero_curp
+    type: field
+    match: text
+    priority: 1
+  mxrfcknown:
+    key: rfc
+    is_pii: True
+    name: Mexican RFC (Registro Federal de Contribuyentes) by known name
+    rule: rfc,rfc_number,numero_rfc
+    type: field
+    match: text
+    priority: 1
+  mxphoneknown:
+    key: phone
+    is_pii: True
+    name: Mexican phone number by known name
+    rule: telefono,telefono_celular,numero_telefone
+    type: field
+    match: text
+    priority: 1
+

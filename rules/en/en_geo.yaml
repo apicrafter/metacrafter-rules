@@ -12,6 +12,7 @@ rules:
     minlen: 4
     type: data
     match: text
+    priority: 2
   encontinentbyname:
     key: continent
     name: Continent name by value
@@ -20,3 +21,4 @@ rules:
     minlen: 6
     type: data
     match: text
+    priority: 2

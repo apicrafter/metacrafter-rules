@@ -1,0 +1,42 @@
+name: jp-datetime
+description: Japanese date and time common patterns
+context: datetime
+lang: ja
+country_code: jp
+rules:
+  jpdateknown:
+    key: date
+    name: Japanese date name
+    rule: 日付,日時,作成日,更新日,登録日
+    type: field
+    match: text
+    priority: 1
+  jpyearknown:
+    key: year
+    name: Japanese year name
+    rule: 年,年度
+    type: field
+    match: text
+    priority: 1
+  jpmonthknown:
+    key: month
+    name: Japanese month name
+    rule: 月,月間
+    type: field
+    match: text
+    priority: 1
+  jpdayknown:
+    key: day
+    name: Japanese day name
+    rule: 日,日付
+    type: field
+    match: text
+    priority: 1
+  jptimeknown:
+    key: time
+    name: Japanese time name
+    rule: 時間,時刻,時分
+    type: field
+    match: text
+    priority: 1
+

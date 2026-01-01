@@ -1,0 +1,39 @@
+name: se-pii
+description: Swedish person identifiable information (PII)
+context: pii
+lang: sv
+country_code: se
+rules:
+  sepersonnummerfield:
+    key: sepersonnummer
+    is_pii: True
+    name: Swedish personal number by field name
+    rule: swedish_personal_number,personnummer,personnummer_se,swedish_id,personal_id_se
+    type: field
+    match: text
+  sepersonnummervalue:
+    key: sepersonnummer
+    is_pii: True
+    name: Swedish personal number by pattern
+    match: ppr
+    type: data
+    rule: Word(nums, exact=6) + Optional(Literal('-') | Literal('+')) + Word(nums, exact=4)
+    maxlen: 11
+    minlen: 10
+  sepassportfield:
+    key: sepassport
+    is_pii: True
+    name: Swedish passport by field name
+    rule: swedish_passport,passport_se,passport_sweden
+    type: field
+    match: text
+  sepassportvalue:
+    key: sepassport
+    is_pii: True
+    name: Swedish passport by pattern
+    match: ppr
+    type: data
+    rule: Word(nums, exact=8)
+    maxlen: 8
+    minlen: 8
+

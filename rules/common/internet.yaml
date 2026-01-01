@@ -10,6 +10,7 @@ rules:
     rule: cidr
     match: text
     type: field
+    priority: 1
   asnbyprefixname:
     key: asn
     name: Autonomous system network (ASN) by value and name
@@ -18,16 +19,30 @@ rules:
     rule: Literal('AS') + Word(nums, max=5)
     type: data
     match: ppr
+    priority: 2
+# This rule generates a lot of False positives because it matches any 1-5 digit number in fields containing "asn"
+# Many numeric values in ASN-related fields are not actual ASN numbers
+# It is marked as imprecise and could be filtered if it's set
+  asnbyfield:
+    key: asn
+    name: Autonomous System Number (ASN) by field name
+    rule: asn,as_number,autonomous_system_number,asn_id,as_id,autonomous_system_id
+    type: field
+    match: text
+    priority: 1
   asnbyvalue:
     key: asn
     name: Autonomous system network (ASN) by value and name
-    maxlen: 7
+    maxlen: 10
     minlen: 1
-    rule: Word(nums, max=5)
+    rule: Word(nums, min=1, max=10)
     type: data
     match: ppr
     fieldrule: asn
     fieldrulematch: text
+    validator: metacrafterext.rules.common.identifiers.validate_asn
+    imprecise: 1
+    priority: 3
   asnbyvalueandpostfix:
     key: asn
     name: Autonomous system network (ASN) by value and postfix
@@ -36,14 +51,16 @@ rules:
     rule: Word(nums, max=6)
     type: data
     match: ppr
-    fieldrule: '"_asn" + lineEnd'
+    fieldrule: Literal('_asn') + lineEnd
     fieldrulematch: ppr
+    priority: 2
   fqdnbyknown:
     key: fqdn
     name: Domain or host name (FQDN) by known names
     rule: domainname,domain_name,host_name,hostname
     match: text
     type: field
+    priority: 1
   ipvaddr:
     key: ipaddr
     name: IP address (IPv4 or IPv6)
@@ -51,6 +68,7 @@ rules:
     type: field
     match: text
     is_pii: True
+    priority: 1
   emailknown:
     key: email
     is_pii: True
@@ -58,6 +76,7 @@ rules:
     rule: email,e_mail,e-mail,contact e-mail,email address,contactemail,email_address,contact_email,email_comercial,emailaddress,wstemail,contact email,reportemail,recipientemail,electronicmailaddress,email_addr,emailcontact 
     type: field
     match: text
+    priority: 1
   emailknownpat:
     key: email
     is_pii: True
@@ -65,22 +84,122 @@ rules:
     rule: Word(alphanums) + "email" +  lineEnd
     type: field
     match: ppr
+    priority: 2
   emailknownprefix:
     key: email
     is_pii: True
     name: Email by prefix pat
-    rule: '"email_" + Word(alphanums) +  lineEnd'
+    rule: Literal('email_') + Word(alphanums) +  lineEnd
     type: field
     match: ppr
+    priority: 2
   websiteknown:
     key: url
     name: URL/website by known name
     rule: url,website,uri,web_site,website address,website_address,website_url,image_url,download_url,site_url,site_internet
     type: field
     match: text
+    priority: 1
   urlknownpat:
     key: url
     name: URL/website by known name pattern
     rule: Word(printables) + "url" +  lineEnd
     type: field
     match: ppr
+    priority: 2
+  macaddressfield:
+    key: mac_address
+    name: MAC address (Media Access Control) by field name
+    rule: mac_address,mac,mac_addr,hardware_address,ethernet_address,physical_address,network_address,nic_address,adapter_address
+    type: field
+    match: text
+    priority: 1
+  macaddressvalue:
+    key: mac_address
+    name: MAC address (Media Access Control) by value pattern
+    match: ppr
+    type: data
+    rule: Word(hexnums, exact=2) + (Literal(':') | Literal('-')).suppress() + Word(hexnums, exact=2) + (Literal(':') | Literal('-')).suppress() + Word(hexnums, exact=2) + (Literal(':') | Literal('-')).suppress() + Word(hexnums, exact=2) + (Literal(':') | Literal('-')).suppress() + Word(hexnums, exact=2) + (Literal(':') | Literal('-')).suppress() + Word(hexnums, exact=2)
+    maxlen: 17
+    minlen: 17
+    priority: 1
+    validator: metacrafterext.rules.common.internet.validate_macaddr
+  messageidfield:
+    key: message_id
+    name: Message-ID (Email Message Identifier) by field name
+    rule: message_id,message-id,messageid,message_id_header,email_message_id,mail_message_id,msg_id,msgid
+    type: field
+    match: text
+    priority: 1
+  messageidvalue:
+    key: message_id
+    name: Message-ID (Email Message Identifier) by value pattern
+    match: ppr
+    type: data
+    rule: Literal('<') + Word(printables, excludeChars='<>@', min=1) + Literal('@') + Word(printables, excludeChars='<>@', min=1) + Literal('>')
+    maxlen: 256
+    minlen: 5
+    priority: 1
+    fieldrule: message_id,message-id,messageid,message_id_header,email_message_id,mail_message_id,msg_id,msgid
+    fieldrulematch: text
+  inreplytofield:
+    key: in_reply_to
+    name: In-Reply-To (Email Header) by field name
+    rule: in_reply_to,in-reply-to,inreplyto,in_reply_to_header,reply_to_message_id,reply_message_id
+    type: field
+    match: text
+    priority: 1
+  inreplytovalue:
+    key: in_reply_to
+    name: In-Reply-To (Email Header) by value pattern
+    match: ppr
+    type: data
+    rule: Literal('<') + Word(printables, excludeChars='<>@', min=1) + Literal('@') + Word(printables, excludeChars='<>@', min=1) + Literal('>')
+    maxlen: 256
+    minlen: 5
+    priority: 2
+    fieldrule: in_reply_to,in-reply-to,inreplyto,in_reply_to_header,reply_to_message_id,reply_message_id
+    fieldrulematch: text
+  referencesfield:
+    key: references
+    name: References (Email Header) by field name
+    rule: references,references_header,email_references,mail_references,thread_references
+    type: field
+    match: text
+    priority: 1
+  magnetlinkfield:
+    key: magnet_link
+    name: Magnet URI (BitTorrent) by field name
+    rule: magnet_link,magnet,magnet_uri,magnet_url,torrent_magnet,bt_magnet
+    type: field
+    match: text
+    priority: 1
+  magnetlinkvalue:
+    key: magnet_link
+    name: Magnet URI (BitTorrent) by value pattern
+    match: ppr
+    type: data
+    rule: Literal('magnet:?') + Word(printables, min=10, max=490)
+    minlen: 60
+    maxlen: 500
+    priority: 1
+    validator: metacrafterext.rules.common.internet.validate_magnet_link
+  torrentinfohashfield:
+    key: torrent_info_hash
+    name: BitTorrent Info Hash (BTIH) by field name
+    rule: torrent_hash,info_hash,btih,bt_hash,torrent_info_hash,bittorrent_hash,torrent_id
+    type: field
+    match: text
+    priority: 1
+  torrentinfohashvalue:
+    key: torrent_info_hash
+    name: BitTorrent Info Hash (BTIH) by value pattern
+    match: ppr
+    type: data
+    rule: Word(hexnums, exact=40)
+    minlen: 40
+    maxlen: 40
+    priority: 2
+    validator: metacrafterext.rules.common.internet.validate_torrent_info_hash
+    fieldrule: torrent_hash,info_hash,btih,bt_hash,torrent_info_hash,bittorrent_hash,torrent_id
+    fieldrulematch: text

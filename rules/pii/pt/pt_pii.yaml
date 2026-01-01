@@ -1,0 +1,39 @@
+name: pt-pii
+description: Portuguese PII identifiers
+context: pii
+lang: pt
+country_code: xx
+rules:
+  ptphoneknown:
+    key: phone
+    is_pii: True
+    name: Portuguese phone number by known name
+    rule: telefone,celular,numero_telefone,telefone_celular
+    type: field
+    match: text
+    priority: 1
+  ptbirthdayknown:
+    key: birthday
+    is_pii: True
+    name: Portuguese birthday by known name
+    rule: data_nascimento,data_de_nascimento,nascimento
+    type: field
+    match: text
+    priority: 1
+  ptemailknown:
+    key: email
+    is_pii: True
+    name: Portuguese email by known name
+    rule: email,e_mail,correio_eletronico
+    type: field
+    match: text
+    priority: 1
+  ptpassportknown:
+    key: passport
+    is_pii: True
+    name: Portuguese passport by known name
+    rule: passaporte,numero_passaporte
+    type: field
+    match: text
+    priority: 1
+

@@ -48,3 +48,5 @@ rules:
     rule: Literal('FR') + Word(alphanums, exact=11)
     maxlen: 13
     minlen: 13
+    validator: metacrafterext.rules.fr.validators.validate_fr_vat
+    priority: 1

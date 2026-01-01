@@ -10,9 +10,119 @@ rules:
     rule: orcid
     type: field
     match: text
+    priority: 1
+  orcidbyvalue:
+    key: orcid
+    name: ORCID unique identifier by value pattern
+    match: ppr
+    type: data
+    rule: Literal("0000-000") + Word(nums, exact=4) + Literal("-") + Word(nums, exact=4) + Optional(Literal("-") + Word('0123456789X', exact=1))
+    minlen: 16
+    maxlen: 19
+    priority: 1
+    validator: metacrafterext.rules.common.identifiers.validate_orcid
+  doifield:
+    key: doi
+    name: DOI (Digital Object Identifier) by field name
+    rule: doi,digital_object_identifier,doi_number,doi_code,doi_id
+    type: field
+    match: text
+    priority: 1
   doibydata:
     key: doi
     name: DOI unique ID of publication
-    rule: Literal("10.") + Word(nums,exact=4) + Literal("/") + Word(printables)
+    rule: Literal("10.") + Word(nums,exact=4) + Literal("/") + Word(alphanums + "-._;()/", min=1, max=200)
     type: data
     match: ppr
+    priority: 1
+  isnifield:
+    key: isni
+    name: International Standard Name Identifier (ISNI) by field name
+    rule: isni,isni_number,isni_code,isni_id,standard_name_identifier,international_standard_name_identifier
+    type: field
+    match: text
+    priority: 1
+  isnivalue:
+    key: isni
+    name: International Standard Name Identifier (ISNI) by value pattern
+    match: ppr
+    type: data
+    rule: Word(nums, exact=15) + Word('0123456789X', exact=1)
+    maxlen: 16
+    minlen: 16
+    priority: 1
+    validator: metacrafterext.rules.common.identifiers.validate_isni
+  isnivaluewithspaces:
+    key: isni
+    name: International Standard Name Identifier (ISNI) with spaces
+    match: ppr
+    type: data
+    rule: Word(nums, exact=4) + Optional(Literal(' ').suppress()) + Word(nums, exact=4) + Optional(Literal(' ').suppress()) + Word(nums, exact=4) + Optional(Literal(' ').suppress()) + Word(nums, exact=3) + Word('0123456789X', exact=1)
+    maxlen: 19
+    minlen: 16
+    priority: 2
+    validator: metacrafterext.rules.common.identifiers.validate_isni
+  gridbyfieldname:
+    key: grid
+    name: Global Research Identifier Database (GRID) by field name
+    rule: grid,grid_id,grid_identifier,global_research_identifier
+    type: field
+    match: text
+    priority: 1
+  gridbyvalue:
+    key: grid
+    name: Global Research Identifier Database (GRID) by value pattern
+    match: ppr
+    type: data
+    rule: Literal("grid.") + Word(nums, min=4, max=6) + Literal(".") + Word(hexnums, min=1, max=2)
+    minlen: 8
+    maxlen: 12
+    priority: 1
+    validator: metacrafterext.rules.common.identifiers.validate_grid
+  openalexidbyfieldname:
+    key: openalexid
+    name: OpenAlex ID by field name
+    rule: openalex_id,openalexid,openalex_identifier
+    type: field
+    match: text
+    priority: 1
+  openalexidbyvalue:
+    key: openalexid
+    name: OpenAlex ID by value pattern
+    match: ppr
+    type: data
+    rule: Word('ACIVW', exact=1) + Word('123456789', exact=1) + Word(nums, min=3, max=9)
+    minlen: 5
+    maxlen: 11
+    priority: 1
+    validator: metacrafterext.rules.common.identifiers.validate_openalex_id
+  roridbyfieldname:
+    key: rorid
+    name: Research Organization Registry ID (ROR ID) by field name
+    rule: ror_id,rorid,research_organization_registry_id,ror_identifier
+    type: field
+    match: text
+    priority: 1
+  roridbyvalue:
+    key: rorid
+    name: Research Organization Registry ID (ROR ID) by value pattern
+    match: ppr
+    type: data
+    rule: Word(alphanums, exact=9)
+    minlen: 9
+    maxlen: 9
+    priority: 1
+  researcheridbyfieldname:
+    key: researcherid
+    name: ResearcherID by field name
+    rule: researcher_id,researcherid,web_of_science_researcherid,researcher_identifier
+    type: field
+    match: text
+    priority: 1
+  scopusauthoiridbyfieldname:
+    key: scopusauthoirid
+    name: Scopus Author ID by field name
+    rule: scopus_author_id,scopusauthoirid,scopus_author_identifier,scopus_id
+    type: field
+    match: text
+    priority: 1

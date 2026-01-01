@@ -1,0 +1,39 @@
+name: ae-pii
+description: UAE person identifiable information (PII)
+context: pii
+lang: ar
+country_code: ae
+rules:
+  aeemiratesidfield:
+    key: aeemiratesid
+    is_pii: True
+    name: UAE Emirates ID by field name
+    rule: emirates_id,emirates_id_number,uae_id,national_id,emirates_id_no,الهوية_الإماراتية,رقم_الهوية
+    type: field
+    match: text
+  aeemiratesidvalue:
+    key: aeemiratesid
+    is_pii: True
+    name: UAE Emirates ID by pattern
+    match: ppr
+    type: data
+    rule: Word(nums, exact=15)
+    maxlen: 15
+    minlen: 15
+  aepassportfield:
+    key: aepassport
+    is_pii: True
+    name: UAE passport by field name
+    rule: passport,passport_number,uae_passport,emirates_passport,جواز_السفر,رقم_جواز_السفر
+    type: field
+    match: text
+  aepassportvalue:
+    key: aepassport
+    is_pii: True
+    name: UAE passport by pattern
+    match: ppr
+    type: data
+    rule: Word(alphanums, min=8, max=9)
+    maxlen: 9
+    minlen: 8
+

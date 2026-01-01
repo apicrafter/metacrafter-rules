@@ -1,0 +1,132 @@
+name: texts
+description: Texts and articles identifiers
+context: texts
+lang: common
+country_code: xx
+rules:
+  # Article ID Detection
+  articleidfield:
+    key: article_id
+    name: Article ID by field name
+    rule: article_id,articleid,article_number,article_no,article_code,post_id,postid,story_id,storyid,news_id,newsid,entry_id,entryid
+    type: field
+    match: text
+    priority: 1
+  articleidvalue:
+    key: article_id
+    name: Article ID by value pattern (numeric)
+    match: ppr
+    type: data
+    rule: Word(nums, min=1, max=20)
+    minlen: 1
+    maxlen: 20
+    priority: 2
+    fieldrule: article_id,articleid,article_number,article_no,article_code,post_id,postid,story_id,storyid,news_id,newsid,entry_id,entryid
+    fieldrulematch: text
+    imprecise: 1
+  articleidalphanumvalue:
+    key: article_id
+    name: Article ID by value pattern (alphanumeric)
+    match: ppr
+    type: data
+    rule: Word(alphanums + '-_', min=3, max=50)
+    minlen: 3
+    maxlen: 50
+    priority: 2
+    fieldrule: article_id,articleid,article_number,article_no,article_code,post_id,postid,story_id,storyid,news_id,newsid,entry_id,entryid
+    fieldrulematch: text
+    imprecise: 1
+
+  # Document ID Detection
+  documentidfield:
+    key: document_id
+    name: Document ID by field name
+    rule: document_id,documentid,document_number,document_no,document_code,doc_id,docid,doc_number,doc_no,reference_number,ref_number,ref_no
+    type: field
+    match: text
+    priority: 1
+  documentidvalue:
+    key: document_id
+    name: Document ID by value pattern (numeric)
+    match: ppr
+    type: data
+    rule: Word(nums, min=1, max=30)
+    minlen: 1
+    maxlen: 30
+    priority: 2
+    fieldrule: document_id,documentid,document_number,document_no,document_code,doc_id,docid,doc_number,doc_no,reference_number,ref_number,ref_no
+    fieldrulematch: text
+    imprecise: 1
+  documentidalphanumvalue:
+    key: document_id
+    name: Document ID by value pattern (alphanumeric)
+    match: ppr
+    type: data
+    rule: Word(alphanums + '-_/', min=3, max=100)
+    minlen: 3
+    maxlen: 100
+    priority: 2
+    fieldrule: document_id,documentid,document_number,document_no,document_code,doc_id,docid,doc_number,doc_no,reference_number,ref_number,ref_no
+    fieldrulematch: text
+    imprecise: 1
+
+  # Content ID Detection
+  contentidfield:
+    key: content_id
+    name: Content ID by field name
+    rule: content_id,contentid,content_number,content_no,content_code,cms_id,cmsid,page_id,pageid,node_id,nodeid
+    type: field
+    match: text
+    priority: 1
+  contentidvalue:
+    key: content_id
+    name: Content ID by value pattern
+    match: ppr
+    type: data
+    rule: Word(alphanums + '-_', min=3, max=50)
+    minlen: 3
+    maxlen: 50
+    priority: 2
+    fieldrule: content_id,contentid,content_number,content_no,content_code,cms_id,cmsid,page_id,pageid,node_id,nodeid
+    fieldrulematch: text
+    imprecise: 1
+
+  # Headline Detection (field name only, no pattern)
+  headlinefield:
+    key: headline
+    name: Headline by field name
+    rule: headline,headline_text,article_headline,title,article_title,news_headline,story_headline
+    type: field
+    match: text
+    priority: 1
+
+  # Description Detection (field name only, no pattern)
+  descriptionfield:
+    key: description
+    name: Description by field name
+    rule: description,desc,article_description,content_description,text_description,summary,abstract
+    type: field
+    match: text
+    priority: 1
+
+  # Comment ID Detection
+  commentidfield:
+    key: comment_id
+    name: Comment ID by field name
+    rule: comment_id,commentid,comment_number,comment_no,comment_code,reply_id,replyid
+    type: field
+    match: text
+    priority: 1
+  commentidvalue:
+    key: comment_id
+    name: Comment ID by value pattern
+    match: ppr
+    type: data
+    rule: Word(alphanums + '-_', min=3, max=50)
+    minlen: 3
+    maxlen: 50
+    priority: 2
+    fieldrule: comment_id,commentid,comment_number,comment_no,comment_code,reply_id,replyid
+    fieldrulematch: text
+    imprecise: 1
+

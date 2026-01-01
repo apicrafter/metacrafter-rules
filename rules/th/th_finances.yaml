@@ -1,0 +1,36 @@
+name: th-finances
+description: Thai financial identifiers
+context: finances
+lang: th
+country_code: th
+rules:
+  thtaxidfield:
+    key: thtaxid
+    name: Thai tax ID by field name
+    rule: thai_tax_id,เลขประจำตัวผู้เสียภาษี,เลขผู้เสียภาษี,เลขที่ผู้เสียภาษี
+    type: field
+    match: text
+  thtaxidvalue:
+    key: thtaxid
+    name: Thai tax ID by pattern
+    match: ppr
+    type: data
+    rule: Word(nums, exact=13)
+    maxlen: 13
+    minlen: 13
+  thbankaccountfield:
+    key: thbankaccount
+    name: Thai bank account by field name
+    rule: thai_bank_account,เลขบัญชี,เลขที่บัญชี,บัญชีธนาคาร
+    type: field
+    match: text
+  thbankaccountvalue:
+    key: thbankaccount
+    name: Thai bank account by pattern
+    match: ppr
+    type: data
+    rule: Word(nums, min=10, max=15)
+    maxlen: 15
+    minlen: 10
+    imprecise: 1
+

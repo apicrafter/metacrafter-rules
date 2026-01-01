@@ -1,0 +1,22 @@
+name: hi-datetime
+description: Hindi date and time formats
+context: datetime
+lang: hi
+country_code: xx
+rules:
+  hidatefield:
+    key: hidate
+    name: Hindi date format by field name
+    rule: hindi_date,हिंदी_तारीख,तारीख,दिनांक
+    type: field
+    match: text
+  hidatevalue:
+    key: hidate
+    name: Hindi date format by pattern
+    match: ppr
+    type: data
+    rule: Word(nums, exact=2) + Literal('/') + Word(nums, exact=2) + Literal('/') + Word(nums, exact=4) | Word(nums, exact=2) + Literal('-') + Word(nums, exact=2) + Literal('-') + Word(nums, exact=4)
+    maxlen: 10
+    minlen: 10
+    imprecise: 1
+

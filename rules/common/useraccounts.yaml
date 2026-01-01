@@ -1,0 +1,75 @@
+name: useraccounts
+description: User accounts in products and services
+context: useraccounts
+lang: common
+country_code: xx
+rules:
+  useridfield:
+    key: userid
+    name: User ID by field name
+    rule: user_id,userid,user_identifier,account_id,account_identifier
+    type: field
+    match: text
+  useridvalue:
+    key: userid
+    name: User ID by pattern
+    match: ppr
+    type: data
+    rule: Word(alphanums, min=4, max=64)
+    maxlen: 64
+    minlen: 4
+    imprecise: 1
+  usernamefield:
+    key: username
+    name: Username by field name
+    rule: username,user_name,login_name,user_login
+    type: field
+    match: text
+  usernamevalue:
+    key: username
+    name: Username by pattern
+    match: ppr
+    type: data
+    rule: Word(alphanums + '._-', min=3, max=32)
+    maxlen: 32
+    minlen: 3
+    fieldrule: username,user_name,login_name,user_login,account_name
+    fieldrulematch: text
+    imprecise: 1
+    priority: 3
+  userhandlefield:
+    key: userhandle
+    name: User handle by field name
+    rule: user_handle,handle,social_handle,twitter_handle,instagram_handle
+    type: field
+    match: text
+  userhandlevalue:
+    key: userhandle
+    name: User handle by pattern
+    match: ppr
+    type: data
+    rule: Literal('@') + Word(alphanums + '_', min=1, max=15)
+    maxlen: 16
+    minlen: 2
+    fieldrule: user_handle,handle,social_handle,twitter_handle,instagram_handle
+    fieldrulematch: text
+    imprecise: 1
+    priority: 3
+  useruuidfield:
+    key: useruuid
+    name: User UUID by field name
+    rule: user_uuid,account_uuid,user_guid,account_guid
+    type: field
+    match: text
+  useruuidvalue:
+    key: useruuid
+    name: User UUID by pattern
+    match: ppr
+    type: data
+    rule: Word('0123456789abcdefABCDEF', exact=8) + Literal('-') + Word('0123456789abcdefABCDEF', exact=4) + Literal('-') + Word('0123456789abcdefABCDEF', exact=4) + Literal('-') + Word('0123456789abcdefABCDEF', exact=4) + Literal('-') + Word('0123456789abcdefABCDEF', exact=12)
+    maxlen: 36
+    minlen: 36
+    fieldrule: user_uuid,account_uuid,user_guid,account_guid
+    fieldrulematch: text
+    priority: 2
+

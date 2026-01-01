@@ -1,0 +1,51 @@
+name: ae-finances
+description: UAE financial identifiers
+context: finances
+lang: ar
+country_code: ae
+rules:
+  aetaxnumberfield:
+    key: aetaxnumber
+    name: UAE tax number by field name
+    rule: tax_number,tax_id,vat_number,uae_tax,uae_vat,trn,trade_license_number,الرقم_الضريبي
+    type: field
+    match: text
+  aetaxnumbervalue:
+    key: aetaxnumber
+    name: UAE tax number by pattern
+    match: ppr
+    type: data
+    rule: Word(nums, min=9, max=15)
+    maxlen: 15
+    minlen: 9
+    imprecise: 1
+  aebankaccountfield:
+    key: aebankaccount
+    name: UAE bank account by field name
+    rule: bank_account,account_number,iban,uae_iban,رقم_الحساب
+    type: field
+    match: text
+  aebankaccountvalue:
+    key: aebankaccount
+    name: UAE bank account by pattern
+    match: ppr
+    type: data
+    rule: Literal('AE') + Word(nums, exact=2) + Word(alphanums, exact=4) + Word(nums, min=16, max=24)
+    maxlen: 30
+    minlen: 28
+    imprecise: 1
+  aeibanfield:
+    key: aeiban
+    name: UAE IBAN by field name
+    rule: iban,iban_number,uae_iban
+    type: field
+    match: text
+  aeibanvalue:
+    key: aeiban
+    name: UAE IBAN by pattern
+    match: ppr
+    type: data
+    rule: Literal('AE') + Word(nums, exact=2) + Word(alphanums, exact=4) + Word(nums, min=16, max=24)
+    maxlen: 30
+    minlen: 28
+

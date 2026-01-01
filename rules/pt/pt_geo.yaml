@@ -1,0 +1,35 @@
+name: pt-geo
+description: Portuguese geographic identifiers
+context: geo
+lang: pt
+country_code: xx
+rules:
+  ptcityknown:
+    key: city
+    name: Portuguese city by known name
+    rule: cidade,municipio
+    type: field
+    match: text
+    priority: 1
+  ptstateknown:
+    key: state
+    name: Portuguese state by known name
+    rule: estado,uf,estado_uf
+    type: field
+    match: text
+    priority: 1
+  ptaddressknown:
+    key: address
+    name: Portuguese address by known name
+    rule: endereco,endereco_completo,logradouro
+    type: field
+    match: text
+    priority: 1
+  ptpostcodeknown:
+    key: postcode
+    name: Portuguese postal code by known name
+    rule: codigo_postal,cep,cep_number
+    type: field
+    match: text
+    priority: 1
+

@@ -1,0 +1,35 @@
+name: eg-geo
+description: Egyptian geographic identifiers
+context: geo
+lang: ar
+country_code: eg
+rules:
+  egpostcodefield:
+    key: egpostcode
+    name: Egyptian postal code by field name
+    rule: postcode,postal_code,zip_code,egyptian_postcode,الرمز_البريدي
+    type: field
+    match: text
+  egpostcodevalue:
+    key: egpostcode
+    name: Egyptian postal code by pattern
+    match: ppr
+    type: data
+    rule: Word(nums, exact=5)
+    maxlen: 5
+    minlen: 5
+  egcityfield:
+    key: egcity
+    name: Egyptian city name by field name
+    rule: city,city_name,governorate,المدينة,اسم_المدينة,المحافظة
+    type: field
+    match: text
+  egcityvalue:
+    key: egcity
+    name: Egyptian city name by value
+    rule: Cairo,Alexandria,Giza,Shubra El Kheima,Port Said,Suez,Luxor,Asyut,Ismailia,Faiyum,Zagazig,Aswan,Damietta,Minya,Damanhur,Beni Suef,Qena,Sohag,Kafr el-Sheikh,Arish,Mallawi,Bilbais,Mit Ghamr,Al-Hamidiyya,Desouk,Qalyub,Abu Kabir,Kafr el-Dawwar,Girga,Akhmim,Matareya,Idfu,Bilqas,Disuq,Talkha,El Mahalla El Kubra,El Mansura,Tanta,Zifta,Samannud,El Senbellawein,Sharm El Sheikh,Hurghada
+    maxlen: 25
+    minlen: 4
+    type: data
+    match: text
+

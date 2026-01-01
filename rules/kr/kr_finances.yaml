@@ -1,0 +1,51 @@
+name: kr-finances
+description: Korean financial identifiers
+context: finances
+lang: ko
+country_code: kr
+rules:
+  krbusinessregfield:
+    key: krbusinessreg
+    name: Korean business registration number by field name
+    rule: 사업자등록번호
+    type: field
+    match: text
+  krbusinessregvalue:
+    key: krbusinessreg
+    name: Korean business registration number by pattern
+    match: ppr
+    type: data
+    rule: Word(nums, exact=3) + Literal('-') + Word(nums, exact=2) + Literal('-') + Word(nums, exact=5)
+    maxlen: 12
+    minlen: 12
+  krtaxnumberfield:
+    key: krtaxnumber
+    name: Korean tax number by field name
+    rule: 세무서번호,korean_tax_number
+    type: field
+    match: text
+  krtaxnumbervalue:
+    key: krtaxnumber
+    name: Korean tax number by pattern
+    match: ppr
+    type: data
+    rule: Word(nums, min=10, max=13)
+    maxlen: 13
+    minlen: 10
+    imprecise: 1
+  krbankaccountfield:
+    key: krbankaccount
+    name: Korean bank account by field name
+    rule: 계좌번호,은행계좌
+    type: field
+    match: text
+  krbankaccountvalue:
+    key: krbankaccount
+    name: Korean bank account by pattern
+    match: ppr
+    type: data
+    rule: Word(nums, min=10, max=16)
+    maxlen: 16
+    minlen: 10
+    imprecise: 1
+

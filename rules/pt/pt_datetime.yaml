@@ -1,0 +1,35 @@
+name: pt-datetime
+description: Portuguese date and time common patterns
+context: datetime
+lang: pt
+country_code: xx
+rules:
+  ptdateknown:
+    key: date
+    name: Portuguese date name
+    rule: data,data_criacao,data_atualizacao,data_registro
+    type: field
+    match: text
+    priority: 1
+  ptyearknown:
+    key: year
+    name: Portuguese year name
+    rule: ano,ano_criacao
+    type: field
+    match: text
+    priority: 1
+  ptmonthknown:
+    key: month
+    name: Portuguese month name
+    rule: mes,mes_criacao
+    type: field
+    match: text
+    priority: 1
+  pttimeknown:
+    key: time
+    name: Portuguese time name
+    rule: hora,horario,horas
+    type: field
+    match: text
+    priority: 1
+

@@ -49,6 +49,7 @@ rules:
     priority: 1
     match: ppr
     type: data
+    validator: metacrafterext.rules.ru.validators.validate_ru_snils
   rupassportforeignfield:
     key: rupassport
     is_pii: True
@@ -84,3 +85,20 @@ rules:
     rule: fullname,full_name,полное_имя,polnoe_imya,фио,fio
     type: field
     match: text
+  rudriverlicensefield:
+    key: rudriverlicense
+    is_pii: True
+    name: Russian driver's license by field name
+    rule: водительское удостоверение,номер водительского удостоверения,водительские права,driver_license,driverlicense,водительское_удостоверение
+    type: field
+    match: text
+  rudriverlicensevalue:
+    key: rudriverlicense
+    is_pii: True
+    name: Russian driver's license by pattern
+    rule: Word(nums, exact=2) + Literal(' ').suppress() + Word(nums, exact=6)
+    maxlen: 9
+    minlen: 9
+    priority: 1
+    match: ppr
+    type: data

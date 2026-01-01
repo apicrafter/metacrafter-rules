@@ -1,0 +1,31 @@
+name: cn-pii
+description: Chinese PII identifiers
+context: pii
+lang: zh
+country_code: cn
+rules:
+  cnidcardknown:
+    key: idcard
+    is_pii: True
+    name: Chinese ID card (身份证) by known name
+    rule: 身份证,身份证号,身份证号码,居民身份证,身份证件号码
+    type: field
+    match: text
+    priority: 1
+  cnphoneknown:
+    key: phone
+    is_pii: True
+    name: Chinese phone number by known name
+    rule: 电话,电话号码,手机,手机号,联系电话,移动电话,固定电话,座机
+    type: field
+    match: text
+    priority: 1
+  cnbirthdayknown:
+    key: birthday
+    is_pii: True
+    name: Chinese birthday by known name
+    rule: 生日,出生日期,出生年月,生日日期
+    type: field
+    match: text
+    priority: 1
+

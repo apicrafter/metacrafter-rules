@@ -10,12 +10,14 @@ rules:
     rule: true,false
     match: text
     type: data
+    priority: 2
   booleanyesno:
     key: boolean
     name: Boolean value yes/no
     rule: yes,no
     match: text
     type: data
+    priority: 2
   participleprefixrule:
     key: boolean
     name: Boolean with number of common prefixes and integer

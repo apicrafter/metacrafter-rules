@@ -1,0 +1,31 @@
+name: gb-med
+description: English (UK) medical codes
+context: medical
+lang: en
+country_code: gb
+rules:
+  bnfcode:
+    key: ukbnfcode
+    name: UK BNF drug code
+    match: text
+    type: field
+    rule: bnf code
+  engmcfield:
+    key: gmcnumber
+    is_pii: True
+    name: UK GMC registration number by field name
+    rule: gmc_number,gmc,gmc_reg
+    type: field
+    match: text
+  engmcvalue:
+    key: gmcnumber
+    is_pii: True
+    name: UK GMC registration number by value
+    match: ppr
+    type: data
+    rule: Word(nums, exact=7)
+    maxlen: 7
+    minlen: 7
+
+
+  

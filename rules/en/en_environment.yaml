@@ -10,6 +10,7 @@ rules:
     rule: emissions_inventory,emission_inventory,air_emissions,ghg_inventory
     type: field
     match: text
+    priority: 1
   enemisvalue:
     key: emissioninventory
     name: Emission pollutant code by pattern
@@ -18,12 +19,14 @@ rules:
     rule: Word(nums, min=2, max=6) + Literal('-').suppress() + Word(alphanums, min=1, max=4)
     maxlen: 11
     minlen: 4
+    priority: 2
   enenergypointfield:
     key: powerplantid
     name: Power plant identifier by field name
     rule: power_plant_id,plantid,plant_identifier,eia_plant_id
     type: field
     match: text
+    priority: 1
   enenergypointvalue:
     key: powerplantid
     name: Power plant identifier by pattern
@@ -32,12 +35,14 @@ rules:
     rule: Word('ABCDEFGHIJKLMNOPQRSTUVWXYZ', exact=2) + Word(nums, min=3, max=6)
     maxlen: 8
     minlen: 5
+    priority: 2
   engridnodefield:
     key: gridnode
     name: Grid node identifier by field name
     rule: grid_node,gridnode,interconnect_node,balancing_authority
     type: field
     match: text
+    priority: 1
   engridnodevalue:
     key: gridnode
     name: Grid node identifier by pattern
@@ -46,17 +51,5 @@ rules:
     rule: Word('ABCDEFGHIJKLMNOPQRSTUVWXYZ', exact=3) + Literal('-').suppress() + Word(nums, min=2, max=4)
     maxlen: 8
     minlen: 6
-  enwqsfield:
-    key: waterstation
-    name: Water quality station id by field name
-    rule: station_id,water_station,usgs_station,epa_station
-    type: field
-    match: text
-  enwqsvalue:
-    key: waterstation
-    name: Water quality station id by pattern
-    match: ppr
-    type: data
-    rule: Word(nums, exact=8)
-    maxlen: 8
-    minlen: 8
+    priority: 2
+

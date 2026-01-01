@@ -20,6 +20,8 @@ rules:
     rule: Word(nums, exact=3) + Optional(Literal('-') | Literal(' ') | Literal('.')) + Word(nums, exact=2) + Optional(Literal('-') | Literal(' ') | Literal('.')) + Word(nums, exact=4)
     maxlen: 11
     minlen: 9
+    validator: metacrafterext.rules.us.validators.validate_us_ssn
+    priority: 1
   
   useinfield:
     key: usein
@@ -37,6 +39,8 @@ rules:
     rule: Word(nums, exact=9)
     maxlen: 9
     minlen: 9
+    validator: metacrafterext.rules.us.validators.validate_us_ein
+    priority: 1
   
   usitinfield:
     key: usitin
@@ -54,7 +58,9 @@ rules:
     rule: Literal('9') + Word(nums, exact=2) + Optional(Literal('-') | Literal(' ')) + Word('7890123456789', exact=2) + Optional(Literal('-') | Literal(' ')) + Word(nums, exact=4)
     maxlen: 11
     minlen: 9
-  
+    validator: metacrafterext.rules.us.validators.validate_us_itin
+    priority: 1
+
   uspassportfield:
     key: uspassport
     is_pii: True
@@ -71,6 +77,8 @@ rules:
     rule: Word(nums, exact=9)
     maxlen: 9
     minlen: 9
+    validator: metacrafterext.rules.us.validators.validate_us_passport
+    priority: 1
   
   usdriverlicfield:
     key: usdriverlic
@@ -79,6 +87,9 @@ rules:
     rule: driver_license,drivers_license,dl_number,license_number,driving_license
     type: field
     match: text
+# This rule generates a lot of False positives because Word(alphanums, min=6, max=18) matches almost any alphanumeric string
+# Many identifiers, codes, and other values match this pattern but are not driver license numbers
+# It is marked as imprecise and could be filtered if it's set
   usdriverlicvalue:
     key: usdriverlic
     is_pii: True
@@ -88,4 +99,21 @@ rules:
     rule: Word(alphanums, min=6, max=18)
     maxlen: 18
     minlen: 6
-
+    validator: metacrafterext.rules.us.validators.validate_us_driver_license
+    imprecise: 1
+  enssnfield:
+    key: ssn
+    is_pii: True
+    name: US Social Security Number by field name
+    rule: ssn,socialsecuritynumber,social_security_number,social_security_no
+    type: field
+    match: text
+  enssnvalue:
+    key: ssn
+    is_pii: True
+    name: US Social Security Number by pattern
+    match: ppr
+    type: data
+    rule: Word(nums, exact=3) + Literal('-').suppress() + Word(nums, exact=2) + Literal('-').suppress() + Word(nums, exact=4)
+    maxlen: 11
+    minlen: 11

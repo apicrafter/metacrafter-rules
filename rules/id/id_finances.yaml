@@ -1,0 +1,36 @@
+name: id-finances
+description: Indonesian financial identifiers
+context: finances
+lang: id
+country_code: id
+rules:
+  idnpwpfield:
+    key: idnpwp
+    name: Indonesian NPWP by field name
+    rule: npwp,nomor_pokok_wajib_pajak,tax_number,tax_id,indonesian_tax_number
+    type: field
+    match: text
+  idnpwpvalue:
+    key: idnpwp
+    name: Indonesian NPWP by pattern
+    match: ppr
+    type: data
+    rule: Word(nums, exact=2) + Literal('.').suppress() + Word(nums, exact=3) + Literal('.').suppress() + Word(nums, exact=3) + Literal('.').suppress() + Literal('-') + Word(nums, exact=3) + Literal('.').suppress() + Word(nums, exact=3)
+    maxlen: 20
+    minlen: 15
+  idbankaccountfield:
+    key: idbankaccount
+    name: Indonesian bank account by field name
+    rule: bank_account,rekening_bank,account_number,nomor_rekening,no_rekening
+    type: field
+    match: text
+  idbankaccountvalue:
+    key: idbankaccount
+    name: Indonesian bank account by pattern
+    match: ppr
+    type: data
+    rule: Word(nums, min=8, max=17)
+    maxlen: 17
+    minlen: 8
+    imprecise: 1
+

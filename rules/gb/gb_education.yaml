@@ -1,0 +1,41 @@
+name: gb-education
+description: Education identifiers in United Kingdom
+context: education
+lang: en
+country_code: gb
+rules:
+  enukurnfield:
+    key: ukurn
+    name: UK school URN by field name
+    rule: urn,uk_urn,school_urn
+    type: field
+    match: text
+  enukurnvalue:
+    key: ukurn
+    name: UK school URN by value pattern
+    match: ppr
+    type: data
+    rule: Word(nums, exact=6)
+    maxlen: 6
+    minlen: 6
+  enukprnfield:
+    key: ukprn
+    name: UK provider UKPRN by field name
+    rule: ukprn,uk_prn
+    type: field
+    match: text
+  enukprnvalue:
+    key: ukprn
+    name: UK provider UKPRN by value
+    match: ppr
+    type: data
+    rule: Word(nums, exact=8)
+    maxlen: 8
+    minlen: 8
+  enstudentfield:
+    key: studentid
+    is_pii: True
+    name: Student identifier by field name
+    rule: student_id,studentid,pupil_id
+    type: field
+    match: text

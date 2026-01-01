@@ -19,12 +19,14 @@ rules:
     rule: uuid
     match: text
     type: field
+    priority: 1
   guidbyname:
     key: guid
     name: Globally unique identifier (GUID) by name
     rule: guid
     match: text
     type: field
+    priority: 1
   guid:
     key: guid
     name: Globally unique identifier (GUID) by value
@@ -34,3 +36,54 @@ rules:
     priority: 1
     match: ppr
     type: data
+  mongodbidfield:
+    key: mongodbid
+    name: MongoDB ObjectId by field name
+    rule: mongodb_id,objectid,_id,mongo_id,mongodb_objectid,object_id
+    match: text
+    type: field
+    priority: 1
+  mongodbidvalue:
+    key: mongodbid
+    name: MongoDB ObjectId by value pattern
+    match: ppr
+    type: data
+    rule: Word(hexnums, exact=24)
+    maxlen: 24
+    minlen: 24
+    priority: 1
+    validator: metacrafterext.rules.common.identifiers.validate_mongodb_objectid
+  ulidfield:
+    key: ulid
+    name: ULID (Universally Unique Lexicographically Sortable Identifier) by field name
+    rule: ulid,ulid_id,sortable_id,ulid_identifier
+    match: text
+    type: field
+    priority: 1
+  ulidvalue:
+    key: ulid
+    name: ULID (Universally Unique Lexicographically Sortable Identifier) by value pattern
+    match: ppr
+    type: data
+    rule: Word('0123456789ABCDEFGHJKMNPQRSTVWXYZ', exact=26)
+    maxlen: 26
+    minlen: 26
+    priority: 1
+    validator: metacrafterext.rules.common.identifiers.validate_ulid
+  snowflakeidfield:
+    key: snowflake_id
+    name: Snowflake ID by field name
+    rule: snowflake_id,snowflake,discord_id,twitter_id,snowflake_number
+    match: text
+    type: field
+    priority: 1
+  snowflakeidvalue:
+    key: snowflake_id
+    name: Snowflake ID by value pattern
+    match: ppr
+    type: data
+    rule: Word(nums, min=15, max=19)
+    maxlen: 19
+    minlen: 15
+    priority: 1
+    validator: metacrafterext.rules.common.identifiers.validate_snowflake_id

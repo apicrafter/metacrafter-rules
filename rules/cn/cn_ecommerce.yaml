@@ -1,0 +1,43 @@
+name: cn-ecommerce
+description: Chinese e-commerce identifiers
+context: ecommerce
+lang: zh
+country_code: cn
+rules:
+  cnalibabaorderfield:
+    key: cnalibabaorder
+    name: Alibaba order ID by field name
+    rule: alibaba_order_id,taobao_order_id,tmall_order_id,1688_order_id,alibaba_order
+    type: field
+    match: text
+  cnalibabaordervalue:
+    key: cnalibabaorder
+    name: Alibaba order ID by pattern
+    match: ppr
+    type: data
+    rule: Word(nums, min=12, max=20)
+    maxlen: 20
+    minlen: 12
+    fieldrule: alibaba_order_id,taobao_order_id,tmall_order_id,1688_order_id,alibaba_order
+    fieldrulematch: text
+    imprecise: 1
+    priority: 3
+  cnjdorderfield:
+    key: cnjdorder
+    name: JD.com order ID by field name
+    rule: jd_order_id,jd_order,jingdong_order_id
+    type: field
+    match: text
+  cnjdordervalue:
+    key: cnjdorder
+    name: JD.com order ID by pattern
+    match: ppr
+    type: data
+    rule: Word(nums, min=15, max=18)
+    maxlen: 18
+    minlen: 15
+    fieldrule: jd_order_id,jd_order,jingdong_order_id
+    fieldrulematch: text
+    imprecise: 1
+    priority: 3
+

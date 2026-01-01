@@ -1,0 +1,24 @@
+name: gb-transport
+description: UK transport identifiers
+context: transport
+lang: en
+country_code: gb
+rules:
+  gbvehicleplatefield:
+    key: gb_vehicle_plate
+    name: UK vehicle registration plate by field name
+    rule: license_plate,registration_plate,number_plate,vehicle_plate,reg_plate,plate_number,gb_plate,uk_plate
+    type: field
+    match: text
+    priority: 1
+  gbvehicleplatevalue:
+    key: gb_vehicle_plate
+    name: UK vehicle registration plate by pattern
+    match: ppr
+    type: data
+    rule: Word(alphas, exact=2) + Word(nums, exact=2) + Optional(Literal(' ').suppress()) + Word(alphas, exact=3)
+    minlen: 7
+    maxlen: 8
+    priority: 1
+    validator: metacrafterext.rules.gb.transport.validate_gb_vehicle_plate
+

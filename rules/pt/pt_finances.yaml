@@ -1,0 +1,29 @@
+name: pt-finances
+description: Portuguese financial identifiers
+context: finances
+lang: pt
+country_code: xx
+rules:
+  ptbankaccountknown:
+    key: bankaccount
+    name: Portuguese bank account by known name
+    rule: conta_bancaria,conta,numero_conta,conta_corrente,conta_poupanca
+    type: field
+    match: text
+    priority: 1
+  ptbankcardknown:
+    key: bankcard
+    is_pii: True
+    name: Portuguese bank card by known name
+    rule: cartao,numero_cartao,cartao_credito,cartao_debito
+    type: field
+    match: text
+    priority: 1
+  pttaxidknown:
+    key: taxid
+    name: Portuguese tax ID by known name
+    rule: nif,numero_contribuinte,contribuinte
+    type: field
+    match: text
+    priority: 1
+

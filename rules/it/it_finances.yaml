@@ -1,0 +1,21 @@
+name: it-finances
+description: Italian financial identifiers
+context: finances
+lang: it
+country_code: it
+rules:
+  ittaxidknown:
+    key: taxid
+    name: Italian tax ID (Codice Fiscale) by known name
+    rule: codice_fiscale,cf,tax_id,partita_iva,iva
+    type: field
+    match: text
+    priority: 1
+  itbankaccountknown:
+    key: bankaccount
+    name: Italian bank account by known name
+    rule: conto_bancario,conto,numero_conto,iban
+    type: field
+    match: text
+    priority: 1
+

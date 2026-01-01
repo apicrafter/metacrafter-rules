@@ -1,0 +1,175 @@
+name: gs1
+description: GS1 standards identifiers (GTIN, UPC, EAN, SSCC, GLN)
+context: gs1
+lang: common
+country_code: xx
+rules:
+  # GTIN (Global Trade Item Number) - supports GTIN-8, GTIN-12, GTIN-13, GTIN-14
+  gtinfield:
+    key: gtin
+    name: Global Trade Item Number (GTIN) by field name
+    rule: gtin,gtin_code,gtin_number,global_trade_item_number,product_gtin
+    type: field
+    match: text
+    priority: 1
+  gtin8value:
+    key: gtin
+    name: GTIN-8 by value pattern
+    match: ppr
+    type: data
+    rule: Word(nums, exact=8)
+    maxlen: 8
+    minlen: 8
+    priority: 1
+    validator: metacrafterext.rules.common.identifiers.validate_gtin
+  gtin12value:
+    key: gtin
+    name: GTIN-12 (UPC) by value pattern
+    match: ppr
+    type: data
+    rule: Word(nums, exact=12)
+    maxlen: 12
+    minlen: 12
+    priority: 1
+    validator: metacrafterext.rules.common.identifiers.validate_gtin
+  gtin13value:
+    key: gtin
+    name: GTIN-13 (EAN) by value pattern
+    match: ppr
+    type: data
+    rule: Word(nums, exact=13)
+    maxlen: 13
+    minlen: 13
+    priority: 1
+    validator: metacrafterext.rules.common.identifiers.validate_gtin
+  gtin14value:
+    key: gtin
+    name: GTIN-14 by value pattern
+    match: ppr
+    type: data
+    rule: Word(nums, exact=14)
+    maxlen: 14
+    minlen: 14
+    priority: 1
+    validator: metacrafterext.rules.common.identifiers.validate_gtin
+  gtinwithai01value:
+    key: gtin
+    name: GTIN-14 with Application Identifier (01) by value pattern
+    match: ppr
+    type: data
+    rule: Literal('01') + Word(nums, exact=14)
+    maxlen: 16
+    minlen: 16
+    priority: 2
+    validator: metacrafterext.rules.common.identifiers.validate_gtin
+    imprecise: 1
+
+  # UPC (Universal Product Code) - GTIN-12 format
+  upcfield:
+    key: upc
+    name: Universal Product Code (UPC) by field name
+    rule: upc,upc_code,upc_number,universal_product_code,product_upc,barcode_upc
+    type: field
+    match: text
+    priority: 1
+  upcvalue:
+    key: upc
+    name: Universal Product Code (UPC) by value pattern
+    match: ppr
+    type: data
+    rule: Word(nums, exact=12)
+    maxlen: 12
+    minlen: 12
+    priority: 1
+    validator: metacrafterext.rules.common.identifiers.validate_gtin
+    fieldrule: upc,upc_code,upc_number,universal_product_code,product_upc,barcode_upc
+    fieldrulematch: text
+
+  # EAN (European Article Number) - GTIN-13 format
+  eanfield:
+    key: ean
+    name: European Article Number (EAN) by field name
+    rule: ean,ean_code,ean_number,european_article_number,product_ean,barcode_ean,ean_13,ean13
+    type: field
+    match: text
+    priority: 1
+  ean13value:
+    key: ean
+    name: EAN-13 by value pattern
+    match: ppr
+    type: data
+    rule: Word(nums, exact=13)
+    maxlen: 13
+    minlen: 13
+    priority: 1
+    validator: metacrafterext.rules.common.identifiers.validate_gtin
+    fieldrule: ean,ean_code,ean_number,european_article_number,product_ean,barcode_ean,ean_13,ean13
+    fieldrulematch: text
+  ean8value:
+    key: ean
+    name: EAN-8 by value pattern
+    match: ppr
+    type: data
+    rule: Word(nums, exact=8)
+    maxlen: 8
+    minlen: 8
+    priority: 2
+    validator: metacrafterext.rules.common.identifiers.validate_gtin
+    fieldrule: ean,ean_code,ean_number,european_article_number,product_ean,barcode_ean,ean_8,ean8
+    fieldrulematch: text
+
+  # SSCC (Serial Shipping Container Code)
+  ssccfield:
+    key: sssc
+    name: Serial Shipping Container Code (SSCC) by field name
+    rule: sscc,sscc_code,sscc_number,serial_shipping_container_code,container_sscc,logistics_sscc
+    type: field
+    match: text
+    priority: 1
+  ssccvalue:
+    key: sssc
+    name: Serial Shipping Container Code (SSCC) by value pattern
+    match: ppr
+    type: data
+    rule: Word(nums, exact=18)
+    maxlen: 18
+    minlen: 18
+    priority: 1
+    validator: metacrafterext.rules.common.identifiers.validate_sscc
+    fieldrule: sscc,sscc_code,sscc_number,serial_shipping_container_code,container_sscc,logistics_sscc
+    fieldrulematch: text
+  ssccwithai00value:
+    key: sssc
+    name: SSCC with Application Identifier (00) by value pattern
+    match: ppr
+    type: data
+    rule: Literal('00') + Word(nums, exact=18)
+    maxlen: 20
+    minlen: 20
+    priority: 2
+    validator: metacrafterext.rules.common.identifiers.validate_sscc
+    fieldrule: sscc,sscc_code,sscc_number,serial_shipping_container_code,container_sscc,logistics_sscc
+    fieldrulematch: text
+    imprecise: 1
+
+  # GLN (Global Location Number)
+  glnfield:
+    key: gln
+    name: Global Location Number (GLN) by field name
+    rule: gln,gln_code,gln_number,global_location_number,location_gln,party_gln
+    type: field
+    match: text
+    priority: 1
+  glnvalue:
+    key: gln
+    name: Global Location Number (GLN) by value pattern
+    match: ppr
+    type: data
+    rule: Word(nums, exact=13)
+    maxlen: 13
+    minlen: 13
+    priority: 1
+    validator: metacrafterext.rules.common.identifiers.validate_gln
+    fieldrule: gln,gln_code,gln_number,global_location_number,location_gln,party_gln
+    fieldrulematch: text
+

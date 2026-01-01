@@ -1,0 +1,94 @@
+name: telecom
+description: Telecommunications identifiers
+context: telecom
+lang: common
+country_code: xx
+rules:
+  imeifield:
+    key: imei
+    is_pii: True
+    name: International Mobile Equipment Identity (IMEI) by field name
+    rule: imei,device_id,mobile_device_id,equipment_id,imei_number,device_imei,imei_code,imei_string,device_imei_number,mobile_imei
+    type: field
+    match: text
+    priority: 1
+  imeivalue:
+    key: imei
+    is_pii: True
+    name: International Mobile Equipment Identity (IMEI) by value pattern
+    match: ppr
+    type: data
+    rule: Word(nums, exact=14) + Optional(Word(nums, exact=1))
+    maxlen: 15
+    minlen: 14
+    priority: 1
+    validator: metacrafterext.rules.common.identifiers.validate_imei
+  imeivaluewithdashes:
+    key: imei
+    is_pii: True
+    name: International Mobile Equipment Identity (IMEI) with dashes
+    match: ppr
+    type: data
+    rule: Word(nums, exact=2) + Literal('-').suppress() + Word(nums, exact=6) + Literal('-').suppress() + Word(nums, exact=6) + Literal('-').suppress() + Word(nums, min=1, max=2)
+    maxlen: 18
+    minlen: 17
+    priority: 2
+    validator: metacrafterext.rules.common.identifiers.validate_imei
+  imsifield:
+    key: imsi
+    is_pii: True
+    name: International Mobile Subscriber Identity (IMSI) by field name
+    rule: imsi,imsi_number,subscriber_id,sim_imsi,mobile_subscriber_id,subscriber_identity
+    type: field
+    match: text
+    priority: 1
+  imsivalue:
+    key: imsi
+    is_pii: True
+    name: International Mobile Subscriber Identity (IMSI) by value pattern
+    match: ppr
+    type: data
+    rule: Word(nums, exact=15)
+    maxlen: 15
+    minlen: 15
+    priority: 1
+    validator: metacrafterext.rules.common.identifiers.validate_imsi
+  msisdnfield:
+    key: msisdn
+    is_pii: True
+    name: Mobile Station International Subscriber Directory Number (MSISDN) by field name
+    rule: msisdn,msisdn_number,mobile_number,subscriber_number,msisdn_code
+    type: field
+    match: text
+    priority: 1
+  msisdnvalue:
+    key: msisdn
+    is_pii: True
+    name: Mobile Station International Subscriber Directory Number (MSISDN) by value pattern
+    match: ppr
+    type: data
+    rule: Word(nums, min=11, max=15)
+    maxlen: 15
+    minlen: 11
+    priority: 1
+    validator: metacrafterext.rules.common.identifiers.validate_msisdn
+  iccidfield:
+    key: iccid
+    is_pii: True
+    name: Integrated Circuit Card Identifier (ICCID) by field name
+    rule: iccid,iccid_number,sim_card_id,sim_iccid,sim_serial,sim_id,sim_number
+    type: field
+    match: text
+    priority: 1
+  iccidvalue:
+    key: iccid
+    is_pii: True
+    name: Integrated Circuit Card Identifier (ICCID) by value pattern
+    match: ppr
+    type: data
+    rule: Word(nums, min=19, max=20)
+    maxlen: 20
+    minlen: 19
+    priority: 1
+    validator: metacrafterext.rules.common.identifiers.validate_iccid
+

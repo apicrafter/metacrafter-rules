@@ -1,0 +1,28 @@
+name: ar-geo
+description: Arabic geographic identifiers
+context: geo
+lang: ar
+country_code: xx
+rules:
+  arcityknown:
+    key: city
+    name: Arabic city by known name
+    rule: مدينة,المدينة,المدن
+    type: field
+    match: text
+    priority: 1
+  arcountryknown:
+    key: country
+    name: Arabic country by known name
+    rule: دولة,الدولة,البلد,الوطن
+    type: field
+    match: text
+    priority: 1
+  arpostcodeknown:
+    key: postcode
+    name: Arabic postal code by known name
+    rule: الرمز_البريدي,الرمز_البريد,الرمز_البريدي
+    type: field
+    match: text
+    priority: 1
+

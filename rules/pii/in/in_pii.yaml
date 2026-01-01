@@ -1,0 +1,39 @@
+name: in-pii
+description: Indian PII identifiers
+context: pii
+lang: en
+country_code: in
+rules:
+  inaadhaarknown:
+    key: aadhaar
+    is_pii: True
+    name: Indian Aadhaar number by known name
+    rule: aadhaar,aadhar,aadhaar_number,aadhar_number,uid,uid_number
+    type: field
+    match: text
+    priority: 1
+  inpanknown:
+    key: pan
+    is_pii: True
+    name: Indian PAN (Permanent Account Number) by known name
+    rule: pan,pan_number,pan_card,pan_card_number
+    type: field
+    match: text
+    priority: 1
+  inphoneknown:
+    key: phone
+    is_pii: True
+    name: Indian phone number by known name
+    rule: phone,phone_number,mobile,mobile_number,contact_number
+    type: field
+    match: text
+    priority: 1
+  inbirthdayknown:
+    key: birthday
+    is_pii: True
+    name: Indian birthday by known name
+    rule: date_of_birth,dob,birth_date,birthday
+    type: field
+    match: text
+    priority: 1
+

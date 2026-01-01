@@ -1,0 +1,31 @@
+name: pt-persons
+description: Portuguese person identifiers
+context: persons
+lang: pt
+country_code: xx
+rules:
+  ptpersonnameknown:
+    key: person_name
+    is_pii: True
+    name: Portuguese person name by known name
+    rule: nome_completo,nome,nome_pessoa,nome_do_cliente
+    type: field
+    match: text
+    priority: 1
+  ptfirstnameknown:
+    key: firstname
+    is_pii: True
+    name: Portuguese first name by known name
+    rule: primeiro_nome,nome_primeiro,primeiro_nome_pessoa
+    type: field
+    match: text
+    priority: 1
+  ptlastnameknown:
+    key: lastname
+    is_pii: True
+    name: Portuguese last name by known name
+    rule: sobrenome,ultimo_nome,nome_familia,apelido
+    type: field
+    match: text
+    priority: 1
+

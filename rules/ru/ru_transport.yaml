@@ -1,0 +1,24 @@
+name: ru-transport
+description: Russian transport identifiers
+context: transport
+lang: ru
+country_code: ru
+rules:
+  ruvehicleplatefield:
+    key: ru_vehicle_plate
+    name: Russian vehicle license plate by field name
+    rule: номерной_знак,госномер,автомобильный_номер,license_plate,registration_plate,ru_plate
+    type: field
+    match: text
+    priority: 1
+  ruvehicleplatevalue:
+    key: ru_vehicle_plate
+    name: Russian vehicle license plate by pattern
+    match: ppr
+    type: data
+    rule: Word(alphas, exact=1) + Word(nums, exact=3) + Word(alphas, exact=2) + Word(nums, exact=2)
+    minlen: 8
+    maxlen: 8
+    priority: 1
+    validator: metacrafterext.rules.ru.transport.validate_ru_vehicle_plate
+

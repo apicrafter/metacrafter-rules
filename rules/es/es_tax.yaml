@@ -52,3 +52,5 @@ rules:
     rule: Literal('ES') + Word(alphanums, exact=9)
     maxlen: 11
     minlen: 11
+    validator: metacrafterext.rules.es.validators.validate_es_vat
+    priority: 1

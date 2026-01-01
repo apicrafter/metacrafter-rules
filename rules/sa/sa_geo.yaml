@@ -1,0 +1,35 @@
+name: sa-geo
+description: Saudi Arabian geographic identifiers
+context: geo
+lang: ar
+country_code: sa
+rules:
+  sapostcodefield:
+    key: sapostcode
+    name: Saudi postal code by field name
+    rule: postcode,postal_code,zip_code,saudi_postcode,الرمز_البريدي
+    type: field
+    match: text
+  sapostcodevalue:
+    key: sapostcode
+    name: Saudi postal code by pattern
+    match: ppr
+    type: data
+    rule: Word(nums, exact=5) | (Word(nums, exact=5) + Literal('-') + Word(nums, exact=4))
+    maxlen: 10
+    minlen: 5
+  sacityfield:
+    key: sacity
+    name: Saudi city name by field name
+    rule: city,city_name,المدينة,اسم_المدينة
+    type: field
+    match: text
+  sacityvalue:
+    key: sacity
+    name: Saudi city name by value
+    rule: Riyadh,Jeddah,Mecca,Medina,Dammam,Khobar,Taif,Abha,Tabuk,Buraydah,Khamis Mushait,Hail,Najran,Al Jubail,Yanbu,Al Qatif,Arar,Sakaka,Jizan,Al Bahah,Unaizah,Al Khafji,Al Mubarraz,Al Kharj,Al Qunfudhah,Al Majma'ah,Al Zulfi,Shakrah,Al Bukayriyah,Al Artawiyah,Al Wajh,Duba,Al Ula,Al Qurayyat,Al Namas,Al Lith,Al Baha,Al Qassim,Al Jawf,Northern Borders,Al Sharqiyah
+    maxlen: 20
+    minlen: 4
+    type: data
+    match: text
+

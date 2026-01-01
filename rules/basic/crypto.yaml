@@ -1,9 +1,16 @@
 name: crypto
 description: Cryptographic identifiers
-context: crypto
+context: cryptography
 lang: common
 country_code: xx
 rules:
+  sha256hash_by_field:
+    key: sha256hash
+    name: SHA-256 hash by field name
+    rule: sha256,sha256hash,sha256_hash,sha_256,sha256_digest,sha256_fingerprint
+    match: text
+    type: field
+    priority: 1
   sha256hash:
     key: sha256hash
     name: SHA-256 hash
@@ -13,6 +20,14 @@ rules:
     match: ppr
     type: data
     rule: Word(hexnums, exact=64)
+    validator: metacrafterext.rules.common.crypto.validate_sha256
+  sha1hash_by_field:
+    key: sha1hash
+    name: SHA-1 hash by field name
+    rule: sha1,sha1hash,sha1_hash,sha_1,sha1_digest,sha1_fingerprint
+    match: text
+    type: field
+    priority: 1
   sha1hash:
     key: sha1hash
     name: SHA-1 hash
@@ -22,6 +37,13 @@ rules:
     match: ppr
     type: data
     rule: Word(hexnums, exact=40)
+  md5hash_by_field:
+    key: md5hash
+    name: MD5 hash by field name
+    rule: md5,md5hash,md5_hash,md5_digest,md5_fingerprint
+    match: text
+    type: field
+    priority: 1
   md5hash:
     key: md5hash
     name: MD5 hash
@@ -31,3 +53,148 @@ rules:
     match: ppr
     rule: Word(hexnums, exact=32)
     type: data
+    validator: metacrafterext.rules.common.crypto.validate_md5
+  sha384hash_by_field:
+    key: sha384hash
+    name: SHA-384 hash by field name
+    rule: sha384,sha384hash,sha384_hash,sha_384,sha384_digest
+    match: text
+    type: field
+    priority: 1
+  sha384hash:
+    key: sha384hash
+    name: SHA-384 hash
+    maxlen: 96
+    minlen: 96
+    priority: 1
+    match: ppr
+    type: data
+    rule: Word(hexnums, exact=96)
+  sha512hash_by_field:
+    key: sha512hash
+    name: SHA-512 hash by field name
+    rule: sha512,sha512hash,sha512_hash,sha_512,sha512_digest
+    match: text
+    type: field
+    priority: 1
+  sha512hash:
+    key: sha512hash
+    name: SHA-512 hash
+    maxlen: 128
+    minlen: 128
+    priority: 1
+    match: ppr
+    type: data
+    rule: Word(hexnums, exact=128)
+  ripemd160hash_by_field:
+    key: ripemd160hash
+    name: RIPEMD-160 hash by field name
+    rule: ripemd160,ripemd160hash,ripemd160_hash,ripemd_160
+    match: text
+    type: field
+    priority: 1
+  ripemd160hash:
+    key: ripemd160hash
+    name: RIPEMD-160 hash
+    maxlen: 40
+    minlen: 40
+    priority: 1
+    match: ppr
+    type: data
+    rule: Word(hexnums, exact=40)
+  blake2b256hash_by_field:
+    key: blake2b256hash
+    name: BLAKE2b-256 hash by field name
+    rule: blake2b256,blake2b_256,blake2b256hash,blake2b256_hash
+    match: text
+    type: field
+    priority: 1
+  blake2b256hash:
+    key: blake2b256hash
+    name: BLAKE2b-256 hash
+    maxlen: 64
+    minlen: 64
+    priority: 1
+    match: ppr
+    type: data
+    rule: Word(hexnums, exact=64)
+  blake2b512hash_by_field:
+    key: blake2b512hash
+    name: BLAKE2b-512 hash by field name
+    rule: blake2b512,blake2b_512,blake2b512hash,blake2b512_hash
+    match: text
+    type: field
+    priority: 1
+  blake2b512hash:
+    key: blake2b512hash
+    name: BLAKE2b-512 hash
+    maxlen: 128
+    minlen: 128
+    priority: 1
+    match: ppr
+    type: data
+    rule: Word(hexnums, exact=128)
+  keccak256hash_by_field:
+    key: keccak256hash
+    name: Keccak-256 hash by field name
+    rule: keccak256,keccak_256,keccak256hash,keccak256_hash
+    match: text
+    type: field
+    priority: 1
+  keccak256hash:
+    key: keccak256hash
+    name: Keccak-256 hash
+    maxlen: 64
+    minlen: 64
+    priority: 1
+    match: ppr
+    type: data
+    rule: Word(hexnums, exact=64)
+  keccak512hash_by_field:
+    key: keccak512hash
+    name: Keccak-512 hash by field name
+    rule: keccak512,keccak_512,keccak512hash,keccak512_hash
+    match: text
+    type: field
+    priority: 1
+  keccak512hash:
+    key: keccak512hash
+    name: Keccak-512 hash
+    maxlen: 128
+    minlen: 128
+    priority: 1
+    match: ppr
+    type: data
+    rule: Word(hexnums, exact=128)
+  hash_by_field:
+    key: hash
+    name: Hash by field name (generic)
+    rule: hash,checksum,digest,fingerprint,hash_value,hash_code
+    match: text
+    type: field
+    priority: 2
+  crc32_by_field:
+    key: crc32
+    name: CRC-32 checksum by field name
+    rule: crc32,crc32_checksum,crc_32
+    match: text
+    type: field
+    priority: 1
+  crc32:
+    key: crc32
+    name: CRC-32 checksum
+    maxlen: 8
+    minlen: 8
+    priority: 1
+    match: ppr
+    type: data
+    rule: Word(hexnums, exact=8)
+  sctcrypto:
+    key: sctcrypto
+    name: Signed certificate timestamp (SCT)
+    maxlen: 200
+    minlen: 4
+    priority: 1
+    match: ppr
+    type: data
+    rule: Word('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=', min=4, max=200)

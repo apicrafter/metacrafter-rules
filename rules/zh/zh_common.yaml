@@ -1,0 +1,58 @@
+name: zh-common
+description: Chinese common identifiers
+context: common
+lang: zh
+country_code: xx
+rules:
+  zhphoneknown:
+    key: phone
+    is_pii: True
+    name: Chinese phone number by known name
+    rule: 电话,电话号码,手机,手机号,联系电话,移动电话,固定电话,座机
+    type: field
+    match: text
+    priority: 1
+  zhemailknown:
+    key: email
+    is_pii: True
+    name: Chinese email by known name
+    rule: 邮箱,电子邮箱,邮件,电子邮件,邮箱地址
+    type: field
+    match: text
+    priority: 1
+  zhnameknown:
+    key: name
+    name: Chinese name/title by name
+    rule: 姓名,名字,名称,标题,全名,中文名
+    type: field
+    match: text
+    priority: 1
+  zhaddressknown:
+    key: address
+    name: Chinese address by known name
+    rule: 地址,详细地址,居住地址,联系地址,通讯地址
+    type: field
+    match: text
+    priority: 1
+  zhdescriptionknown:
+    key: description
+    name: Chinese description by known
+    rule: 描述,说明,简介,详细介绍
+    type: field
+    match: text
+    priority: 1
+  zhcommentknown:
+    key: comment
+    name: Chinese comment/note by known
+    rule: 备注,注释,说明,意见,评论
+    type: field
+    match: text
+    priority: 1
+  zhcategoryknown:
+    key: category
+    name: Chinese category by known
+    rule: 类别,分类,种类,类型
+    type: field
+    match: text
+    priority: 1
+

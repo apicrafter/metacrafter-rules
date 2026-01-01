@@ -18,6 +18,7 @@ rules:
     rule: Word('ABCDEFGHIJKLMNOPQRSTUVWXYZ', exact=2) + Word(nums, exact=2) + Word(alphanums, min=10, max=28)
     maxlen: 34
     minlen: 14
+    validator: metacrafterext.rules.common.identifiers.validate_iban
   bicfield:
     key: bic
     name: SWIFT/BIC code by field name
@@ -32,73 +33,55 @@ rules:
     rule: Word('ABCDEFGHIJKLMNOPQRSTUVWXYZ', exact=4) + Word('ABCDEFGHIJKLMNOPQRSTUVWXYZ', exact=2) + Word('ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789', exact=2) + Optional(Word('ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789', exact=3))
     maxlen: 11
     minlen: 8
-  abafield:
-    key: aba
-    name: US ABA routing number by field name
-    rule: aba,routing_number,aba_number,bank_routing
+  leifield:
+    key: lei
+    name: Legal Entity Identifier by field name
+    rule: lei,legal_entity_identifier,lei_code,lei_number,legal_entity_id
     type: field
     match: text
-  ababankvalue:
-    key: aba
-    name: US ABA routing number by value pattern
+    priority: 1
+  leivalue:
+    key: lei
+    name: Legal Entity Identifier by value pattern
     match: ppr
     type: data
-    rule: Word(nums, exact=9)
-    maxlen: 9
-    minlen: 9
-  sortcodefield:
-    key: uksortcode
-    name: UK sort code by field name
-    rule: sortcode,sort_code,uk_sortcode
+    rule: Word('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ', exact=18) + Word(nums, exact=2)
+    maxlen: 20
+    minlen: 20
+    priority: 1
+    validator: metacrafterext.rules.common.identifiers.validate_lei
+  figifield:
+    key: figi
+    name: Financial Instrument Global Identifier by field name
+    rule: figi,financial_instrument_identifier,bbgid,bloomberg_id,figi_code
     type: field
     match: text
-  sortcodevalue:
-    key: uksortcode
-    name: UK sort code by value pattern
+    priority: 1
+  figivalue:
+    key: figi
+    name: Financial Instrument Global Identifier by value pattern
     match: ppr
     type: data
-    rule: Word(nums, exact=2) + Optional(Literal('-').suppress()) + Word(nums, exact=2) + Optional(Literal('-').suppress()) + Word(nums, exact=2)
-    maxlen: 8
-    minlen: 6
-  clabefield:
-    key: clabe
-    name: Mexican CLABE by field name
-    rule: clabe,clabe_number,clabe_account
+    rule: Word('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ', exact=12)
+    maxlen: 12
+    minlen: 12
+    priority: 1
+    validator: metacrafterext.rules.common.identifiers.validate_figi
+  isinfield:
+    key: isin
+    name: International Securities Identification Number by field name
+    rule: isin,isin_code,isin_number,security_id,security_identifier
     type: field
     match: text
-  clabevalue:
-    key: clabe
-    name: Mexican CLABE by value pattern
+    priority: 1
+  isinvalue:
+    key: isin
+    name: International Securities Identification Number by value pattern
     match: ppr
     type: data
-    rule: Word(nums, exact=18)
-    maxlen: 18
-    minlen: 18
-  ifscfield:
-    key: ifsc
-    name: Indian IFSC code by field name
-    rule: ifsc,ifsc_code,bank_ifsc
-    type: field
-    match: text
-  ifscvalue:
-    key: ifsc
-    name: Indian IFSC code by value pattern
-    match: ppr
-    type: data
-    rule: Word('ABCDEFGHIJKLMNOPQRSTUVWXYZ', exact=4) + Literal('0').suppress() + Word(alphanums, exact=6)
-    maxlen: 11
-    minlen: 11
-  catransitfield:
-    key: catransit
-    name: Canadian branch transit number by field name
-    rule: transit_number,canada_transit,branch_transit
-    type: field
-    match: text
-  catransitvalue:
-    key: catransit
-    name: Canadian branch transit number by value pattern
-    match: ppr
-    type: data
-    rule: Optional(Literal('0').suppress()) + Word(nums, exact=5) + Optional(Literal('-').suppress() + Word(nums, exact=3))
-    maxlen: 9
-    minlen: 5
+    rule: Word('ABCDEFGHIJKLMNOPQRSTUVWXYZ', exact=2) + Word('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ', exact=10)
+    maxlen: 12
+    minlen: 12
+    priority: 1
+    validator: metacrafterext.rules.common.identifiers.validate_isin
+

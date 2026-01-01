@@ -1,0 +1,39 @@
+name: ch-persons
+description: Swiss person identifiers
+context: persons
+lang: de
+country_code: ch
+rules:
+  chahvfield:
+    key: chahv
+    is_pii: True
+    name: Swiss AHV number by field name
+    rule: swiss_ahv,ahv_number,ahv_nummer,ahv_se,swiss_social_security
+    type: field
+    match: text
+  chahvvalue:
+    key: chahv
+    is_pii: True
+    name: Swiss AHV number by pattern
+    match: ppr
+    type: data
+    rule: Word(nums, exact=3) + Literal('.') + Word(nums, exact=3) + Literal('.') + Word(nums, exact=3) + Literal('.') + Word(nums, exact=3)
+    maxlen: 15
+    minlen: 15
+  chpassportfield:
+    key: chpassport
+    is_pii: True
+    name: Swiss passport by field name
+    rule: swiss_passport,passport_ch,passport_switzerland,schweizer_pass
+    type: field
+    match: text
+  chpassportvalue:
+    key: chpassport
+    is_pii: True
+    name: Swiss passport by pattern
+    match: ppr
+    type: data
+    rule: Word(alphas, exact=1) + Word(nums, exact=8)
+    maxlen: 9
+    minlen: 9
+

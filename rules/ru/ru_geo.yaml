@@ -61,6 +61,9 @@ rules:
     priority: 1
     match: ppr
     type: data
+    validator: metacrafterext.rules.ru.validators.validate_ru_kadastr
+    fieldrule: кадастровый номер,кадастровый номер земельного участка,kadastrovyy_nomer,kadastrovyy_nomer_zemelnogo_uchastka,kadastrovyj_number,cadastral_number,cadastral number
+    fieldrulematch: text
   rusaddress:
     key: address
     is_pii: True
@@ -153,7 +156,19 @@ rules:
     match: text
     rule: почтовый индекс,индекс,pochtovyy_indeks,indeks
     type: field
-  # This rule generates a lot of False positives so it marked as imprecise rule and could be filtered if it's set
+  rupostalcode:
+    key: ruspostalcode
+    is_pii: True
+    name: Russian postal code by pattern
+    match: ppr
+    type: data
+    rule: Word(nums, exact=6)
+    maxlen: 6
+    minlen: 6
+    priority: 1
+# This rule generates a lot of False positives because 3-digit numbers are very common in data
+# Without a fieldrule constraint, this matches any 3-digit number that happens to be a valid country code
+# It is marked as imprecise and could be filtered if it's set
   rucountrycodepat:
     key: ruscountrycode
     name: Russian country code by OKSM classifier (3 digits) by pattern
@@ -175,6 +190,21 @@ rules:
     rule: город,населенный пункт
     match: text
     type: field
+  rufiasfield:
+    key: rufias
+    name: Russian FIAS address identifier by field name
+    rule: fias,fias_id,fias_guid,fias_code,фиас,идентификатор фиас,код фиас
+    type: field
+    match: text
+  rufiasvalue:
+    key: rufias
+    name: Russian FIAS address identifier by pattern (GUID format)
+    match: ppr
+    type: data
+    rule: Word(hexnums, exact=8) + Literal('-') + Word(hexnums, exact=4) + Literal('-') + Word(hexnums, exact=4) + Literal('-') + Word(hexnums, exact=4) + Literal('-') + Word(hexnums, exact=12)
+    maxlen: 36
+    minlen: 36
+    priority: 1
 
 
 

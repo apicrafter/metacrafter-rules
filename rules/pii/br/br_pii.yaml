@@ -1,0 +1,47 @@
+name: br-pii
+description: Brazilian PII identifiers
+context: pii
+lang: pt
+country_code: br
+rules:
+  brcpfknown:
+    key: cpf
+    is_pii: True
+    name: Brazilian CPF (Cadastro de Pessoa Física) by known name
+    rule: cpf,cpf_number,cpf_numero,numero_cpf
+    type: field
+    match: text
+    priority: 1
+  brrgknown:
+    key: rg
+    is_pii: True
+    name: Brazilian RG (Registro Geral) by known name
+    rule: rg,numero_rg,rg_number,rg_numero
+    type: field
+    match: text
+    priority: 1
+  brphoneknown:
+    key: phone
+    is_pii: True
+    name: Brazilian phone number by known name
+    rule: telefone,celular,numero_telefone,telefone_celular
+    type: field
+    match: text
+    priority: 1
+  brbirthdayknown:
+    key: birthday
+    is_pii: True
+    name: Brazilian birthday by known name
+    rule: data_nascimento,data_de_nascimento,nascimento
+    type: field
+    match: text
+    priority: 1
+  bremailknown:
+    key: email
+    is_pii: True
+    name: Brazilian email by known name
+    rule: email,e_mail,correio_eletronico
+    type: field
+    match: text
+    priority: 1
+

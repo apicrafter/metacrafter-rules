@@ -1,0 +1,52 @@
+name: us-realestate
+description: US real estate and property identifiers
+context: realestate
+lang: en
+country_code: us
+rules:
+  usapnfield:
+    key: usapn
+    name: US Assessor Parcel Number by field name
+    rule: apn,assessor_parcel_number,parcel_number,parcel_id,assessor_parcel,apn_number
+    type: field
+    match: text
+  usapnvalue:
+    key: usapn
+    name: US Assessor Parcel Number by pattern
+    match: ppr
+    type: data
+    rule: Word(alphanums, min=8, max=20)
+    maxlen: 20
+    minlen: 8
+    imprecise: 1
+  usparcelnumberfield:
+    key: usparcelnumber
+    name: US parcel number by field name
+    rule: parcel_number,parcel_no,parcel_id,lot_parcel,lot_number
+    type: field
+    match: text
+  usparcelnumbervalue:
+    key: usparcelnumber
+    name: US parcel number by pattern
+    match: ppr
+    type: data
+    rule: Word(alphanums, min=6, max=18)
+    maxlen: 18
+    minlen: 6
+    imprecise: 1
+  usfipspropertyfield:
+    key: usfipsproperty
+    name: US FIPS property code by field name
+    rule: fips_property,property_fips,fips_code,property_fips_code
+    type: field
+    match: text
+  usfipspropertyvalue:
+    key: usfipsproperty
+    name: US FIPS property code by pattern
+    match: ppr
+    type: data
+    rule: Word(nums, min=5, max=15)
+    maxlen: 15
+    minlen: 5
+    imprecise: 1
+

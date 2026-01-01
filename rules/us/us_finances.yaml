@@ -1,0 +1,55 @@
+name: us-finances
+description: United States banking and payment identifiers
+context: finances
+lang: en
+country_code: us
+rules:
+  abafield:
+    key: aba
+    name: US ABA routing number by field name
+    rule: aba,routing_number,aba_number,bank_routing
+    type: field
+    match: text
+  ababankvalue:
+    key: aba
+    name: US ABA routing number by value pattern
+    match: ppr
+    type: data
+    rule: Word(nums, exact=9)
+    maxlen: 9
+    minlen: 9
+    validator: metacrafterext.rules.us.validators.validate_aba_routing
+    priority: 1
+  abaroutingfield:
+    key: abaroutingnum
+    name: ABA routing number by field name
+    rule: routing_number,aba_routing,aba_number,routing_num,bank_routing
+    type: field
+    match: text
+  abaroutingvalue:
+    key: abaroutingnum
+    name: ABA routing number by pattern
+    match: ppr
+    type: data
+    rule: Word('0123678', exact=1) + Word(nums, exact=3) + Optional(Literal('-')) + Word(nums, exact=4) + Optional(Literal('-')) + Word(nums, exact=1)
+    maxlen: 11
+    minlen: 9
+    validator: metacrafterext.rules.us.validators.validate_aba_routing
+    priority: 1
+  cusipfield:
+    key: cusip
+    name: CUSIP by field name
+    rule: cusip,cusip_id,cusip_number
+    type: field
+    match: text
+  cusipvalue:
+    key: cusip
+    name: CUSIP by pattern
+    match: ppr
+    type: data
+    rule: Word(nums, exact=3) + Word(alphanums, exact=2) + Word(alphanums + '*@#', exact=3) + Word(nums, exact=1)
+    maxlen: 9
+    minlen: 9
+    validator: metacrafterext.rules.us.validators.validate_cusip
+    priority: 1
+

@@ -1,0 +1,22 @@
+name: sg-finances
+description: Singapore financial identifiers
+context: finances
+lang: en
+country_code: sg
+rules:
+  sgacraknown:
+    key: acra
+    name: Singapore ACRA (Accounting and Corporate Regulatory Authority) number by known name
+    rule: acra,acra_number,acra_registration_number
+    type: field
+    match: text
+    priority: 1
+  sgnricknown:
+    key: nric
+    is_pii: True
+    name: Singapore NRIC (National Registration Identity Card) by known name
+    rule: nric,nric_number,nric_id,ic_number
+    type: field
+    match: text
+    priority: 1
+

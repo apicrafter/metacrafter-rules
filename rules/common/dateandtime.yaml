@@ -10,12 +10,14 @@ rules:
     rule: created_at,updated_at,created,updated,createdAt,updatedAt,creat_dt,deleted_at,datetime
     type: field
     match: text
+    priority: 1
   dateknown:
     key: date
     name: Date by known name
     rule: date,created_date,creation_date,end_date,responsedate,createddate,completiondatem,start_date,end_date,report_date,actiondate,issue_date,closed_date,due_date,date_of_last_change,claimdate
     type: field
     match: text
+    priority: 1
   yearbydatafiltered:
     key: year
     name: Modern years in range 1001-2199 by data and fieldname
@@ -26,62 +28,75 @@ rules:
     type: data
     fieldrule: Optional(Word(printables)) + Literal('year') + Optional(Word(printables))
     fieldrulematch: ppr
+    priority: 2
   yearknown:
     key: year
     name: Year by known name
     rule: year,yearnum
     type: field
     match: text
+    priority: 1
   yearknownpat:
     key: year
     name: Year by known name pattern
     rule: Word(printables) + "year" +  lineEnd
     type: field
     match: ppr
+    priority: 2
   timestampknown:
     key: unixtime
     name: Timestamp by known name
     rule: timestamp
     type: field
     match: text
+    priority: 1
   timestampknownpat:
     key: unixtime
     name: Timestamp by known name pattern
     rule: Word(printables) + "timestamp" +  lineEnd
     type: field
     match: ppr
+    priority: 2
   timezoneknown:
     key: timezone
     name: Timezone by known name
     rule: timezone
     type: field
     match: text
+    priority: 1
   timezoneknownpat:
     key: timezone
     name: Timezone by known name pattern
     rule: Word(printables) + "timezone" +  lineEnd
     type: field
     match: ppr
+    priority: 2
   monthknownpat:
     key: month
     name: Month by known name pattern
     rule: Word(printables) + Literal("month")
     type: field
     match: ppr
+    priority: 2
   monthknown:
     key: month
     name: Month by known name
     rule: month,monthnum
     type: field
     match: text
-# This rule generates a lot of False positives since integer range 1001-2199 is quite common
+    priority: 1
+# This rule generates a lot of False positives since integer range 1900-2100 is quite common
 # so it marked as imprecise rule and could be filtered if it's set
+# Range narrowed from 1001-2199 to 1900-2100 for modern data (reduces false positives for historical years)
   yearbydataimprecise:
     key: year
-    name: Modern years in range 1001-2199 by data
+    name: Modern years in range 1900-2100 by data
     maxlen: 4
     minlen: 4
-    rule: (Literal('1') + Word(nums, exact=3)) ^ (Literal('2') + Word('01', exact=1) + Word(nums, exact=2))
+    rule: (Literal('19') + Word(nums, exact=2)) ^ (Literal('20') + Word(nums, exact=2))
     match: ppr
     type: data
+    fieldrule: Optional(Word(printables)) + (CaselessLiteral('year') | CaselessLiteral('date') | CaselessLiteral('time')) + Optional(Word(printables))
+    fieldrulematch: ppr
     imprecise: 1
+    priority: 3

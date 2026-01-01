@@ -1,0 +1,47 @@
+name: br-persons
+description: Brazilian person identifiers
+context: persons
+lang: pt
+country_code: br
+rules:
+  brpersonnameknown:
+    key: person_name
+    is_pii: True
+    name: Brazilian person name by known name
+    rule: nome_completo,nome,nome_pessoa,nome_do_cliente
+    type: field
+    match: text
+    priority: 1
+  brfirstnameknown:
+    key: firstname
+    is_pii: True
+    name: Brazilian first name by known name
+    rule: primeiro_nome,nome_primeiro,primeiro_nome_pessoa
+    type: field
+    match: text
+    priority: 1
+  brlastnameknown:
+    key: lastname
+    is_pii: True
+    name: Brazilian last name by known name
+    rule: sobrenome,ultimo_nome,nome_familia,apelido
+    type: field
+    match: text
+    priority: 1
+  brcpfknown:
+    key: cpf
+    is_pii: True
+    name: Brazilian CPF by known name
+    rule: cpf,cpf_number,cpf_numero,numero_cpf
+    type: field
+    match: text
+    priority: 1
+  brrgknown:
+    key: rg
+    is_pii: True
+    name: Brazilian RG (Registro Geral) by known name
+    rule: rg,numero_rg,rg_number,rg_numero
+    type: field
+    match: text
+    priority: 1
+

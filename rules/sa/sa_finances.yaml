@@ -1,0 +1,51 @@
+name: sa-finances
+description: Saudi Arabian financial identifiers
+context: finances
+lang: ar
+country_code: sa
+rules:
+  sataxnumberfield:
+    key: sataxnumber
+    name: Saudi tax number by field name
+    rule: tax_number,tax_id,vat_number,saudi_tax,saudi_vat,الرقم_الضريبي
+    type: field
+    match: text
+  sataxnumbervalue:
+    key: sataxnumber
+    name: Saudi tax number by pattern
+    match: ppr
+    type: data
+    rule: Word(nums, min=9, max=15)
+    maxlen: 15
+    minlen: 9
+    imprecise: 1
+  sabankaccountfield:
+    key: sabankaccount
+    name: Saudi bank account by field name
+    rule: bank_account,account_number,iban,saudi_iban,رقم_الحساب
+    type: field
+    match: text
+  sabankaccountvalue:
+    key: sabankaccount
+    name: Saudi bank account by pattern
+    match: ppr
+    type: data
+    rule: Literal('SA') + Word(nums, exact=2) + Word(alphanums, exact=4) + Word(nums, min=16, max=24)
+    maxlen: 30
+    minlen: 28
+    imprecise: 1
+  saibanfield:
+    key: saiban
+    name: Saudi IBAN by field name
+    rule: iban,iban_number,saudi_iban
+    type: field
+    match: text
+  saibanvalue:
+    key: saiban
+    name: Saudi IBAN by pattern
+    match: ppr
+    type: data
+    rule: Literal('SA') + Word(nums, exact=2) + Word(alphanums, exact=4) + Word(nums, min=16, max=24)
+    maxlen: 30
+    minlen: 28
+

@@ -1,0 +1,60 @@
+name: am-pii
+description: Armenian person identifiable information (PII)
+context: pii
+lang: hy
+country_code: am
+rules:
+  amssnfield:
+    key: am_ssn
+    is_pii: True
+    name: Armenian Social Security Number by field name
+    rule: arm_ssn,am_ssn,armenian_ssn,arm_social_security,հասարակական_ապահովագրության_համար,հասարակական_ապահովագրության_նույնականացման_համար
+    type: field
+    match: text
+  amssnvalue:
+    key: am_ssn
+    is_pii: True
+    name: Armenian Social Security Number by pattern
+    match: ppr
+    type: data
+    rule: Word(nums, exact=10)
+    maxlen: 10
+    minlen: 10
+    priority: 1
+  ampassportfield:
+    key: am_passport
+    is_pii: True
+    name: Armenian passport by field name
+    rule: arm_passport,am_passport,armenian_passport,passport_am,passport_armenia,հայտարարագիր,հայտարարագրի_համար
+    type: field
+    match: text
+  ampassportvalue:
+    key: am_passport
+    is_pii: True
+    name: Armenian passport by pattern
+    match: ppr
+    type: data
+    rule: Word(alphanums, min=6, max=9)
+    maxlen: 9
+    minlen: 6
+    priority: 1
+    imprecise: 1
+  amdriverlicensefield:
+    key: am_driver_license
+    is_pii: True
+    name: Armenian driver license by field name
+    rule: arm_driver_license,am_dl,armenian_dl,driver_license_am,driver_license_armenia,վարորդական_իրավունք,վարորդական_իրավունքի_համար
+    type: field
+    match: text
+  amdriverlicensevalue:
+    key: am_driver_license
+    is_pii: True
+    name: Armenian driver license by pattern
+    match: ppr
+    type: data
+    rule: Word(alphanums, min=6, max=10)
+    maxlen: 10
+    minlen: 6
+    priority: 1
+    imprecise: 1
+

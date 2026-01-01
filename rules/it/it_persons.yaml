@@ -1,0 +1,31 @@
+name: it-persons
+description: Italian person identifiers
+context: persons
+lang: it
+country_code: it
+rules:
+  itpersonnameknown:
+    key: person_name
+    is_pii: True
+    name: Italian person name by known name
+    rule: nome_completo,nome,cognome,nome_persona
+    type: field
+    match: text
+    priority: 1
+  itfirstnameknown:
+    key: firstname
+    is_pii: True
+    name: Italian first name by known name
+    rule: nome,primo_nome
+    type: field
+    match: text
+    priority: 1
+  itlastnameknown:
+    key: lastname
+    is_pii: True
+    name: Italian last name by known name
+    rule: cognome,ultimo_nome
+    type: field
+    match: text
+    priority: 1
+

@@ -1,0 +1,51 @@
+name: ch-finances
+description: Swiss financial identifiers
+context: finances
+lang: de
+country_code: ch
+rules:
+  chuidfield:
+    key: chuid
+    name: Swiss UID by field name
+    rule: swiss_uid,uid_ch,uid_switzerland,unternehmens_identifikationsnummer
+    type: field
+    match: text
+  chuidvalue:
+    key: chuid
+    name: Swiss UID by pattern
+    match: ppr
+    type: data
+    rule: Literal('CHE') + Word(nums, exact=9) + Literal('TVA') | (Word(nums, exact=3) + Literal('.') + Word(nums, exact=3) + Literal('.') + Word(nums, exact=3))
+    maxlen: 15
+    minlen: 11
+    imprecise: 1
+  chbankaccountfield:
+    key: chbankaccount
+    name: Swiss bank account by field name
+    rule: swiss_bank_account,bankkonto_ch,kontonummer_ch,iban_ch
+    type: field
+    match: text
+  chbankaccountvalue:
+    key: chbankaccount
+    name: Swiss bank account by pattern
+    match: ppr
+    type: data
+    rule: Literal('CH') + Word(nums, exact=2) + Word(alphanums, exact=4) + Word(nums, min=16, max=24)
+    maxlen: 30
+    minlen: 28
+    imprecise: 1
+  chibanfield:
+    key: chiban
+    name: Swiss IBAN by field name
+    rule: swiss_iban,iban_ch
+    type: field
+    match: text
+  chibanvalue:
+    key: chiban
+    name: Swiss IBAN by pattern
+    match: ppr
+    type: data
+    rule: Literal('CH') + Word(nums, exact=2) + Word(alphanums, exact=4) + Word(nums, min=16, max=24)
+    maxlen: 30
+    minlen: 28
+

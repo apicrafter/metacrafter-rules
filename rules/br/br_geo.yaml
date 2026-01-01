@@ -1,0 +1,35 @@
+name: br-geo
+description: Brazilian geographic identifiers
+context: geo
+lang: pt
+country_code: br
+rules:
+  brcepknown:
+    key: postcode
+    name: Brazilian CEP (Código de Endereçamento Postal) by known name
+    rule: cep,codigo_postal,cep_number,numero_cep
+    type: field
+    match: text
+    priority: 1
+  brcityknown:
+    key: city
+    name: Brazilian city by known name
+    rule: cidade,municipio
+    type: field
+    match: text
+    priority: 1
+  brstateknown:
+    key: state
+    name: Brazilian state by known name
+    rule: estado,uf,estado_uf
+    type: field
+    match: text
+    priority: 1
+  braddressknown:
+    key: address
+    name: Brazilian address by known name
+    rule: endereco,endereco_completo,logradouro
+    type: field
+    match: text
+    priority: 1
+

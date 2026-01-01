@@ -23,7 +23,7 @@ rules:
   mimetypebyvalue:
     key: mimetype
     name: Mimetype / content type by value
-    priority: 1
+    priority: 2
     maxlen: 100
     minlen: 10
     match: text
@@ -36,6 +36,7 @@ rules:
     rule: phone,fax,contact_phone,telephone,phone number,phone_number,business_phone,phonenumber,phone_no,contactphone,phone_1,phone1,phone2,fax_number,contact_fax,cellphon
     type: field
     match: text
+    priority: 1
   phoneknownpat:
     key: phone
     is_pii: True
@@ -43,13 +44,15 @@ rules:
     rule: Word(printables) + "phone" +  lineEnd
     type: field
     match: ppr
+    priority: 2
   phoneknownprefix:
     key: phone
     is_pii: True
     name: Phone number by known pattern
-    rule: '"phone" + Word(printables) + lineEnd'
+    rule: Literal('phone') + Word(printables) + lineEnd
     type: field
     match: ppr
+    priority: 2
   faxknownpat:
     key: phone
     is_pii: True    
@@ -57,6 +60,7 @@ rules:
     rule: Word(printables) + "fax" +  lineEnd
     type: field
     match: ppr
+    priority: 2
   uniqueidbyknown:
     key: id
     name: Unique id by known names

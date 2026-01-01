@@ -1,0 +1,29 @@
+name: zh-finances
+description: Chinese financial identifiers
+context: finances
+lang: zh
+country_code: xx
+rules:
+  zhabankaccountknown:
+    key: bankaccount
+    name: Chinese bank account by known name
+    rule: 银行账号,账户,账号,银行账户,账户号码
+    type: field
+    match: text
+    priority: 1
+  zhbankcardknown:
+    key: bankcard
+    is_pii: True
+    name: Chinese bank card by known name
+    rule: 银行卡,银行卡号,卡号,信用卡,借记卡
+    type: field
+    match: text
+    priority: 1
+  zhtaxidknown:
+    key: taxid
+    name: Chinese tax ID by known name
+    rule: 税号,税务登记号,纳税人识别号
+    type: field
+    match: text
+    priority: 1
+

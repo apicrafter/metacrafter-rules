@@ -42,6 +42,10 @@ rules:
     rule: hrb,handelsregisternr,handelsregister_nr
     type: field
     match: text
+# This rule generates a lot of False positives because the pattern (single letter + 1-6 digits) matches many common codes
+# Examples: product codes, reference numbers, invoice numbers, etc.
+# It is marked as imprecise and could be filtered if it's set
+# Validator added to reduce false positives
   dehrbvalue:
     key: handelsregisternr
     name: Handelsregisternummer anhand Wert
@@ -50,3 +54,6 @@ rules:
     rule: Word('ABCDEFGHIJKLMNOPQRSTUVWXYZ', exact=1) + Word(nums, min=1, max=6)
     maxlen: 7
     minlen: 2
+    validator: metacrafterext.rules.de.validators.validate_de_hrb
+    imprecise: 1
+    priority: 2

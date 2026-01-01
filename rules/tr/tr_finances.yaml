@@ -1,0 +1,50 @@
+name: tr-finances
+description: Turkish financial identifiers
+context: finances
+lang: tr
+country_code: tr
+rules:
+  trtaxnumberfield:
+    key: trtaxnumber
+    name: Turkish tax number by field name
+    rule: vergi_numarası,vergi_no,tax_id,turkish_tax_number
+    type: field
+    match: text
+  trtaxnumbervalue:
+    key: trtaxnumber
+    name: Turkish tax number by pattern
+    match: ppr
+    type: data
+    rule: Word(nums, exact=10)
+    maxlen: 10
+    minlen: 10
+  trbankaccountfield:
+    key: trbankaccount
+    name: Turkish bank account by field name
+    rule: banka_hesabı,hesap_numarası,account_number,iban
+    type: field
+    match: text
+  trbankaccountvalue:
+    key: trbankaccount
+    name: Turkish bank account by pattern
+    match: ppr
+    type: data
+    rule: Literal('TR') + Word(nums, exact=2) + Word(alphanums, min=4, max=4) + Word(nums, min=16, max=24)
+    maxlen: 28
+    minlen: 26
+    imprecise: 1
+  tribanfield:
+    key: triban
+    name: Turkish IBAN by field name
+    rule: turkish_iban
+    type: field
+    match: text
+  tribanvalue:
+    key: triban
+    name: Turkish IBAN by pattern
+    match: ppr
+    type: data
+    rule: Literal('TR') + Word(nums, exact=2) + Word(alphanums, exact=4) + Word(nums, min=16, max=24)
+    maxlen: 28
+    minlen: 26
+

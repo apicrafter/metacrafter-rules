@@ -1,0 +1,55 @@
+name: sa-pii
+description: Saudi Arabian person identifiable information (PII)
+context: pii
+lang: ar
+country_code: sa
+rules:
+  saiqamafield:
+    key: saiqama
+    is_pii: True
+    name: Saudi Iqama by field name
+    rule: iqama,iqama_number,iqama_no,residence_permit,saudi_iqama,إقامة,رقم_الإقامة
+    type: field
+    match: text
+  saiqamavalue:
+    key: saiqama
+    is_pii: True
+    name: Saudi Iqama by pattern
+    match: ppr
+    type: data
+    rule: Word(nums, exact=10) | (Word(nums, exact=2) + Literal('-') + Word(nums, exact=7) + Literal('-') + Word(nums, exact=1))
+    maxlen: 12
+    minlen: 10
+  saidfield:
+    key: said
+    is_pii: True
+    name: Saudi ID by field name
+    rule: saudi_id,national_id,saudi_national_id,id_number,identity_number,الهوية_الوطنية,رقم_الهوية
+    type: field
+    match: text
+  saidvalue:
+    key: said
+    is_pii: True
+    name: Saudi ID by pattern
+    match: ppr
+    type: data
+    rule: Word(nums, exact=10)
+    maxlen: 10
+    minlen: 10
+  sapassportfield:
+    key: sapassport
+    is_pii: True
+    name: Saudi passport by field name
+    rule: passport,passport_number,saudi_passport,جواز_السفر,رقم_جواز_السفر
+    type: field
+    match: text
+  sapassportvalue:
+    key: sapassport
+    is_pii: True
+    name: Saudi passport by pattern
+    match: ppr
+    type: data
+    rule: Word(alphanums, min=8, max=9)
+    maxlen: 9
+    minlen: 8
+

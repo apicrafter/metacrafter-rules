@@ -7,6 +7,232 @@ rules:
   isbnbyname:
     key: isbn13
     name: International Standard Book Number (ISBN) by known name
-    rule: isbn
+    rule: isbn,isbn13,isbn_13,isbn_number
     match: text
     type: field
+    priority: 1
+  isbn13value:
+    key: isbn13
+    name: International Standard Book Number (ISBN-13) by value pattern
+    match: ppr
+    type: data
+    rule: Word(nums, exact=13)
+    maxlen: 13
+    minlen: 13
+    priority: 1
+    validator: metacrafterext.rules.common.identifiers.validate_isbn13
+  isbn13valuewithdashes:
+    key: isbn13
+    name: International Standard Book Number (ISBN-13) with dashes
+    match: ppr
+    type: data
+    rule: Word(nums, exact=3) + Literal('-').suppress() + Word(nums, exact=1) + Literal('-').suppress() + Word(nums, exact=3) + Literal('-').suppress() + Word(nums, exact=5) + Literal('-').suppress() + Word(nums, exact=1)
+    maxlen: 17
+    minlen: 17
+    priority: 2
+    validator: metacrafterext.rules.common.identifiers.validate_isbn13
+  isbn10field:
+    key: isbn10
+    name: International Standard Book Number (ISBN-10) by field name
+    rule: isbn10,isbn_10,isbn
+    match: text
+    type: field
+    priority: 1
+  isbn10value:
+    key: isbn10
+    name: International Standard Book Number (ISBN-10) by value pattern
+    match: ppr
+    type: data
+    rule: Word(nums, exact=9) + Word('0123456789X', exact=1)
+    maxlen: 10
+    minlen: 10
+    priority: 1
+    validator: metacrafterext.rules.common.identifiers.validate_isbn10
+  isbn10valuewithdashes:
+    key: isbn10
+    name: International Standard Book Number (ISBN-10) with dashes
+    match: ppr
+    type: data
+    rule: Word(nums, exact=1) + Literal('-').suppress() + Word(nums, exact=2) + Literal('-').suppress() + Word(nums, exact=6) + Literal('-').suppress() + Word('0123456789X', exact=1)
+    maxlen: 13
+    minlen: 13
+    priority: 2
+    validator: metacrafterext.rules.common.identifiers.validate_isbn10
+  gtinfield:
+    key: gtin
+    name: Global Trade Item Number (GTIN) by field name
+    rule: gtin,ean,upc,barcode,product_code,gtin_code,ean_code,upc_code,product_id
+    type: field
+    match: text
+    priority: 1
+  gtinvalue:
+    key: gtin
+    name: Global Trade Item Number (GTIN) by value pattern
+    match: ppr
+    type: data
+    rule: Word(nums, min=8, max=14)
+    maxlen: 14
+    minlen: 8
+    priority: 1
+    validator: metacrafterext.rules.common.identifiers.validate_gtin
+  issnfield:
+    key: issn
+    name: International Standard Serial Number (ISSN) by field name
+    rule: issn,issn_number,issn_code,serial_number
+    type: field
+    match: text
+    priority: 1
+  issnvalue:
+    key: issn
+    name: International Standard Serial Number (ISSN) by value pattern
+    match: ppr
+    type: data
+    rule: Word(nums, exact=4) + Optional(Literal('-')) + Word('0123456789X', exact=4)
+    maxlen: 9
+    minlen: 8
+    priority: 1
+    validator: metacrafterext.rules.common.identifiers.validate_issn
+  issnvaluewithoutdash:
+    key: issn
+    name: International Standard Serial Number (ISSN) without dash
+    match: ppr
+    type: data
+    rule: Word(nums, exact=8)
+    maxlen: 8
+    minlen: 8
+    priority: 2
+  isrcfield:
+    key: isrc
+    name: International Standard Recording Code (ISRC) by field name
+    rule: isrc,isrc_code,isrc_number,recording_code
+    type: field
+    match: text
+    priority: 1
+  isrcvalue:
+    key: isrc
+    name: International Standard Recording Code (ISRC) by value pattern
+    match: ppr
+    type: data
+    rule: Word('ABCDEFGHIJKLMNOPQRSTUVWXYZ', exact=2) + Word('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ', exact=3) + Word(nums, exact=7)
+    maxlen: 12
+    minlen: 12
+    priority: 1
+    validator: metacrafterext.rules.common.identifiers.validate_isrc
+  ssscfield:
+    key: sssc
+    name: Serial Shipping Container Code (SSCC) by field name
+    rule: sscc,sscc_number,sscc_code,serial_shipping_container_code,container_code
+    type: field
+    match: text
+    priority: 1
+  ssscvalue:
+    key: sssc
+    name: Serial Shipping Container Code (SSCC) by value pattern
+    match: ppr
+    type: data
+    rule: Optional(Literal('00')) + Word(nums, exact=18)
+    maxlen: 20
+    minlen: 18
+    priority: 1
+    validator: metacrafterext.rules.common.identifiers.validate_sscc
+  doifield:
+    key: doi
+    name: Digital Object Identifier (DOI) by field name
+    rule: doi,digital_object_identifier,doi_number,doi_code,doi_id
+    match: text
+    type: field
+    priority: 1
+  doivalue:
+    key: doi
+    name: Digital Object Identifier (DOI) by value pattern
+    match: ppr
+    type: data
+    rule: Literal('10.') + Word(printables, min=4, max=20) + Literal('/') + Word(printables, min=1, max=200)
+    maxlen: 250
+    minlen: 8
+    priority: 1
+    validator: metacrafterext.rules.common.identifiers.validate_doi
+  oidfield:
+    key: oid
+    name: ITU/ISO/IEC Object Identifier (OID) by field name
+    rule: oid,object_id,object_identifier,oid_number,asn1_oid
+    match: text
+    type: field
+    priority: 1
+  oidvalue:
+    key: oid
+    name: ITU/ISO/IEC Object Identifier (OID) by value pattern
+    match: ppr
+    type: data
+    rule: Word('0123', exact=1) + Literal('.').suppress() + Word(nums, min=1) + ZeroOrMore(Literal('.').suppress() + Word(nums, min=1))
+    minlen: 3
+    maxlen: 100
+    priority: 1
+    validator: metacrafterext.rules.common.identifiers.validate_oid
+  glnfield:
+    key: gln
+    name: Global Location Number (GLN) by field name
+    rule: gln,gln_number,global_location_number,location_id,location_number
+    match: text
+    type: field
+    priority: 1
+  glnvalue:
+    key: gln
+    name: Global Location Number (GLN) by value pattern
+    match: ppr
+    type: data
+    rule: Word(nums, exact=13)
+    maxlen: 13
+    minlen: 13
+    priority: 1
+    validator: metacrafterext.rules.common.identifiers.validate_gln
+  isnifield:
+    key: isni
+    name: International Standard Name Identifier (ISNI) by field name
+    rule: isni,isni_code,isni_number,standard_name_identifier
+    match: text
+    type: field
+    priority: 1
+  isnivalue:
+    key: isni
+    name: International Standard Name Identifier (ISNI) by value pattern
+    match: ppr
+    type: data
+    rule: Word(nums, exact=16)
+    maxlen: 16
+    minlen: 16
+    priority: 1
+    validator: metacrafterext.rules.common.identifiers.validate_isni
+  wikidataidfield:
+    key: wikidataid
+    name: Wikidata ID by field name
+    rule: wikidata_id,wikidataid,q_id,entity_id,wikidata_entity
+    match: text
+    type: field
+    priority: 1
+  wikidataidvalue:
+    key: wikidataid
+    name: Wikidata ID by value pattern
+    match: ppr
+    type: data
+    rule: Literal('Q') + Word(nums, min=1, max=10)
+    minlen: 2
+    maxlen: 11
+    priority: 1
+  eidrfield:
+    key: eidr
+    name: Entertainment Identifier Registry (EIDR) by field name
+    rule: eidr,eidr_code,entertainment_id,entertainment_identifier
+    match: text
+    type: field
+    priority: 1
+  eidrvalue:
+    key: eidr
+    name: Entertainment Identifier Registry (EIDR) by value pattern
+    match: ppr
+    type: data
+    rule: Literal('10.5240/') + Word(hexnums, exact=4) + Literal('-').suppress() + Word(hexnums, exact=4) + Literal('-').suppress() + Word(hexnums, exact=4) + Literal('-').suppress() + Word(hexnums, exact=4) + Literal('-').suppress() + Word(hexnums, exact=4) + Literal('-').suppress() + Word(hexnums, exact=1)
+    minlen: 34
+    maxlen: 34
+    priority: 1
+    validator: metacrafterext.rules.common.identifiers.validate_eidr
