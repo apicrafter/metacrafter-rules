@@ -1,12 +1,29 @@
 # This is purely the result of trial and error.
 
+import shutil
 import sys
 import codecs
+from pathlib import Path
 
 from setuptools import setup, find_packages
+from setuptools.command.build_py import build_py
 from setuptools.command.test import test as TestCommand
 
 import metacrafterext.rules
+
+
+class BuildPy(build_py):
+    """Copy repository ``rules/`` into the package for wheel installs."""
+
+    def run(self):
+        super().run()
+        src = Path("rules")
+        if not src.is_dir():
+            return
+        dest = Path(self.build_lib) / "metacrafterext" / "rules" / "_bundled_rules"
+        if dest.exists():
+            shutil.rmtree(dest)
+        shutil.copytree(src, dest)
 
 
 class PyTest(TestCommand):
@@ -82,7 +99,7 @@ setup(
     extras_require=extras_require,
     install_requires=install_requires,
     tests_require=tests_require,
-    cmdclass={'test': PyTest},
+    cmdclass={'build_py': BuildPy, 'test': PyTest},
     zip_safe=False,
     keywords='json jsonl csv bson cli dataset metadata',
     classifiers=[
