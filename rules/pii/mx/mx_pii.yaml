@@ -4,7 +4,7 @@ context: pii
 lang: es
 country_code: mx
 rules:
-  mxcurpknown:
+  mx_pii_mxcurpknown:
     key: curp
     is_pii: True
     name: Mexican CURP (Clave Única de Registro de Población) by known name
@@ -12,7 +12,7 @@ rules:
     type: field
     match: text
     priority: 1
-  mxrfcknown:
+  mx_pii_mxrfcknown:
     key: rfc
     is_pii: True
     name: Mexican RFC (Registro Federal de Contribuyentes) by known name

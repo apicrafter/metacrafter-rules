@@ -148,6 +148,43 @@ def validate_es_nie(value):
     return False
 
 
+def validate_es_nif(value):
+    """
+    Validates Spanish NIF/DNI (Número de Identificación Fiscal) using MOD-23 checksum.
+
+    Spanish NIF/DNI format:
+    - 8 digits followed by a check letter
+    - Separators (spaces, dashes, dots) are ignored
+    - Check letter derived from MOD-23 of the 8-digit number
+
+    Args:
+        value: NIF/DNI string (may include spaces, dashes, or dots)
+
+    Returns:
+        bool: True if valid NIF, False otherwise
+    """
+    if not isinstance(value, str):
+        return False
+
+    nif = value.replace(' ', '').replace('-', '').replace('.', '').upper()
+
+    if len(nif) != 9:
+        return False
+
+    digits_part = nif[:8]
+    check_letter = nif[8]
+
+    if not (digits_part.isdigit() and check_letter.isalpha()):
+        return False
+
+    check_letters = 'TRWAGMYFPDXBNJZSQVHLCKE'
+    try:
+        remainder = int(digits_part) % 23
+        return check_letter == check_letters[remainder]
+    except (ValueError, IndexError):
+        return False
+
+
 def validate_es_vat(value):
     """
     Validates Spanish VAT (IVA) number using MOD-23 checksum.

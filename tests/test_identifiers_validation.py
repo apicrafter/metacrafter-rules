@@ -28,6 +28,28 @@ from metacrafterext.rules.common.identifiers import (
     validate_iccid,
     validate_asn,
     validate_language_tag,
+    validate_imo_number,
+    validate_snomed_ct,
+    validate_pl_regon,
+    validate_pl_pesel,
+    validate_tr_tckimlik,
+    validate_pl_nip,
+    validate_us_npi,
+    validate_fr_nir,
+    validate_th_idcard,
+    validate_sa_id,
+    validate_sa_iqama,
+    validate_th_taxid,
+    validate_vn_taxcode,
+    validate_isbn,
+    validate_isbn10,
+    validate_uk_nhs,
+    validate_tr_vkn,
+    validate_id_nik,
+    validate_ror_id,
+    validate_nl_bsn,
+    validate_nl_rsin,
+    validate_fr_siren,
 )
 from metacrafterext.rules.us.validators import validate_us_driver_license
 from metacrafterext.rules.es.validators import validate_es_passport
@@ -335,7 +357,7 @@ class TestIMEIValidation:
         def calc_check(digits_14):
             total = 0
             for i, d in enumerate(reversed(digits_14)):
-                if i % 2 == 1:
+                if i % 2 == 0:
                     doubled = d * 2
                     total += (doubled // 10) + (doubled % 10)
                 else:
@@ -366,7 +388,7 @@ class TestIMEIValidation:
         def calc_check(digits_14):
             total = 0
             for i, d in enumerate(reversed(digits_14)):
-                if i % 2 == 1:
+                if i % 2 == 0:
                     doubled = d * 2
                     total += (doubled // 10) + (doubled % 10)
                 else:
@@ -861,6 +883,446 @@ class TestICCIDValidation:
         assert validate_iccid(None) == False
         assert validate_iccid(89014103211118510720) == False
         assert validate_iccid([]) == False
+
+
+class TestIMONumberValidation:
+    def test_valid_imo_numbers(self):
+        # Real IMO numbers with correct check digits.
+        assert validate_imo_number("9074729") is True
+        assert validate_imo_number("9704611") is True
+        assert validate_imo_number("8814275") is True
+
+    def test_imo_prefix_accepted(self):
+        assert validate_imo_number("IMO 9074729") is True
+        assert validate_imo_number("IMO9074729") is True
+
+    def test_invalid_check_digit(self):
+        assert validate_imo_number("9074720") is False
+        assert validate_imo_number("9704610") is False
+
+    def test_invalid_format(self):
+        assert validate_imo_number("0074729") is False  # leading zero
+        assert validate_imo_number("950123") is False   # too short
+        assert validate_imo_number("90747290") is False  # too long
+        assert validate_imo_number("abcdefg") is False
+        assert validate_imo_number(None) is False
+        assert validate_imo_number("") is False
+
+
+class TestSnomedCtValidation:
+    def test_valid_snomed_codes(self):
+        # Real SNOMED CT concept ids (valid Verhoeff check digit).
+        assert validate_snomed_ct("22298006") is True
+        assert validate_snomed_ct("80146002") is True
+        assert validate_snomed_ct("73211009") is True
+        assert validate_snomed_ct("386661006") is True
+
+    def test_invalid_check_digit(self):
+        assert validate_snomed_ct("22298007") is False
+
+    def test_invalid_format(self):
+        assert validate_snomed_ct("12345") is False        # too short
+        assert validate_snomed_ct("000146002") is False    # leading zero
+        assert validate_snomed_ct("1" * 19) is False       # too long
+        assert validate_snomed_ct("abcdef") is False
+        assert validate_snomed_ct(None) is False
+
+
+class TestPlRegonValidation:
+    def test_valid_regon9(self):
+        assert validate_pl_regon("123456785") is True
+
+    def test_valid_regon14(self):
+        assert validate_pl_regon("12345678500002") is True
+
+    def test_invalid_check_digit(self):
+        assert validate_pl_regon("123456789") is False
+
+    def test_invalid_format(self):
+        assert validate_pl_regon("12345678") is False        # 8 digits
+        assert validate_pl_regon("1234567890123") is False    # 13 digits
+        assert validate_pl_regon("000000000") is False        # all zeros
+        assert validate_pl_regon("abcdefghi") is False
+        assert validate_pl_regon(None) is False
+
+    def test_separators_ignored(self):
+        assert validate_pl_regon("123-456-785") is True
+
+
+class TestPlPeselValidation:
+    def test_valid_pesel(self):
+        assert validate_pl_pesel("44051401359") is True
+
+    def test_invalid_check_digit(self):
+        assert validate_pl_pesel("44051401358") is False
+
+    def test_invalid_date(self):
+        assert validate_pl_pesel("44133001234") is False  # month 33 invalid
+
+    def test_invalid_format(self):
+        assert validate_pl_pesel("1234567890") is False   # 10 digits
+        assert validate_pl_pesel("abcdefghijk") is False
+        assert validate_pl_pesel(None) is False
+
+
+class TestTrTckimlikValidation:
+    def _make(self, first9):
+        d = [int(x) for x in first9]
+        tenth = ((d[0] + d[2] + d[4] + d[6] + d[8]) * 7 - (d[1] + d[3] + d[5] + d[7])) % 10
+        eleventh = (sum(d) + tenth) % 10
+        return first9 + str(tenth) + str(eleventh)
+
+    def test_valid_tckimlik(self):
+        assert validate_tr_tckimlik(self._make("100000001")) is True
+
+    def test_invalid_check_digits(self):
+        assert validate_tr_tckimlik("12345678901") is False
+
+    def test_leading_zero(self):
+        assert validate_tr_tckimlik("01234567890") is False
+
+    def test_invalid_format(self):
+        assert validate_tr_tckimlik("1234567890") is False  # 10 digits
+        assert validate_tr_tckimlik("abcdefghijk") is False
+        assert validate_tr_tckimlik(None) is False
+
+
+class TestPlNipValidation:
+    """Tests for Polish NIP (tax number) validation."""
+
+    def test_valid(self):
+        # Check digit computed with weights [6,5,7,2,3,4,5,6,7].
+        assert validate_pl_nip("1234563218") is True
+
+    def test_valid_with_separators(self):
+        assert validate_pl_nip("123-456-32-18") is True
+
+    def test_invalid_check_digit(self):
+        assert validate_pl_nip("1234567890") is False
+
+    def test_invalid_format(self):
+        assert validate_pl_nip("123456321") is False  # 9 digits
+        assert validate_pl_nip("abcdefghij") is False
+        assert validate_pl_nip(None) is False
+
+
+class TestUsNpiValidation:
+    """Tests for US National Provider Identifier validation."""
+
+    def test_valid(self):
+        # 1234567893 is the canonical valid NPI test value.
+        assert validate_us_npi("1234567893") is True
+
+    def test_invalid_check_digit(self):
+        assert validate_us_npi("1234567890") is False
+
+    def test_invalid_format(self):
+        assert validate_us_npi("123456789") is False  # 9 digits
+        assert validate_us_npi("12345678901") is False  # 11 digits
+        assert validate_us_npi("abcdefghij") is False
+        assert validate_us_npi(None) is False
+
+
+class TestFrNirValidation:
+    """Tests for French NIR / INSEE number validation."""
+
+    def test_valid(self):
+        # 13-digit body 1800112345678 with control key 20.
+        assert validate_fr_nir("180011234567820") is True
+
+    def test_valid_with_spaces(self):
+        assert validate_fr_nir("1 80 01 12 345 678 20") is True
+
+    def test_invalid_key(self):
+        assert validate_fr_nir("180011234567800") is False
+
+    def test_invalid_format(self):
+        assert validate_fr_nir("1800112345678") is False  # 13 digits, no key
+        assert validate_fr_nir("18001123456782X") is False
+        assert validate_fr_nir(None) is False
+
+
+class TestThIdCardValidation:
+    """Tests for Thai national ID card validation."""
+
+    def test_valid(self):
+        assert validate_th_idcard("1101700207111") is True
+
+    def test_valid_with_separators(self):
+        assert validate_th_idcard("1-1017-00207-11-1") is True
+
+    def test_invalid_check_digit(self):
+        assert validate_th_idcard("1101700207110") is False
+
+    def test_leading_zero(self):
+        assert validate_th_idcard("0101700207111") is False
+
+    def test_invalid_format(self):
+        assert validate_th_idcard("110170020711") is False  # 12 digits
+        assert validate_th_idcard("abcdefghijklm") is False
+        assert validate_th_idcard(None) is False
+
+
+class TestSaIdValidation:
+    """Tests for Saudi national ID validation (Luhn, starts with 1)."""
+
+    def test_valid(self):
+        assert validate_sa_id("1000000008") is True
+
+    def test_rejects_iqama_prefix(self):
+        assert validate_sa_id("2000000006") is False  # valid Luhn but Iqama
+
+    def test_invalid_check_digit(self):
+        assert validate_sa_id("1000000000") is False
+
+    def test_invalid_format(self):
+        assert validate_sa_id("100000000") is False  # 9 digits
+        assert validate_sa_id("abcdefghij") is False
+        assert validate_sa_id(None) is False
+
+
+class TestSaIqamaValidation:
+    """Tests for Saudi Iqama validation (Luhn, starts with 2)."""
+
+    def test_valid(self):
+        assert validate_sa_iqama("2000000006") is True
+
+    def test_rejects_id_prefix(self):
+        assert validate_sa_iqama("1000000008") is False  # valid Luhn but citizen ID
+
+    def test_invalid_check_digit(self):
+        assert validate_sa_iqama("2000000000") is False
+
+    def test_invalid_format(self):
+        assert validate_sa_iqama("200000000") is False
+        assert validate_sa_iqama(None) is False
+
+
+class TestThTaxIdValidation:
+    """Tests for Thai tax ID validation (13-digit check digit)."""
+
+    def test_valid_personal(self):
+        assert validate_th_taxid("1101700207111") is True
+
+    def test_valid_corporate_leading_zero(self):
+        # Juristic-person TIN may start with 0.
+        assert validate_th_taxid("0101536000000") is True
+
+    def test_invalid_check_digit(self):
+        assert validate_th_taxid("1101700207110") is False
+
+    def test_invalid_format(self):
+        assert validate_th_taxid("110170020711") is False  # 12 digits
+        assert validate_th_taxid(None) is False
+
+
+class TestVnTaxCodeValidation:
+    """Tests for Vietnamese tax code validation (modulo-11 check digit)."""
+
+    def test_valid(self):
+        # Documented Vietnamese tax codes.
+        assert validate_vn_taxcode("0100109106") is True
+        assert validate_vn_taxcode("0101248141") is True
+
+    def test_valid_with_branch(self):
+        assert validate_vn_taxcode("0100109106-001") is True
+
+    def test_invalid_check_digit(self):
+        assert validate_vn_taxcode("0100109107") is False
+
+    def test_invalid_branch(self):
+        assert validate_vn_taxcode("0100109106-01") is False  # 2-digit branch
+
+    def test_invalid_format(self):
+        assert validate_vn_taxcode("010010910") is False  # 9 digits
+        assert validate_vn_taxcode("abcdefghij") is False
+        assert validate_vn_taxcode(None) is False
+
+
+class TestIsbn10Validation:
+    """Tests for ISBN-10 validation (regression for check-digit fix)."""
+
+    def test_valid(self):
+        assert validate_isbn10("0306406152") is True
+        assert validate_isbn10("0-306-40615-2") is True
+
+    def test_valid_with_x_check(self):
+        assert validate_isbn10("097522980X") is True
+
+    def test_invalid_check_digit(self):
+        assert validate_isbn10("0306406153") is False
+
+    def test_invalid_format(self):
+        assert validate_isbn10("03064061") is False
+        assert validate_isbn10(None) is False
+
+
+class TestIsbnCombinedValidation:
+    """Tests for the combined ISBN-10/13 validator."""
+
+    def test_valid_isbn10(self):
+        assert validate_isbn("0-306-40615-2") is True
+
+    def test_valid_isbn13(self):
+        assert validate_isbn("978-0-306-40615-7") is True
+
+    def test_invalid(self):
+        assert validate_isbn("1234567890") is False
+        assert validate_isbn("123456789012") is False  # 12 digits
+        assert validate_isbn(None) is False
+
+
+class TestUkNhsValidation:
+    """Tests for UK NHS number validation (modulo-11 check digit)."""
+
+    def test_valid(self):
+        assert validate_uk_nhs("9434765919") is True
+
+    def test_valid_with_separators(self):
+        assert validate_uk_nhs("943 476 5919") is True
+        assert validate_uk_nhs("943-476-5919") is True
+
+    def test_invalid_check_digit(self):
+        assert validate_uk_nhs("9434765918") is False
+
+    def test_invalid_format(self):
+        assert validate_uk_nhs("943476591") is False  # 9 digits
+        assert validate_uk_nhs("abcdefghij") is False
+        assert validate_uk_nhs(None) is False
+
+
+class TestFigiCheckDigitValidation:
+    """Tests for the strengthened FIGI validator (structure + check digit)."""
+
+    def test_valid(self):
+        assert validate_figi("BBG000BLNQ16") is True  # IBM
+        assert validate_figi("BBG000B9XRY4") is True  # Apple
+
+    def test_invalid_check_digit(self):
+        assert validate_figi("BBG000BLNQ17") is False
+
+    def test_missing_g_marker(self):
+        assert validate_figi("BBX000BLNQ16") is False  # position 3 must be G
+
+    def test_reserved_prefix(self):
+        assert validate_figi("BSG000BLNQ16") is False  # BS is reserved
+
+    def test_vowel_rejected(self):
+        assert validate_figi("BBG00ABLNQ16") is False  # vowel not allowed
+
+    def test_invalid_format(self):
+        assert validate_figi("BBG000BLNQ1") is False  # 11 chars
+        assert validate_figi(None) is False
+
+
+class TestTrVknValidation:
+    """Tests for Turkish tax number (VKN) validation."""
+
+    def test_valid(self):
+        assert validate_tr_vkn("4540536920") is True
+
+    def test_invalid_check_digit(self):
+        assert validate_tr_vkn("4540536921") is False
+
+    def test_invalid_format(self):
+        assert validate_tr_vkn("454053692") is False  # 9 digits
+        assert validate_tr_vkn("abcdefghij") is False
+        assert validate_tr_vkn(None) is False
+
+
+class TestIdNikValidation:
+    """Tests for Indonesian NIK structural validation."""
+
+    def test_valid_male(self):
+        assert validate_id_nik("3174011708900001") is True
+
+    def test_valid_female(self):
+        # Female holders have 40 added to the day component.
+        assert validate_id_nik("3174015708900001") is True
+
+    def test_invalid_month(self):
+        assert validate_id_nik("3174011713900001") is False
+
+    def test_invalid_sequence(self):
+        assert validate_id_nik("3174011708900000") is False
+
+    def test_invalid_format(self):
+        assert validate_id_nik("317401170890000") is False  # 15 digits
+        assert validate_id_nik("abcdefghijklmnop") is False
+        assert validate_id_nik(None) is False
+
+
+class TestRorIdValidation:
+    """Tests for ROR ID validation (ISO 7064 MOD 97-10 checksum)."""
+
+    def test_valid(self):
+        # Real ROR IDs: Stanford, MIT, Harvard.
+        assert validate_ror_id("00f54p054") is True
+        assert validate_ror_id("042nb2s44") is True
+        assert validate_ror_id("03vek6s52") is True
+
+    def test_valid_with_url_prefix(self):
+        assert validate_ror_id("https://ror.org/00f54p054") is True
+
+    def test_invalid_checksum(self):
+        assert validate_ror_id("00f54p055") is False
+
+    def test_invalid_format(self):
+        assert validate_ror_id("123456789") is False  # must start with 0
+        assert validate_ror_id("00i54p054") is False  # 'i' not in alphabet
+        assert validate_ror_id("00f54p05") is False  # 8 chars
+        assert validate_ror_id(None) is False
+
+
+class TestNlBsnValidation:
+    """Tests for Dutch BSN validation (11-test / elfproef)."""
+
+    def test_valid(self):
+        assert validate_nl_bsn("111222333") is True
+        assert validate_nl_bsn("123456782") is True
+
+    def test_invalid_check(self):
+        assert validate_nl_bsn("111222334") is False
+
+    def test_all_zeros(self):
+        assert validate_nl_bsn("000000000") is False
+
+    def test_invalid_format(self):
+        assert validate_nl_bsn("12345678") is False  # 8 digits
+        assert validate_nl_bsn("abcdefghi") is False
+        assert validate_nl_bsn(None) is False
+
+
+class TestNlRsinValidation:
+    """Tests for Dutch RSIN validation (shares the BSN 11-test)."""
+
+    def test_valid(self):
+        assert validate_nl_rsin("123456782") is True
+
+    def test_invalid_check(self):
+        assert validate_nl_rsin("123456783") is False
+
+    def test_invalid_format(self):
+        assert validate_nl_rsin("12345678") is False
+        assert validate_nl_rsin(None) is False
+
+
+class TestFrSirenValidation:
+    """Tests for French SIREN validation (Luhn check digit)."""
+
+    def test_valid(self):
+        assert validate_fr_siren("443061841") is True
+
+    def test_valid_with_spaces(self):
+        assert validate_fr_siren("443 061 841") is True
+
+    def test_invalid_check(self):
+        assert validate_fr_siren("443061842") is False
+
+    def test_invalid_format(self):
+        assert validate_fr_siren("44306184") is False  # 8 digits
+        assert validate_fr_siren("abcdefghi") is False
+        assert validate_fr_siren(None) is False
 
 
 if __name__ == "__main__":

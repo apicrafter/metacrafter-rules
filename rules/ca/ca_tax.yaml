@@ -16,6 +16,7 @@ rules:
     match: ppr
     type: data
     rule: Word(nums, exact=9)
+    imprecise: 1
     maxlen: 9
     minlen: 9
   cagstfield:
@@ -74,5 +75,7 @@ rules:
     match: ppr
     type: data
     rule: Word(nums, exact=9)
+    validator: metacrafterext.rules.ca.validators.validate_ca_sin
+    imprecise: 1
     maxlen: 9
     minlen: 9

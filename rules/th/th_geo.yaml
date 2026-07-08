@@ -10,14 +10,17 @@ rules:
     rule: thai_postcode,รหัสไปรษณีย์,รหัสไปรษณีย์ไทย
     type: field
     match: text
-  thpostcodevalue:
-    key: thpostcode
-    name: Thai postal code by pattern
-    match: ppr
-    type: data
-    rule: Word(nums, exact=5)
-    maxlen: 5
-    minlen: 5
+# Disabled: matches any 5-digit number, colliding with US ZIP codes and generic
+# numeric ids/counts. Cannot be distinguished from an arbitrary 5-digit value;
+# rely on thpostcodefield instead.
+#  thpostcodevalue:
+#    key: thpostcode
+#    name: Thai postal code by pattern
+#    match: ppr
+#    type: data
+#    rule: Word(nums, exact=5)
+#    maxlen: 5
+#    minlen: 5
   thprovincefield:
     key: thprovince
     name: Thai province by field name

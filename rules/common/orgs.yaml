@@ -7,7 +7,8 @@ rules:
   companynameknown:
     key: orgname
     name: Company name known names
-    rule: legalname,companyname,orgname,org_name,company_name,organization_name,legal_name,organizationname,company name
+    rule: legalname,companyname,orgname,org_name,company_name,organization_name,legal_name,organizationname,company
+      name
     type: field
     match: text
   dunsfield:
@@ -27,3 +28,11 @@ rules:
     minlen: 9
     priority: 1
     validator: metacrafterext.rules.common.identifiers.validate_duns
+    imprecise: 1
+  companycompanybyknown:
+    key: company_company
+    name: Company Company
+    match: text
+    type: field
+    rule: company,companyId,companyid,company_companyid,company_recid
+    priority: 1

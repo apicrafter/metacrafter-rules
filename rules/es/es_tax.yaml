@@ -4,22 +4,24 @@ context: finances
 lang: es
 country_code: es
 rules:
-  esniffield:
+  es_tax_esniffield:
     key: nif
     is_pii: True
     name: NIF por nombre de campo
     rule: nif,numero_nif,dni
     type: field
     match: text
-  esnifvalue:
+  es_tax_esnifvalue:
     key: nif
     is_pii: True
     name: NIF por patrón
-    match: pprrd(nums, exact=7) + Word('TRWAGMYFPDXBNJZSQVHLCK
+    match: ppr
     type: data
-    rule: Word('XYZKLM', exact=1) + WoE', exact=1)
+    rule: Word(nums, exact=8) + Word('TRWAGMYFPDXBNJZSQVHLCKE', exact=1)
     maxlen: 9
     minlen: 9
+    validator: metacrafterext.rules.es.validators.validate_es_nif
+    priority: 1
   esciffield:
     key: cif
     is_pii: True

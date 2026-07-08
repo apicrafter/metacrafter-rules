@@ -46,7 +46,7 @@ rules:
   programminglangbyknown:
     key: programminglang
     name: Programming language by field name
-    rule: language,programming_language,lang,code_language,programming_lang,prog_language,dev_language
+    rule: programming_language,code_language,programming_lang,prog_language,dev_language
     type: field
     match: text
     priority: 1

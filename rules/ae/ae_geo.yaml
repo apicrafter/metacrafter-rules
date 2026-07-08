@@ -10,19 +10,26 @@ rules:
     rule: postcode,postal_code,zip_code,uae_postcode,po_box,po_box_number,صندوق_البريد
     type: field
     match: text
-  aepostcodevalue:
-    key: aepostcode
-    name: UAE postal code by pattern
-    match: ppr
-    type: data
-    rule: Word(nums, min=4, max=6)
-    maxlen: 6
-    minlen: 4
-    imprecise: 1
+# Disabled: matches any 4-6 digit number, colliding with years, ZIP codes and
+# generic numeric ids/counts. Cannot be distinguished from an arbitrary number;
+# rely on aepostcodefield instead.
+#  aepostcodevalue:
+#    key: aepostcode
+#    name: UAE postal code by pattern
+#    match: ppr
+#    type: data
+#    rule: Word(nums, min=4, max=6)
+#    maxlen: 6
+#    minlen: 4
+#    imprecise: 1
   aecityfield:
     key: aecity
     name: UAE city name by field name
-    rule: city,city_name,emirate,المدينة,اسم_المدينة,الإمارة
+    # Restricted to UAE-specific field names. Generic terms (city, city_name,
+    # المدينة, اسم_المدينة) were removed because they matched every city column
+    # worldwide and overlap with the generic `city` datatype, causing false
+    # positives. UAE city detection now relies on the enumerated value list below.
+    rule: emirate,uae_city,emirate_name,الإمارة
     type: field
     match: text
   aecityvalue:

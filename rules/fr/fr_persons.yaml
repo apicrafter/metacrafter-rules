@@ -17,9 +17,10 @@ rules:
     name: French NIR by pattern
     match: ppr
     type: data
-    rule: Word(nums, exact=13)
-    maxlen: 13
-    minlen: 13
+    rule: Word(nums, exact=15)
+    validator: metacrafterext.rules.common.identifiers.validate_fr_nir
+    maxlen: 15
+    minlen: 15
   
   frcnifield:
     key: frcni

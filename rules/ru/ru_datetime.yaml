@@ -15,22 +15,26 @@ rules:
     name: Time range by pattern (с 10:00 по 15:00) used in Russian datasets
     type: data
     match: ppr
-    rule: Literal("с") + Word("012", exact=1) + Word(nums, exact=1) + Literal(":") + Word("012345", exact=1) + Word(nums, exact=1) + Literal("по") + Word("012", exact=1) + Word(nums, exact=1) + Literal(":") + Word("012345", exact=1) + Word(nums, exact=1)
+    rule: Literal("с") + Word("012", exact=1) + Word(nums, exact=1) + Literal(":")
+      + Word("012345", exact=1) + Word(nums, exact=1) + Literal("по") + Word("012",
+      exact=1) + Word(nums, exact=1) + Literal(":") + Word("012345", exact=1) + Word(nums,
+      exact=1)
   rusdatetimename:
     key: datetime
     name: Russian date name
     match: text
     type: field
-    rule: дата,дата и время,дата создания,дата регистрации,дата начала,дата окончания,дата приема,дата принятия,дата проведения,дата выдачи,отчетная дата
+    rule: дата,дата и время,дата создания,дата регистрации,дата начала,дата окончания,дата
+      приема,дата принятия,дата проведения,дата выдачи,отчетная дата,Место проведения
   rustimename:
     key: time
     name: Russian time name
     match: text
     type: field
-    rule: время
+    rule: время,Время приема,Время работы
   rusyearname:
     key: year
     name: Russian year name
     match: text
     type: field
-    rule: год
+    rule: год,Годы,Отчетный год

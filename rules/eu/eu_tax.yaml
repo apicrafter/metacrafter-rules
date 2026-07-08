@@ -22,6 +22,7 @@ rules:
     minlen: 8
     validator: metacrafterext.rules.common.identifiers.validate_eu_vat
     priority: 1
+    imprecise: 1
   euidfield:
     key: euid
     name: European Unique Identifier (EUID) by field name
@@ -38,13 +39,14 @@ rules:
     minlen: 6
     validator: metacrafterext.rules.common.identifiers.validate_euid
     priority: 1
-  ibanfield:
+    imprecise: 1
+  eu_tax_ibanfield:
     key: iban
     name: IBAN by field name
     rule: iban,iban_account,iban_number
     type: field
     match: text
-  ibanvalue:
+  eu_tax_ibanvalue:
     key: iban
     name: IBAN by value pattern
     match: ppr

@@ -13,9 +13,10 @@ rules:
     priority: 1
   addressknown:
     key: address
-    is_pii: True
+    is_pii: true
     name: Address
-    rule: address,postaladdress,actualaddress,fulladdress,address_legal,legaladdress,postal address,post address,location_address,location_1_address,address_1
+    rule: address,postaladdress,actualaddress,fulladdress,address_legal,legaladdress,postal
+      address,post address,location_address,location_1_address,address_1
     type: field
     match: text
     priority: 1
@@ -56,7 +57,8 @@ rules:
     name: Latitude by data pattern and name
     maxlen: 13
     minlen: 4
-    rule: ((Word('012345678', exact=1) + Word(nums, exact=1)) ^ (Literal("9") + Word(nums, exact=1))) + Literal('.') + Word(nums, min=1, max=10)
+    rule: ((Word('012345678', exact=1) + Word(nums, exact=1)) ^ (Literal("9") + Word(nums,
+      exact=1))) + Literal('.') + Word(nums, min=1, max=10)
     type: data
     match: ppr
     fieldrule: Optional(Word(printables)) + Optional('_') + "lat"
@@ -67,7 +69,8 @@ rules:
     name: Longitude by data pattern and name
     maxlen: 13
     minlen: 4
-    rule: ((Literal("1") + Word("012345678") + Word(nums, exact=1)) ^ (Word(nums, exact=2))) + Literal(".") + Word(nums, min=1, max=10)
+    rule: ((Literal("1") + Word("012345678") + Word(nums, exact=1)) ^ (Word(nums,
+      exact=2))) + Literal(".") + Word(nums, min=1, max=10)
     type: data
     match: ppr
     fieldrule: Optional(Word(printables)) + Optional('_') + (Literal("lon") ^ Literal("lng"))
@@ -75,15 +78,16 @@ rules:
     priority: 2
   postindexknown:
     key: postindex
-    is_pii: True
+    is_pii: true
     name: Post index code (ZIP code and e.t.c) by known name
-    rule: postindex,postIndex,post_index,postcode,zip_code,zipcode,postalcode,post index,zip_code,postal_code,location_zip,address_zip
+    rule: postindex,postIndex,post_index,postcode,zip_code,zipcode,postalcode,post
+      index,zip_code,postal_code,location_zip,address_zip
     match: text
     type: field
     priority: 1
   streetknown:
     key: street
-    is_pii: True
+    is_pii: true
     name: Street name by field name
     rule: street,street name,streetname,street_name
     match: text
@@ -91,7 +95,7 @@ rules:
     priority: 1
   cityknown:
     key: city
-    is_pii: True
+    is_pii: true
     name: City/town name by field name
     rule: town,city,cityname,location (city),location_city,location_1_city,address_city,city_name
     match: text
@@ -107,7 +111,8 @@ rules:
   wbregionbyvalue:
     key: wbregion
     name: World Bank region
-    rule: South Asia,Europe & Central Asia,Sub-Saharan Africa,Latin America & Caribbean,East Asia & Pacific,North America,Middle East & North Africa
+    rule: South Asia,Europe & Central Asia,Sub-Saharan Africa,Latin America & Caribbean,East
+      Asia & Pacific,North America,Middle East & North Africa
     match: text
     type: data
     priority: 2
@@ -128,6 +133,7 @@ rules:
     minlen: 13
     priority: 1
     validator: metacrafterext.rules.common.identifiers.validate_gln
+    imprecise: 1
   unlocodefield:
     key: unlocode
     name: UN/LOCODE by field name
@@ -140,9 +146,58 @@ rules:
     name: UN/LOCODE by value pattern
     match: ppr
     type: data
-    rule: Word('ABCDEFGHIJKLMNOPQRSTUVWXYZ', exact=2) + Word('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ', exact=3)
+    rule: Word('ABCDEFGHIJKLMNOPQRSTUVWXYZ', exact=2) + Word('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+      exact=3)
     maxlen: 5
     minlen: 5
     priority: 1
-
- 
+    imprecise: 1
+  addressaddressbyknown:
+    key: address_address
+    name: Address Address
+    match: text
+    type: field
+    rule: address1,address2,address_line_1,address_line_2
+    priority: 1
+  countrygeobyknown:
+    key: country_geo
+    name: Country Geo
+    match: text
+    type: field
+    rule: country_code,countryId,countryid,address_country
+    priority: 1
+  streetaddressbyknown:
+    key: street_address
+    name: Street Address
+    match: text
+    type: field
+    rule: street_address,street2,street1,addressstreet
+    priority: 1
+  latgeobyknown:
+    key: lat_geo
+    name: Lat Geo
+    match: text
+    type: field
+    rule: stop_lat,geo_lat,cos_latitude,sin_latitude
+    priority: 1
+  longeobyknown:
+    key: lon_geo
+    name: Lon Geo
+    match: text
+    type: field
+    rule: stop_lon,cos_longitude,sin_longitude
+    priority: 1
+  coordinategeobyknown:
+    key: coordinate_geo
+    name: Coordinate Geo
+    match: text
+    type: field
+    rule: coordinates
+    priority: 1
+  continentgeobyknown:
+    key: continent_geo
+    name: Continent Geo
+    match: text
+    type: field
+    rule: continent_name
+    priority: 1

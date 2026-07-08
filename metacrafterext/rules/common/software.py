@@ -152,6 +152,36 @@ def validate_hash_format(value, hash_type='md5'):
     return False
 
 
+def _looks_like_dotted_date(value):
+    """
+    Returns True if a plain dotted numeric string looks like a calendar date
+    such as ``31.5.2019`` (D.M.YYYY / M.D.YYYY) or ``2019.5.31`` (YYYY.M.D).
+
+    Such values are indistinguishable from a bare ``MAJOR.MINOR.PATCH`` version
+    but are far more commonly real dates in tabular data, so they should not be
+    reported as software versions.
+    """
+    parts = value.split('.')
+    if len(parts) != 3 or not all(p.isdigit() for p in parts):
+        return False
+
+    a, b, c = (int(p) for p in parts)
+
+    def _valid(day, month, year):
+        if not (1000 <= year <= 2999 and 1 <= month <= 12):
+            return False
+        days_in_month = [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+        return 1 <= day <= days_in_month[month - 1]
+
+    # Trailing 4-digit year: D.M.YYYY or M.D.YYYY
+    if len(parts[2]) == 4 and (_valid(a, b, c) or _valid(b, a, c)):
+        return True
+    # Leading 4-digit year: YYYY.M.D
+    if len(parts[0]) == 4 and _valid(c, b, a):
+        return True
+    return False
+
+
 def validate_semver(value):
     """
     Validates semantic version format (SemVer 2.0.0).
@@ -169,7 +199,12 @@ def validate_semver(value):
         return False
     
     value = value.strip()
-    
+
+    # Reject plain dotted dates (e.g. "31.5.2019") which match the semver
+    # shape but are almost always calendar dates in real data.
+    if _looks_like_dotted_date(value):
+        return False
+
     # SemVer pattern: major.minor.patch[-prerelease][+build]
     semver_pattern = r'^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$'
     return bool(re.match(semver_pattern, value))
@@ -208,9 +243,10 @@ def validate_version(value):
     elif value.startswith('r') and len(value) > 1 and value[1:].isdigit():
         value = value[1:]
     
-    # Check if it's a version-like pattern (numbers and dots)
-    # At least one digit, can have dots and numbers
-    version_pattern = r'^\d+(?:\.\d+)*(?:[-_]\w+)?$'
+    # Check if it's a version-like pattern (numbers and dots).
+    # Allow up to 4 dotted numeric segments (e.g. 3.4.5.6) so overly long
+    # dotted sequences like 1.2.3.4.5.6 are rejected as false positives.
+    version_pattern = r'^\d+(?:\.\d+){0,3}(?:[-_]\w+)?$'
     if re.match(version_pattern, value):
         return True
     
@@ -271,13 +307,14 @@ def validate_npm_package(value):
         scope, name = package_name[1:].split('/', 1)
         if not scope or not name:
             return False
-        # Scope and name should be valid identifiers
-        scope_valid = re.match(r'^[a-z0-9][a-z0-9._-]*$', scope)
-        name_valid = re.match(r'^[a-z0-9][a-z0-9._-]*$', name)
+        # Scope and name must start with a letter (reduces numeric-string
+        # false positives) followed by lowercase alphanumerics/._-
+        scope_valid = re.match(r'^[a-z][a-z0-9._-]*$', scope)
+        name_valid = re.match(r'^[a-z][a-z0-9._-]*$', name)
         return bool(scope_valid and name_valid)
     else:
-        # Unscoped package
-        return bool(re.match(r'^[a-z0-9][a-z0-9._-]*$', package_name))
+        # Unscoped package must start with a letter.
+        return bool(re.match(r'^[a-z][a-z0-9._-]*$', package_name))
 
 
 def validate_pypi_package(value):
@@ -317,8 +354,9 @@ def validate_pypi_package(value):
     if not package_name:
         return False
     
-    # Basic validation: alphanumeric, hyphens, underscores, dots
-    return bool(re.match(r'^[a-zA-Z0-9][a-zA-Z0-9._-]*$', package_name))
+    # PyPI names must start with a letter (rejects numeric/separator-leading
+    # strings such as "123package", "-package", ".package").
+    return bool(re.match(r'^[a-zA-Z][a-zA-Z0-9._-]*$', package_name))
 
 
 def validate_maven_coordinate(value):
@@ -409,8 +447,9 @@ def validate_docker_image(value):
     for part in parts:
         if not part:
             return False
-        # Each part should be valid identifier
-        if not re.match(r'^[a-z0-9][a-z0-9._-]*$', part.lower()):
+        # Docker image names are lowercase-only; match without lowercasing so
+        # uppercase names (e.g. "IMAGE") are correctly rejected.
+        if not re.match(r'^[a-z0-9][a-z0-9._-]*$', part):
             return False
     
     return True
@@ -435,9 +474,9 @@ def validate_spdx_license(value):
     if license_lower in SPDX_LICENSES:
         return True
     
-    # Check if it matches SPDX format (alphanumeric, hyphens, dots)
-    # SPDX format: [A-Za-z0-9.-]+
-    if re.match(r'^[a-z0-9][a-z0-9.-]*$', license_lower):
+    # Check if it matches SPDX format. Identifiers must start with a letter
+    # (rejects pure-numeric strings like "123") and contain no spaces.
+    if re.match(r'^[a-z][a-z0-9.-]*$', license_lower):
         return True
     
     return False
@@ -511,6 +550,10 @@ def validate_build_number(value):
     if not value:
         return False
     
+    # A trailing separator (e.g. "build-") is malformed.
+    if value.endswith(('-', '_', '.')):
+        return False
+    
     # Pure numeric
     if value.isdigit():
         return True
@@ -569,9 +612,9 @@ def validate_winregkey(value):
     if hkey_part not in valid_hkeys:
         return False
     
-    # Remaining parts should be non-empty
-    if len(parts) > 1:
-        return all(part.strip() for part in parts[1:])
-    
-    return True
+    # A registry key must include at least one subkey after the hive; a bare
+    # hive such as "HKEY_LOCAL_MACHINE" is not a key path.
+    if len(parts) < 2:
+        return False
+    return all(part.strip() for part in parts[1:])
 

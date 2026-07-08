@@ -10,14 +10,18 @@ rules:
     rule: ma_buu_chinh,ma_buu_dien
     type: field
     match: text
-  vnpostcodevalue:
-    key: vnpostcode
-    name: Vietnamese postal code by pattern
-    match: ppr
-    type: data
-    rule: Word(nums, exact=5) | (Word(nums, exact=5) + Literal('-') + Word(nums, exact=4))
-    maxlen: 10
-    minlen: 5
+# Disabled: matches any bare 5-digit number (and the US-style #####-#### form),
+# colliding with US ZIP codes and generic numeric ids/counts, causing too many
+# false positives. A Vietnamese postal code cannot be distinguished from an
+# arbitrary 5-digit number by value alone; rely on vnpostcodefield instead.
+#  vnpostcodevalue:
+#    key: vnpostcode
+#    name: Vietnamese postal code by pattern
+#    match: ppr
+#    type: data
+#    rule: Word(nums, exact=5) | (Word(nums, exact=5) + Literal('-') + Word(nums, exact=4))
+#    maxlen: 10
+#    minlen: 5
   vnprovincefield:
     key: vnprovince
     name: Vietnamese province by field name

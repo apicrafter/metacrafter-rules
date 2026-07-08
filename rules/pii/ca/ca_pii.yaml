@@ -1,0 +1,45 @@
+name: ca-pii
+description: Canadian person identifiable information (PII)
+context: pii
+lang: en
+country_code: ca
+rules:
+  ca_pii_sinfield:
+    key: ca_sin
+    is_pii: True
+    name: Canadian Social Insurance Number by field name
+    rule: sin,social_insurance_number,numero_assurance_sociale,nas
+    type: field
+    match: text
+    priority: 1
+  ca_pii_sinvalue:
+    key: ca_sin
+    is_pii: True
+    name: Canadian Social Insurance Number by pattern
+    match: ppr
+    type: data
+    rule: Word(nums, exact=3) + Optional(Literal('-') | Literal(' ')) + Word(nums, exact=3) + Optional(Literal('-') | Literal(' ')) + Word(nums, exact=3)
+    validator: metacrafterext.rules.ca.validators.validate_ca_sin
+    imprecise: 1
+    maxlen: 11
+    minlen: 9
+    priority: 1
+  ca_pii_sinfield_plain:
+    key: ca_sin
+    is_pii: True
+    name: Canadian Social Insurance Number (compact) by pattern
+    match: ppr
+    type: data
+    rule: Word(nums, exact=9)
+    validator: metacrafterext.rules.ca.validators.validate_ca_sin
+    imprecise: 1
+    maxlen: 9
+    minlen: 9
+    priority: 1
+  ca_pii_postalcodefield:
+    key: ca_postalcode
+    is_pii: False
+    name: Canadian postal code by field name
+    rule: postal_code,postalcode,zip,zip_code,code_postal
+    type: field
+    match: text

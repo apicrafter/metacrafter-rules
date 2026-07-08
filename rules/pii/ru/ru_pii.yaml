@@ -18,7 +18,7 @@ rules:
     rule: дата смерти
     type: field
     match: text
-  passportbyknown:
+  ru_pii_passportbyknown:
     key: ruintpassport
     is_pii: True
     name: Russian passport by field name

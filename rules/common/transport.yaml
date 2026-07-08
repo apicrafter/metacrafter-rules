@@ -11,15 +11,19 @@ rules:
     type: field
     match: text
     priority: 1
-  iataairlinecodevalue:
-    key: iataairlinecode
-    name: IATA airline code by value pattern
-    match: ppr
-    type: data
-    rule: Word('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ', exact=2)
-    maxlen: 2
-    minlen: 2
-    priority: 1
+# Disabled: matches any 2-character alphanumeric value (country/state/currency
+# codes, abbreviations, any 2-char code), causing too many false positives. An
+# IATA airline code cannot be distinguished from a generic 2-char code by value
+# alone; rely on iataairlinecodefield instead.
+#  iataairlinecodevalue:
+#    key: iataairlinecode
+#    name: IATA airline code by value pattern
+#    match: ppr
+#    type: data
+#    rule: Word('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ', exact=2)
+#    maxlen: 2
+#    minlen: 2
+#    priority: 1
   icaoairlinecodefield:
     key: icaoairlinecode
     name: ICAO airline code by field name
@@ -27,15 +31,19 @@ rules:
     type: field
     match: text
     priority: 1
-  icaoairlinecodevalue:
-    key: icaoairlinecode
-    name: ICAO airline code by value pattern
-    match: ppr
-    type: data
-    rule: Word('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ', exact=3)
-    maxlen: 3
-    minlen: 3
-    priority: 1
+# Disabled: matches any 3-character alphanumeric value (currency codes, country
+# codes, generic 3-char codes/abbreviations), causing too many false positives.
+# An ICAO airline code cannot be distinguished from a generic 3-char code by
+# value alone; rely on icaoairlinecodefield instead.
+#  icaoairlinecodevalue:
+#    key: icaoairlinecode
+#    name: ICAO airline code by value pattern
+#    match: ppr
+#    type: data
+#    rule: Word('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ', exact=3)
+#    maxlen: 3
+#    minlen: 3
+#    priority: 1
   iataairportcodefield:
     key: iataairportcode
     name: IATA airport code by field name
@@ -43,15 +51,19 @@ rules:
     type: field
     match: text
     priority: 1
-  iataairportcodevalue:
-    key: iataairportcode
-    name: IATA airport code by value pattern
-    match: ppr
-    type: data
-    rule: Word('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ', exact=3)
-    maxlen: 3
-    minlen: 3
-    priority: 1
+# Disabled: matches any 3-character alphanumeric value (currency codes, country
+# codes, generic 3-char codes/abbreviations), causing too many false positives.
+# An IATA airport code cannot be distinguished from a generic 3-char code by
+# value alone; rely on iataairportcodefield instead.
+#  iataairportcodevalue:
+#    key: iataairportcode
+#    name: IATA airport code by value pattern
+#    match: ppr
+#    type: data
+#    rule: Word('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ', exact=3)
+#    maxlen: 3
+#    minlen: 3
+#    priority: 1
   icaoairportcodefield:
     key: icaoairportcode
     name: ICAO airport code by field name
@@ -81,6 +93,8 @@ rules:
     match: ppr
     type: data
     rule: Word('123456789', exact=1) + Word(nums, exact=6)
+    validator: metacrafterext.rules.common.identifiers.validate_imo_number
+    imprecise: 1
     maxlen: 7
     minlen: 7
     priority: 1
@@ -97,6 +111,7 @@ rules:
     match: ppr
     type: data
     rule: Word(nums, exact=9)
+    imprecise: 1
     maxlen: 9
     minlen: 9
     priority: 1

@@ -18,6 +18,7 @@ rules:
     match: ppr
     type: data
     rule: Word(nums, exact=11)
+    validator: metacrafterext.rules.common.identifiers.validate_tr_tckimlik
     maxlen: 11
     minlen: 11
   trpassportfield:
@@ -27,15 +28,18 @@ rules:
     rule: pasaport,passport_number,pasaport_numarası,pasaport_no
     type: field
     match: text
-  trpassportvalue:
-    key: trpassport
-    is_pii: True
-    name: Turkish passport by pattern
-    match: ppr
-    type: data
-    rule: Word(alphanums, min=6, max=9)
-    maxlen: 9
-    minlen: 6
+# Disabled: matches any alphanumeric string 6-9 chars, so most generic
+# ids/codes/words are flagged. A Turkish passport number cannot be distinguished
+# from an arbitrary alphanumeric value; rely on trpassportfield instead.
+#  trpassportvalue:
+#    key: trpassport
+#    is_pii: True
+#    name: Turkish passport by pattern
+#    match: ppr
+#    type: data
+#    rule: Word(alphanums, min=6, max=9)
+#    maxlen: 9
+#    minlen: 6
   trdriverlicfield:
     key: trdriverlic
     is_pii: True

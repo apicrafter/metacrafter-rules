@@ -42,8 +42,56 @@ rules:
     match: ppr
     type: data
     rule: Word(nums, exact=12)
+    imprecise: 1
     maxlen: 12
     minlen: 12
-
+  uksloafield:
+    key: uksloa
+    name: UK Lower Super Output Area (LSOA) code by field name
+    match: text
+    type: field
+    rule: lsoa,lsoa code,lsoa_code,lsoa11cd,lsoa11_cd,lsoa code 2011,lsoa 2011 code,lsoa 2011 name
+  ukmsoafield:
+    key: ukmsoa
+    name: UK Middle Super Output Area (MSOA) code by field name
+    match: text
+    type: field
+    rule: msoa,msoa code,msoa_code,msoa11cd,msoa11_cd,msoa name,msoa04cd,msoa04_cd
+  ukonscodefield:
+    key: ukonscode
+    name: UK ONS (Office for National Statistics) code by field name
+    match: text
+    type: field
+    rule: ons code,ons_code,ons ref,ons_ref,ons body code,ons_body_code,ons_administrative_area,ons codes
+  ukgsscodefield:
+    key: ukgsscode
+    name: UK GSS (Geographic Statistical Standard) code by field name
+    match: text
+    type: field
+    rule: gss code,gss_code,gssla code,gssla_code
+  ukboroughcodefield:
+    key: ukboroughcode
+    name: UK borough code by field name
+    match: text
+    type: field
+    rule: borough code,borough_code,borough ref,borough_ref,boroughcd
+  uklacodefield:
+    key: uklacode
+    name: UK Local Authority (LA) code by field name
+    match: text
+    type: field
+    rule: la code,la_code,local authority code,previous local authority code,pre 2009 la code,post 2009 la code,old la code
+  ukparishcodefield:
+    key: ukparishcode
+    name: UK parish code by field name
+    match: text
+    type: field
+    rule: parish code,parish_code,parish_ward,parish
+  ukdistrictcodefield:
+    key: ukdistrictcode
+    name: UK district code by field name
+    match: text
+    type: field
+    rule: district code,district_code,ons_district_code,ogss_district_code,polling district code,local authority district code
 
   

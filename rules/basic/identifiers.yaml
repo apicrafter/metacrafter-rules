@@ -77,13 +77,17 @@ rules:
     match: text
     type: field
     priority: 1
-  snowflakeidvalue:
-    key: snowflake_id
-    name: Snowflake ID by value pattern
-    match: ppr
-    type: data
-    rule: Word(nums, min=15, max=19)
-    maxlen: 19
-    minlen: 15
-    priority: 1
-    validator: metacrafterext.rules.common.identifiers.validate_snowflake_id
+# Disabled: matches essentially any 15-19 digit integer (the validator only
+# checks digit count and 64-bit range), so bigint primary keys, account numbers
+# and other large numeric ids are flagged. A Snowflake ID has no reliable
+# structural signature by value; rely on snowflakeidfield instead.
+#  snowflakeidvalue:
+#    key: snowflake_id
+#    name: Snowflake ID by value pattern
+#    match: ppr
+#    type: data
+#    rule: Word(nums, min=15, max=19)
+#    maxlen: 19
+#    minlen: 15
+#    priority: 1
+#    validator: metacrafterext.rules.common.identifiers.validate_snowflake_id

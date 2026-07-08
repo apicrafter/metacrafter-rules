@@ -4,14 +4,14 @@ context: pii
 lang: ko
 country_code: kr
 rules:
-  krrrnfield:
+  kr_pii_krrrnfield:
     key: krrrn
     is_pii: True
     name: Korean RRN by field name
     rule: rrn,resident_registration_number,주민등록번호,rrn_number,korean_id,national_id
     type: field
     match: text
-  krrrnvalue:
+  kr_pii_krrrnvalue:
     key: krrrn
     is_pii: True
     name: Korean RRN by pattern
@@ -20,14 +20,14 @@ rules:
     rule: Word(nums, exact=6) + Literal('-') + Word(nums, exact=7)
     maxlen: 14
     minlen: 14
-  krpassportfield:
+  kr_pii_krpassportfield:
     key: krpassport
     is_pii: True
     name: Korean passport by field name
     rule: passport,여권,passport_number,여권번호,passport_no
     type: field
     match: text
-  krpassportvalue:
+  kr_pii_krpassportvalue:
     key: krpassport
     is_pii: True
     name: Korean passport by pattern
@@ -36,14 +36,14 @@ rules:
     rule: Word(alphas, exact=1) + Word(nums, exact=8)
     maxlen: 9
     minlen: 9
-  krdriverlicfield:
+  kr_pii_krdriverlicfield:
     key: krdriverlic
     is_pii: True
     name: Korean driver license by field name
     rule: driver_license,운전면허,운전면허번호,license_number,driving_license
     type: field
     match: text
-  krdriverlicvalue:
+  kr_pii_krdriverlicvalue:
     key: krdriverlic
     is_pii: True
     name: Korean driver license by pattern

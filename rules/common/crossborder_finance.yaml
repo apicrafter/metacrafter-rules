@@ -15,7 +15,8 @@ rules:
     name: International Bank Account Number by value pattern
     match: ppr
     type: data
-    rule: Word('ABCDEFGHIJKLMNOPQRSTUVWXYZ', exact=2) + Word(nums, exact=2) + Word(alphanums, min=10, max=28)
+    rule: Word('ABCDEFGHIJKLMNOPQRSTUVWXYZ', exact=2) + Word(nums, exact=2) + Word(alphanums,
+      min=10, max=28)
     maxlen: 34
     minlen: 14
     validator: metacrafterext.rules.common.identifiers.validate_iban
@@ -30,7 +31,9 @@ rules:
     name: SWIFT/BIC code by value pattern
     match: ppr
     type: data
-    rule: Word('ABCDEFGHIJKLMNOPQRSTUVWXYZ', exact=4) + Word('ABCDEFGHIJKLMNOPQRSTUVWXYZ', exact=2) + Word('ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789', exact=2) + Optional(Word('ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789', exact=3))
+    rule: Word('ABCDEFGHIJKLMNOPQRSTUVWXYZ', exact=4) + Word('ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+      exact=2) + Word('ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789', exact=2) + Optional(Word('ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789',
+      exact=3))
     maxlen: 11
     minlen: 8
   leifield:
@@ -79,9 +82,16 @@ rules:
     name: International Securities Identification Number by value pattern
     match: ppr
     type: data
-    rule: Word('ABCDEFGHIJKLMNOPQRSTUVWXYZ', exact=2) + Word('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ', exact=10)
+    rule: Word('ABCDEFGHIJKLMNOPQRSTUVWXYZ', exact=2) + Word('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+      exact=10)
     maxlen: 12
     minlen: 12
     priority: 1
     validator: metacrafterext.rules.common.identifiers.validate_isin
-
+  balanceamountbyknown:
+    key: balance_amount
+    name: Balance Amount
+    match: text
+    type: field
+    rule: account_balance,total_balance,include_in_balance,balanced_scorecard,master_account_balance
+    priority: 1

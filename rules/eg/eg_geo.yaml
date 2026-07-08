@@ -10,14 +10,17 @@ rules:
     rule: postcode,postal_code,zip_code,egyptian_postcode,الرمز_البريدي
     type: field
     match: text
-  egpostcodevalue:
-    key: egpostcode
-    name: Egyptian postal code by pattern
-    match: ppr
-    type: data
-    rule: Word(nums, exact=5)
-    maxlen: 5
-    minlen: 5
+# Disabled: matches any 5-digit number, colliding with US ZIP codes and generic
+# numeric ids/counts. Cannot be distinguished from an arbitrary 5-digit value;
+# rely on egpostcodefield instead.
+#  egpostcodevalue:
+#    key: egpostcode
+#    name: Egyptian postal code by pattern
+#    match: ppr
+#    type: data
+#    rule: Word(nums, exact=5)
+#    maxlen: 5
+#    minlen: 5
   egcityfield:
     key: egcity
     name: Egyptian city name by field name

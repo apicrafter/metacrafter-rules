@@ -8,7 +8,7 @@ rules:
     key: person_name
     is_pii: True
     name: Italian person name by known name
-    rule: nome_completo,nome,cognome,nome_persona
+    rule: nome_completo,cognome,nome_persona
     type: field
     match: text
     priority: 1

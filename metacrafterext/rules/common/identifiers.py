@@ -4,6 +4,8 @@ Validation functions for global identifiers with check digits.
 These functions validate identifiers that use check digit algorithms to reduce
 false positives in pattern matching.
 """
+import datetime
+import re
 
 
 def validate_iban(value):
@@ -232,14 +234,16 @@ def validate_imei(value):
     # Use 14 digits for check digit calculation
     digits = [int(d) for d in imei[:14]]
     
-    # Luhn algorithm: double every second digit from right (odd positions)
+    # Luhn algorithm for IMEI: the check digit makes the full 15-digit number
+    # pass Luhn, so when computing over the 14 payload digits the rightmost
+    # payload digit IS doubled (reversed index 0).
     total = 0
     for i, digit in enumerate(reversed(digits)):
-        if i % 2 == 0:  # Even position in reversed = rightmost, don't double
-            total += digit
-        else:  # Odd position in reversed = second from right, double it
+        if i % 2 == 0:  # rightmost payload digit is doubled
             doubled = digit * 2
             total += (doubled // 10) + (doubled % 10)
+        else:
+            total += digit
     
     check_digit = (10 - (total % 10)) % 10
     
@@ -631,29 +635,231 @@ def validate_openalex_id(value):
     return True
 
 
+_FIGI_CONSONANTS = set('BCDFGHJKLMNPQRSTVWXYZ')
+_FIGI_RESERVED_PREFIXES = {'BS', 'BM', 'GG', 'GB', 'GH', 'KY', 'VG'}
+
+
 def validate_figi(value):
     """
-    Validates FIGI format (no check digit, but format validation).
-    FIGI is 12-character alphanumeric code.
-    
+    Validates a FIGI (Financial Instrument Global Identifier).
+
+    A FIGI is 12 characters with a defined structure:
+
+    * positions 1-2: upper-case consonants, excluding the reserved combinations
+      (``BS``, ``BM``, ``GG``, ``GB``, ``GH``, ``KY``, ``VG``) that collide with
+      ISIN country prefixes;
+    * position 3: always ``G``;
+    * positions 4-11: consonants or digits (vowels are never used);
+    * position 12: a modulo-10 (Luhn-style, base-36) check digit.
+
     Args:
-        value: FIGI string (12 characters)
-        
+        value: FIGI string
+
     Returns:
-        bool: True if valid FIGI format, False otherwise
+        bool: True if the value is a valid FIGI, False otherwise.
     """
     if not isinstance(value, str):
         return False
-    
+
     figi = value.upper().replace(' ', '').replace('-', '')
-    
+
     if len(figi) != 12:
         return False
-    
-    if not figi.isalnum():
+
+    if figi[0] not in _FIGI_CONSONANTS or figi[1] not in _FIGI_CONSONANTS:
         return False
-    
+
+    if figi[:2] in _FIGI_RESERVED_PREFIXES:
+        return False
+
+    if figi[2] != 'G':
+        return False
+
+    for ch in figi[3:11]:
+        if not (ch.isdigit() or ch in _FIGI_CONSONANTS):
+            return False
+
+    if not figi[11].isdigit():
+        return False
+
+    total = 0
+    for i in range(11):
+        ch = figi[i]
+        mapped = int(ch) if ch.isdigit() else ord(ch) - 55
+        if (i + 1) % 2 == 0:
+            mapped *= 2
+        total += sum(int(d) for d in str(mapped))
+
+    check = (10 - (total % 10)) % 10
+    return check == int(figi[11])
+
+
+def validate_tr_vkn(value):
+    """
+    Validates a Turkish tax identification number (Vergi Kimlik Numarası).
+
+    A 10-digit number whose final digit is a check digit computed with the
+    official VKN algorithm over the first nine digits.
+
+    Args:
+        value: VKN string (spaces and dashes are ignored)
+
+    Returns:
+        bool: True if the value is a valid Turkish tax number, False otherwise.
+    """
+    if not isinstance(value, str):
+        return False
+
+    vkn = value.replace(' ', '').replace('-', '')
+    if len(vkn) != 10 or not vkn.isdigit():
+        return False
+
+    total = 0
+    for i in range(9):
+        c1 = (int(vkn[i]) + (9 - i)) % 10
+        c2 = (c1 * pow(2, 9 - i)) % 9
+        if c1 != 0 and c2 == 0:
+            c2 = 9
+        total += c2
+    check = (10 - (total % 10)) % 10
+    return check == int(vkn[9])
+
+
+def validate_id_nik(value):
+    """
+    Validates the structure of an Indonesian NIK (Nomor Induk Kependudukan).
+
+    A NIK is 16 digits: 6 digits of area code, a 6-digit birth date in
+    ``DDMMYY`` form (the day has 40 added for female holders), and a 4-digit
+    sequence that is never ``0000``. There is no check digit, so the embedded
+    date is validated to reduce false positives.
+
+    Args:
+        value: NIK string (spaces and dashes are ignored)
+
+    Returns:
+        bool: True if the value has a valid NIK structure, False otherwise.
+    """
+    if not isinstance(value, str):
+        return False
+
+    nik = value.replace(' ', '').replace('-', '')
+    if len(nik) != 16 or not nik.isdigit():
+        return False
+
+    day = int(nik[6:8])
+    if day > 40:
+        day -= 40
+    month = int(nik[8:10])
+    sequence = nik[12:16]
+
+    if not (1 <= day <= 31):
+        return False
+    if not (1 <= month <= 12):
+        return False
+    if sequence == '0000':
+        return False
     return True
+
+
+_ROR_CROCKFORD = '0123456789abcdefghjkmnpqrstvwxyz'
+_ROR_PATTERN = re.compile(r'^0[a-hj-km-np-tv-z0-9]{6}[0-9]{2}$')
+
+
+def validate_ror_id(value):
+    """
+    Validates a ROR ID (Research Organization Registry identifier).
+
+    A ROR ID is a 9-character identifier: a leading ``0``, six Crockford
+    base-32 characters, and a 2-digit ISO 7064 MOD 97-10 checksum. An optional
+    ``https://ror.org/`` prefix (or leading path) is ignored.
+
+    Args:
+        value: ROR ID string (with or without the ror.org prefix)
+
+    Returns:
+        bool: True if the value is a valid ROR ID, False otherwise.
+    """
+    if not isinstance(value, str):
+        return False
+
+    ror = value.strip().rstrip('/').split('/')[-1].lower()
+    if not _ROR_PATTERN.match(ror):
+        return False
+
+    number = 0
+    for ch in ror[:-2]:
+        number = number * 32 + _ROR_CROCKFORD.index(ch)
+    checksum = str(98 - ((number * 100) % 97)).zfill(2)
+    return checksum == ror[-2:]
+
+
+def _nl_elfproef(number):
+    """Returns True if a 9-digit string passes the Dutch 11-test (elfproef)."""
+    if len(number) != 9 or not number.isdigit():
+        return False
+    if number == '000000000':
+        return False
+    weights = [9, 8, 7, 6, 5, 4, 3, 2, -1]
+    return sum(int(number[i]) * weights[i] for i in range(9)) % 11 == 0
+
+
+def validate_nl_bsn(value):
+    """
+    Validates a Dutch BSN (Burgerservicenummer).
+
+    A 9-digit number that passes the Dutch 11-test (elfproef): the digits are
+    weighted 9, 8, ..., 2 and the final digit by -1, and the weighted sum must
+    be divisible by 11.
+
+    Args:
+        value: BSN string (spaces and dashes are ignored)
+
+    Returns:
+        bool: True if the value is a valid BSN, False otherwise.
+    """
+    if not isinstance(value, str):
+        return False
+    return _nl_elfproef(value.replace(' ', '').replace('-', ''))
+
+
+def validate_nl_rsin(value):
+    """
+    Validates a Dutch RSIN (Rechtspersonen en Samenwerkingsverbanden
+    Informatienummer).
+
+    An RSIN uses the same 9-digit 11-test (elfproef) as the BSN.
+
+    Args:
+        value: RSIN string (spaces and dashes are ignored)
+
+    Returns:
+        bool: True if the value is a valid RSIN, False otherwise.
+    """
+    if not isinstance(value, str):
+        return False
+    return _nl_elfproef(value.replace(' ', '').replace('-', ''))
+
+
+def validate_fr_siren(value):
+    """
+    Validates a French SIREN company identifier.
+
+    A 9-digit number whose final digit is a Luhn check digit.
+
+    Args:
+        value: SIREN string (spaces and dashes are ignored)
+
+    Returns:
+        bool: True if the value is a valid SIREN, False otherwise.
+    """
+    if not isinstance(value, str):
+        return False
+
+    siren = value.replace(' ', '').replace('-', '')
+    if len(siren) != 9 or not siren.isdigit():
+        return False
+    return _luhn_is_valid(siren)
 
 
 def validate_gln(value):
@@ -1301,7 +1507,7 @@ def validate_isbn10(value):
     for i in range(9):
         total += int(isbn[i]) * (10 - i)
     
-    check_value = total % 11
+    check_value = (11 - (total % 11)) % 11
     check_char = 'X' if check_value == 10 else str(check_value)
     
     return isbn[9].upper() == check_char
@@ -1348,4 +1554,542 @@ def validate_duns(value):
     # We'll allow it but note that real DUNS numbers rarely start with 0
     
     return True
+
+
+def validate_imo_number(value):
+    """
+    Validates an IMO ship identification number using its check digit.
+
+    An IMO number is 7 digits. The check digit (the last digit) is computed by
+    multiplying each of the first six digits by a weight from 7 down to 2,
+    summing the products, and taking the result modulo 10.
+
+    Example: 9074729 -> (9*7)+(0*6)+(7*5)+(4*4)+(7*3)+(2*2) = 139; 139 % 10 = 9.
+
+    Args:
+        value: IMO number string (an optional ``IMO`` prefix is ignored)
+
+    Returns:
+        bool: True if the value is a valid IMO number, False otherwise.
+    """
+    if not isinstance(value, str):
+        return False
+
+    imo = value.strip().upper()
+    if imo.startswith('IMO'):
+        imo = imo[3:].strip()
+
+    if len(imo) != 7 or not imo.isdigit():
+        return False
+
+    # First digit of a real IMO number is non-zero.
+    if imo[0] == '0':
+        return False
+
+    total = 0
+    for i, ch in enumerate(imo[:6]):
+        total += int(ch) * (7 - i)
+
+    return total % 10 == int(imo[6])
+
+
+_VERHOEFF_D = (
+    (0, 1, 2, 3, 4, 5, 6, 7, 8, 9),
+    (1, 2, 3, 4, 0, 6, 7, 8, 9, 5),
+    (2, 3, 4, 0, 1, 7, 8, 9, 5, 6),
+    (3, 4, 0, 1, 2, 8, 9, 5, 6, 7),
+    (4, 0, 1, 2, 3, 9, 5, 6, 7, 8),
+    (5, 9, 8, 7, 6, 0, 4, 3, 2, 1),
+    (6, 5, 9, 8, 7, 1, 0, 4, 3, 2),
+    (7, 6, 5, 9, 8, 2, 1, 0, 4, 3),
+    (8, 7, 6, 5, 9, 3, 2, 1, 0, 4),
+    (9, 8, 7, 6, 5, 4, 3, 2, 1, 0),
+)
+_VERHOEFF_P = (
+    (0, 1, 2, 3, 4, 5, 6, 7, 8, 9),
+    (1, 5, 7, 6, 2, 8, 3, 0, 9, 4),
+    (5, 8, 0, 3, 7, 9, 6, 1, 4, 2),
+    (8, 9, 1, 6, 0, 4, 3, 5, 2, 7),
+    (9, 4, 5, 3, 1, 2, 6, 8, 7, 0),
+    (4, 2, 8, 6, 5, 7, 3, 9, 0, 1),
+    (2, 7, 9, 3, 8, 0, 6, 4, 1, 5),
+    (7, 0, 4, 6, 9, 1, 3, 2, 5, 8),
+)
+
+
+def _verhoeff_is_valid(number):
+    """Return True if ``number`` (a digit string) satisfies the Verhoeff check."""
+    c = 0
+    for i, ch in enumerate(reversed(number)):
+        c = _VERHOEFF_D[c][_VERHOEFF_P[i % 8][int(ch)]]
+    return c == 0
+
+
+def validate_snomed_ct(value):
+    """
+    Validates a SNOMED CT identifier (SCTID).
+
+    An SCTID is a 6-18 digit number whose final digit is a Verhoeff check digit
+    computed over the preceding digits. The two digits immediately before the
+    check digit form the partition identifier; its first digit must be 0 or 1.
+
+    Args:
+        value: SCTID string
+
+    Returns:
+        bool: True if the value is a structurally valid SCTID, False otherwise.
+    """
+    if not isinstance(value, str):
+        return False
+
+    sctid = value.strip()
+    if len(sctid) < 6 or len(sctid) > 18 or not sctid.isdigit():
+        return False
+
+    # SCTIDs do not have leading zeros.
+    if sctid[0] == '0':
+        return False
+
+    # Partition identifier: two digits before the check digit; first is 0 or 1.
+    if sctid[-3] not in ('0', '1'):
+        return False
+
+    return _verhoeff_is_valid(sctid)
+
+
+def _regon_check_digit(digits, weights):
+    total = sum(int(d) * w for d, w in zip(digits, weights))
+    check = total % 11
+    return 0 if check == 10 else check
+
+
+def validate_pl_regon(value):
+    """
+    Validates a Polish REGON statistical business number.
+
+    REGON comes in two lengths, each with a weighted modulo-11 check digit:
+      * REGON-9  -> 9 digits, weights [8, 9, 2, 3, 4, 5, 6, 7] over the first 8.
+      * REGON-14 -> 14 digits, weights [2, 4, 8, 5, 0, 9, 7, 3, 6, 1, 2, 4, 8]
+        over the first 13. Its first 9 digits must themselves be a valid REGON-9.
+
+    Args:
+        value: REGON string (spaces and dashes are ignored)
+
+    Returns:
+        bool: True if the value is a valid REGON, False otherwise.
+    """
+    if not isinstance(value, str):
+        return False
+
+    regon = value.replace(' ', '').replace('-', '')
+    if not regon.isdigit() or len(regon) not in (9, 14):
+        return False
+
+    if regon == '0' * len(regon):
+        return False
+
+    if len(regon) == 9:
+        expected = _regon_check_digit(regon[:8], [8, 9, 2, 3, 4, 5, 6, 7])
+        return expected == int(regon[8])
+
+    # 14-digit REGON: first 9 digits must be a valid REGON-9.
+    if not validate_pl_regon(regon[:9]):
+        return False
+    expected = _regon_check_digit(
+        regon[:13], [2, 4, 8, 5, 0, 9, 7, 3, 6, 1, 2, 4, 8]
+    )
+    return expected == int(regon[13])
+
+
+def validate_pl_pesel(value):
+    """
+    Validates a Polish PESEL national identification number.
+
+    A PESEL is 11 digits: the first six encode a date of birth (with the month
+    offset by century), followed by a serial number and a modulo-10 check digit
+    (weights [1, 3, 7, 9, 1, 3, 7, 9, 1, 3] over the first ten digits).
+
+    Args:
+        value: PESEL string (spaces and dashes are ignored)
+
+    Returns:
+        bool: True if the value is a valid PESEL, False otherwise.
+    """
+    if not isinstance(value, str):
+        return False
+
+    pesel = value.replace(' ', '').replace('-', '')
+    if len(pesel) != 11 or not pesel.isdigit():
+        return False
+
+    weights = [1, 3, 7, 9, 1, 3, 7, 9, 1, 3]
+    total = sum(int(d) * w for d, w in zip(pesel[:10], weights))
+    check = (10 - (total % 10)) % 10
+    if check != int(pesel[10]):
+        return False
+
+    # Validate the embedded date of birth (century encoded in the month field).
+    year = int(pesel[0:2])
+    month = int(pesel[2:4])
+    day = int(pesel[4:6])
+    century_map = {0: 1900, 20: 2000, 40: 2100, 60: 2200, 80: 1800}
+    offset = (month // 20) * 20
+    if offset not in century_map:
+        return False
+    real_month = month - offset
+    full_year = century_map[offset] + year
+    try:
+        datetime.date(full_year, real_month, day)
+    except ValueError:
+        return False
+
+    return True
+
+
+def validate_tr_tckimlik(value):
+    """
+    Validates a Turkish national identification number (T.C. Kimlik No).
+
+    An 11-digit number where:
+      * the first digit is non-zero,
+      * the 10th digit = ((d1+d3+d5+d7+d9)*7 - (d2+d4+d6+d8)) mod 10,
+      * the 11th digit = (sum of the first ten digits) mod 10.
+
+    Args:
+        value: TC Kimlik string (spaces and dashes are ignored)
+
+    Returns:
+        bool: True if the value is a valid TC Kimlik No, False otherwise.
+    """
+    if not isinstance(value, str):
+        return False
+
+    tc = value.replace(' ', '').replace('-', '')
+    if len(tc) != 11 or not tc.isdigit():
+        return False
+
+    d = [int(ch) for ch in tc]
+    if d[0] == 0:
+        return False
+
+    odd_sum = d[0] + d[2] + d[4] + d[6] + d[8]
+    even_sum = d[1] + d[3] + d[5] + d[7]
+    tenth = (odd_sum * 7 - even_sum) % 10
+    if tenth != d[9]:
+        return False
+
+    eleventh = sum(d[:10]) % 10
+    return eleventh == d[10]
+
+
+def validate_pl_nip(value):
+    """
+    Validates a Polish NIP (tax identification number).
+
+    A NIP is 10 digits with a modulo-11 check digit using weights
+    [6, 5, 7, 2, 3, 4, 5, 6, 7] over the first nine digits (a remainder of 10
+    is invalid).
+
+    Args:
+        value: NIP string (spaces and dashes are ignored)
+
+    Returns:
+        bool: True if the value is a valid NIP, False otherwise.
+    """
+    if not isinstance(value, str):
+        return False
+
+    nip = value.replace(' ', '').replace('-', '')
+    if len(nip) != 10 or not nip.isdigit():
+        return False
+
+    weights = [6, 5, 7, 2, 3, 4, 5, 6, 7]
+    total = sum(int(d) * w for d, w in zip(nip[:9], weights))
+    check = total % 11
+    if check == 10:
+        return False
+    return check == int(nip[9])
+
+
+def validate_us_npi(value):
+    """
+    Validates a US National Provider Identifier (NPI).
+
+    An NPI is 10 digits whose final digit is a Luhn check digit computed after
+    prefixing the constant ``80840`` (the ISO issuer prefix) to the first nine
+    digits.
+
+    Args:
+        value: NPI string (spaces and dashes are ignored)
+
+    Returns:
+        bool: True if the value is a valid NPI, False otherwise.
+    """
+    if not isinstance(value, str):
+        return False
+
+    npi = value.replace(' ', '').replace('-', '')
+    if len(npi) != 10 or not npi.isdigit():
+        return False
+
+    base = '80840' + npi[:9]
+    total = 0
+    for i, ch in enumerate(reversed(base)):
+        digit = int(ch)
+        if i % 2 == 0:  # positions counted from the check digit position
+            digit *= 2
+            if digit > 9:
+                digit -= 9
+        total += digit
+    check = (10 - (total % 10)) % 10
+    return check == int(npi[9])
+
+
+def validate_fr_nir(value):
+    """
+    Validates a French NIR / INSEE social security number.
+
+    A NIR is 13 digits followed by a 2-digit control key equal to
+    ``97 - (N mod 97)`` where N is the 13-digit number. Corsica department
+    codes ``2A``/``2B`` are supported by substituting them per the official
+    algorithm.
+
+    Args:
+        value: NIR string (spaces are ignored)
+
+    Returns:
+        bool: True if the value is a valid NIR, False otherwise.
+    """
+    if not isinstance(value, str):
+        return False
+
+    nir = value.replace(' ', '').upper()
+    if len(nir) != 15:
+        return False
+
+    body = nir[:13]
+    key_part = nir[13:]
+    if not key_part.isdigit():
+        return False
+
+    # Handle Corsica department codes 2A / 2B in positions 6-7.
+    corsica = body[5:7]
+    numeric_body = body
+    if corsica == '2A':
+        numeric_body = body[:5] + '19' + body[7:]
+    elif corsica == '2B':
+        numeric_body = body[:5] + '18' + body[7:]
+
+    if not numeric_body.isdigit():
+        return False
+
+    key = 97 - (int(numeric_body) % 97)
+    return key == int(key_part)
+
+
+def validate_th_idcard(value):
+    """
+    Validates a Thai national identification number.
+
+    A 13-digit number whose final digit is a check digit: multiply the first 12
+    digits by weights 13 down to 2, sum, and the check digit is
+    ``(11 - (sum mod 11)) mod 10``.
+
+    Args:
+        value: Thai ID string (spaces and dashes are ignored)
+
+    Returns:
+        bool: True if the value is a valid Thai ID, False otherwise.
+    """
+    if not isinstance(value, str):
+        return False
+
+    tid = value.replace(' ', '').replace('-', '')
+    if len(tid) != 13 or not tid.isdigit():
+        return False
+
+    if tid[0] == '0':
+        return False
+
+    total = sum(int(tid[i]) * (13 - i) for i in range(12))
+    check = (11 - (total % 11)) % 10
+    return check == int(tid[12])
+
+
+def _luhn_is_valid(number):
+    """Returns True if an all-digit string passes the Luhn (mod 10) checksum."""
+    total = 0
+    for i, ch in enumerate(reversed(number)):
+        digit = int(ch)
+        if i % 2 == 1:
+            digit *= 2
+            if digit > 9:
+                digit -= 9
+        total += digit
+    return total % 10 == 0
+
+
+def validate_sa_id(value):
+    """
+    Validates a Saudi Arabian national ID (Hawiyya).
+
+    A 10-digit number that starts with ``1`` (Saudi citizen) and whose digits
+    pass the Luhn checksum.
+
+    Args:
+        value: Saudi ID string (spaces and dashes are ignored)
+
+    Returns:
+        bool: True if the value is a valid Saudi national ID, False otherwise.
+    """
+    if not isinstance(value, str):
+        return False
+
+    sid = value.replace(' ', '').replace('-', '')
+    if len(sid) != 10 or not sid.isdigit():
+        return False
+    if sid[0] != '1':
+        return False
+    return _luhn_is_valid(sid)
+
+
+def validate_sa_iqama(value):
+    """
+    Validates a Saudi Arabian Iqama (residence permit) number.
+
+    A 10-digit number that starts with ``2`` (resident) and whose digits pass
+    the Luhn checksum.
+
+    Args:
+        value: Iqama string (spaces and dashes are ignored)
+
+    Returns:
+        bool: True if the value is a valid Iqama number, False otherwise.
+    """
+    if not isinstance(value, str):
+        return False
+
+    iqama = value.replace(' ', '').replace('-', '')
+    if len(iqama) != 10 or not iqama.isdigit():
+        return False
+    if iqama[0] != '2':
+        return False
+    return _luhn_is_valid(iqama)
+
+
+def validate_th_taxid(value):
+    """
+    Validates a Thai tax identification number (TIN).
+
+    A 13-digit number sharing the same weighted modulo-11 check digit as the
+    Thai national ID. Unlike the national ID, a leading zero is allowed because
+    juristic-person tax IDs may begin with ``0``.
+
+    Args:
+        value: Thai tax ID string (spaces and dashes are ignored)
+
+    Returns:
+        bool: True if the value is a valid Thai tax ID, False otherwise.
+    """
+    if not isinstance(value, str):
+        return False
+
+    tid = value.replace(' ', '').replace('-', '')
+    if len(tid) != 13 or not tid.isdigit():
+        return False
+
+    total = sum(int(tid[i]) * (13 - i) for i in range(12))
+    check = (11 - (total % 11)) % 10
+    return check == int(tid[12])
+
+
+def validate_vn_taxcode(value):
+    """
+    Validates a Vietnamese tax code (Mã số thuế).
+
+    The 10-digit base code carries a modulo-11 check digit using weights
+    ``[31, 29, 23, 19, 17, 13, 7, 5, 3]`` over the first nine digits, where the
+    check digit is ``10 - (sum mod 11)``. An optional 3-digit branch suffix
+    (``NNNNNNNNNN-NNN``) is accepted; the branch part is not checksummed.
+
+    Args:
+        value: Vietnamese tax code string (spaces are ignored)
+
+    Returns:
+        bool: True if the value is a valid Vietnamese tax code, False otherwise.
+    """
+    if not isinstance(value, str):
+        return False
+
+    code = value.replace(' ', '')
+    if '-' in code:
+        base, _, branch = code.partition('-')
+        if len(branch) != 3 or not branch.isdigit():
+            return False
+    else:
+        base = code
+
+    if len(base) != 10 or not base.isdigit():
+        return False
+
+    weights = [31, 29, 23, 19, 17, 13, 7, 5, 3]
+    total = sum(int(base[i]) * weights[i] for i in range(9))
+    check = 10 - (total % 11)
+    return check == int(base[9])
+
+
+def validate_isbn(value):
+    """
+    Validates an ISBN in either the 10- or 13-digit form.
+
+    Dispatches to :func:`validate_isbn10` or :func:`validate_isbn13` based on
+    the length after stripping hyphens and spaces.
+
+    Args:
+        value: ISBN string (10 or 13 chars, may include hyphens/spaces)
+
+    Returns:
+        bool: True if the value is a valid ISBN-10 or ISBN-13, False otherwise.
+    """
+    if not isinstance(value, str):
+        return False
+
+    cleaned = value.replace('-', '').replace(' ', '')
+    if len(cleaned) == 10:
+        return validate_isbn10(value)
+    if len(cleaned) == 13:
+        return validate_isbn13(value)
+    return False
+
+
+def validate_uk_nhs(value):
+    """
+    Validates a UK NHS number.
+
+    A 10-digit number whose final digit is a modulo-11 check digit: the first
+    nine digits are multiplied by weights 10 down to 2, summed, and the check
+    digit is ``11 - (sum mod 11)`` (a result of 11 maps to 0; a result of 10 is
+    invalid).
+
+    Args:
+        value: NHS number string (spaces and dashes are ignored)
+
+    Returns:
+        bool: True if the value is a valid NHS number, False otherwise.
+    """
+    if not isinstance(value, str):
+        return False
+
+    nhs = value.replace(' ', '').replace('-', '')
+    if len(nhs) != 10 or not nhs.isdigit():
+        return False
+
+    weights = [10, 9, 8, 7, 6, 5, 4, 3, 2]
+    total = sum(int(nhs[i]) * weights[i] for i in range(9))
+    check = 11 - (total % 11)
+    if check == 11:
+        check = 0
+    if check == 10:
+        return False
+    return check == int(nhs[9])
 

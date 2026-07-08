@@ -11,15 +11,19 @@ rules:
     rule: swedish_personal_number,personnummer,personnummer_se,swedish_id,personal_id_se
     type: field
     match: text
-  sepersonnummervalue:
-    key: sepersonnummer
-    is_pii: True
-    name: Swedish personal number by pattern
-    match: ppr
-    type: data
-    rule: Word(nums, exact=6) + Optional(Literal('-') | Literal('+')) + Word(nums, exact=4)
-    maxlen: 11
-    minlen: 10
+# Disabled: matches any 10-11 digit number (with optional -/+ separator) and has
+# no checksum/date validation, so phone numbers and generic numeric ids are
+# flagged. A Swedish personnummer cannot be reliably distinguished by this loose
+# pattern; rely on sepersonnummerfield instead.
+#  sepersonnummervalue:
+#    key: sepersonnummer
+#    is_pii: True
+#    name: Swedish personal number by pattern
+#    match: ppr
+#    type: data
+#    rule: Word(nums, exact=6) + Optional(Literal('-') | Literal('+')) + Word(nums, exact=4)
+#    maxlen: 11
+#    minlen: 10
   sepassportfield:
     key: sepassport
     is_pii: True
@@ -36,4 +40,7 @@ rules:
     rule: Word(nums, exact=8)
     maxlen: 8
     minlen: 8
+    # A bare 8-digit number has no check digit, so a value-only match is highly
+    # ambiguous. Marked imprecise so it is ignored unless --include-imprecise.
+    imprecise: 1
 

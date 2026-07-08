@@ -189,12 +189,19 @@ rules:
     match: ppr
     type: data
     rule: Word(hexnums, exact=8)
-  sctcrypto:
-    key: sctcrypto
-    name: Signed certificate timestamp (SCT)
-    maxlen: 200
-    minlen: 4
-    priority: 1
-    match: ppr
-    type: data
-    rule: Word('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=', min=4, max=200)
+    # Any 8-char hex string matches (short hashes, ids, colors, ...), and a
+    # CRC-32 cannot be validated from the value alone. Marked imprecise so it
+    # is ignored unless --include-imprecise; the field-name rule still applies.
+    imprecise: 1
+# Disabled: the value pattern matches any base64 string between 4 and 200
+# characters, i.e. nearly any text/alphanumeric value, producing massive false
+# positives. There is no reliable way to detect an SCT by value alone.
+#  sctcrypto:
+#    key: sctcrypto
+#    name: Signed certificate timestamp (SCT)
+#    maxlen: 200
+#    minlen: 4
+#    priority: 1
+#    match: ppr
+#    type: data
+#    rule: Word('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=', min=4, max=200)

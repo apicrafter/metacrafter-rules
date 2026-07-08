@@ -16,6 +16,7 @@ rules:
     match: ppr
     type: data
     rule: Word(nums, exact=12)
+    imprecise: 1
     maxlen: 12
     minlen: 12
   gbpostcodefield:

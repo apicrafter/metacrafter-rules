@@ -15,13 +15,14 @@ rules:
     name: Russian cadastral number by pattern
     match: ppr
     type: data
-    rule: Word(nums, min=1, max=2) + Literal(':') + Word(nums, min=1, max=2) + Literal(':') + Word(nums, min=1, max=7) + Literal(':') + Word(nums, min=1, max=4)
+    rule: Word(nums, min=1, max=2) + Literal(':') + Word(nums, min=1, max=2) + Literal(':')
+      + Word(nums, min=1, max=7) + Literal(':') + Word(nums, min=1, max=4)
     maxlen: 20
     minlen: 10
   rupropertynumberfield:
     key: rupropertynumber
     name: Russian property number by field name
-    rule: property_number,номер_объекта,property_id,идентификатор_объекта
+    rule: property_number,номер_объекта,property_id,идентификатор_объекта,Номер объекта
     type: field
     match: text
   rupropertynumbervalue:
@@ -33,4 +34,3 @@ rules:
     maxlen: 20
     minlen: 8
     imprecise: 1
-

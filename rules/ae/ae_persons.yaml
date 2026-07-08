@@ -27,13 +27,16 @@ rules:
     rule: passport,passport_number,uae_passport,emirates_passport,جواز_السفر,رقم_جواز_السفر
     type: field
     match: text
-  aepassportvalue:
-    key: aepassport
-    is_pii: True
-    name: UAE passport by pattern
-    match: ppr
-    type: data
-    rule: Word(alphanums, min=8, max=9)
-    maxlen: 9
-    minlen: 8
+# Disabled: matches any alphanumeric string 8-9 chars, so most generic
+# ids/codes/words are flagged. A UAE passport number cannot be distinguished from
+# an arbitrary alphanumeric value; rely on aepassportfield instead.
+#  aepassportvalue:
+#    key: aepassport
+#    is_pii: True
+#    name: UAE passport by pattern
+#    match: ppr
+#    type: data
+#    rule: Word(alphanums, min=8, max=9)
+#    maxlen: 9
+#    minlen: 8
 

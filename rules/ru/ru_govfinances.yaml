@@ -25,13 +25,15 @@ rules:
   rukbkcode:
     key: kbk
     name: Russian KBK code
-    rule: kbk,кбк
+    rule: kbk,кбк,КБК РФ(Пр),КБК РФ(Рз)
     type: field
     match: text
   rukbkcoodefull:
     key: kbk
     name: Russian KBK code by known full name
-    rule: код бюджетной классификации
+    rule: код бюджетной классификации,Код бюдж. классификации,Код дохода по бюджетной
+      классификации,Код по бюджетной классификации,Код расхода по бюджетной классификации,Коды
+      бюджетной классификации
     type: field
     match: text
   tofkcode:

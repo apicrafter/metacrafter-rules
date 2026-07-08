@@ -24,7 +24,7 @@ rules:
     key: person_name
     is_pii: True
     name: Indian person name by known name
-    rule: full_name,name,person_name,customer_name
+    rule: full_name,person_name,customer_name
     type: field
     match: text
     priority: 1

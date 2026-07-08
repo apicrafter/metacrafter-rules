@@ -18,6 +18,7 @@ rules:
     match: ppr
     type: data
     rule: Word(nums, exact=11)
+    validator: metacrafterext.rules.common.identifiers.validate_pl_pesel
     maxlen: 11
     minlen: 11
   plpassportfield:

@@ -10,14 +10,17 @@ rules:
     rule: postcode,우편번호,postal_code,zip_code,zipcode
     type: field
     match: text
-  krpostcodevalue:
-    key: krpostcode
-    name: Korean postal code by pattern
-    match: ppr
-    type: data
-    rule: Word(nums, exact=5) | (Word(nums, exact=5) + Literal('-') + Word(nums, exact=3))
-    maxlen: 9
-    minlen: 5
+# Disabled: matches any 5-digit number (and #####-### form), colliding with US
+# ZIP codes and generic numeric ids/counts. Cannot be distinguished from an
+# arbitrary 5-digit value; rely on krpostcodefield instead.
+#  krpostcodevalue:
+#    key: krpostcode
+#    name: Korean postal code by pattern
+#    match: ppr
+#    type: data
+#    rule: Word(nums, exact=5) | (Word(nums, exact=5) + Literal('-') + Word(nums, exact=3))
+#    maxlen: 9
+#    minlen: 5
   krprovincefield:
     key: krprovince
     name: Korean province by field name

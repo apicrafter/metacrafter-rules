@@ -4,7 +4,7 @@ context: pii
 lang: ja
 country_code: jp
 rules:
-  jpmynumberknown:
+  jp_pii_jpmynumberknown:
     key: mynumber
     is_pii: True
     name: Japanese My Number (マイナンバー) by known name
@@ -12,7 +12,7 @@ rules:
     type: field
     match: text
     priority: 1
-  jpphoneknown:
+  jp_pii_jpphoneknown:
     key: phone
     is_pii: True
     name: Japanese phone number by known name

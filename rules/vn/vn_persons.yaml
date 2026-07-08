@@ -4,14 +4,14 @@ context: persons
 lang: vi
 country_code: vn
 rules:
-  vncccdfield:
+  vn_persons_vncccdfield:
     key: vncccd
     is_pii: True
     name: Vietnamese CCCD by field name
     rule: cccd,can_cuoc_cong_dan,so_cccd,cccd_number,vietnamese_id,national_id
     type: field
     match: text
-  vncccdvalue:
+  vn_persons_vncccdvalue:
     key: vncccd
     is_pii: True
     name: Vietnamese CCCD by pattern
@@ -20,14 +20,17 @@ rules:
     rule: Word(nums, exact=12)
     maxlen: 12
     minlen: 12
-  vnpassportfield:
+    # A bare 12-digit number has no check digit, so a value-only match is highly
+    # ambiguous. Marked imprecise so it is ignored unless --include-imprecise.
+    imprecise: 1
+  vn_persons_vnpassportfield:
     key: vnpassport
     is_pii: True
     name: Vietnamese passport by field name
     rule: ho_chieu,so_ho_chieu,ho_chieu_no
     type: field
     match: text
-  vnpassportvalue:
+  vn_persons_vnpassportvalue:
     key: vnpassport
     is_pii: True
     name: Vietnamese passport by pattern
@@ -36,14 +39,14 @@ rules:
     rule: Word(alphas, exact=1) + Word(nums, min=7, max=8)
     maxlen: 9
     minlen: 8
-  vndriverlicfield:
+  vn_persons_vndriverlicfield:
     key: vndriverlic
     is_pii: True
     name: Vietnamese driver license by field name
     rule: bang_lai,so_bang_lai,bang_lai_xe
     type: field
     match: text
-  vndriverlicvalue:
+  vn_persons_vndriverlicvalue:
     key: vndriverlic
     is_pii: True
     name: Vietnamese driver license by pattern

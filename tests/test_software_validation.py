@@ -183,6 +183,26 @@ class TestSemverValidation:
         assert validate_semver(None) == False
         assert validate_semver(123) == False
 
+    def test_dotted_dates_rejected(self):
+        """Calendar dates must not be reported as semantic versions."""
+        dates = [
+            "31.05.2019",
+            "28.09.2021",
+            "13.04.2020",
+            "1.2.2019",
+            "31.5.2019",
+            "1.6.2020",
+            "2019.5.31",
+            "29.2.2020",  # valid leap day
+        ]
+        for value in dates:
+            assert validate_semver(value) == False, f"Date {value} should not be semver"
+
+    def test_impossible_dates_still_versions(self):
+        """Values that cannot be real dates remain valid versions."""
+        assert validate_semver("30.2.2019") == True  # Feb 30 is impossible
+        assert validate_semver("13.13.2019") == True  # month 13 impossible
+
 
 class TestVersionValidation:
     """Tests for general version validation."""

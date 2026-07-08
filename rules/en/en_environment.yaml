@@ -20,6 +20,7 @@ rules:
     maxlen: 11
     minlen: 4
     priority: 2
+    imprecise: 1
   enenergypointfield:
     key: powerplantid
     name: Power plant identifier by field name

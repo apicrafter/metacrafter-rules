@@ -18,7 +18,7 @@ rules:
     rule: anio_nacimiento
     match: text
     type: data
-  espassportfield:
+  es_pii_espassportfield:
     key: espassport
     is_pii: True
     name: Spanish passport by field name
@@ -27,7 +27,7 @@ rules:
     match: text
 # This rule generates a lot of False positives because the pattern Word(alphanums, min=2, max=3) matches many common 2-3 character codes
 # It is marked as imprecise and could be filtered if it's set
-  espassportvalue:
+  es_pii_espassportvalue:
     key: espassport
     is_pii: True
     name: Spanish passport by pattern
@@ -38,14 +38,14 @@ rules:
     minlen: 8
     validator: metacrafterext.rules.es.validators.validate_es_passport
     imprecise: 1
-  esniefield:
+  es_pii_esniefield:
     key: esnie
     is_pii: True
     name: Spanish NIE by field name
     rule: nie,numero_identidad_extranjero,foreigner_id
     type: field
     match: text
-  esnievalue:
+  es_pii_esnievalue:
     key: esnie
     is_pii: True
     name: Spanish NIE by pattern
@@ -54,14 +54,14 @@ rules:
     rule: (Literal('X') + Optional(Literal('-') | Literal('.')) + Optional(Literal('0')) + Word(nums, exact=7) + Optional(Literal('-') | Literal('.')) + Word(alphas, exact=1)) | (Word(alphas, exact=1) + Optional(Literal('-') | Literal('.')) + Word(nums, exact=7) + Optional(Literal('-') | Literal('.')) + Word(alphanums, exact=1)) | (Word(nums, exact=8) + Optional(Literal('-') | Literal('.')) + Word(alphas, exact=1))
     maxlen: 12
     minlen: 9
-  esniffield:
+  es_pii_esniffield:
     key: esnif
     is_pii: True
     name: Spanish NIF by field name
     rule: nif,dni,numero_identificacion_fiscal
     type: field
     match: text
-  esnifvalue:
+  es_pii_esnifvalue:
     key: esnif
     is_pii: True
     name: Spanish NIF by pattern

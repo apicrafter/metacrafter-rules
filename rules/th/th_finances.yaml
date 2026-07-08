@@ -16,8 +16,10 @@ rules:
     match: ppr
     type: data
     rule: Word(nums, exact=13)
+    validator: metacrafterext.rules.common.identifiers.validate_th_taxid
     maxlen: 13
     minlen: 13
+    imprecise: 1
   thbankaccountfield:
     key: thbankaccount
     name: Thai bank account by field name

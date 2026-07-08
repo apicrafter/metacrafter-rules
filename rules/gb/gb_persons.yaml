@@ -34,6 +34,7 @@ rules:
     match: ppr
     type: data
     rule: Word(nums, exact=10)
+    imprecise: 1
     maxlen: 10
     minlen: 10
   ukpassportfield:
@@ -50,6 +51,7 @@ rules:
     match: ppr
     type: data
     rule: Word(nums, exact=9)
+    imprecise: 1
     maxlen: 9
     minlen: 9
   uknhsnumfield:
@@ -66,8 +68,27 @@ rules:
     match: ppr
     type: data
     rule: Word(nums, exact=3) + Optional(Literal('-') | Literal(' ')) + Word(nums, exact=3) + Optional(Literal('-') | Literal(' ')) + Word(nums, exact=4)
+    validator: metacrafterext.rules.common.identifiers.validate_uk_nhs
     maxlen: 12
     minlen: 10
+  ukdriverlicfield:
+    key: ukdriverlic
+    is_pii: True
+    name: UK driver license by field name
+    rule: driver_license,driving_licence,dl_number,license_number,uk_driving_license
+    type: field
+    match: text
+    priority: 1
+  ukdriverlicvalue:
+    key: ukdriverlic
+    is_pii: True
+    name: UK driver license by pattern
+    match: ppr
+    type: data
+    rule: Word('ABCDEFGHIJKLMNOPQRSTUVWXYZ9', exact=5) + Word(nums, exact=6) + Word('ABCDEFGHIJKLMNOPQRSTUVWXYZ9', exact=2) + Word(nums, exact=1) + Word('ABCDEFGHIJKLMNOPQRSTUVWXYZ', exact=2)
+    maxlen: 16
+    minlen: 16
+    priority: 1
   enniivalue:
     key: ninumber
     is_pii: True

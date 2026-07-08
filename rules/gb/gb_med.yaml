@@ -26,6 +26,9 @@ rules:
     rule: Word(nums, exact=7)
     maxlen: 7
     minlen: 7
+    # A bare 7-digit number has no check digit, so a value-only match is highly
+    # ambiguous. Marked imprecise so it is ignored unless --include-imprecise.
+    imprecise: 1
 
 
   

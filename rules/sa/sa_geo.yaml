@@ -10,14 +10,17 @@ rules:
     rule: postcode,postal_code,zip_code,saudi_postcode,الرمز_البريدي
     type: field
     match: text
-  sapostcodevalue:
-    key: sapostcode
-    name: Saudi postal code by pattern
-    match: ppr
-    type: data
-    rule: Word(nums, exact=5) | (Word(nums, exact=5) + Literal('-') + Word(nums, exact=4))
-    maxlen: 10
-    minlen: 5
+# Disabled: matches any 5-digit number (and #####-#### form), colliding with US
+# ZIP codes and generic numeric ids/counts. Cannot be distinguished from an
+# arbitrary 5-digit value; rely on sapostcodefield instead.
+#  sapostcodevalue:
+#    key: sapostcode
+#    name: Saudi postal code by pattern
+#    match: ppr
+#    type: data
+#    rule: Word(nums, exact=5) | (Word(nums, exact=5) + Literal('-') + Word(nums, exact=4))
+#    maxlen: 10
+#    minlen: 5
   sacityfield:
     key: sacity
     name: Saudi city name by field name

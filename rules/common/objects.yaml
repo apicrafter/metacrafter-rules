@@ -58,7 +58,7 @@ rules:
     minlen: 13
     priority: 2
     validator: metacrafterext.rules.common.identifiers.validate_isbn10
-  gtinfield:
+  objects_gtinfield:
     key: gtin
     name: Global Trade Item Number (GTIN) by field name
     rule: gtin,ean,upc,barcode,product_code,gtin_code,ean_code,upc_code,product_id
@@ -75,14 +75,15 @@ rules:
     minlen: 8
     priority: 1
     validator: metacrafterext.rules.common.identifiers.validate_gtin
-  issnfield:
+    imprecise: 1
+  objects_issnfield:
     key: issn
     name: International Standard Serial Number (ISSN) by field name
     rule: issn,issn_number,issn_code,serial_number
     type: field
     match: text
     priority: 1
-  issnvalue:
+  objects_issnvalue:
     key: issn
     name: International Standard Serial Number (ISSN) by value pattern
     match: ppr
@@ -92,6 +93,7 @@ rules:
     minlen: 8
     priority: 1
     validator: metacrafterext.rules.common.identifiers.validate_issn
+    imprecise: 1
   issnvaluewithoutdash:
     key: issn
     name: International Standard Serial Number (ISSN) without dash
@@ -101,14 +103,16 @@ rules:
     maxlen: 8
     minlen: 8
     priority: 2
-  isrcfield:
+    validator: metacrafterext.rules.common.identifiers.validate_issn
+    imprecise: 1
+  objects_isrcfield:
     key: isrc
     name: International Standard Recording Code (ISRC) by field name
     rule: isrc,isrc_code,isrc_number,recording_code
     type: field
     match: text
     priority: 1
-  isrcvalue:
+  objects_isrcvalue:
     key: isrc
     name: International Standard Recording Code (ISRC) by value pattern
     match: ppr
@@ -135,14 +139,14 @@ rules:
     minlen: 18
     priority: 1
     validator: metacrafterext.rules.common.identifiers.validate_sscc
-  doifield:
+  objects_doifield:
     key: doi
     name: Digital Object Identifier (DOI) by field name
     rule: doi,digital_object_identifier,doi_number,doi_code,doi_id
     match: text
     type: field
     priority: 1
-  doivalue:
+  objects_doivalue:
     key: doi
     name: Digital Object Identifier (DOI) by value pattern
     match: ppr
@@ -164,19 +168,19 @@ rules:
     name: ITU/ISO/IEC Object Identifier (OID) by value pattern
     match: ppr
     type: data
-    rule: Word('0123', exact=1) + Literal('.').suppress() + Word(nums, min=1) + ZeroOrMore(Literal('.').suppress() + Word(nums, min=1))
+    rule: Word('0123', exact=1) + Literal('.').suppress() + Word(nums, min=1) + (Literal('.').suppress() + Word(nums, min=1))[0, ...]
     minlen: 3
     maxlen: 100
     priority: 1
     validator: metacrafterext.rules.common.identifiers.validate_oid
-  glnfield:
+  objects_glnfield:
     key: gln
     name: Global Location Number (GLN) by field name
     rule: gln,gln_number,global_location_number,location_id,location_number
     match: text
     type: field
     priority: 1
-  glnvalue:
+  objects_glnvalue:
     key: gln
     name: Global Location Number (GLN) by value pattern
     match: ppr
@@ -186,6 +190,7 @@ rules:
     minlen: 13
     priority: 1
     validator: metacrafterext.rules.common.identifiers.validate_gln
+    imprecise: 1
   isnifield:
     key: isni
     name: International Standard Name Identifier (ISNI) by field name

@@ -11,15 +11,18 @@ rules:
     rule: arm_postal_code,am_postal_code,armenian_postal_code,postal_code_am,postcode_am,zip_am,փոստային_ինդեքս,փոստային_կոդ
     type: field
     match: text
-  ampostalcodevalue:
-    key: am_postal_code
-    is_pii: True
-    name: Armenian postal code by pattern
-    match: ppr
-    type: data
-    rule: Word(nums, exact=4)
-    maxlen: 4
-    minlen: 4
-    priority: 1
-    imprecise: 1
+# Disabled: matches any 4-digit number, colliding with years and generic numeric
+# ids/counts. Cannot be distinguished from an arbitrary 4-digit value; rely on
+# ampostalcodefield instead.
+#  ampostalcodevalue:
+#    key: am_postal_code
+#    is_pii: True
+#    name: Armenian postal code by pattern
+#    match: ppr
+#    type: data
+#    rule: Word(nums, exact=4)
+#    maxlen: 4
+#    minlen: 4
+#    priority: 1
+#    imprecise: 1
 

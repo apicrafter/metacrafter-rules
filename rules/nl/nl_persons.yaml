@@ -8,7 +8,7 @@ rules:
     key: person_name
     is_pii: True
     name: Dutch person name by known name
-    rule: volledige_naam,naam,persoonsnaam,klantnaam
+    rule: volledige_naam,persoonsnaam,klantnaam
     type: field
     match: text
     priority: 1

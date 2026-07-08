@@ -23,7 +23,8 @@ rules:
     name: Modern years in range 1001-2199 by data and fieldname
     maxlen: 4
     minlen: 4
-    rule: (Literal('1') + Word(nums, exact=3)) ^ (Literal('2') + Word('01', exact=1) + Word(nums, exact=2))
+    rule: (Literal('1') + Word(nums, exact=3)) ^ (Literal('2') + Word('01', exact=1)
+      + Word(nums, exact=2))
     match: ppr
     type: data
     fieldrule: Optional(Word(printables)) + Literal('year') + Optional(Word(printables))
@@ -85,9 +86,6 @@ rules:
     type: field
     match: text
     priority: 1
-# This rule generates a lot of False positives since integer range 1900-2100 is quite common
-# so it marked as imprecise rule and could be filtered if it's set
-# Range narrowed from 1001-2199 to 1900-2100 for modern data (reduces false positives for historical years)
   yearbydataimprecise:
     key: year
     name: Modern years in range 1900-2100 by data
@@ -96,7 +94,50 @@ rules:
     rule: (Literal('19') + Word(nums, exact=2)) ^ (Literal('20') + Word(nums, exact=2))
     match: ppr
     type: data
-    fieldrule: Optional(Word(printables)) + (CaselessLiteral('year') | CaselessLiteral('date') | CaselessLiteral('time')) + Optional(Word(printables))
+    fieldrule: Optional(Word(printables)) + (CaselessLiteral('year') | CaselessLiteral('date')
+      | CaselessLiteral('time')) + Optional(Word(printables))
     fieldrulematch: ppr
     imprecise: 1
     priority: 3
+  timestampdatebyknown:
+    key: timestamp_date
+    name: Timestamp Date
+    match: text
+    type: field
+    rule: registration_timestamp,modification_timestamp,valid_until_timestamp,valid_from_timestamp
+    priority: 1
+  createddatebyknown:
+    key: created_date
+    name: Created date timestamp
+    match: text
+    type: field
+    rule: created_by,createdby,created_on,date_created
+    priority: 1
+  modifieddatebyknown:
+    key: modified_date
+    name: Modified date timestamp
+    match: text
+    type: field
+    rule: lastmodifiedby,modified,lastmodifieddate,modified_by
+    priority: 1
+  updateddatebyknown:
+    key: updated_date
+    name: Updated date timestamp
+    match: text
+    type: field
+    rule: updated_by,updated_on,last_updated,date_updated
+    priority: 1
+  datedatebyknown:
+    key: date_date
+    name: Date Date
+    match: text
+    type: field
+    rule: expiry_date,settlement_date,maturity_date,update_time
+    priority: 1
+  timedatebyknown:
+    key: time_date
+    name: Time Date
+    match: text
+    type: field
+    rule: create_time,create_time_,start_time,end_time
+    priority: 1

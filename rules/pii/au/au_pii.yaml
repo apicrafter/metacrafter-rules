@@ -4,7 +4,7 @@ context: pii
 lang: en
 country_code: au
 rules:
-  autfnknown:
+  au_pii_autfnknown:
     key: tfn
     is_pii: True
     name: Australian TFN (Tax File Number) by known name
@@ -12,7 +12,7 @@ rules:
     type: field
     match: text
     priority: 1
-  aumedicareknown:
+  au_pii_aumedicareknown:
     key: medicare
     is_pii: True
     name: Australian Medicare number by known name

@@ -16,6 +16,7 @@ rules:
     match: ppr
     type: data
     rule: (Word(nums, exact=10) | (Word(nums, exact=9) + Word('Xx', exact=1))) | (Literal('978') + Word(nums, exact=10) | Literal('979') + Word(nums, exact=10))
+    validator: metacrafterext.rules.common.identifiers.validate_isbn
     maxlen: 13
     minlen: 10
   issnfield:
@@ -30,6 +31,8 @@ rules:
     match: ppr
     type: data
     rule: Word(nums, exact=4) + Literal('-') + Word(nums, exact=4) | (Word(nums, exact=7) + Word('Xx', exact=1))
+    validator: metacrafterext.rules.common.identifiers.validate_issn
+    imprecise: 1
     maxlen: 9
     minlen: 8
   doifield:
@@ -53,14 +56,18 @@ rules:
     rule: youtube_id,youtube_video_id,video_id,youtube_url
     type: field
     match: text
-  youtubevideoidvalue:
-    key: youtubevideoid
-    name: YouTube video ID by pattern
-    match: ppr
-    type: data
-    rule: Word(alphanums + '-_', exact=11)
-    maxlen: 11
-    minlen: 11
+# Disabled: matches any 11-character [alphanumeric-_] token, so a large range of
+# generic short ids/codes are flagged. A YouTube video ID cannot be
+# distinguished from an arbitrary 11-char token by value alone; rely on
+# youtubevideoidfield instead.
+#  youtubevideoidvalue:
+#    key: youtubevideoid
+#    name: YouTube video ID by pattern
+#    match: ppr
+#    type: data
+#    rule: Word(alphanums + '-_', exact=11)
+#    maxlen: 11
+#    minlen: 11
   vimeovideoidfield:
     key: vimeovideoid
     name: Vimeo video ID by field name
@@ -90,7 +97,7 @@ rules:
     rule: Word(alphas, exact=2) + Word(alphanums, exact=3) + Word(nums, exact=7) + Word(alphanums, exact=2)
     maxlen: 12
     minlen: 12
-  eanfield:
+  media_eanfield:
     key: ean
     name: EAN by field name
     rule: ean,ean_code,ean_number,ean_13,ean_8,european_article_number
@@ -102,6 +109,8 @@ rules:
     match: ppr
     type: data
     rule: Word(nums, exact=13) | Word(nums, exact=8)
+    validator: metacrafterext.rules.common.identifiers.validate_gtin
+    imprecise: 1
     maxlen: 13
     minlen: 8
 

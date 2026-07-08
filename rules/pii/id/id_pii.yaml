@@ -4,30 +4,31 @@ context: pii
 lang: id
 country_code: id
 rules:
-  idnikfield:
+  id_pii_idnikfield:
     key: idnik
     is_pii: True
     name: Indonesian NIK by field name
     rule: nik,nomor_induk_kependudukan,nik_number,indonesian_id,national_id,ktp_number
     type: field
     match: text
-  idnikvalue:
+  id_pii_idnikvalue:
     key: idnik
     is_pii: True
     name: Indonesian NIK by pattern
     match: ppr
     type: data
     rule: Word(nums, exact=16)
+    validator: metacrafterext.rules.common.identifiers.validate_id_nik
     maxlen: 16
     minlen: 16
-  idpassportfield:
+  id_pii_idpassportfield:
     key: idpassport
     is_pii: True
     name: Indonesian passport by field name
     rule: passport,paspor,passport_number,nomor_paspor,paspor_no
     type: field
     match: text
-  idpassportvalue:
+  id_pii_idpassportvalue:
     key: idpassport
     is_pii: True
     name: Indonesian passport by pattern
@@ -36,14 +37,14 @@ rules:
     rule: Word(alphas, exact=1) + Word(nums, min=7, max=8)
     maxlen: 9
     minlen: 8
-  iddriverlicfield:
+  id_pii_iddriverlicfield:
     key: iddriverlic
     is_pii: True
     name: Indonesian driver license by field name
     rule: driver_license,sim,sim_number,sim_no,driving_license,license_number
     type: field
     match: text
-  iddriverlicvalue:
+  id_pii_iddriverlicvalue:
     key: iddriverlic
     is_pii: True
     name: Indonesian driver license by pattern

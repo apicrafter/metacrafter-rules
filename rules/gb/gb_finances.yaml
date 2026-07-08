@@ -2,7 +2,7 @@ name: gb-finance
 description: United Kingdom banking and payment identifiers
 context: finances
 lang: en
-country_code: uk
+country_code: gb
 rules:
   sortcodefield:
     key: uksortcode
@@ -18,4 +18,8 @@ rules:
     rule: Word(nums, exact=2) + Optional(Literal('-').suppress()) + Word(nums, exact=2) + Optional(Literal('-').suppress()) + Word(nums, exact=2)
     maxlen: 8
     minlen: 6
+    # A bare 6-digit number has no check digit, so an undashed value-only match
+    # is highly ambiguous. Marked imprecise so it is ignored unless
+    # --include-imprecise.
+    imprecise: 1
 

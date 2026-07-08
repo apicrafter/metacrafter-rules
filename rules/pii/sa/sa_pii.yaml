@@ -18,6 +18,7 @@ rules:
     match: ppr
     type: data
     rule: Word(nums, exact=10) | (Word(nums, exact=2) + Literal('-') + Word(nums, exact=7) + Literal('-') + Word(nums, exact=1))
+    validator: metacrafterext.rules.common.identifiers.validate_sa_iqama
     maxlen: 12
     minlen: 10
   saidfield:
@@ -34,6 +35,7 @@ rules:
     match: ppr
     type: data
     rule: Word(nums, exact=10)
+    validator: metacrafterext.rules.common.identifiers.validate_sa_id
     maxlen: 10
     minlen: 10
   sapassportfield:
@@ -49,7 +51,11 @@ rules:
     name: Saudi passport by pattern
     match: ppr
     type: data
-    rule: Word(alphanums, min=8, max=9)
+    rule: Word(alphas, exact=1) + Word(nums, exact=8)
     maxlen: 9
-    minlen: 8
+    minlen: 9
+    # Real format is one letter followed by 8 digits. Even so, there is no
+    # check digit, so a value-only match is ambiguous; marked imprecise so it
+    # is ignored unless --include-imprecise.
+    imprecise: 1
 

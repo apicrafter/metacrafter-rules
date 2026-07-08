@@ -4,30 +4,32 @@ context: persons
 lang: th
 country_code: th
 rules:
-  thidcardfield:
+  th_persons_thidcardfield:
     key: thidcard
     is_pii: True
     name: Thai ID card by field name
     rule: thai_id,thai_id_card,บัตรประชาชน,เลขบัตรประชาชน,เลขประจำตัวประชาชน
     type: field
     match: text
-  thidcardvalue:
+  th_persons_thidcardvalue:
     key: thidcard
     is_pii: True
     name: Thai ID card by pattern
     match: ppr
     type: data
     rule: Word(nums, exact=13)
+    validator: metacrafterext.rules.common.identifiers.validate_th_idcard
     maxlen: 13
     minlen: 13
-  thpassportfield:
+    imprecise: 1
+  th_persons_thpassportfield:
     key: thpassport
     is_pii: True
     name: Thai passport by field name
     rule: thai_passport,passport_thai,หนังสือเดินทาง,เลขหนังสือเดินทาง
     type: field
     match: text
-  thpassportvalue:
+  th_persons_thpassportvalue:
     key: thpassport
     is_pii: True
     name: Thai passport by pattern
@@ -36,14 +38,14 @@ rules:
     rule: Word(alphas, exact=1) + Word(nums, exact=7)
     maxlen: 8
     minlen: 8
-  thdriverlicfield:
+  th_persons_thdriverlicfield:
     key: thdriverlic
     is_pii: True
     name: Thai driver license by field name
     rule: thai_driver_license,ใบขับขี่,เลขใบขับขี่,ใบอนุญาตขับขี่
     type: field
     match: text
-  thdriverlicvalue:
+  th_persons_thdriverlicvalue:
     key: thdriverlic
     is_pii: True
     name: Thai driver license by pattern

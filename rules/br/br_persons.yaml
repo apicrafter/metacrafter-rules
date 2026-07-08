@@ -8,7 +8,7 @@ rules:
     key: person_name
     is_pii: True
     name: Brazilian person name by known name
-    rule: nome_completo,nome,nome_pessoa,nome_do_cliente
+    rule: nome_completo,nome_pessoa,nome_do_cliente
     type: field
     match: text
     priority: 1
@@ -28,7 +28,7 @@ rules:
     type: field
     match: text
     priority: 1
-  brcpfknown:
+  br_persons_brcpfknown:
     key: cpf
     is_pii: True
     name: Brazilian CPF by known name

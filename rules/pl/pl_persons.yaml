@@ -4,30 +4,31 @@ context: persons
 lang: pl
 country_code: pl
 rules:
-  plpeselfield:
+  pl_persons_plpeselfield:
     key: plpesel
     is_pii: True
     name: Polish PESEL by field name
     rule: pesel,pesel_number,pesel_no,polish_id,national_id,polish_national_id
     type: field
     match: text
-  plpeselvalue:
+  pl_persons_plpeselvalue:
     key: plpesel
     is_pii: True
     name: Polish PESEL by pattern
     match: ppr
     type: data
     rule: Word(nums, exact=11)
+    validator: metacrafterext.rules.common.identifiers.validate_pl_pesel
     maxlen: 11
     minlen: 11
-  plpassportfield:
+  pl_persons_plpassportfield:
     key: plpassport
     is_pii: True
     name: Polish passport by field name
     rule: passport,paszport,passport_number,numer_paszportu,paszport_no
     type: field
     match: text
-  plpassportvalue:
+  pl_persons_plpassportvalue:
     key: plpassport
     is_pii: True
     name: Polish passport by pattern
@@ -36,14 +37,14 @@ rules:
     rule: Word(alphas, exact=2) + Word(nums, exact=7)
     maxlen: 9
     minlen: 9
-  pldriverlicfield:
+  pl_persons_pldriverlicfield:
     key: pldriverlic
     is_pii: True
     name: Polish driver license by field name
     rule: driver_license,prawo_jazdy,numer_prawa_jazdy,license_number,driving_license
     type: field
     match: text
-  pldriverlicvalue:
+  pl_persons_pldriverlicvalue:
     key: pldriverlic
     is_pii: True
     name: Polish driver license by pattern

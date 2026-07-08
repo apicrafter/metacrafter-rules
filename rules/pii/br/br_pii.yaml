@@ -4,7 +4,7 @@ context: pii
 lang: pt
 country_code: br
 rules:
-  brcpfknown:
+  br_pii_brcpfknown:
     key: cpf
     is_pii: True
     name: Brazilian CPF (Cadastro de Pessoa Física) by known name
@@ -12,7 +12,7 @@ rules:
     type: field
     match: text
     priority: 1
-  brrgknown:
+  br_pii_brrgknown:
     key: rg
     is_pii: True
     name: Brazilian RG (Registro Geral) by known name

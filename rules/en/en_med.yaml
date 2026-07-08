@@ -49,6 +49,8 @@ rules:
     match: ppr
     type: data
     rule: Word(nums, min=6, max=10)
+    validator: metacrafterext.rules.common.identifiers.validate_snomed_ct
+    imprecise: 1
     maxlen: 10
     minlen: 6
     priority: 2
@@ -65,6 +67,7 @@ rules:
     match: ppr
     type: data
     rule: Word(nums, exact=5)
+    imprecise: 1
     maxlen: 5
     minlen: 5
     priority: 2

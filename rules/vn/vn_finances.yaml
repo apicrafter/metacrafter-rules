@@ -16,6 +16,7 @@ rules:
     match: ppr
     type: data
     rule: Word(nums, exact=10) | (Word(nums, exact=10) + Literal('-') + Word(nums, exact=3))
+    validator: metacrafterext.rules.common.identifiers.validate_vn_taxcode
     maxlen: 14
     minlen: 10
   vnbankaccountfield:

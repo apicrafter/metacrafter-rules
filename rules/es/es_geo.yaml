@@ -35,14 +35,17 @@ rules:
     rule: postcode,postal_code,codigo_postal,codigopostal
     type: field
     match: text
-  espostcodevalue:
-    key: espostcode
-    name: Spanish postal code by pattern
-    match: ppr
-    type: data
-    rule: Word(nums, exact=5)
-    maxlen: 5
-    minlen: 5
+# Disabled: matches any 5-digit number, colliding with US ZIP codes and generic
+# numeric ids/counts. Cannot be distinguished from an arbitrary 5-digit value;
+# rely on espostcodefield instead.
+#  espostcodevalue:
+#    key: espostcode
+#    name: Spanish postal code by pattern
+#    match: ppr
+#    type: data
+#    rule: Word(nums, exact=5)
+#    maxlen: 5
+#    minlen: 5
 
 
 

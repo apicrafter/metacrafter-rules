@@ -46,3 +46,7 @@ rules:
     rule: Word(nums, exact=3) + Word(nums, exact=2) + Optional(Literal('.').suppress() + Word(nums, min=2, max=3))
     maxlen: 8
     minlen: 5
+    # A bare 5-8 digit number has no check digit, so a value-only match is
+    # highly ambiguous. Marked imprecise so it is ignored unless
+    # --include-imprecise.
+    imprecise: 1

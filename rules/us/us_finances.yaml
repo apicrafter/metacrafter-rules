@@ -20,6 +20,7 @@ rules:
     minlen: 9
     validator: metacrafterext.rules.us.validators.validate_aba_routing
     priority: 1
+    imprecise: 1
   abaroutingfield:
     key: abaroutingnum
     name: ABA routing number by field name
@@ -36,6 +37,7 @@ rules:
     minlen: 9
     validator: metacrafterext.rules.us.validators.validate_aba_routing
     priority: 1
+    imprecise: 1
   cusipfield:
     key: cusip
     name: CUSIP by field name
@@ -51,5 +53,6 @@ rules:
     maxlen: 9
     minlen: 9
     validator: metacrafterext.rules.us.validators.validate_cusip
+    imprecise: 1
     priority: 1
 

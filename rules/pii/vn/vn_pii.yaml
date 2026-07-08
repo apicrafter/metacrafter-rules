@@ -20,6 +20,9 @@ rules:
     rule: Word(nums, exact=12)
     maxlen: 12
     minlen: 12
+    # A bare 12-digit number has no check digit, so a value-only match is highly
+    # ambiguous. Marked imprecise so it is ignored unless --include-imprecise.
+    imprecise: 1
   vnpassportfield:
     key: vnpassport
     is_pii: True

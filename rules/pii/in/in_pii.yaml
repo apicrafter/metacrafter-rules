@@ -4,7 +4,7 @@ context: pii
 lang: en
 country_code: in
 rules:
-  inaadhaarknown:
+  in_pii_inaadhaarknown:
     key: aadhaar
     is_pii: True
     name: Indian Aadhaar number by known name
@@ -12,7 +12,7 @@ rules:
     type: field
     match: text
     priority: 1
-  inpanknown:
+  in_pii_inpanknown:
     key: pan
     is_pii: True
     name: Indian PAN (Permanent Account Number) by known name

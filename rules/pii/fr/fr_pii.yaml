@@ -11,30 +11,31 @@ rules:
     rule: date_de_naissance,date_naissance
     type: field
     match: text
-  frnirfield:
+  fr_pii_frnirfield:
     key: frnir
     is_pii: True
     name: French NIR by field name
     rule: nir,numéro_inscription_répertoire,numero_inscription_repertoire,social_security_number
     type: field
     match: text
-  frnirvalue:
+  fr_pii_frnirvalue:
     key: frnir
     is_pii: True
     name: French NIR by pattern
     match: ppr
     type: data
-    rule: Word(nums, exact=13)
-    maxlen: 13
-    minlen: 13
-  frcnifield:
+    rule: Word(nums, exact=15)
+    validator: metacrafterext.rules.common.identifiers.validate_fr_nir
+    maxlen: 15
+    minlen: 15
+  fr_pii_frcnifield:
     key: frcni
     is_pii: True
     name: French CNI by field name
     rule: cni,carte_nationale_identité,carte_nationale_identite,identity_card
     type: field
     match: text
-  frcnivalue:
+  fr_pii_frcnivalue:
     key: frcni
     is_pii: True
     name: French CNI by pattern
@@ -43,14 +44,14 @@ rules:
     rule: Word(nums, exact=12)
     maxlen: 12
     minlen: 12
-  frpassportfield:
+  fr_pii_frpassportfield:
     key: frpassport
     is_pii: True
     name: French passport by field name
     rule: passport,passeport,passport_number,numero_passeport
     type: field
     match: text
-  frpassportvalue:
+  fr_pii_frpassportvalue:
     key: frpassport
     is_pii: True
     name: French passport by pattern

@@ -3,6 +3,61 @@ Validation functions for German-specific identifiers.
 """
 
 
+def validate_de_steuer_id(value):
+    """
+    Validates a German tax identification number (Steuerliche Identifikationsnummer / IdNr).
+
+    Rules:
+    - Exactly 11 digits (separators and spaces are ignored).
+    - The first digit must not be 0.
+    - Among the first 10 digits exactly one digit must repeat (appear two or
+      three times) while at least one digit is absent -- the official
+      structural constraint.
+    - The 11th digit is a check digit computed with the ISO 7064 MOD 11,10
+      algorithm over the first 10 digits.
+
+    Args:
+        value: tax id string (may include spaces, dots or dashes)
+
+    Returns:
+        bool: True if the value is a structurally valid Steuer-IdNr.
+    """
+    if not isinstance(value, str):
+        return False
+
+    idnr = value.replace(' ', '').replace('.', '').replace('-', '').replace('/', '')
+
+    if len(idnr) != 11 or not idnr.isdigit():
+        return False
+
+    if idnr[0] == '0':
+        return False
+
+    first_ten = idnr[:10]
+
+    # Structural rule: exactly one digit repeats among the first ten digits.
+    counts = {}
+    for ch in first_ten:
+        counts[ch] = counts.get(ch, 0) + 1
+    repeated = [c for c, n in counts.items() if n > 1]
+    if len(repeated) != 1:
+        return False
+    if counts[repeated[0]] > 3:
+        return False
+
+    # ISO 7064 MOD 11,10 check digit.
+    product = 10
+    for ch in first_ten:
+        digit = int(ch)
+        s = (digit + product) % 10
+        if s == 0:
+            s = 10
+        product = (s * 2) % 11
+    check = (11 - product) % 10
+
+    return check == int(idnr[10])
+
+
 def validate_de_hrb(value):
     """
     Validates German HRB (Handelsregisternummer) format.

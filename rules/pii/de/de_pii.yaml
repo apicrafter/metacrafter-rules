@@ -1,0 +1,48 @@
+name: de-pii
+description: German person identifiable information (PII)
+context: pii
+lang: de
+country_code: de
+rules:
+  de_pii_steueridfield:
+    key: de_steuerid
+    is_pii: True
+    name: German tax identification number by field name
+    rule: steueridentifikationsnummer,steuer_id,steuerid,idnr,steuernummer,tax_id,tin
+    type: field
+    match: text
+    priority: 1
+  de_pii_steueridvalue:
+    key: de_steuerid
+    is_pii: True
+    name: German tax identification number by pattern
+    match: ppr
+    type: data
+    rule: Word(nums, exact=11)
+    validator: metacrafterext.rules.de.validators.validate_de_steuer_id
+    maxlen: 11
+    minlen: 11
+    priority: 1
+  de_pii_ibanfield:
+    key: de_iban
+    is_pii: True
+    name: German IBAN by field name
+    rule: iban,bank_account,kontonummer,konto
+    type: field
+    match: text
+  de_pii_ibanvalue:
+    key: de_iban
+    is_pii: True
+    name: German IBAN by pattern
+    match: ppr
+    type: data
+    rule: Literal('DE') + Word(nums, exact=20)
+    maxlen: 22
+    minlen: 22
+  de_pii_versicherungsnummerfield:
+    key: de_socialinsurance
+    is_pii: True
+    name: German social insurance number by field name
+    rule: versicherungsnummer,sozialversicherungsnummer,rentenversicherungsnummer,social_insurance_number
+    type: field
+    match: text

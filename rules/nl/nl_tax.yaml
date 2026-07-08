@@ -36,5 +36,7 @@ rules:
     match: ppr
     type: data
     rule: Word(nums, exact=9)
+    validator: metacrafterext.rules.common.identifiers.validate_nl_bsn
     maxlen: 9
     minlen: 9
+    imprecise: 1

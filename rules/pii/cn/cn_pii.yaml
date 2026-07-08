@@ -4,7 +4,7 @@ context: pii
 lang: zh
 country_code: cn
 rules:
-  cnidcardknown:
+  cn_pii_cnidcardknown:
     key: idcard
     is_pii: True
     name: Chinese ID card (身份证) by known name

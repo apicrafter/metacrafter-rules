@@ -21,6 +21,7 @@ rules:
     maxlen: 11
     minlen: 9
     validator: metacrafterext.rules.us.validators.validate_us_ssn
+    imprecise: 1
     priority: 1
   
   useinfield:
@@ -40,6 +41,7 @@ rules:
     maxlen: 9
     minlen: 9
     validator: metacrafterext.rules.us.validators.validate_us_ein
+    imprecise: 1
     priority: 1
   
   usitinfield:
@@ -78,6 +80,7 @@ rules:
     maxlen: 9
     minlen: 9
     validator: metacrafterext.rules.us.validators.validate_us_passport
+    imprecise: 1
     priority: 1
   
   usdriverlicfield:
@@ -101,6 +104,80 @@ rules:
     minlen: 6
     validator: metacrafterext.rules.us.validators.validate_us_driver_license
     imprecise: 1
+  usnpifield:
+    key: usnpi
+    is_pii: True
+    name: US National Provider Identifier (NPI) by field name
+    rule: usnpi,npi,npi_number,npi_id,us_npi,national_provider_identifier
+    type: field
+    match: text
+    priority: 1
+  usnpivalue:
+    key: usnpi
+    is_pii: True
+    name: US National Provider Identifier (NPI) by pattern
+    match: ppr
+    type: data
+    rule: Word(nums, exact=10)
+    validator: metacrafterext.rules.common.identifiers.validate_us_npi
+    maxlen: 10
+    minlen: 10
+    priority: 1
+  usdeanumberfield:
+    key: usdeanumber
+    is_pii: True
+    name: US DEA Registration Number by field name
+    rule: dea_number,dea_registration,dea_id,dea_code,drug_enforcement_administration
+    type: field
+    match: text
+    priority: 1
+  usdeanumbervalue:
+    key: usdeanumber
+    is_pii: True
+    name: US DEA Registration Number by pattern
+    match: ppr
+    type: data
+    rule: (Word(alphas, exact=2) + Word(nums, exact=7)) | (Word(alphas, exact=1) + Literal('9') + Word(nums, exact=7))
+    maxlen: 9
+    minlen: 9
+    priority: 1
+  usatinfield:
+    key: usatin
+    is_pii: True
+    name: US ATIN (Adoption Taxpayer Identification Number) by field name
+    rule: atin,adoption_tin,adoption_taxpayer_id,adoption_tax_id,adoption_taxpayer_identification_number
+    type: field
+    match: text
+    priority: 1
+  usatinvalue:
+    key: usatin
+    is_pii: True
+    name: US ATIN (Adoption Taxpayer Identification Number) by pattern
+    match: ppr
+    type: data
+    rule: Word(nums, exact=9)
+    imprecise: 1
+    maxlen: 9
+    minlen: 9
+    priority: 1
+  usptinfield:
+    key: usptin
+    is_pii: True
+    name: US PTIN (Preparer Tax Identification Number) by field name
+    rule: ptin,preparer_tin,preparer_tax_id,tax_preparer_id,preparer_tax_identification_number
+    type: field
+    match: text
+    priority: 1
+  usptinvalue:
+    key: usptin
+    is_pii: True
+    name: US PTIN (Preparer Tax Identification Number) by pattern
+    match: ppr
+    type: data
+    rule: Literal('P') + Optional(Literal('-')) + Word(nums, exact=8)
+    maxlen: 10
+    minlen: 9
+    priority: 1
   enssnfield:
     key: ssn
     is_pii: True

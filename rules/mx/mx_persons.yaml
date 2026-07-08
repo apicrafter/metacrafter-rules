@@ -8,7 +8,7 @@ rules:
     key: person_name
     is_pii: True
     name: Mexican person name by known name
-    rule: nombre_completo,nombre,nombre_persona,nombre_cliente
+    rule: nombre_completo,nombre_persona,nombre_cliente
     type: field
     match: text
     priority: 1

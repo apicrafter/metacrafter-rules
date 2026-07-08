@@ -22,6 +22,7 @@ rules:
     minlen: 8
     priority: 1
     validator: metacrafterext.rules.common.identifiers.validate_gtin
+    imprecise: 1
   gtin12value:
     key: gtin
     name: GTIN-12 (UPC) by value pattern
@@ -32,6 +33,7 @@ rules:
     minlen: 12
     priority: 1
     validator: metacrafterext.rules.common.identifiers.validate_gtin
+    imprecise: 1
   gtin13value:
     key: gtin
     name: GTIN-13 (EAN) by value pattern
@@ -42,6 +44,7 @@ rules:
     minlen: 13
     priority: 1
     validator: metacrafterext.rules.common.identifiers.validate_gtin
+    imprecise: 1
   gtin14value:
     key: gtin
     name: GTIN-14 by value pattern
@@ -52,6 +55,7 @@ rules:
     minlen: 14
     priority: 1
     validator: metacrafterext.rules.common.identifiers.validate_gtin
+    imprecise: 1
   gtinwithai01value:
     key: gtin
     name: GTIN-14 with Application Identifier (01) by value pattern
@@ -103,6 +107,7 @@ rules:
     minlen: 13
     priority: 1
     validator: metacrafterext.rules.common.identifiers.validate_gtin
+    imprecise: 1
     fieldrule: ean,ean_code,ean_number,european_article_number,product_ean,barcode_ean,ean_13,ean13
     fieldrulematch: text
   ean8value:
@@ -115,6 +120,7 @@ rules:
     minlen: 8
     priority: 2
     validator: metacrafterext.rules.common.identifiers.validate_gtin
+    imprecise: 1
     fieldrule: ean,ean_code,ean_number,european_article_number,product_ean,barcode_ean,ean_8,ean8
     fieldrulematch: text
 
@@ -153,14 +159,14 @@ rules:
     imprecise: 1
 
   # GLN (Global Location Number)
-  glnfield:
+  gs1_glnfield:
     key: gln
     name: Global Location Number (GLN) by field name
     rule: gln,gln_code,gln_number,global_location_number,location_gln,party_gln
     type: field
     match: text
     priority: 1
-  glnvalue:
+  gs1_glnvalue:
     key: gln
     name: Global Location Number (GLN) by value pattern
     match: ppr
@@ -170,6 +176,7 @@ rules:
     minlen: 13
     priority: 1
     validator: metacrafterext.rules.common.identifiers.validate_gln
+    imprecise: 1
     fieldrule: gln,gln_code,gln_number,global_location_number,location_gln,party_gln
     fieldrulematch: text
 

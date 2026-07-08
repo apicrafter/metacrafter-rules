@@ -18,6 +18,7 @@ rules:
     match: ppr
     type: data
     rule: Word(nums, exact=10)
+    imprecise: 1
     maxlen: 10
     minlen: 10
     priority: 1

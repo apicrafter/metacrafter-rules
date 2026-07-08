@@ -4,14 +4,14 @@ context: pii
 lang: ar
 country_code: eg
 rules:
-  egnationalidfield:
+  eg_pii_egnationalidfield:
     key: egnationalid
     is_pii: True
     name: Egyptian National ID by field name
     rule: national_id,egyptian_id,id_number,identity_number,الرقم_القومي,البطاقة_الوطنية
     type: field
     match: text
-  egnationalidvalue:
+  eg_pii_egnationalidvalue:
     key: egnationalid
     is_pii: True
     name: Egyptian National ID by pattern
@@ -20,20 +20,21 @@ rules:
     rule: Word(nums, exact=14)
     maxlen: 14
     minlen: 14
-  egpassportfield:
+  eg_pii_egpassportfield:
     key: egpassport
     is_pii: True
     name: Egyptian passport by field name
     rule: passport,passport_number,egyptian_passport,جواز_السفر,رقم_جواز_السفر
     type: field
     match: text
-  egpassportvalue:
+  eg_pii_egpassportvalue:
     key: egpassport
     is_pii: True
     name: Egyptian passport by pattern
     match: ppr
     type: data
     rule: Word(alphanums, min=8, max=9)
+    imprecise: 1
     maxlen: 9
     minlen: 8
 

@@ -18,6 +18,7 @@ rules:
     rule: Word(nums, exact=4) + Literal('-').suppress() + Word(nums, min=1, max=8)
     maxlen: 13
     minlen: 6
+    imprecise: 1
   ojreferencefield:
     key: ojreference
     name: Official Journal reference by field name
@@ -60,3 +61,4 @@ rules:
     rule: Word('ABCDEFGHIJKLMNOPQRSTUVWXYZ', exact=2) + Word(alphanums, min=1, max=3)
     maxlen: 5
     minlen: 3
+    imprecise: 1

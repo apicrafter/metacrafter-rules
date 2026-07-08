@@ -12,11 +12,11 @@ rules:
     type: field
     match: text
     priority: 1
-  arpersonnameknown:
+  ar_common_arpersonnameknown:
     key: person_name
     is_pii: True
     name: Argentine person name by known name
-    rule: nombre_completo,nombre,nombre_persona
+    rule: nombre_completo,nombre_persona
     type: field
     match: text
     priority: 1

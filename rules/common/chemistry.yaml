@@ -44,15 +44,18 @@ rules:
     type: field
     match: text
     priority: 1
-  pubchemidbyvalue:
-    key: pubchemid
-    name: PubChem Substance ID by value pattern
-    match: ppr
-    type: data
-    rule: Word('123456789', exact=1) + Word(nums, min=0)
-    minlen: 1
-    priority: 2
-    note: May have false positives as it matches any positive integer
+# Disabled: matches any positive integer, so every numeric id/count/quantity
+# column is flagged. A PubChem ID cannot be distinguished from a generic integer
+# by value alone; rely on pubchemidbyfieldname instead.
+#  pubchemidbyvalue:
+#    key: pubchemid
+#    name: PubChem Substance ID by value pattern
+#    match: ppr
+#    type: data
+#    rule: Word('123456789', exact=1) + Optional(Word(nums))
+#    minlen: 1
+#    priority: 2
+#    note: May have false positives as it matches any positive integer
   molformulabyfieldname:
     key: molformula
     name: Molecular Formula by field name
@@ -60,14 +63,18 @@ rules:
     type: field
     match: text
     priority: 1
-  molformulabyvalue:
-    key: molformula
-    name: Molecular Formula by value pattern
-    match: ppr
-    type: data
-    rule: Word(alphas + nums + "()[].,-+", min=1)
-    minlen: 1
-    priority: 2
-    validator: metacrafterext.rules.common.chemistry.validate_molecular_formula
-    note: Complex pattern - validates basic structure but may need refinement
+# Disabled: the value pattern matches almost any alphanumeric token, and the
+# validator only checks that an element-symbol substring is present, so ordinary
+# words/codes (e.g. anything containing "In", "As", "No", "Be", ...) match. This
+# produced too many false positives; rely on molformulabyfieldname instead.
+#  molformulabyvalue:
+#    key: molformula
+#    name: Molecular Formula by value pattern
+#    match: ppr
+#    type: data
+#    rule: Word(alphas + nums + "()[].,-+", min=1)
+#    minlen: 1
+#    priority: 2
+#    validator: metacrafterext.rules.common.chemistry.validate_molecular_formula
+#    note: Complex pattern - validates basic structure but may need refinement
 

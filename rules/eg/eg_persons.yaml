@@ -34,6 +34,7 @@ rules:
     match: ppr
     type: data
     rule: Word(alphanums, min=8, max=9)
+    imprecise: 1
     maxlen: 9
     minlen: 8
 

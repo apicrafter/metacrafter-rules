@@ -21,7 +21,7 @@ rules:
     maxlen: 19
     priority: 1
     validator: metacrafterext.rules.common.identifiers.validate_orcid
-  doifield:
+  science_doifield:
     key: doi
     name: DOI (Digital Object Identifier) by field name
     rule: doi,digital_object_identifier,doi_number,doi_code,doi_id
@@ -35,14 +35,14 @@ rules:
     type: data
     match: ppr
     priority: 1
-  isnifield:
+  science_isnifield:
     key: isni
     name: International Standard Name Identifier (ISNI) by field name
     rule: isni,isni_number,isni_code,isni_id,standard_name_identifier,international_standard_name_identifier
     type: field
     match: text
     priority: 1
-  isnivalue:
+  science_isnivalue:
     key: isni
     name: International Standard Name Identifier (ISNI) by value pattern
     match: ppr
@@ -109,6 +109,7 @@ rules:
     match: ppr
     type: data
     rule: Word(alphanums, exact=9)
+    validator: metacrafterext.rules.common.identifiers.validate_ror_id
     minlen: 9
     maxlen: 9
     priority: 1

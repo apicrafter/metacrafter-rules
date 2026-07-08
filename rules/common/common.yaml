@@ -31,15 +31,15 @@ rules:
     rule: application/pdf,application/json,application/octet-stream,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.wordprocessingml.document,image/jpeg,image/tiff,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/zip,text/csv,text/plain,application/vnd.google-earth.kml+xml,application/x-zip-compressed,application/vnd.geo+json,application/vnd.ms-excel.sheet.macroenabled.12,application/vnd.openxmlformats-officedocument.presentationml.presentation,text/xml,application/csv,text/html,application/rdf+xml,image/png,text/tab-separated-values,application/geo+json,application/vnd.geo+json,application/gzip,application/vnd.google-earth.kmz,application/x-tar
   phoneknown:
     key: phone
-    is_pii: True
+    is_pii: true
     name: Phone number by known name
-    rule: phone,fax,contact_phone,telephone,phone number,phone_number,business_phone,phonenumber,phone_no,contactphone,phone_1,phone1,phone2,fax_number,contact_fax,cellphon
+    rule: phone,fax,contact_phone,telephone,phone number,phone_number,business_phone,phonenumber,phone_no,contactphone,phone_1,phone1,phone2,fax_number,contact_fax,cellphon,mobile_phone_number,other_mobile,telephone_number,telephonenumber
     type: field
     match: text
     priority: 1
   phoneknownpat:
     key: phone
-    is_pii: True
+    is_pii: true
     name: Phone number by known pattern
     rule: Word(printables) + "phone" +  lineEnd
     type: field
@@ -47,7 +47,7 @@ rules:
     priority: 2
   phoneknownprefix:
     key: phone
-    is_pii: True
+    is_pii: true
     name: Phone number by known pattern
     rule: Literal('phone') + Word(printables) + lineEnd
     type: field
@@ -55,7 +55,7 @@ rules:
     priority: 2
   faxknownpat:
     key: phone
-    is_pii: True    
+    is_pii: true
     name: Phone number by known pattern (Fax)
     rule: Word(printables) + "fax" +  lineEnd
     type: field
@@ -68,3 +68,129 @@ rules:
     match: text
     type: field
     rule: id,uniqueid,unique_id,uniqid,uniq_id,unique_key,uniquekey,uniqkey,record_id,objectid,object_id,id_unique,id_uniq,globalid,global_id
+  booleanbooleanbyknown:
+    key: boolean_boolean
+    name: Boolean Boolean
+    match: text
+    type: field
+    rule: is_managed_internally,is_mandatory,is_public,is_long
+    priority: 1
+  activebooleanbyknown:
+    key: active_boolean
+    name: Active Boolean
+    match: text
+    type: field
+    rule: active,is_active,is_active_,isactive
+    priority: 1
+  filefilebyknown:
+    key: file_file
+    name: File File
+    match: text
+    type: field
+    rule: file_sn,file_stre_cours,file_extsn,file_cn
+    priority: 1
+  enabledbooleanbyknown:
+    key: enabled_boolean
+    name: Enabled Boolean
+    match: text
+    type: field
+    rule: enabled,is_count_enabled_,is_enabled,service_enabled
+    priority: 1
+  emailbyknown:
+    key: email
+    name: Email address
+    match: text
+    type: field
+    rule: email_cn,email_verified,user_email,unconfirmed_email
+    priority: 1
+  createdidbyknown:
+    key: created_id
+    name: Created Id
+    match: text
+    type: field
+    rule: created_by_id,createdby_id,created_by_user_id,hr_created_by_id,createdByUuid
+    priority: 1
+  widthmeasurementbyknown:
+    key: width_measurement
+    name: Width Measurement
+    match: text
+    type: field
+    rule: width,br_bandwidth,ti_bandwidth_percent,ti_allocated_bandwidth
+    priority: 1
+  deletedbooleanbyknown:
+    key: deleted_boolean
+    name: Deleted Boolean
+    match: text
+    type: field
+    rule: is_deleted
+    priority: 1
+  confirmedbooleanbyknown:
+    key: confirmed_boolean
+    name: Confirmed Boolean
+    match: text
+    type: field
+    rule: confirmed_at,is_confirmed
+    priority: 1
+  percentagemeasurementbyknown:
+    key: percentage_measurement
+    name: Percentage Measurement
+    match: text
+    type: field
+    rule: percentage,i_upper_limit_percentage,i_lower_limit_percentage,ic_upper_limit_percentage
+    priority: 1
+  pathfilebyknown:
+    key: path_file
+    name: Path File
+    match: text
+    type: field
+    rule: image_path,imagepath,relate_image_path
+    priority: 1
+  modifiedidbyknown:
+    key: modified_id
+    name: Modified Id
+    match: text
+    type: field
+    rule: lastmodifiedby_id
+    priority: 1
+  disabledbooleanbyknown:
+    key: disabled_boolean
+    name: Disabled Boolean
+    match: text
+    type: field
+    rule: disabled_m,is_disabled
+    priority: 1
+  sizemeasurementbyknown:
+    key: size_measurement
+    name: Size Measurement
+    match: text
+    type: field
+    rule: volume_size
+    priority: 1
+  lengthfilebyknown:
+    key: length_file
+    name: Length File
+    match: text
+    type: field
+    rule: window_length,msg_length,bin_length,ahrc_resource_length
+    priority: 1
+  heightmeasurementbyknown:
+    key: height_measurement
+    name: Height Measurement
+    match: text
+    type: field
+    rule: height
+    priority: 1
+  sizefilebyknown:
+    key: size_file
+    name: Size File
+    match: text
+    type: field
+    rule: byte_size,content_size_,p_size,popup_vrticl_size
+    priority: 1
+  mimetypebyknown1:
+    key: mime_type
+    name: Mime Type
+    match: text
+    type: field
+    rule: mime
+    priority: 1

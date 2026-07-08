@@ -4,14 +4,14 @@ context: pii
 lang: de
 country_code: ch
 rules:
-  chahvfield:
+  ch_pii_chahvfield:
     key: chahv
     is_pii: True
     name: Swiss AHV number by field name
     rule: swiss_ahv,ahv_number,ahv_nummer,ahv_se,swiss_social_security
     type: field
     match: text
-  chahvvalue:
+  ch_pii_chahvvalue:
     key: chahv
     is_pii: True
     name: Swiss AHV number by pattern
@@ -20,14 +20,14 @@ rules:
     rule: Word(nums, exact=3) + Literal('.') + Word(nums, exact=3) + Literal('.') + Word(nums, exact=3) + Literal('.') + Word(nums, exact=3)
     maxlen: 15
     minlen: 15
-  chpassportfield:
+  ch_pii_chpassportfield:
     key: chpassport
     is_pii: True
     name: Swiss passport by field name
     rule: swiss_passport,passport_ch,passport_switzerland,schweizer_pass
     type: field
     match: text
-  chpassportvalue:
+  ch_pii_chpassportvalue:
     key: chpassport
     is_pii: True
     name: Swiss passport by pattern

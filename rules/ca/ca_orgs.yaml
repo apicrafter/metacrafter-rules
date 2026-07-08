@@ -18,6 +18,10 @@ rules:
     rule: Word(nums, min=7, max=9)
     maxlen: 9
     minlen: 7
+    # A bare 7-9 digit number has no check digit, so a value-only match is
+    # highly ambiguous. Marked imprecise so it is ignored unless
+    # --include-imprecise.
+    imprecise: 1
   caextraProvfield:
     key: caextra
     name: Extra-provincial registration number by field name
@@ -46,3 +50,4 @@ rules:
     rule: Word('ABCDEFGHIJKLMNOPQRSTUVWXYZ', min=1, max=3) + Word(nums, min=4, max=7)
     maxlen: 10
     minlen: 5
+    imprecise: 1

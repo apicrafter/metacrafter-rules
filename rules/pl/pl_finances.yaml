@@ -16,6 +16,7 @@ rules:
     match: ppr
     type: data
     rule: Word(nums, exact=10)
+    validator: metacrafterext.rules.common.identifiers.validate_pl_nip
     maxlen: 10
     minlen: 10
   plregonfield:
@@ -30,6 +31,7 @@ rules:
     match: ppr
     type: data
     rule: Word(nums, min=9, max=14)
+    validator: metacrafterext.rules.common.identifiers.validate_pl_regon
     maxlen: 14
     minlen: 9
   plbankaccountfield:

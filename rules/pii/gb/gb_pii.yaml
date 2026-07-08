@@ -4,14 +4,14 @@ context: pii
 lang: en
 country_code: gb
 rules:
-  ukninofield:
+  gb_pii_ukninofield:
     key: uknino
     is_pii: True
     name: UK National Insurance number by field name
     rule: nino,national_insurance_number,ni_number,insurance_number
     type: field
     match: text
-  ukninovalue:
+  gb_pii_ukninovalue:
     key: uknino
     is_pii: True
     name: UK National Insurance number by pattern
@@ -21,56 +21,77 @@ rules:
     maxlen: 9
     minlen: 9
   
-  ukutrfield:
+  gb_pii_ukutrfield:
     key: ukutr
     is_pii: True
     name: UK UTR by field name
     rule: utr,unique_taxpayer_reference,tax_reference,taxpayer_reference
     type: field
     match: text
-  ukutrvalue:
+  gb_pii_ukutrvalue:
     key: ukutr
     is_pii: True
     name: UK UTR by pattern
     match: ppr
     type: data
     rule: Word(nums, exact=10)
+    imprecise: 1
     maxlen: 10
     minlen: 10
   
-  ukpassportfield:
+  gb_pii_ukpassportfield:
     key: ukpassport
     is_pii: True
     name: UK passport by field name
     rule: passport,passport_number,uk_passport,british_passport
     type: field
     match: text
-  ukpassportvalue:
+  gb_pii_ukpassportvalue:
     key: ukpassport
     is_pii: True
     name: UK passport by pattern
     match: ppr
     type: data
     rule: Word(nums, exact=9)
+    imprecise: 1
     maxlen: 9
     minlen: 9
   
-  uknhsnumfield:
+  gb_pii_uknhsnumfield:
     key: uknhsnum
     is_pii: True
     name: UK NHS Number by field name
     rule: nhs_number,nhs_num,national_health_service_number
     type: field
     match: text
-  uknhsnumvalue:
+  gb_pii_uknhsnumvalue:
     key: uknhsnum
     is_pii: True
     name: UK NHS Number by pattern
     match: ppr
     type: data
     rule: Word(nums, exact=3) + Optional(Literal('-') | Literal(' ')) + Word(nums, exact=3) + Optional(Literal('-') | Literal(' ')) + Word(nums, exact=4)
+    validator: metacrafterext.rules.common.identifiers.validate_uk_nhs
     maxlen: 12
     minlen: 10
+  gb_pii_ukdriverlicfield:
+    key: ukdriverlic
+    is_pii: True
+    name: UK driver license by field name
+    rule: driver_license,driving_licence,dl_number,license_number,uk_driving_license
+    type: field
+    match: text
+    priority: 1
+  gb_pii_ukdriverlicvalue:
+    key: ukdriverlic
+    is_pii: True
+    name: UK driver license by pattern
+    match: ppr
+    type: data
+    rule: Word('ABCDEFGHIJKLMNOPQRSTUVWXYZ9', exact=5) + Word(nums, exact=6) + Word('ABCDEFGHIJKLMNOPQRSTUVWXYZ9', exact=2) + Word(nums, exact=1) + Word('ABCDEFGHIJKLMNOPQRSTUVWXYZ', exact=2)
+    maxlen: 16
+    minlen: 16
+    priority: 1
   enniifield:
     key: ninumber
     is_pii: True
@@ -78,7 +99,7 @@ rules:
     rule: ni_number,ni number,nationalinsurance,national_insurance_number,nino
     type: field
     match: text
-    ennhsfield:
+  ennhsfield:
     key: nhsnumber
     is_pii: True
     name: NHS number by field name
@@ -92,5 +113,6 @@ rules:
     match: ppr
     type: data
     rule: Word(nums, exact=3) + Optional(Literal(' ').suppress()) + Word(nums, exact=3) + Optional(Literal(' ').suppress()) + Word(nums, exact=4)
+    validator: metacrafterext.rules.common.identifiers.validate_uk_nhs
     maxlen: 13
     minlen: 10

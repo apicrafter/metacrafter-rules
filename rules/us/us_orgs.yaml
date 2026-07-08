@@ -4,7 +4,7 @@ context: companies
 lang: en
 country_code: us
 rules:
-  encompanynamebypostfix:
+  us_orgs_encompanynamebypostfix:
     key: encompanyname
     name: US name of the company
     maxlen: 120
