@@ -5,7 +5,7 @@ lang: en
 country_code: ca
 rules:
   ca_pii_sinfield:
-    key: ca_sin
+    key: casin
     is_pii: True
     name: Canadian Social Insurance Number by field name
     rule: sin,social_insurance_number,numero_assurance_sociale,nas
@@ -13,7 +13,7 @@ rules:
     match: text
     priority: 1
   ca_pii_sinvalue:
-    key: ca_sin
+    key: casin
     is_pii: True
     name: Canadian Social Insurance Number by pattern
     match: ppr
@@ -25,7 +25,7 @@ rules:
     minlen: 9
     priority: 1
   ca_pii_sinfield_plain:
-    key: ca_sin
+    key: casin
     is_pii: True
     name: Canadian Social Insurance Number (compact) by pattern
     match: ppr

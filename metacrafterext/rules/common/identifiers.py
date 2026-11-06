@@ -593,7 +593,7 @@ def validate_grid(value):
 
 
 def validate_openalex_id(value):
-    """
+    r"""
     Validates OpenAlex ID format.
     
     OpenAlex ID format: [ACIVW][1-9]\d{3,9}
@@ -894,9 +894,10 @@ def validate_asn(value):
     
     ASN range is 1-4294967295 (32-bit unsigned integer).
     Most common ASNs are 4-6 digits, but the full range is valid.
+    The number may have the prefix AS, as in AS64496.
     
     Args:
-        value: ASN string (numeric)
+        value: ASN string (digits, optionally prefixed with AS)
         
     Returns:
         bool: True if valid ASN range, False otherwise
@@ -904,9 +905,9 @@ def validate_asn(value):
     if not isinstance(value, str):
         return False
     
-    asn = value.strip()
+    asn = value[2:] if value[:2].upper() == 'AS' else value
     
-    if not asn.isdigit():
+    if not asn.isdigit() or not asn.isascii():
         return False
     
     try:
@@ -1010,133 +1011,90 @@ def validate_language_tag(value):
     return True
 
 
+# VAT number formats of the VIES system (country prefix, then the number).
+# Greece uses the prefix EL, Northern Ireland XI.
+_EU_VAT_FORMATS = {
+    'AT': r'U\d{8}',
+    'BE': r'[01]\d{9}',
+    'BG': r'\d{9,10}',
+    'CY': r'\d{8}[A-Z]',
+    'CZ': r'\d{8,10}',
+    'DE': r'\d{9}',
+    'DK': r'\d{8}',
+    'EE': r'\d{9}',
+    'EL': r'\d{9}',
+    'ES': r'[A-Z]\d{7}[A-Z0-9]|\d{8}[A-Z]',
+    'FI': r'\d{8}',
+    'FR': r'[0-9A-HJ-NP-Z]{2}\d{9}',
+    'HR': r'\d{11}',
+    'HU': r'\d{8}',
+    'IE': r'\d{7}[A-W][A-IW]?|\d[A-Z+*]\d{5}[A-W]',
+    'IT': r'\d{11}',
+    'LT': r'\d{9}|\d{12}',
+    'LU': r'\d{8}',
+    'LV': r'\d{11}',
+    'MT': r'\d{8}',
+    'NL': r'\d{9}B\d{2}',
+    'PL': r'\d{10}',
+    'PT': r'\d{9}',
+    'RO': r'[1-9]\d{1,9}',
+    'SE': r'\d{10}01',
+    'SI': r'\d{8}',
+    'SK': r'\d{10}',
+    'XI': r'\d{9}|\d{12}|GD\d{3}|HA\d{3}',
+}
+_EU_VAT_RES = {
+    country: re.compile(r'(?:%s)' % pattern, re.ASCII)
+    for country, pattern in _EU_VAT_FORMATS.items()
+}
+
+
 def validate_eu_vat(value, country_code=None):
     """
-    Validates EU VAT number using country-specific checksum algorithms.
-    
-    EU VAT numbers have different validation rules per country:
-    - AT (Austria): MOD-11
-    - BE (Belgium): MOD-97
-    - BG (Bulgaria): MOD-11
-    - CY (Cyprus): MOD-11
-    - CZ (Czech Republic): MOD-11
-    - DE (Germany): MOD-11
-    - DK (Denmark): MOD-11
-    - EE (Estonia): MOD-11
-    - ES (Spain): MOD-23
-    - FI (Finland): MOD-11
-    - FR (France): MOD-11
-    - GR (Greece): MOD-11
-    - HR (Croatia): MOD-11
-    - HU (Hungary): MOD-11
-    - IE (Ireland): MOD-23
-    - IT (Italy): MOD-11
-    - LT (Lithuania): MOD-11
-    - LU (Luxembourg): MOD-11
-    - LV (Latvia): MOD-11
-    - MT (Malta): MOD-37
-    - NL (Netherlands): MOD-11
-    - PL (Poland): MOD-11
-    - PT (Portugal): MOD-11
-    - RO (Romania): MOD-11
-    - SE (Sweden): MOD-11
-    - SI (Slovenia): MOD-11
-    - SK (Slovakia): MOD-11
-    
+    Validates an EU VAT number in the compact form that the VIES system checks.
+
+    The number is the 2-letter code of the member state (EL for Greece, XI
+    for Northern Ireland) followed by the national number, with no spaces or
+    other separators: ``DE136695976``, ``FR40303265045``, ``NL004495445B01``.
+
+    - The national number must have the format of its country.
+    - German and French numbers must also pass their check digits
+      (:func:`metacrafterext.rules.de.validators.validate_de_ust`,
+      :func:`metacrafterext.rules.fr.validators.validate_fr_vat`).
+    - Numbers of one repeated digit are rejected.
+
     Args:
-        value: VAT number string (may include spaces or dashes)
-        country_code: Optional 2-letter country code to use specific validation
-        
+        value: VAT number string
+        country_code: Optional 2-letter country code the number must belong to
+            (GR is read as EL)
+
     Returns:
-        bool: True if valid EU VAT format, False otherwise
+        bool: True if valid EU VAT number, False otherwise
     """
     if not isinstance(value, str):
         return False
-    
-    vat = value.replace(' ', '').replace('-', '').replace('.', '').upper()
-    
-    # Basic format check: 2-letter country code + 6-12 alphanumeric
-    if len(vat) < 8 or len(vat) > 14:
-        return False
-    
-    # Extract country code
-    if not vat[:2].isalpha():
-        return False
-    
-    detected_country = vat[:2]
-    vat_number = vat[2:]
-    
-    # Use provided country_code or detected one
-    country = (country_code or detected_country).upper()
-    
-    # Basic format validation: alphanumeric after country code
-    if not vat_number.isalnum():
-        return False
-    
-    # Country-specific length checks
-    country_lengths = {
-        'AT': 9, 'BE': 10, 'BG': 9, 'CY': 9, 'CZ': 8, 'DE': 9,
-        'DK': 8, 'EE': 9, 'ES': 9, 'FI': 8, 'FR': 11, 'GR': 9,
-        'HR': 11, 'HU': 8, 'IE': 8, 'IT': 11, 'LT': 9, 'LU': 8,
-        'LV': 11, 'MT': 8, 'NL': 12, 'PL': 10, 'PT': 9, 'RO': 2,  # RO: 2-10
-        'SE': 12, 'SI': 8, 'SK': 10
-    }
-    
-    if country in country_lengths:
-        expected_len = country_lengths[country]
-        if country == 'RO':
-            # Romania: 2-10 digits
-            if not (2 <= len(vat_number) <= 10 and vat_number.isdigit()):
-                return False
-        else:
-            if len(vat_number) != expected_len:
-                return False
-    
-    # Basic checksum validation for common countries
-    # Note: Full implementation would require country-specific algorithms
-    # This provides basic format and structure validation
-    
-    # Check for obviously invalid patterns
-    if vat_number.isdigit():
-        # All zeros or all same digit
-        if len(set(vat_number)) == 1:
+
+    vat = value.strip()
+    country, number = vat[:2], vat[2:]
+    if country_code is not None:
+        expected = country_code.upper()
+        if country != ('EL' if expected == 'GR' else expected):
             return False
-    
-    # Additional country-specific basic checks
+
+    pattern = _EU_VAT_RES.get(country)
+    if pattern is None or not pattern.fullmatch(number):
+        return False
+
+    digits = ''.join(ch for ch in number if ch.isdigit())
+    if len(digits) == len(number) and len(set(digits)) == 1:
+        return False
+
     if country == 'DE':
-        # German VAT: 9 digits, starts with country code
-        if len(vat_number) != 9 or not vat_number.isdigit():
-            return False
-    elif country == 'FR':
-        # French VAT: 11 characters total (FR + 2 letters + 9 digits)
-        # But in our pattern, vat_number is after country code, so it's 2 letters + 9 digits = 11
-        if len(vat_number) != 11:
-            return False
-        if not (vat_number[:2].isalpha() and vat_number[2:].isdigit()):
-            return False
-        # Check that letters are valid (typically A-Z)
-        if not vat_number[:2].isupper():
-            return False
-    elif country == 'IT':
-        # Italian VAT: 11 digits
-        if len(vat_number) != 11 or not vat_number.isdigit():
-            return False
-    elif country == 'ES':
-        # Spanish VAT: 9 characters (1 letter + 8 digits or 8 digits + 1 letter)
-        if len(vat_number) != 9:
-            return False
-    elif country == 'NL':
-        # Dutch VAT: 12 characters (2 letters + 9 digits + B + 2 digits)
-        if len(vat_number) != 12:
-            return False
-    
-    # Basic validation passed
-    # Full checksum validation would require country-specific implementations
-    
-    # Reject obviously invalid country codes (XX is reserved/unassigned)
-    if country in ['XX', 'ZZ']:
-        return False
-    
+        from metacrafterext.rules.de.validators import validate_de_ust
+        return validate_de_ust(vat)
+    if country == 'FR':
+        from metacrafterext.rules.fr.validators import validate_fr_vat
+        return validate_fr_vat(vat)
     return True
 
 
@@ -1283,7 +1241,12 @@ def validate_ulid(value):
     # Check all characters are valid
     if not all(c in valid_chars for c in ulid):
         return False
-    
+
+    # 26 Base32 characters carry 130 bits; a ULID has 128, so the first
+    # character is at most 7 (the largest ULID is 7ZZZZZZZZZZZZZZZZZZZZZZZZZ).
+    if ulid[0] not in '01234567':
+        return False
+
     return True
 
 

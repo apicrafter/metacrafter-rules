@@ -87,29 +87,22 @@ rules:
     type: field
     rule: id,uniqueid,unique_id,uniqid,uniq_id,unique_key,uniquekey,uniqkey,record_id,objectid,object_id,id_unique,id_uniq,globalid,global_id
   booleanbooleanbyknown:
-    key: boolean_boolean
-    name: Boolean Boolean
+    key: boolean
+    name: Boolean flag by field name
     match: text
     type: field
     rule: is_managed_internally,is_mandatory,is_public,is_long
     priority: 1
   activebooleanbyknown:
-    key: active_boolean
-    name: Active Boolean
+    key: boolean
+    name: Active flag by field name
     match: text
     type: field
     rule: active,is_active,is_active_,isactive
     priority: 1
-  filefilebyknown:
-    key: file_file
-    name: File File
-    match: text
-    type: field
-    rule: file_sn,file_stre_cours,file_extsn,file_cn
-    priority: 1
   enabledbooleanbyknown:
-    key: enabled_boolean
-    name: Enabled Boolean
+    key: boolean
+    name: Enabled flag by field name
     match: text
     type: field
     rule: enabled,is_count_enabled_,is_enabled,service_enabled
@@ -122,88 +115,88 @@ rules:
     rule: email_cn,email_verified,user_email,unconfirmed_email
     priority: 1
   createdidbyknown:
-    key: created_id
-    name: Created Id
+    key: userid
+    name: Creator user ID by field name
     match: text
     type: field
-    rule: created_by_id,createdby_id,created_by_user_id,hr_created_by_id,createdByUuid
+    rule: created_by_id,createdby_id,created_by_user_id,hr_created_by_id,createdByUuid,created_by,createdby
     priority: 1
   widthmeasurementbyknown:
     key: width_measurement
-    name: Width Measurement
+    name: Width by field name
     match: text
     type: field
-    rule: width,br_bandwidth,ti_bandwidth_percent,ti_allocated_bandwidth
+    rule: width
     priority: 1
   deletedbooleanbyknown:
-    key: deleted_boolean
-    name: Deleted Boolean
+    key: boolean
+    name: Deleted flag by field name
     match: text
     type: field
     rule: is_deleted
     priority: 1
   confirmedbooleanbyknown:
-    key: confirmed_boolean
-    name: Confirmed Boolean
+    key: boolean
+    name: Confirmed flag by field name
     match: text
     type: field
-    rule: confirmed_at,is_confirmed
+    rule: is_confirmed
     priority: 1
   percentagemeasurementbyknown:
-    key: percentage_measurement
-    name: Percentage Measurement
+    key: percentage
+    name: Percentage by field name
     match: text
     type: field
     rule: percentage,i_upper_limit_percentage,i_lower_limit_percentage,ic_upper_limit_percentage
     priority: 1
   pathfilebyknown:
     key: path_file
-    name: Path File
+    name: Image file path by field name
     match: text
     type: field
     rule: image_path,imagepath,relate_image_path
     priority: 1
   modifiedidbyknown:
-    key: modified_id
-    name: Modified Id
+    key: userid
+    name: Last editor user ID by field name
     match: text
     type: field
-    rule: lastmodifiedby_id
+    rule: lastmodifiedby_id,lastmodifiedby,modified_by,updated_by
     priority: 1
   disabledbooleanbyknown:
-    key: disabled_boolean
-    name: Disabled Boolean
+    key: boolean
+    name: Disabled flag by field name
     match: text
     type: field
     rule: disabled_m,is_disabled
     priority: 1
   sizemeasurementbyknown:
-    key: size_measurement
-    name: Size Measurement
+    key: datasize
+    name: Volume size by field name
     match: text
     type: field
     rule: volume_size
     priority: 1
   lengthfilebyknown:
-    key: length_file
-    name: Length File
+    key: datasize
+    name: Data length by field name
     match: text
     type: field
-    rule: window_length,msg_length,bin_length,ahrc_resource_length
+    rule: msg_length,bin_length,ahrc_resource_length
     priority: 1
   heightmeasurementbyknown:
     key: height_measurement
-    name: Height Measurement
+    name: Height by field name
     match: text
     type: field
     rule: height
     priority: 1
   sizefilebyknown:
-    key: size_file
-    name: Size File
+    key: datasize
+    name: Data size by field name
     match: text
     type: field
-    rule: byte_size,content_size_,p_size,popup_vrticl_size
+    rule: byte_size,content_size_
     priority: 1
   mimetypebyknown1:
     key: mime_type

@@ -26,31 +26,30 @@ This document provides comprehensive documentation for all validation functions 
 **Rule**: `rules/eu/eu_tax.yaml:vatvalue`
 
 **Description**:  
-Validates EU VAT numbers using country-specific format validation. Supports all 27 EU member states with country-specific length and format checks.
+Validates EU VAT numbers in the compact form that the VIES system checks: the country prefix and the national number, with no spaces or other separators.
 
 **Algorithm**:  
-- Country-specific format validation
-- Length checks per country (AT=9, BE=10, DE=9, FR=11, etc.)
-- Basic structure validation
+- VIES format of each member state (for example `DE` + 9 digits, `FR` + 2-character key + 9 digits, `NL` + 9 digits + `B` + 2 digits)
+- German and French check digits (`validate_de_ust`, `validate_fr_vat`)
 - Invalid pattern detection (all zeros, all same digit)
 
 **Supported Countries**:  
-AT, BE, BG, CY, CZ, DE, DK, EE, ES, FI, FR, GR, HR, HU, IE, IT, LT, LU, LV, MT, NL, PL, PT, RO, SE, SI, SK
+AT, BE, BG, CY, CZ, DE, DK, EE, EL (Greece), ES, FI, FR, HR, HU, IE, IT, LT, LU, LV, MT, NL, PL, PT, RO, SE, SI, SK, XI (Northern Ireland)
 
 **Usage**:
 ```python
 from metacrafterext.rules.common.identifiers import validate_eu_vat
 
 # Auto-detect country from VAT number
-validate_eu_vat('DE123456789')  # True
+validate_eu_vat('DE136695976')  # True
 
 # Specify country explicitly
-validate_eu_vat('DE123456789', country_code='DE')  # True
+validate_eu_vat('DE136695976', country_code='DE')  # True
 ```
 
 **Examples**:
-- Valid: `DE123456789`, `FRAB123456789`, `IT12345678901`
-- Invalid: `DE000000000`, `XX123456789`, `DE12345` (too short)
+- Valid: `DE136695976`, `FR40303265045`, `IT00743110157`, `NL004495445B01`
+- Invalid: `DE136695978` (check digit), `GR072830684` (Greece uses EL), `DE 136695976` (separators), `DE12345` (too short)
 
 ---
 
@@ -124,25 +123,25 @@ validate_es_nie('X1234567A')  # False (wrong checksum)
 **Rule**: `rules/de/de_tax.yaml:dehrbvalue`
 
 **Description**:  
-Validates German Handelsregisternummer (HRB) format. HRB is a commercial register number for companies in Germany.
+Validates German commercial register numbers (Handelsregisternummer), which the local courts keep.
 
 **Format**:  
-- Single uppercase letter (A-Z) representing the registry court
-- Followed by 1-6 digits
-- Total length: 2-7 characters
+- Register section: HRA, HRB, GnR, PR or VR
+- An optional space and 1-6 digits that do not start with 0
+- An optional suffix of 1-3 capital letters for the court, such as B for Berlin-Charlottenburg
 
 **Usage**:
 ```python
 from metacrafterext.rules.de.validators import validate_de_hrb
 
-validate_de_hrb('B123456')  # True
-validate_de_hrb('H12345')  # True
-validate_de_hrb('B0')  # False (all zeros)
+validate_de_hrb('HRB 12345 B')  # True
+validate_de_hrb('GnR 11223')  # True
+validate_de_hrb('H12345')  # False (no register section)
 ```
 
 **Examples**:
-- Valid: `B123456`, `H12345`, `M1234`
-- Invalid: `B0` (all zeros), `B1234567` (too long), `123456` (missing letter)
+- Valid: `HRA 11223`, `HRB 12345 B`, `GnR 11223`
+- Invalid: `H12345` (no register section), `HRC 44123` (no section HRC), `HRB 0123` (leading 0)
 
 **Note**: Rule remains marked as `imprecise: 1` but validator significantly reduces false positives.
 

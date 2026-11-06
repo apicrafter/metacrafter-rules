@@ -15,11 +15,11 @@ rules:
     fieldrule: ano,anio
     fieldrulematch: text
   esmonthbydatafiltered:
-    key: year
+    key: month
     name: Spanish month by fieldname and value
-    maxlen: 1
-    minlen: 2
-    rule: Word(nums, exact=1) ^ (Literal('1') + (Literal('1') ^ Literal('2')))
+    maxlen: 2
+    minlen: 1
+    rule: (Optional(Literal('0')) + Word('123456789', exact=1)) ^ (Literal('1') + Word('012', exact=1))
     match: ppr
     type: data
     fieldrule: mes

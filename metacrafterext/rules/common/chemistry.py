@@ -9,7 +9,7 @@ import re
 
 
 def validate_inchi(value):
-    """
+    r"""
     Validates InChI (International Chemical Identifier) format.
     
     InChI format: InChI=1S?/... or InChI=1/...

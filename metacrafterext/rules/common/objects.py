@@ -3,7 +3,7 @@ import re
 
 def strip_useless(s):
     """Removes unnssesary"""
-    return re.sub("\D","X", re.sub("\W","", s))
+    return re.sub(r"\D", "X", re.sub(r"\W", "", s))
 
 def valid_isbn10(s):
     """Returns true is ISBN-10 valid else False"""

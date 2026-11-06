@@ -26,9 +26,9 @@ rules:
     name: International Standard Book Number (ISBN-13) with dashes
     match: ppr
     type: data
-    rule: Word(nums, exact=3) + Literal('-').suppress() + Word(nums, exact=1) + Literal('-').suppress() + Word(nums, exact=3) + Literal('-').suppress() + Word(nums, exact=5) + Literal('-').suppress() + Word(nums, exact=1)
+    rule: Word(nums) + Literal('-') + Word(nums) + ZeroOrMore(Literal('-') + Word(nums))
     maxlen: 17
-    minlen: 17
+    minlen: 14
     priority: 2
     validator: metacrafterext.rules.common.identifiers.validate_isbn13
   isbn10field:
@@ -53,9 +53,9 @@ rules:
     name: International Standard Book Number (ISBN-10) with dashes
     match: ppr
     type: data
-    rule: Word(nums, exact=1) + Literal('-').suppress() + Word(nums, exact=2) + Literal('-').suppress() + Word(nums, exact=6) + Literal('-').suppress() + Word('0123456789X', exact=1)
+    rule: Word(nums) + Literal('-') + Word(nums + 'Xx') + ZeroOrMore(Literal('-') + Word(nums + 'Xx'))
     maxlen: 13
-    minlen: 13
+    minlen: 11
     priority: 2
     validator: metacrafterext.rules.common.identifiers.validate_isbn10
   objects_gtinfield:

@@ -100,44 +100,44 @@ rules:
     imprecise: 1
     priority: 3
   timestampdatebyknown:
-    key: timestamp_date
-    name: Timestamp Date
+    key: datetime
+    name: Timestamp by field name
     match: text
     type: field
-    rule: registration_timestamp,modification_timestamp,valid_until_timestamp,valid_from_timestamp
+    rule: registration_timestamp,modification_timestamp,valid_until_timestamp,valid_from_timestamp,confirmed_at
     priority: 1
   createddatebyknown:
-    key: created_date
-    name: Created date timestamp
+    key: datetime
+    name: Creation timestamp by field name
     match: text
     type: field
-    rule: created_by,createdby,created_on,date_created
+    rule: created_on,date_created,create_time,create_time_
     priority: 1
   modifieddatebyknown:
-    key: modified_date
-    name: Modified date timestamp
+    key: datetime
+    name: Modification timestamp by field name
     match: text
     type: field
-    rule: lastmodifiedby,modified,lastmodifieddate,modified_by
+    rule: modified,lastmodifieddate
     priority: 1
   updateddatebyknown:
-    key: updated_date
-    name: Updated date timestamp
+    key: datetime
+    name: Update timestamp by field name
     match: text
     type: field
-    rule: updated_by,updated_on,last_updated,date_updated
+    rule: updated_on,last_updated,date_updated,update_time
     priority: 1
   datedatebyknown:
-    key: date_date
-    name: Date Date
+    key: date
+    name: Date by field name
     match: text
     type: field
-    rule: expiry_date,settlement_date,maturity_date,update_time
+    rule: expiry_date,settlement_date,maturity_date
     priority: 1
   timedatebyknown:
-    key: time_date
-    name: Time Date
+    key: time
+    name: Time by field name
     match: text
     type: field
-    rule: create_time,create_time_,start_time,end_time
+    rule: start_time,end_time
     priority: 1
