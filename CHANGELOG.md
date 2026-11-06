@@ -52,6 +52,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- **Russian OGRN is detected by value and by more field names** (`rules/ru/ru_orgs.yaml`):
+  - `ruogrn` is no longer `imprecise`, so default scans run it (before, OGRN values were
+    never matched unless `--include-imprecise` was given). It also accepts 15-digit
+    OGRNIP numbers.
+  - `_check_ogrn` checks the number structure as well as the check digit: sign digit
+    (1 or 5 for OGRN, 3 for OGRNIP), registration year (since 2002 for OGRN, 2004 for
+    OGRNIP, not after the current year) and a non-zero region code. Random 13-digit
+    numbers now pass about 0.5% of the time instead of about 10%.
+  - The field-name rule `ruogrnknown` reports `ogrn` instead of the draft `ogrn_ogrnip`,
+    so a matching field name raises the value score. It also matches OGRNIP and common
+    variants (`ogrnip`, `ОГРНИП`, `ОГРН/ОГРНИП`, `ogrn_code`, `ОГРН ЮЛ`,
+    `ОГРН организации`, …); `ruogrnfulltext` matches the full names of OGRN and OGRNIP.
+- `rutitleknown` (key `name`) no longer lists `ИНН`, `КПП`, `ОКПО` and `ОГРН`, so these
+  columns are not labelled `name`.
 - `validate_semver`: calendar dates written as dotted numbers (for example
   `31.5.2019`, `1.2.2019`, `2019.5.31`) are no longer accepted as semantic
   versions. Fields such as `dc:created` / `dc:valid` are no longer misclassified
