@@ -486,6 +486,14 @@ class TestASNValidation:
         assert validate_asn(123456) == False
         assert validate_asn([]) == False
 
+    def test_as_prefix(self):
+        """The AS prefix is part of the usual notation."""
+        assert validate_asn("AS64496") is True
+        assert validate_asn("as174") is True
+        assert validate_asn("AS0") is False
+        assert validate_asn("AS4294967296") is False
+        assert validate_asn("AS 64496") is False
+
 
 class TestLanguageTagValidation:
     """Tests for IETF BCP 47 language tag validation."""

@@ -16,9 +16,9 @@ rules:
     name: German vehicle license plate by pattern
     match: ppr
     type: data
-    rule: Word(alphas, min=1, max=3) + Literal('-').suppress() + Word(alphas, min=1, max=2) + Optional(Literal(' ').suppress()) + Word(nums, min=1, max=4)
+    rule: Word('ABCDEFGHIJKLMNOPQRSTUVWXYZÄÖÜ', min=1, max=3) + Optional(Literal('-')) + Word('ABCDEFGHIJKLMNOPQRSTUVWXYZ', min=1, max=2) + Word('123456789', nums, max=4) + Optional(Word('EH', exact=1))
     minlen: 5
-    maxlen: 10
+    maxlen: 12
     priority: 1
     validator: metacrafterext.rules.de.transport.validate_de_vehicle_plate
 

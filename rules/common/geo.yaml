@@ -153,15 +153,22 @@ rules:
     priority: 1
     imprecise: 1
   addressaddressbyknown:
-    key: address_address
-    name: Address Address
+    key: address
+    name: Address line 1 by field name
     match: text
     type: field
-    rule: address1,address2,address_line_1,address_line_2
+    rule: address1,address_line_1
+    priority: 1
+  addressline2byknown:
+    key: address_line2
+    name: Address line 2 by field name
+    match: text
+    type: field
+    rule: address2,address_line_2
     priority: 1
   countrygeobyknown:
-    key: country_geo
-    name: Country Geo
+    key: country
+    name: Country by field name
     match: text
     type: field
     rule: country_code,countryId,countryid,address_country
@@ -174,29 +181,29 @@ rules:
     rule: street_address,street2,street1,addressstreet
     priority: 1
   latgeobyknown:
-    key: lat_geo
-    name: Lat Geo
+    key: latitude
+    name: Latitude by field name
     match: text
     type: field
-    rule: stop_lat,geo_lat,cos_latitude,sin_latitude
+    rule: stop_lat,geo_lat
     priority: 1
   longeobyknown:
-    key: lon_geo
-    name: Lon Geo
+    key: longitude
+    name: Longitude by field name
     match: text
     type: field
-    rule: stop_lon,cos_longitude,sin_longitude
+    rule: stop_lon
     priority: 1
   coordinategeobyknown:
-    key: coordinate_geo
-    name: Coordinate Geo
+    key: geopoint
+    name: Coordinates by field name
     match: text
     type: field
     rule: coordinates
     priority: 1
   continentgeobyknown:
-    key: continent_geo
-    name: Continent Geo
+    key: continent
+    name: Continent by field name
     match: text
     type: field
     rule: continent_name

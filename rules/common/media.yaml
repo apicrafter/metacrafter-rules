@@ -15,9 +15,9 @@ rules:
     name: ISBN by pattern
     match: ppr
     type: data
-    rule: (Word(nums, exact=10) | (Word(nums, exact=9) + Word('Xx', exact=1))) | (Literal('978') + Word(nums, exact=10) | Literal('979') + Word(nums, exact=10))
+    rule: Word(nums + 'Xx') + ZeroOrMore(Literal('-') + Word(nums + 'Xx'))
     validator: metacrafterext.rules.common.identifiers.validate_isbn
-    maxlen: 13
+    maxlen: 17
     minlen: 10
   issnfield:
     key: issn

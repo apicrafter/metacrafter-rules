@@ -51,6 +51,7 @@ rules:
     name: IBAN by value pattern
     match: ppr
     type: data
-    rule: Word('ABCDEFGHIJKLMNOPQRSTUVWXYZ', exact=2) + Word(nums, exact=2) + Word(alphanums, min=10, max=28)
-    maxlen: 34
-    minlen: 14
+    rule: Word('ABCDEFGHIJKLMNOPQRSTUVWXYZ', exact=2) + Word(nums, exact=2) + Word('ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789', min=1, max=4) + ZeroOrMore(Word('ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789', min=1, max=4))
+    maxlen: 42
+    minlen: 15
+    validator: metacrafterext.rules.common.identifiers.validate_iban

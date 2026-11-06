@@ -57,12 +57,11 @@ This document provides a comprehensive inventory of all validation functions cur
 - **Status**: ✅ Implemented
 
 #### `validate_eu_vat(value, country_code=None)`
-- **Algorithm**: Country-specific (MOD-11, MOD-97, MOD-23, etc.)
-- **Format**: 2-letter country code + 6-12 alphanumeric characters
-- **Length**: 8-14 characters
-- **Supported Countries**: All 27 EU member states
+- **Algorithm**: VIES format of each member state; check digits for DE (`validate_de_ust`) and FR (`validate_fr_vat`)
+- **Format**: country prefix (EL for Greece, XI for Northern Ireland) + national number, no separators
+- **Supported Countries**: All 27 EU member states and XI
 - **Used By**: `rules/eu/eu_tax.yaml:vatvalue`
-- **Status**: ✅ Implemented (basic format validation, country-specific checksums partially implemented)
+- **Status**: ✅ Implemented
 
 #### `validate_euid(value)`
 - **Algorithm**: Format validation only
@@ -123,9 +122,9 @@ This document provides a comprehensive inventory of all validation functions cur
 
 #### `validate_asn(value)`
 - **Algorithm**: Range validation (1-4294967295)
-- **Format**: Numeric string
+- **Format**: Numeric string, optionally prefixed with AS
 - **Length**: 1-10 digits
-- **Used By**: `rules/common/internet.yaml:asnbyvalue`
+- **Used By**: `rules/common/internet.yaml:asnbyvalue`, `rules/common/internet.yaml:asnbyprefixname`
 - **Status**: ✅ Implemented (still marked imprecise)
 
 ### International Codes
@@ -218,10 +217,15 @@ This document provides a comprehensive inventory of all validation functions cur
 
 #### `validate_de_hrb(value)`
 - **Algorithm**: Format validation
-- **Format**: 1 uppercase letter + 1-6 digits
-- **Length**: 2-7 characters
+- **Format**: register section (HRA, HRB, GnR, PR, VR) + optional space + 1-6 digits not starting with 0 + optional court suffix of 1-3 letters (`HRB 12345 B`)
 - **Used By**: `rules/de/de_tax.yaml:dehrbvalue`
 - **Status**: ✅ Implemented (still marked imprecise)
+
+#### `validate_de_ust(value)`
+- **Algorithm**: ISO 7064 MOD 11,10 check digit
+- **Format**: DE + 9 digits, the first not 0
+- **Used By**: `rules/de/de_tax.yaml:deustvalue`
+- **Status**: ✅ Implemented
 
 #### `validate_de_ops(value)`
 - **Algorithm**: Format validation with year filtering
@@ -238,8 +242,8 @@ This document provides a comprehensive inventory of all validation functions cur
 **Location**: `metacrafterext/rules/fr/validators.py`
 
 #### `validate_fr_vat(value)`
-- **Algorithm**: MOD-11 checksum (format validation implemented)
-- **Format**: FR + 2 letters + 9 digits
+- **Algorithm**: key = (12 + 3 × (SIREN mod 97)) mod 97 for numeric keys, the python-stdnum check for keys with a letter; Luhn check of the SIREN
+- **Format**: FR + 2-character key (0-9, A-Z without I and O) + 9-digit SIREN
 - **Length**: 13 characters (FR + 11)
 - **Used By**: `rules/fr/fr_tax.yaml:frvatvalue`
 - **Status**: ✅ Implemented

@@ -7,20 +7,20 @@ rules:
   isbn13:
     key: isbn13
     name: International Standard Book Number (ISBN)
-    rule: Word(nums, exact=3) + Literal('-').suppress() + Word(nums, exact=1) + Literal('-').suppress() + Word(nums, exact=2) + Literal('-').suppress() + Word(nums, exact=6) + Literal('-').suppress() + Word(nums, exact=1)
-    validator: metacrafterext.rules.common.objects.valid_isbn13
+    rule: Word(nums) + Literal('-') + Word(nums) + ZeroOrMore(Literal('-') + Word(nums))
+    validator: metacrafterext.rules.common.identifiers.validate_isbn13
     maxlen: 17
-    minlen: 17
+    minlen: 14
     priority: 1
     match: ppr
     type: data
   isbn10:
     key: isbn10
     name: International Standard Book Number (ISBN)
-    rule: Word(nums, exact=1) + Literal('-').suppress() + Word(nums, exact=2) + Literal('-').suppress() + Word(nums, exact=6) + Literal('-').suppress() + Word(nums, exact=1)
-    validator: metacrafterext.rules.common.objects.valid_isbn10
+    rule: Word(nums) + Literal('-') + Word(nums + 'Xx') + ZeroOrMore(Literal('-') + Word(nums + 'Xx'))
+    validator: metacrafterext.rules.common.identifiers.validate_isbn10
     maxlen: 13
-    minlen: 13
+    minlen: 11
     priority: 1
     match: ppr
     type: data
