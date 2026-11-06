@@ -1,4 +1,6 @@
 
+import datetime
+
 from pyparsing import oneOf, lineStart, ParseException, Word, printables, Optional
 
 RU_ORG_PREFIXES = ['ооо',
@@ -242,17 +244,37 @@ def _check_inn(code):
     return False
 
 
+OGRN_FIRST_YEAR = 2      # OGRN numbers are issued since 2002
+OGRNIP_FIRST_YEAR = 4    # OGRNIP numbers are issued since 2004
+
+
 def _check_ogrn(ogrn):
-    """Validates OGRN code"""
-    if not ogrn:
+    """Validates OGRN (13 digits) and OGRNIP (15 digits) codes.
+
+    Structure: sign digit (1 or 5 for OGRN, 3 for OGRNIP), two digits of the
+    registration year, two digits of the region code, record number, check digit.
+    """
+    if not ogrn or not isinstance(ogrn, str):
+        return False
+    if not (ogrn.isascii() and ogrn.isdigit()):
         return False
     if len(ogrn) == 13:
         delimeter = 11
+        signs = ('1', '5')
+        first_year = OGRN_FIRST_YEAR
     elif len(ogrn) == 15:
         delimeter = 13
+        signs = ('3',)
+        first_year = OGRNIP_FIRST_YEAR
     else:
         return False
-    if not ogrn.isdigit(): return False
+    if ogrn[0] not in signs:
+        return False
+    year = int(ogrn[1:3])
+    if year < first_year or year > datetime.date.today().year % 100:
+        return False
+    if ogrn[3:5] == '00':
+        return False
     main_part = int(ogrn[:-1]) % delimeter % 10
     checksum = int(ogrn[-1])
 

@@ -25,8 +25,11 @@ rules:
     match: text
   ruogrnfulltext:
     key: ogrn
-    name: Russian INN code by fulltext
-    rule: государственный регистрационный номер записи о создании юридического лица
+    name: Russian OGRN code by fulltext
+    rule: государственный регистрационный номер записи о создании юридического лица,основной
+      государственный регистрационный номер,основной государственный регистрационный номер
+      (огрн),основной государственный регистрационный номер индивидуального предпринимателя,основной
+      государственный регистрационный номер индивидуального предпринимателя (огрнип),osnovnoy_gosudarstvennyy_registratsionnyy_nomer
     type: field
     match: text
   rukppknown:
@@ -36,9 +39,12 @@ rules:
     type: field
     match: text
   ruogrnknown:
-    key: ogrn_ogrnip
-    name: Russian OGRN code by field name
-    rule: ogrn,огрн,код ОГРН/ОГРИП,ОГРН ФОИВ
+    key: ogrn
+    name: Russian OGRN/OGRNIP code by field name
+    rule: ogrn,огрн,ogrnip,огрнип,ogrn_ogrnip,ogrn_ip,ogrn_ul,ogrn_code,ogrncode,код огрн,код
+      ОГРН/ОГРИП,код ОГРН/ОГРНИП,ОГРН/ОГРНИП,ОГРН / ОГРНИП,ОГРН (ОГРНИП),ОГРН ФОИВ,ОГРН ЮЛ,ОГРН
+      ИП,ОГРН организации,ОГРН юридического лица,ОГРН заказчика,ОГРН поставщика,ОГРН лицензиата,ОГРН
+      индивидуального предпринимателя
     type: field
     match: text
   ruinn:
@@ -62,14 +68,13 @@ rules:
     validator: metacrafterext.rules.ru.orgs._check_kpp
   ruogrn:
     key: ogrn
-    name: Russian OGRN tax identifier
-    maxlen: 13
+    name: Russian OGRN (13 digits) or OGRNIP (15 digits) registration number
+    maxlen: 15
     minlen: 13
     priority: 1
     match: func
     type: data
     rule: metacrafterext.rules.ru.orgs._check_ogrn
-    imprecise: 1
   ruorgname:
     key: orgname
     name: Russian organization name
