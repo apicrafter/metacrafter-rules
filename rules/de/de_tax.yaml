@@ -17,9 +17,10 @@ rules:
     name: USt-IdNr. anhand Wert
     match: ppr
     type: data
-    rule: Literal('DE') + Word(nums, exact=9)
+    rule: Literal('DE') + Word('123456789', nums, exact=9)
     maxlen: 11
     minlen: 11
+    validator: metacrafterext.rules.de.validators.validate_de_ust
   detaxidfield:
     key: steuerid
     is_pii: True
@@ -52,9 +53,9 @@ rules:
     name: Handelsregisternummer anhand Wert
     match: ppr
     type: data
-    rule: Word('ABCDEFGHIJKLMNOPQRSTUVWXYZ', exact=1) + Word(nums, min=1, max=6)
-    maxlen: 7
-    minlen: 2
+    rule: oneOf('HRA HRB GnR PR VR') + Word('123456789', nums, max=6) + Optional(Word('ABCDEFGHIJKLMNOPQRSTUVWXYZ', min=1, max=3))
+    maxlen: 14
+    minlen: 3
     validator: metacrafterext.rules.de.validators.validate_de_hrb
     imprecise: 1
     priority: 2

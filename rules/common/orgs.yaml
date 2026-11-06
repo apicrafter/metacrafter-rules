@@ -30,9 +30,16 @@ rules:
     validator: metacrafterext.rules.common.identifiers.validate_duns
     imprecise: 1
   companycompanybyknown:
-    key: company_company
-    name: Company Company
+    key: orgname
+    name: Company by field name
     match: text
     type: field
-    rule: company,companyId,companyid,company_companyid,company_recid
+    rule: company
+    priority: 1
+  companyidbyknown:
+    key: id
+    name: Company record ID by field name
+    match: text
+    type: field
+    rule: companyId,companyid,company_companyid,company_recid
     priority: 1

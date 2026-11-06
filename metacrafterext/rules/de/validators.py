@@ -1,6 +1,7 @@
 """
 Validation functions for German-specific identifiers.
 """
+import re
 
 
 def validate_de_steuer_id(value):
@@ -58,57 +59,69 @@ def validate_de_steuer_id(value):
     return check == int(idnr[10])
 
 
+def _iso7064_mod11_10_check(digits):
+    """Check digit of a digit string by ISO 7064 MOD 11,10."""
+    product = 10
+    for ch in digits:
+        total = (int(ch) + product) % 10
+        if total == 0:
+            total = 10
+        product = (total * 2) % 11
+    return (11 - product) % 10
+
+
+_DE_HRB_RE = re.compile(r'^(?:HRA|HRB|GnR|PR|VR) ?[1-9][0-9]{0,5}(?: ?[A-Z]{1,3})?$')
+
+
 def validate_de_hrb(value):
     """
-    Validates German HRB (Handelsregisternummer) format.
-    
-    German HRB format:
-    - Single uppercase letter (A-Z) representing the registry court
-    - Followed by 1-6 digits
-    - Total length: 2-7 characters
-    - Common prefixes: B (Berlin), H (Hamburg), M (Munich), etc.
-    
+    Validates a German commercial register number (Handelsregisternummer).
+
+    The number is the register section and the entry number of up to six
+    digits, optionally followed by a suffix of the court, such as B for
+    Berlin-Charlottenburg:
+
+    - Section: HRA (sole traders and partnerships), HRB (corporations),
+      GnR (cooperatives), PR (partnerships of liberal professions) or VR
+      (associations).
+    - An optional space, then 1-6 digits that do not start with 0.
+    - An optional suffix of 1-3 capital letters, optionally after a space.
+
+    Examples: ``HRA 11223``, ``HRB 12345 B``, ``GnR 11223``.
+
     Args:
-        value: HRB number string (may include spaces or dashes)
-        
+        value: register number string
+
     Returns:
-        bool: True if valid HRB format, False otherwise
+        bool: True if the value has the format of a register number.
     """
     if not isinstance(value, str):
         return False
-    
-    hrb = value.replace(' ', '').replace('-', '').replace('.', '').upper()
-    
-    # Length check: 2-7 characters total
-    # But number part must be 1-6 digits, so min is 2 (1 letter + 1 digit), max is 7 (1 letter + 6 digits)
-    if len(hrb) < 2 or len(hrb) > 7:
+    return _DE_HRB_RE.match(value.strip()) is not None
+
+
+def validate_de_ust(value):
+    """
+    Validates a German VAT identification number (USt-IdNr.).
+
+    The number is ``DE`` and 9 digits; the first digit is not 0 and the last
+    one is a check digit of the first eight by ISO 7064 MOD 11,10.
+
+    Args:
+        value: USt-IdNr. string such as ``DE136695976``
+
+    Returns:
+        bool: True if the value is a valid USt-IdNr.
+    """
+    if not isinstance(value, str):
         return False
-    
-    # Format: Single letter + 1-6 digits
-    if not hrb[0].isalpha() or not hrb[0].isupper():
+    number = value.strip()
+    if len(number) != 11 or not number.startswith('DE'):
         return False
-    
-    letter = hrb[0]
-    number_part = hrb[1:]
-    
-    # Number part must be 1-6 digits
-    if len(number_part) < 1 or len(number_part) > 6:
+    digits = number[2:]
+    if not digits.isdigit() or not digits.isascii() or digits[0] == '0':
         return False
-    
-    if not number_part.isdigit():
-        return False
-    
-    # Check for obviously invalid patterns
-    # All zeros
-    if number_part == '0' * len(number_part):
-        return False
-    
-    # Common valid registry court letters (not exhaustive, but helps filter)
-    # All uppercase letters A-Z are technically valid for different courts
-    # We accept any uppercase letter as valid
-    
-    # Basic format validation passed
-    return True
+    return _iso7064_mod11_10_check(digits[:8]) == int(digits[8])
 
 
 def validate_de_ops(value):
