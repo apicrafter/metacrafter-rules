@@ -5,15 +5,15 @@ lang: ar
 country_code: xx
 rules:
   arpersonnameknown:
-    key: person_name
+    key: person_fullname
     is_pii: True
     name: Arabic person name by known name
-    rule: اسم_الشخص,الاسم_الكامل,اسم_المستخدم,الاسم
+    rule: اسم_الشخص,الاسم_الكامل,الاسم
     type: field
     match: text
     priority: 1
   arfirstnameknown:
-    key: firstname
+    key: person_firstname
     is_pii: True
     name: Arabic first name by known name
     rule: الاسم_الأول,الاسم_الشخصي
@@ -21,7 +21,7 @@ rules:
     match: text
     priority: 1
   arlastnameknown:
-    key: lastname
+    key: person_surname
     is_pii: True
     name: Arabic last name by known name
     rule: اسم_العائلة,اللقب,اسم_الأسرة

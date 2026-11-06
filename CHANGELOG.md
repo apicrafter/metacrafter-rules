@@ -52,6 +52,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- **Person name rules report the universal registry datatypes** (apicrafter/metacrafter#42).
+  In metacrafter-registry, `person_name` is a Chinese record (country CN), and `firstname`
+  and `lastname` are Indian records (country IN). Country rules used them for every
+  country:
+  - Full-name rules for `au`, `in`, `sg`, `it`, `pt`, `br`, `nl`, `jp`, `ar`, `mx` and
+    `ar_country` report `person_fullname`. First-name and last-name rules for `in`, `it`,
+    `pt`, `br`, `nl`, `jp`, `ar` and `zh` report `person_firstname` and `person_surname`.
+    Only the Chinese full-name rules (`cn`, `zh`) still report `person_name`.
+  - The universal rule `fullname` (`rules/common/persons.yaml`) also matches `full_name`,
+    `person_name`, `person_full_name` and `full_person_name`. A `full_name` field is now
+    labelled in every country, also with `--country-codes` set to a country without its
+    own rule (before, only the `au`, `in` and `sg` rules labelled it).
+  - The universal first-name and surname rules also match `given_name` and `family_name`.
+  - `Last Name` is a surname: it moved from the `midname` rule to `surname`, and
+    `midname` matches `Middle Name`.
+  - Full-name rules no longer match a surname (`cognome`, `it`) or a user name
+    (`ユーザー名`, `jp`; `اسم_المستخدم`, `ar`).
+- **File extensions** (`rules/common/common.yaml`): `fileextensionbyknown` labels
+  `file_extension`, `fileextension`, `file_ext` and `fileext` fields as `file_extension`.
+  `fileextensionbyvalue` labels `extension`, `extensions` and `ext` fields when their values
+  are extensions: an optional dot and 1–10 letters and digits that start with a letter
+  (`zip`, `.docx`). Phone extensions (`101`) do not match.
 - **Russian OGRN is detected by value and by more field names** (`rules/ru/ru_orgs.yaml`):
   - `ruogrn` is no longer `imprecise`, so default scans run it (before, OGRN values were
     never matched unless `--include-imprecise` was given). It also accepts 15-digit

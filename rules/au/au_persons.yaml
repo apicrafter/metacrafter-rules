@@ -5,7 +5,7 @@ lang: en
 country_code: au
 rules:
   aupersonnameknown:
-    key: person_name
+    key: person_fullname
     is_pii: True
     name: Australian person name by known name
     rule: full_name,person_name,customer_name

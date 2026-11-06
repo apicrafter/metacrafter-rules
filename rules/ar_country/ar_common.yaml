@@ -13,7 +13,7 @@ rules:
     match: text
     priority: 1
   ar_common_arpersonnameknown:
-    key: person_name
+    key: person_fullname
     is_pii: True
     name: Argentine person name by known name
     rule: nombre_completo,nombre_persona

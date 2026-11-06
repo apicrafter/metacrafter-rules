@@ -5,15 +5,15 @@ lang: it
 country_code: it
 rules:
   itpersonnameknown:
-    key: person_name
+    key: person_fullname
     is_pii: True
     name: Italian person name by known name
-    rule: nome_completo,cognome,nome_persona
+    rule: nome_completo,nome_persona
     type: field
     match: text
     priority: 1
   itfirstnameknown:
-    key: firstname
+    key: person_firstname
     is_pii: True
     name: Italian first name by known name
     rule: nome,primo_nome
@@ -21,7 +21,7 @@ rules:
     match: text
     priority: 1
   itlastnameknown:
-    key: lastname
+    key: person_surname
     is_pii: True
     name: Italian last name by known name
     rule: cognome,ultimo_nome

@@ -5,15 +5,15 @@ lang: ja
 country_code: jp
 rules:
   jppersonnameknown:
-    key: person_name
+    key: person_fullname
     is_pii: True
     name: Japanese person name by known name
-    rule: 氏名,名前,フルネーム,本名,ユーザー名
+    rule: 氏名,名前,フルネーム,本名
     type: field
     match: text
     priority: 1
   jpfirstnameknown:
-    key: firstname
+    key: person_firstname
     is_pii: True
     name: Japanese first name by known name
     rule: 名,名前,ファーストネーム
@@ -21,7 +21,7 @@ rules:
     match: text
     priority: 1
   jplastnameknown:
-    key: lastname
+    key: person_surname
     is_pii: True
     name: Japanese last name by known name
     rule: 姓,名字,苗字,ラストネーム
