@@ -13,6 +13,24 @@ rules:
     match: text
     type: field
     rule: filename,file_name
+  fileextensionbyknown:
+    key: file_extension
+    name: File name extension by known name
+    priority: 1
+    match: text
+    type: field
+    rule: file_extension,fileextension,file_ext,fileext
+  fileextensionbyvalue:
+    key: file_extension
+    name: File name extension by value in an extension field
+    minlen: 1
+    maxlen: 11
+    priority: 1
+    match: ppr
+    type: data
+    rule: Optional(Literal('.')) + Word(alphas, alphanums, max=10)
+    fieldrule: extension,extensions,ext
+    fieldrulematch: text
   mimetypebyknown:
     key: mimetype
     name: Mimetype / content type by known names

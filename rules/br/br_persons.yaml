@@ -5,7 +5,7 @@ lang: pt
 country_code: br
 rules:
   brpersonnameknown:
-    key: person_name
+    key: person_fullname
     is_pii: True
     name: Brazilian person name by known name
     rule: nome_completo,nome_pessoa,nome_do_cliente
@@ -13,7 +13,7 @@ rules:
     match: text
     priority: 1
   brfirstnameknown:
-    key: firstname
+    key: person_firstname
     is_pii: True
     name: Brazilian first name by known name
     rule: primeiro_nome,nome_primeiro,primeiro_nome_pessoa
@@ -21,7 +21,7 @@ rules:
     match: text
     priority: 1
   brlastnameknown:
-    key: lastname
+    key: person_surname
     is_pii: True
     name: Brazilian last name by known name
     rule: sobrenome,ultimo_nome,nome_familia,apelido

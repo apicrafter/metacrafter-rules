@@ -13,7 +13,7 @@ rules:
     match: text
     priority: 1
   sgpersonnameknown:
-    key: person_name
+    key: person_fullname
     is_pii: True
     name: Singapore person name by known name
     rule: full_name,person_name,customer_name

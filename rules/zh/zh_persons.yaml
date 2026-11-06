@@ -13,7 +13,7 @@ rules:
     match: text
     priority: 1
   zhfirstnameknown:
-    key: firstname
+    key: person_firstname
     is_pii: True
     name: Chinese first name by known name
     rule: 名,名字,名
@@ -21,7 +21,7 @@ rules:
     match: text
     priority: 1
   zhlastnameknown:
-    key: lastname
+    key: person_surname
     is_pii: True
     name: Chinese last name by known name
     rule: 姓,姓氏
