@@ -59,3 +59,45 @@ def validate_fr_vat(value):
     else:
         check = _FR_VAT_KEY_ALPHABET.index(key[0]) * 34 + _FR_VAT_KEY_ALPHABET.index(key[1]) - 100
     return (int(siren) + 1 + check // 11) % 11 == check % 11
+
+
+# The card with a 12-digit number was issued from 1988 (pilot in Hauts-de-Seine) until the
+# card with a 9-character number replaced it in 2021.
+FR_CNI_FIRST_YEAR = 1988
+FR_CNI_LAST_YEAR = 2021
+
+
+def validate_fr_cni(value):
+    """
+    Validates the number of a French national identity card (CNI) issued from 1988 to 2021.
+
+    The number has 12 digits:
+
+    - digits 1-2: year of issue, digits 3-4: month of issue;
+    - digits 5-7: issuing department and office (before 2017 a 2-digit department
+      and the sub-prefecture, since 2017 a 3-digit department);
+    - digits 8-12: sequence number assigned in chronological order.
+
+    The year must be from 1988 to 2021 and the month from 01 to 12. The number has no
+    check digit: the check digit is character 13 of the second MRZ line, computed over
+    the 12 digits. Digits 5-7 are not checked: their encoding changed in 2017 and few
+    3-digit values are invalid in both forms. The card issued since 2021 has a
+    9-character alphanumeric number and is not matched.
+
+    Args:
+        value: CNI number string (spaces are ignored)
+
+    Returns:
+        bool: True if the value has the structure of a CNI number, False otherwise.
+    """
+    if not isinstance(value, str):
+        return False
+
+    cni = value.replace(' ', '')
+    if len(cni) != 12 or not (cni.isascii() and cni.isdigit()):
+        return False
+
+    year = int(cni[0:2])
+    year += 1900 if year >= FR_CNI_FIRST_YEAR % 100 else 2000
+    month = int(cni[2:4])
+    return FR_CNI_FIRST_YEAR <= year <= FR_CNI_LAST_YEAR and 1 <= month <= 12

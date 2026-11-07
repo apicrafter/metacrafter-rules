@@ -47,6 +47,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   1900 to the current year in digits 4–7. The check digit is not checked, because no
   official source confirms the algorithm. The registry example `784123456789012` (year 1234)
   no longer matches; apicrafter/metacrafter-registry#144 replaces it.
+- **`frcni` on any 12-digit number** (#30). `frcnivalue` and `fr_pii_frcnivalue` had no
+  validator, so random 12-digit numbers, Aadhaar numbers and 12-digit Russian INNs reported
+  `frcni 100`. They now use `validate_fr_cni`. The number of the card issued from 1988 to
+  2021 starts with the year and month of issue, so digits 1–2 must be a year from 88 to 21
+  and digits 3–4 a month from 01 to 12. The number has no check digit (the check digit is
+  character 13 of the MRZ line), and the issuing department in digits 5–7 is not checked.
+  About 4% of random 12-digit numbers pass: on a scan with metacrafter (300 values a
+  column, `--confidence 1`), random numbers report `frcni 4.67`, Aadhaar numbers `frcni 1`
+  and random INNs `frcni 3`; the default confidence of 5 hides them. INNs whose first four
+  digits (region and tax office) read as a year and a month, such as office numbers `01`–`12`
+  of regions `01`–`21` or `89`–`99`, still pass. The 9-character number of the card issued
+  since 2021 is not matched.
 
 New examples in metacrafter-registry (`34a946c`) that the rules handled wrongly (#19):
 

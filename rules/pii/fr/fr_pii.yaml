@@ -42,6 +42,7 @@ rules:
     match: ppr
     type: data
     rule: Word(nums, exact=12)
+    validator: metacrafterext.rules.fr.validators.validate_fr_cni
     maxlen: 12
     minlen: 12
   fr_pii_frpassportfield:
