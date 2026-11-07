@@ -43,7 +43,13 @@ rules:
   urlbyknownpat:
     key: url
     name: URL/website by known name pattern
-    rule: Word(printables) + "url" +  lineEnd
+    # The field name ends with the word url after 1 to 3 other words (image_url,
+    # profile url, Source-URL).
+    # pyparsing does not backtrack, so each number of words is an alternative.
+    rule: >-
+      ((Word(alphanums) + Optional(oneOf('_ -'))) * 1 + CaselessLiteral('url'))
+      ^ ((Word(alphanums) + Optional(oneOf('_ -'))) * 2 + CaselessLiteral('url'))
+      ^ ((Word(alphanums) + Optional(oneOf('_ -'))) * 3 + CaselessLiteral('url'))
     type: field
     match: ppr
     priority: 2

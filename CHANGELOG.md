@@ -48,6 +48,33 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   Bloomberg Finance L.P., `5493001KJTIIGC8Y1R12`). `DL-123-456-789` is a valid US driver
   license format (Florida prints `W123-456-78-901-0`); the invalid-character cases are now
   `DL_123_456` and `DL.123.456`. `pytest tests` passes on Python 3.13.
+- **ppr field-name rules that matched no field name** (#25). metacrafter compiles a ppr
+  field-name rule (`type: field`, `match: ppr`) as `lineStart + rule + lineEnd`. A rule that
+  ended with `+ lineEnd` never matched: the first `lineEnd` takes the end of the name, and
+  metacrafter's `lineEnd` then fails. A rule that started with `Word(printables)` matched only
+  names with a space before the keyword (`birth month`), not `birth_month`.
+  - `phoneknownpat`, `faxknownpat`, `urlbyknownpat`, `urlknownpat`, `emailknownpat`,
+    `yearknownpat`, `timestampknownpat`, `timezoneknownpat`, `monthknownpat`, `latitudepat`,
+    `longitudepat`, `firstnamepat`, `surnamepat`, `lastnamepat`, `midnamepat` and
+    `percentagebyfield` match the keyword after 1 to 3 other words, separated by `_`, `-` or
+    spaces, in any letter case (`user_phone`, `birth year`, `Geo-Latitude`, `tax_percent`).
+    The keyword alone is matched by the text rules of the same key, as before.
+  - `phoneknownprefix` and `emailknownprefix` match `phone` or `email` followed by digits or
+    by a word that names the number or address (`phone2`, `phone_mobile`, `email_work`).
+    `phone_type`, `phonetic` and `email_verified` do not match.
+  - The guard of `asnbyvalueandpostfix`, `Literal('_asn') + lineEnd`, matched no name. It
+    now accepts names that end with the word `asn` after 1 to 3 other words (`peer_asn`,
+    `Origin ASN`). The rule also checks values with `validate_asn`.
+  - `uszipcodebyname` was a field rule with the value pattern `Word(nums, exact=5)`, so it
+    looked for 5 digits in field names. It is now a value rule for ZIP codes (`02134`) and
+    ZIP+4 (`90210-1234`) in fields whose name ends with `zip`, `zipcode` or `zip_code`
+    (`zip`, `ZIP Code`, `zip5`, `billing_zip`).
+  - `tests/test_field_guards.py` checks these rules against field names, and checks that no
+    ppr field-name rule or field guard starts with `Word(printables)` or ends with `lineEnd`.
+
+  A field-only match of a priority 2 rule scores 48, below metacrafter's default confidence
+  of 50. Default scans therefore do not report these field-name matches alone; they add name
+  evidence to value rules of the same key.
 
 ## [0.0.7] - 2026-11-07
 

@@ -59,7 +59,13 @@ rules:
     key: phone
     is_pii: true
     name: Phone number by known pattern
-    rule: Word(printables) + "phone" +  lineEnd
+    # The field name ends with the word phone after 1 to 3 other words (user_phone,
+    # home phone, contact-phone).
+    # pyparsing does not backtrack, so each number of words is an alternative.
+    rule: >-
+      ((Word(alphanums) + Optional(oneOf('_ -'))) * 1 + CaselessLiteral('phone'))
+      ^ ((Word(alphanums) + Optional(oneOf('_ -'))) * 2 + CaselessLiteral('phone'))
+      ^ ((Word(alphanums) + Optional(oneOf('_ -'))) * 3 + CaselessLiteral('phone'))
     type: field
     match: ppr
     priority: 2
@@ -67,7 +73,13 @@ rules:
     key: phone
     is_pii: true
     name: Phone number by known pattern
-    rule: Literal('phone') + Word(printables) + lineEnd
+    # phone, then digits or a word that names the phone (phone2, phone_mobile, phone-work,
+    # phone_nr, phone_home_2). Other words do not match: phone_type, phone_verified,
+    # phonetic.
+    rule: >-
+      CaselessLiteral('phone') + Optional(oneOf('_ -'))
+      + (Word(nums) ^ (oneOf('number num no nr mobile cell home work office main primary secondary personal business contact other alt', caseless=True)
+      + Optional(Optional(oneOf('_ -')) + Word(nums))))
     type: field
     match: ppr
     priority: 2
@@ -75,7 +87,13 @@ rules:
     key: phone
     is_pii: true
     name: Phone number by known pattern (Fax)
-    rule: Word(printables) + "fax" +  lineEnd
+    # The field name ends with the word fax after 1 to 3 other words (contact_fax,
+    # office fax).
+    # pyparsing does not backtrack, so each number of words is an alternative.
+    rule: >-
+      ((Word(alphanums) + Optional(oneOf('_ -'))) * 1 + CaselessLiteral('fax'))
+      ^ ((Word(alphanums) + Optional(oneOf('_ -'))) * 2 + CaselessLiteral('fax'))
+      ^ ((Word(alphanums) + Optional(oneOf('_ -'))) * 3 + CaselessLiteral('fax'))
     type: field
     match: ppr
     priority: 2
