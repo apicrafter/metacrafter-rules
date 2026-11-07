@@ -162,3 +162,13 @@ rules:
     rule: fullname,full_name,полное_имя,polnoe_imya,фио,fio
     type: field
     match: text
+  rusinitialssurname:
+    key: rus_initials_surname
+    is_pii: true
+    name: Russian surname with initials (Иванов И.И., И.И. Иванов)
+    match: regex
+    type: data
+    rule: '(?:[А-ЯЁ]\.\s?(?:[А-ЯЁ]\.\s?)?[А-ЯЁ][а-яё]+(?:-[А-ЯЁ][а-яё]+)?|[А-ЯЁ][а-яё]+(?:-[А-ЯЁ][а-яё]+)?\s[А-ЯЁ]\.\s?(?:[А-ЯЁ]\.)?)'
+    minlen: 4
+    maxlen: 60
+    priority: 1

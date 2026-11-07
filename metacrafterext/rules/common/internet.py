@@ -1,5 +1,5 @@
 from ipaddress import IPv4Address, IPv6Address, AddressValueError
-from validators import mac_address
+from validators import domain, mac_address
 
 
 def validate_macaddr(s):
@@ -124,3 +124,27 @@ def validate_torrent_info_hash(value):
         return False
     
     return True
+
+
+# IDNA maps these full stops to "." (UTS #46), so validators.domain accepts a Japanese or
+# Chinese sentence that contains one as a domain name.
+_IDNA_DOTS = ("\u3002", "\uff0e", "\uff61")
+
+
+def is_fqdn(value):
+    """Fully qualified domain name, checked with validators.domain.
+
+    Values with the ideographic and fullwidth full stops (。 ． ｡) or without an ASCII dot
+    are rejected: IDNA treats those stops as dots, so text such as
+    "ニコラ･プッサン。リナルドとアルミーダ" passed as a domain. Internationalized names
+    with ASCII dots (слово.рф) still match.
+    """
+    if not isinstance(value, str):
+        return False
+    text = value.strip()
+    if "." not in text or any(dot in text for dot in _IDNA_DOTS):
+        return False
+    try:
+        return bool(domain(text))
+    except Exception:  # noqa: BLE001 - a validator error means no match
+        return False

@@ -30,3 +30,21 @@ rules:
       правового акта,наименование нпа,нпа,реквизиты нпа,название нормативно-правового
       документа,наименование нормативно-правого акта,Вид нормативного правового акта,Наимнование
       поля,Номер нормативного правового акта,Реквизиты
+  rugoskatalogregnumfield:
+    key: ru_goskatalog_regnum
+    name: Registration number of a museum object in the State Catalogue (Goskatalog) by field name
+    match: text
+    type: field
+    rule: goskatalognumber,goskatalog_number,goskatalogid,goskatalog_id,goskatalogregnum,goskatalog_regnum,goskatalog_reg_number,номер в госкаталоге,номер госкаталога,регистрационный номер в госкаталоге
+    priority: 1
+  rugoskatalogregnumvalue:
+    key: ru_goskatalog_regnum
+    name: Goskatalog registration number by value in a Goskatalog field
+    match: regex
+    type: data
+    rule: '[1-9]\d{6,7}'
+    minlen: 7
+    maxlen: 8
+    priority: 1
+    fieldrule: goskatalognumber,goskatalog_number,goskatalogid,goskatalog_id,goskatalogregnum,goskatalog_regnum,goskatalog_reg_number,номер в госкаталоге,номер госкаталога,регистрационный номер в госкаталоге
+    fieldrulematch: text
