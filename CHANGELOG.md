@@ -26,6 +26,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   (`2-150x150.png`) were domains at 86–100. The last label must now be in the IANA root zone:
   `metacrafterext/rules/common/tlds.py` (1436 TLDs, IANA version 2026110700), regenerated with
   `scripts/update_tlds.py`. Internationalized TLDs (`рф`) are compared in their `xn--` form.
+- **`mimetypebyvalue` matches any registered media type** (#44). It was a closed list with
+  `minlen: 10`, so listed values such as `image/png`, `text/csv`, `text/xml` and `text/html`
+  could never match, and `image/gif`, `image/svg+xml` or `video/mp4` were missing. It is now
+  the registry regexp of `mimetype` (a registered top-level type, a subtype, optional
+  parameters; case-insensitive) with priority 1.
 
 ## [0.0.9] - 2026-11-07
 

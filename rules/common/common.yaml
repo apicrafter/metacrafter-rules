@@ -41,12 +41,15 @@ rules:
   mimetypebyvalue:
     key: mimetype
     name: Mimetype / content type by value
-    priority: 2
-    maxlen: 100
-    minlen: 10
-    match: text
+    priority: 1
+    maxlen: 255
+    minlen: 7
+    match: regex
     type: data
-    rule: application/pdf,application/json,application/octet-stream,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.wordprocessingml.document,image/jpeg,image/tiff,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/zip,text/csv,text/plain,application/vnd.google-earth.kml+xml,application/x-zip-compressed,application/vnd.geo+json,application/vnd.ms-excel.sheet.macroenabled.12,application/vnd.openxmlformats-officedocument.presentationml.presentation,text/xml,application/csv,text/html,application/rdf+xml,image/png,text/tab-separated-values,application/geo+json,application/vnd.geo+json,application/gzip,application/vnd.google-earth.kmz,application/x-tar
+    # The registry regexp of the mimetype datatype: a registered top-level type, a subtype and
+    # optional parameters (text/html; charset=utf-8). Case-insensitive, as media types are.
+    rule: >-
+      (?i)(?:application|audio|example|font|haptics|image|message|model|multipart|text|video)/[a-z0-9][a-z0-9!#$&^_.+-]{0,126}(?:[ \t]*;[ \t]*[a-z0-9!#$%&'*+.^_`|~-]+=(?:[a-z0-9!#$%&'*+.^_`|~-]+|"[^"]*"))*
   phoneknown:
     key: phone
     is_pii: true
