@@ -90,6 +90,12 @@ CASES = [
       "Почтовый индекс получателя", "indeks", "post_index", "postal_index", "postindex",
       "Post Index", "address_post_index"],
      ["index", "row_index", "index_id", "zip", "почта"]),
+    # apicrafter/metacrafter-rules#28: status codes (ACTI, DELD) are 4 uppercase letters.
+    ("common/transport.yaml", "icaoairportcodevalue",
+     ["icao", "ICAO", "icao_code", "icaocode", "airport", "Airport", "airport_code",
+      "airport_icao", "icao_airport_code", "departure_airport", "arrival-airport-icao",
+      "Airport ICAO", "origin airport code"],
+     ["status", "infoinclusion", "code", "iata", "airline", "departureairport", "port"]),
 ]
 
 
