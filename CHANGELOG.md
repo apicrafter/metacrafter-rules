@@ -21,6 +21,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   matches, metacrafter does not run qddate on the column, so ISO date columns report `date`
   instead of `datetime 100`. Without registry data the rule does not match.
 
+### Fixed
+
+- **ISNI and ORCID check characters** (#23): `validate_isni` and `validate_orcid` computed
+  the check character with weights 2..11 instead of ISO 7064 MOD 11-2, so they rejected
+  real identifiers (`0000 0001 2297 4701`, `0000-0002-1825-0097`) and accepted wrong ones.
+  Both now share `_iso7064_mod11_2_is_valid`; ISNI also accepts the check character `X`
+  (`000000006629310X`). `orcidbyvalue` (`rules/common/science.yaml`) did not match any
+  ORCID: its pattern expected four digits after `0000-000`. It now matches
+  `0000-000N-NNNN-NNNC` and the `0009-00` block that ORCID issues since 2023, and the
+  validator accepts that block too. `orcidbyvalue`, `science_isnivalue`,
+  `isnivaluewithspaces` and `isnivalue` now accept the registry examples of `orcid` and
+  `isni`.
+- **ISRC country codes** (#23): `validate_isrc` accepted any two letters as the country code
+  (`XXRC17607839`). The code must now be an ISO 3166-1 alpha-2 code or one the
+  International ISRC Agency allocates (`QM`, `QZ`, `QT`, `UK`, `ZZ`, `YU` and others, plus
+  ISO codes withdrawn after 1986 such as `CS` and `SU`). The format check is ASCII only.
+- **BCP 47 language tags** (#23): `validate_language_tag` follows the RFC 5646 syntax:
+  private use (`en-US-x-private`), variants that start with a digit (`de-CH-1901`),
+  extensions (`en-u-ca-gregory`) and extended language subtags (`zh-yue-HK`) are accepted,
+  subtags out of order (`en-US-Latn`) and 4-8 letter primary subtags (`english`) are
+  rejected. Private-use regions such as `XX` stay accepted: `XA..XZ` are in the IANA
+  registry.
+- **Test data with wrong check digits** (#23): the GTIN-14, SSCC and LEI examples in
+  `tests/test_identifiers_validation.py` had wrong check digits (the LEI was a typo for
+  Bloomberg Finance L.P., `5493001KJTIIGC8Y1R12`). `DL-123-456-789` is a valid US driver
+  license format (Florida prints `W123-456-78-901-0`); the invalid-character cases are now
+  `DL_123_456` and `DL.123.456`. `pytest tests` passes on Python 3.13.
+
 ## [0.0.7] - 2026-11-07
 
 ### Fixed

@@ -22,6 +22,7 @@ from metacrafterext.rules.common.identifiers import (
     validate_issn,
     validate_isrc,
     validate_isni,
+    validate_orcid,
     validate_imei,
     validate_imsi,
     validate_msisdn,
@@ -148,7 +149,7 @@ class TestLEIValidation:
         valid_leis = [
             "INR2EJN1ERAN0W5ZP974",  # Microsoft
             "2594007XIACKNMUAW223",  # MakoLab
-            "5493000KJTIIGC8Y1R12",  # Example
+            "5493001KJTIIGC8Y1R12",  # Bloomberg Finance L.P.
         ]
         for lei in valid_leis:
             assert validate_lei(lei) == True, f"LEI {lei} should be valid"
@@ -188,8 +189,8 @@ class TestGTINValidation:
     def test_valid_gtin14(self):
         """Test valid GTIN-14."""
         valid_gtins = [
-            "00012345678901",  # Example GTIN-14
-            "10012345678908",  # Example GTIN-14
+            "00012345678905",  # Example GTIN-14
+            "10012345678902",  # Example GTIN-14, indicator digit 1
         ]
         for gtin in valid_gtins:
             assert validate_gtin(gtin) == True, f"GTIN {gtin} should be valid"
@@ -235,8 +236,9 @@ class TestSSCCValidation:
     def test_valid_sscc(self):
         """Test valid SSCC codes."""
         valid_ssccs = [
-            "001234567890123456",  # 18 digits
-            "0001234567890123456",  # With "00" prefix
+            "001234567890123452",  # 18 digits
+            "00001234567890123452",  # With "00" application identifier prefix
+            "00095287650000315043",  # Registry example, GS1 demonstration prefix 952
         ]
         for sscc in valid_ssccs:
             assert validate_sscc(sscc) == True, f"SSCC {sscc} should be valid"
@@ -318,12 +320,31 @@ class TestISRCValidation:
     def test_invalid_isrcs(self):
         """Test invalid ISRC codes."""
         invalid_isrcs = [
-            "XXRC17607839",  # Invalid country code format
+            "XXRC17607839",  # XX is not an ISO 3166-1 or ISRC country code
+            "AB1231234567",  # AB is not an ISO 3166-1 or ISRC country code
             "USRC1760783",  # Too short
             "USRC176078390",  # Too long
+            "U1RC17607839",  # Digit in the country code
+            "USRC1760783A",  # Letter in the year and designation code
         ]
         for isrc in invalid_isrcs:
             assert validate_isrc(isrc) == False, f"ISRC {isrc} should be invalid"
+
+    def test_isrc_agency_country_codes(self):
+        """Country codes the International ISRC Agency allocates beyond ISO 3166-1."""
+        valid_isrcs = [
+            "QMRC17607839",  # US
+            "QZES51900123",  # US
+            "UKAAA0500001",  # PPL UK
+            "ZZRC17607839",  # International ISRC Agency
+            "YURC17607839",  # Former Yugoslavia
+        ]
+        for isrc in valid_isrcs:
+            assert validate_isrc(isrc) == True, f"ISRC {isrc} should be valid"
+
+    def test_isrc_printed_form(self):
+        """Dashes of the printed form are ignored."""
+        assert validate_isrc("US-RC1-76-07839") == True
 
 
 class TestISNIValidation:
@@ -335,18 +356,56 @@ class TestISNIValidation:
             "0000000121975163",  # Norway
             "0000000121416409",  # Nero
             "0000 0001 2197 5163",  # With spaces
+            "0000 0001 2297 4701",  # Switzerland (registry example)
+            "0000000123317789",  # United Nations (registry example)
         ]
         for isni in valid_isnis:
             assert validate_isni(isni) == True, f"ISNI {isni} should be valid"
-    
+
+    def test_valid_isni_with_x(self):
+        """Test ISNIs whose check character is X."""
+        assert validate_isni("000000006629310X") == True  # Charles Martel
+        assert validate_isni("0000 0000 6629 310X") == True
+        assert validate_isni("000000006629310x") == True
+
     def test_invalid_isnis(self):
         """Test invalid ISNIs."""
         invalid_isnis = [
             "0000000121975164",  # Wrong check digit
+            "0000 0001 2297 4702",  # Wrong check digit
+            "0000000066293100",  # Check character X replaced with 0
             "000000012197516",  # Too short
+            "000000012197516X3",  # Too long
+            "00000001219751X3",  # X before the last position
         ]
         for isni in invalid_isnis:
             assert validate_isni(isni) == False, f"ISNI {isni} should be invalid"
+
+
+class TestORCIDValidation:
+    """Tests for ORCID validation (ISO 7064 MOD 11-2, like ISNI)."""
+
+    def test_valid_orcids(self):
+        valid_orcids = [
+            "0000-0002-1825-0097",  # Josiah S. Carberry
+            "0000-0002-1003-5675",  # Registry example
+            "0000000218250097",  # Without dashes
+            "0009-0001-2345-6786",  # Synthetic, 0009-00 block issued since 2023
+        ]
+        for orcid in valid_orcids:
+            assert validate_orcid(orcid) == True, f"ORCID {orcid} should be valid"
+
+    def test_invalid_orcids(self):
+        invalid_orcids = [
+            "0000-0002-1825-0098",  # Wrong check character
+            "0000-0002-1825-009X",  # Wrong check character
+            "1000-0002-1825-0097",  # Outside the ORCID range
+            "0008-0001-2345-6786",  # Outside the ORCID range
+            "0000-0002-1825-009",  # Too short
+            None,
+        ]
+        for orcid in invalid_orcids:
+            assert validate_orcid(orcid) == False, f"ORCID {orcid} should be invalid"
 
 
 class TestIMEIValidation:
@@ -542,10 +601,16 @@ class TestLanguageTagValidation:
         valid_tags = [
             "en-US-x-private",  # With private use
             "zh-Hans-CN",  # Language, script, region
+            "zh-yue-HK",  # Extended language subtag
+            "es-419",  # UN M.49 region
+            "de-CH-1901",  # Variant that starts with a digit
+            "sl-rozaj-biske",  # Two variants
+            "en-u-ca-gregory",  # Unicode extension
+            "en-XX",  # Private-use region (XA..XZ in the IANA registry)
         ]
         for tag in valid_tags:
             assert validate_language_tag(tag) == True, f"Language tag {tag} should be valid"
-    
+
     def test_invalid_tags(self):
         """Test invalid language tags."""
         invalid_tags = [
@@ -553,7 +618,11 @@ class TestLanguageTagValidation:
             "123",  # Numeric only
             "en-",  # Incomplete
             "-US",  # Missing language
-            "en-XX",  # Invalid region format
+            "en-1A",  # Invalid region format
+            "en-US-Latn",  # Script after the region
+            "en-a-b",  # Extension subtag shorter than 2 characters
+            "en-x",  # Private use without a subtag
+            "x-private",  # Private use only, no language
             "english",  # Too long for simple tag
             "",  # Empty
         ]
@@ -580,6 +649,8 @@ class TestUSDriverLicenseValidation:
             "ABC123456789012",  # 15 characters
             "DL-123-456",  # With dashes
             "DL 123 456",  # With spaces
+            "DL-123-456-789",  # Dash groups as in the printed Florida form
+            "W123-456-78-901-0",  # Florida, printed form
         ]
         for license_num in valid_licenses:
             assert validate_us_driver_license(license_num) == True, f"Driver license {license_num} should be valid"
@@ -619,7 +690,8 @@ class TestUSDriverLicenseValidation:
     def test_invalid_driver_licenses_format(self):
         """Test driver licenses with invalid format."""
         invalid_licenses = [
-            "DL-123-456-789",  # Invalid characters
+            "DL_123_456",  # Invalid characters
+            "DL.123.456",  # Invalid characters
             "DL@123#456",  # Special characters
             "",  # Empty
         ]
