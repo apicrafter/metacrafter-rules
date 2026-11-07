@@ -126,6 +126,23 @@ CASES = [
       for relpath, rule_id in [("common/media.yaml", "issnvalue"),
                                ("common/objects.yaml", "objects_issnvalue"),
                                ("common/objects.yaml", "issnvaluewithoutdash")]],
+    # ORCID and ISNI use the ISO 7064 MOD 11-2 check character (#23).
+    ("common/science.yaml", "orcidbyvalue",
+     ["0000-0002-1003-5675", "0000-0002-1825-0097", "0009-0001-2345-6786"],
+     ["0000-0002-1825-0098", "0000000218250097", "0008-0001-2345-6786"]),
+    ("common/science.yaml", "science_isnivalue",
+     ["0000000123317789", "000000006629310X", "0000000121416409", "0000000122974701"],
+     ["0000000122974702", "0000000066293100"]),
+    ("common/science.yaml", "isnivaluewithspaces",
+     ["0000 0001 2297 4701", "0000 0001 2141 6409", "0000 0000 6629 310X"],
+     ["0000 0001 2297 4702"]),
+    ("common/objects.yaml", "isnivalue",
+     ["0000000123317789", "0000000121416409", "0000000122974701"],
+     ["0000000122974702"]),
+    # ISRC country codes: ISO 3166-1 alpha-2 or a code of the International ISRC Agency (#23).
+    ("common/objects.yaml", "objects_isrcvalue",
+     ["USRC17607839", "GBAYE7700223", "GBAYE7800109", "QMRC17607839"],
+     ["USRC1760783", "XXRC17607839"]),
 ]
 
 # text data rules: rule file, rule id, registry positive examples, registry negative examples
