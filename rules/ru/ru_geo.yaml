@@ -129,12 +129,26 @@ rules:
       тыва,ненецкий автономный округ
   rusfeddistrict:
     key: rusfeddistrict
-    name: Russian region by common pattern
+    name: Russian federal district by full name or abbreviation
     match: text
     type: data
     rule: дальневосточный федеральный округ,центральный федеральный округ,приволжский
       федеральный округ,южный федеральный округ,уральский федеральный округ,северо-кавказский
-      федеральный округ,северо-западный федеральный округ,сибирский федеральный округ
+      федеральный округ,северо-западный федеральный округ,сибирский федеральный округ,цфо,сзфо,юфо,скфо,пфо,уфо,урфо,сфо,дфо,двфо
+# The adjective alone (Центральный, Южный) also names city districts and directions, so it
+# is matched only in fields named after the federal district. The rule also keeps the full
+# names and abbreviations, so such a field matches whichever form it holds.
+  rusfeddistrictbyfield:
+    key: rusfeddistrict
+    name: Russian federal district by short name in a federal district field
+    match: text
+    type: data
+    rule: центральный,северо-западный,южный,северо-кавказский,приволжский,уральский,сибирский,дальневосточный,дальневосточный
+      федеральный округ,центральный федеральный округ,приволжский федеральный округ,южный
+      федеральный округ,уральский федеральный округ,северо-кавказский федеральный округ,северо-западный
+      федеральный округ,сибирский федеральный округ,цфо,сзфо,юфо,скфо,пфо,уфо,урфо,сфо,дфо,двфо
+    fieldrule: федеральный округ,федеральный_округ,федеральныйокруг,фед округ,фед_округ,фо,federal_district,federaldistrict,fed_district,feddistrict,federal_okrug,fed_okrug,fedokrug
+    fieldrulematch: text
   ruscities:
     key: ruscity
     is_pii: true
@@ -262,10 +276,25 @@ rules:
     name: Russian post index code (ZIP code and e.t.c) by known data pattern and field
       pattern
     match: ppr
+    type: data
     rule: Word(nums, exact=6)
-    fieldrule: Word(printables) + oneOf(["index", "индекс"], caseless=True)
+    maxlen: 6
+    minlen: 6
+    # The field name has a word that starts with индекс or indeks (индекс, почтовый индекс,
+    # почтовый_индекс), or post or postal before index (post_index, postindex, Postal Index).
+    # index alone or row_index does not match. pyparsing does not backtrack, so each
+    # alternative fixes the number of words before it (0 to 3); words are separated by _, -
+    # or spaces.
+    fieldrule: >-
+      (oneOf('индекс indeks', caseless=True) + ZeroOrMore(Word(printables + 'абвгдеёжзийклмнопрстуфхцчшщъыьэюяАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ')))
+      ^ ((Word(alphanums + 'абвгдеёжзийклмнопрстуфхцчшщъыьэюяАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ') + Optional(oneOf('_ -'))) * 1 + oneOf('индекс indeks', caseless=True) + ZeroOrMore(Word(printables + 'абвгдеёжзийклмнопрстуфхцчшщъыьэюяАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ')))
+      ^ ((Word(alphanums + 'абвгдеёжзийклмнопрстуфхцчшщъыьэюяАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ') + Optional(oneOf('_ -'))) * 2 + oneOf('индекс indeks', caseless=True) + ZeroOrMore(Word(printables + 'абвгдеёжзийклмнопрстуфхцчшщъыьэюяАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ')))
+      ^ ((Word(alphanums + 'абвгдеёжзийклмнопрстуфхцчшщъыьэюяАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ') + Optional(oneOf('_ -'))) * 3 + oneOf('индекс indeks', caseless=True) + ZeroOrMore(Word(printables + 'абвгдеёжзийклмнопрстуфхцчшщъыьэюяАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ')))
+      ^ (oneOf('post postal', caseless=True) + Optional(oneOf('_ -')) + CaselessLiteral('index') + ZeroOrMore(Word(printables + 'абвгдеёжзийклмнопрстуфхцчшщъыьэюяАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ')))
+      ^ ((Word(alphanums + 'абвгдеёжзийклмнопрстуфхцчшщъыьэюяАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ') + Optional(oneOf('_ -'))) * 1 + oneOf('post postal', caseless=True) + Optional(oneOf('_ -')) + CaselessLiteral('index') + ZeroOrMore(Word(printables + 'абвгдеёжзийклмнопрстуфхцчшщъыьэюяАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ')))
+      ^ ((Word(alphanums + 'абвгдеёжзийклмнопрстуфхцчшщъыьэюяАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ') + Optional(oneOf('_ -'))) * 2 + oneOf('post postal', caseless=True) + Optional(oneOf('_ -')) + CaselessLiteral('index') + ZeroOrMore(Word(printables + 'абвгдеёжзийклмнопрстуфхцчшщъыьэюяАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ')))
+      ^ ((Word(alphanums + 'абвгдеёжзийклмнопрстуфхцчшщъыьэюяАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ') + Optional(oneOf('_ -'))) * 3 + oneOf('post postal', caseless=True) + Optional(oneOf('_ -')) + CaselessLiteral('index') + ZeroOrMore(Word(printables + 'абвгдеёжзийклмнопрстуфхцчшщъыьэюяАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ')))
     fieldrulematch: ppr
-    type: field
   rupostindexbyknown:
     key: postindex
     is_pii: true
@@ -276,7 +305,7 @@ rules:
 # Disabled: matches any 6-digit number, colliding with OKATO/other codes and
 # generic numeric ids/counts. Cannot be distinguished from an arbitrary 6-digit
 # value; Russian post index detection remains via rupostindexbyknown and
-# rupostindexbypattern (both gated by field name).
+# rupostindex (both gated by field name).
 #  rupostalcode:
 #    key: ruspostalcode
 #    is_pii: true

@@ -9,6 +9,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- **Field guards that matched no ordinary field name** (#17). The guards of
+  `iso3166-alpha2`, `iso3166-alpha3`, their imprecise variants, `yearbydatafiltered`,
+  `yearbydataimprecise`, `latitudevalue`, `longitudevalue` and `rupostindex` started with
+  `Optional(Word(printables))` or `Word(printables)`. That word took the whole field name,
+  and pyparsing does not backtrack, so the guards matched only names with a space before
+  the keyword (`birth country`): `country`, `country_code`, `birth_year` and `geo_lat` did
+  not run these value rules. The guards now use the form of the OKVED guard: alternatives
+  with 0 to 3 words before the keyword, separated by `_`, `-` or spaces.
+  - Country codes: a word that starts with `country` (`country`, `countrycode`,
+    `birth_country`, `place_of_birth_country`).
+  - Years: a word that starts with `year` (`year`, `Year`, `year_built`, `birth_year`);
+    the imprecise rule also accepts `date` and `time` (`created_date`, `start_time`).
+  - Latitude and longitude: the word `lat`, `lon` or `lng`, optionally with digits
+    (`geo_lat`, `lat_wgs84`, `lon2`), and not `latest`, `long` or `salon`. metacrafter
+    skips value rules on float columns, so these rules apply to text columns.
+  - Russian post index: a word that starts with `индекс` or `indeks`, or `index` after
+    `post` or `postal` (`почтовый_индекс`, `post_index`, `postindex`); not `index` or
+    `row_index`. `rupostindex` was a field rule, so its 6-digit pattern was tested on
+    field names; it is now a value rule.
+- **ATC codes reported four times**. `enatcvalue`, `deatcvalue`, `fratcvalue` and
+  `esatcvalue` were the same rule, so an ATC column reported `atccode` four times. They
+  are replaced by one rule, `atcvalue` in `rules/common/medical.yaml`. It is language
+  independent, so it also runs when a scan selects other languages (`--langs ru`).
 - **`imsi` on any 15-digit number** (#3). `validate_imsi` accepted every MCC from 001 to
   999, so `imsivalue` matched 300 random 15-digit numbers and 15-digit OGRNIP numbers at
   100. It now accepts only assigned mobile country codes (ITU-T E.212, plus 289 and 995,
@@ -24,6 +47,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   1900 to the current year in digits 4–7. The check digit is not checked, because no
   official source confirms the algorithm. The registry example `784123456789012` (year 1234)
   no longer matches; apicrafter/metacrafter-registry#144 replaces it.
+
+New examples in metacrafter-registry (`34a946c`) that the rules handled wrongly (#19):
+
+- **Wikidata id**: `wikidataidvalue` no longer accepts item numbers with a leading zero
+  (`Q01`, `Q0`) (`rules/common/objects.yaml`).
+- **ISSN**: `issnvalue` (`rules/common/media.yaml`) and `issnvaluewithoutdash`
+  (`rules/common/objects.yaml`) accept the same forms as `objects_issnvalue`: with or
+  without the hyphen, with the `X` check character (`0960-894X`, `00280836`). The MOD-11
+  validator still checks every value.
+- **Russian federal district**: `rusfeddistrict` matches the abbreviations `ЦФО`, `СЗФО`,
+  `ЮФО`, `СКФО`, `ПФО`, `УФО`, `УрФО`, `СФО`, `ДФО`, `ДВФО`. The new
+  `rusfeddistrictbyfield` also matches the short names (`Приволжский`, `Центральный`), but
+  only in fields such as `федеральный округ` or `federal_district`: a short name alone is
+  also a city district or a direction (`rules/ru/ru_geo.yaml`).
 
 ## [0.0.6] - 2026-11-07
 

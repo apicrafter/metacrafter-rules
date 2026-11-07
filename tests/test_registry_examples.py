@@ -110,14 +110,33 @@ CASES = [
      ["1", "01", "9", "10", "11", "12"],
      ["0", "00", "13", "20", "123"]),
     # Substance-level ATC codes (7 characters); group codes such as A13A are not matched.
-    *[(relpath, rule_id,
-       ["D08AX08", "A02BC04", "M04AA03", "J05AR21"],
-       ["A13A", "M04A03", "12345AB", "L03AX", "W01AA01"])
-      for relpath, rule_id in [("en/en_med.yaml", "enatcvalue"), ("de/de_med.yaml", "deatcvalue"),
-                               ("fr/fr_med.yaml", "fratcvalue"), ("es/es_med.yaml", "esatcvalue")]],
+    ("common/medical.yaml", "atcvalue",
+     ["D08AX08", "A02BC04", "M04AA03", "J05AR21"],
+     ["A13A", "M04A03", "12345AB", "L03AX", "W01AA01"]),
     ("ru/ru_codes.yaml", "ruokpdcodepat",
      ["35.30.12.130", "91.01.11", "21.20.10.226", "21.20.1", "21.20"],
      ["35-30-12", "192.168.1.1", "21.20.10.22", "1.20.10.226", "21.20.10.2260"]),
+    ("common/objects.yaml", "wikidataidvalue",
+     ["Q12345", "Q234511", "Q1057890", "Q1"],
+     ["P6782", "Q01", "Q0", "Q12345678901"]),
+    # ISSN with and without the hyphen, with the X check character.
+    *[(relpath, rule_id,
+       ["0028-0836", "1476-4687", "0261-3077", "0960-894X", "00280836", "0960894X"],
+       ["0028-0837", "0028-083", "0028-08361", "00280-836"])
+      for relpath, rule_id in [("common/media.yaml", "issnvalue"),
+                               ("common/objects.yaml", "objects_issnvalue"),
+                               ("common/objects.yaml", "issnvaluewithoutdash")]],
+]
+
+# text data rules: rule file, rule id, registry positive examples, registry negative examples
+TEXT_CASES = [
+    ("ru/ru_geo.yaml", "rusfeddistrict",
+     ["Центральный федеральный округ", "Приволжский федеральный округ", "ЦФО", "СЗФО", "УрФО", "ДФО"],
+     ["Крымский федеральный округ", "Приволжский", "Центральный"]),
+    ("ru/ru_geo.yaml", "rusfeddistrictbyfield",
+     ["Центральный федеральный округ", "Приволжский федеральный округ", "Приволжский", "ЦФО", "СЗФО",
+      "УрФО", "Северо-Кавказский", "Дальневосточный"],
+     ["Крымский федеральный округ", "Крымский", "Ленинский"]),
 ]
 
 
@@ -126,6 +145,26 @@ def test_rule_on_registry_examples(relpath, rule_id, positives, negatives):
     accepts = load_rule(relpath, rule_id)
     assert [v for v in positives if not accepts(v)] == []
     assert [v for v in negatives if accepts(v)] == []
+
+
+@pytest.mark.parametrize("relpath,rule_id,positives,negatives", TEXT_CASES, ids=[c[1] for c in TEXT_CASES])
+def test_text_rule_on_registry_examples(relpath, rule_id, positives, negatives):
+    data = yaml.safe_load((RULES / relpath).read_text(encoding="utf-8"))
+    rule = data["rules"][rule_id]
+    assert rule["match"] == "text" and rule["type"] == "data"
+    keywords = {keyword.strip().lower() for keyword in rule["rule"].split(",")}
+    assert [v for v in positives if v.lower() not in keywords] == []
+    assert [v for v in negatives if v.lower() in keywords] == []
+
+
+def test_rusfeddistrict_short_names_need_the_field_name():
+    rules = yaml.safe_load((RULES / "ru/ru_geo.yaml").read_text(encoding="utf-8"))["rules"]
+    guarded = rules["rusfeddistrictbyfield"]
+    assert guarded["fieldrulematch"] == "text"
+    assert {"федеральный округ", "federal_district"} <= set(guarded["fieldrule"].split(","))
+    assert "fieldrule" not in rules["rusfeddistrict"]
+    unguarded = set(rules["rusfeddistrict"]["rule"].split(","))
+    assert unguarded < set(guarded["rule"].split(","))
 
 
 def test_esmonthbydatafiltered_is_a_month_rule():

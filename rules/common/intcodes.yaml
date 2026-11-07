@@ -13,7 +13,15 @@ rules:
     priority: 1
     match: text
     type: data
-    fieldrule: Optional(Word(printables)) + CaselessLiteral('country') + Optional(Word(printables))
+    # The field name has a word that starts with country: country, country_code, countrycode,
+    # birth_country, place of birth country. pyparsing does not backtrack, so each
+    # alternative fixes the number of words before it (0 to 3); words are separated by _, - or
+    # spaces.
+    fieldrule: >-
+      (CaselessLiteral('country') + ZeroOrMore(Word(printables)))
+      ^ ((Word(alphanums) + Optional(oneOf('_ -'))) * 1 + CaselessLiteral('country') + ZeroOrMore(Word(printables)))
+      ^ ((Word(alphanums) + Optional(oneOf('_ -'))) * 2 + CaselessLiteral('country') + ZeroOrMore(Word(printables)))
+      ^ ((Word(alphanums) + Optional(oneOf('_ -'))) * 3 + CaselessLiteral('country') + ZeroOrMore(Word(printables)))
     fieldrulematch: ppr
   iso3166-alpha3:
     key: countrycode_alpha3
@@ -24,7 +32,12 @@ rules:
     priority: 1
     match: text
     type: data
-    fieldrule: Optional(Word(printables)) + CaselessLiteral('country') + Optional(Word(printables))
+    # Same field guard as iso3166-alpha2.
+    fieldrule: >-
+      (CaselessLiteral('country') + ZeroOrMore(Word(printables)))
+      ^ ((Word(alphanums) + Optional(oneOf('_ -'))) * 1 + CaselessLiteral('country') + ZeroOrMore(Word(printables)))
+      ^ ((Word(alphanums) + Optional(oneOf('_ -'))) * 2 + CaselessLiteral('country') + ZeroOrMore(Word(printables)))
+      ^ ((Word(alphanums) + Optional(oneOf('_ -'))) * 3 + CaselessLiteral('country') + ZeroOrMore(Word(printables)))
     fieldrulematch: ppr
 # This rule generates a lot of False positives because 2-character codes match many common abbreviations and codes
 # Without a fieldrule constraint, this matches any 2-character string that happens to be a valid country code
@@ -38,7 +51,12 @@ rules:
     priority: 1
     match: text
     type: data
-    fieldrule: Optional(Word(printables)) + CaselessLiteral('country') + Optional(Word(printables))
+    # Same field guard as iso3166-alpha2.
+    fieldrule: >-
+      (CaselessLiteral('country') + ZeroOrMore(Word(printables)))
+      ^ ((Word(alphanums) + Optional(oneOf('_ -'))) * 1 + CaselessLiteral('country') + ZeroOrMore(Word(printables)))
+      ^ ((Word(alphanums) + Optional(oneOf('_ -'))) * 2 + CaselessLiteral('country') + ZeroOrMore(Word(printables)))
+      ^ ((Word(alphanums) + Optional(oneOf('_ -'))) * 3 + CaselessLiteral('country') + ZeroOrMore(Word(printables)))
     fieldrulematch: ppr
     imprecise: 1
 # This rule generates a lot of False positives because 3-character codes match many common abbreviations and codes
@@ -53,7 +71,12 @@ rules:
     priority: 1
     match: text
     type: data
-    fieldrule: Optional(Word(printables)) + CaselessLiteral('country') + Optional(Word(printables))
+    # Same field guard as iso3166-alpha2.
+    fieldrule: >-
+      (CaselessLiteral('country') + ZeroOrMore(Word(printables)))
+      ^ ((Word(alphanums) + Optional(oneOf('_ -'))) * 1 + CaselessLiteral('country') + ZeroOrMore(Word(printables)))
+      ^ ((Word(alphanums) + Optional(oneOf('_ -'))) * 2 + CaselessLiteral('country') + ZeroOrMore(Word(printables)))
+      ^ ((Word(alphanums) + Optional(oneOf('_ -'))) * 3 + CaselessLiteral('country') + ZeroOrMore(Word(printables)))
     fieldrulematch: ppr
     imprecise: 1
 # This rule generates a lot of False positives so it marked as imprecise rule and could be filtered if it's set
