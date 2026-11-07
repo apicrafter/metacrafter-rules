@@ -181,3 +181,85 @@ def test_http_status_values():
     assert not any(check(v) for v in ("600", "99", "2000", "abc"))
     guard = text_guard("common/internet.yaml", "httpstatuscodevalue")
     assert guard("Statuscode") and not guard("status") and not guard("price")
+
+
+# --- #48 OKFS, OKOGU, region codes -----------------------------------------------
+
+def text_values(path, rule_id):
+    spec = load(path, rule_id)
+    assert spec["type"] == "data" and spec["match"] == "text"
+    return {value.strip().lower() for value in spec["rule"].split(",")}
+
+
+def regex_any(path, rule_id):
+    spec = load(path, rule_id)
+    pattern = re.compile(spec["rule"])
+    low, high = int(spec.get("minlen", 1)), int(spec.get("maxlen", 10 ** 6))
+    return lambda value: low <= len(value) <= high and pattern.fullmatch(value) is not None
+
+
+@pytest.mark.parametrize("value", [
+    "Федеральная собственность", "Собственность субъектов Российской Федерации", "Муниципальная собственность",
+    "Частная собственность", "Собственность иностранных граждан и лиц без гражданства",
+    "Смешанная российская собственность с долей федеральной собственности",
+    "Иная смешанная российская собственность", "Собственность общественных объединений",
+    "РОССИЙСКАЯ СОБСТВЕННОСТЬ",
+    "Собственность граждан Российской Федерации, постоянно проживающих на территории иностранного государства",
+])
+def test_okfs_names(value):
+    assert regex_any("ru/ru_codes.yaml", "ruokfsname")(value)
+
+
+@pytest.mark.parametrize("value", ["собственность", "Федеральная налоговая служба", "Частная собственность ООО"])
+def test_okfs_names_reject_other_text(value):
+    assert not regex_any("ru/ru_codes.yaml", "ruokfsname")(value)
+
+
+def test_okfs_codes_need_an_okfs_field():
+    codes = text_values("ru/ru_codes.yaml", "ruokfscodevalue")
+    assert {"12", "13", "14", "16", "24", "41", "49", "53", "61"} <= codes and "25" not in codes
+    guard = text_guard("ru/ru_codes.yaml", "ruokfscodevalue")
+    assert guard("okfsCode") and guard("ОКФС") and not guard("code")
+
+
+def test_okogu_codes_need_an_okogu_field():
+    check = regex_any("ru/ru_codes.yaml", "ruokogucodevalue")
+    assert check("1327010") and check("3300500") and not check("132701") and not check("13270100")
+    guard = text_guard("ru/ru_codes.yaml", "ruokogucodevalue")
+    assert guard("okoguCode") and guard("ОКОГУ") and not guard("code")
+
+
+@pytest.mark.parametrize("value", [
+    "Местные администрации (исполнительно-распорядительные органы) сельских поселений",
+    "Местные администрации (исполнительно-распорядительные органы муниципальных образований)",
+    "Представительные органы муниципальных районов",
+    "Контрольно-счетные органы муниципальных районов",
+    "Органы исполнительной власти субъектов Российской Федерации, осуществляющие другие функции",
+    "Исполнительная власть субъектов Российской Федерации",
+    "Система федеральных арбитражных судов",
+])
+def test_okogu_category_names(value):
+    assert regex_any("ru/ru_codes.yaml", "ruokoguname")(value)
+
+
+@pytest.mark.parametrize("value", ["Федеральная налоговая служба", "Администрация города Якутска",
+                                   "Министерство финансов Республики Саха (Якутия)"])
+def test_okogu_category_names_skip_single_organizations(value):
+    assert not regex_any("ru/ru_codes.yaml", "ruokoguname")(value)
+
+
+@pytest.mark.parametrize("rule_id,names", [
+    ("ruokfsnamefield", ["okfsName", "okfs_name", "Форма собственности", "наименование окфс"]),
+    ("ruokogunamefield", ["okoguName", "okogu_name", "наименование по окогу"]),
+])
+def test_classifier_name_fields(rule_id, names):
+    check = regex_field("ru/ru_codes.yaml", rule_id)
+    for name in names:
+        assert check(name), name
+    assert not check("name")
+
+
+def test_region_code_guard_accepts_transliterated_names():
+    guard = text_guard("ru/ru_geo.yaml", "ruregioncode")
+    for name in ("kod_regiona", "region_kod", "Код региона", "regioncode"):
+        assert guard(name), name

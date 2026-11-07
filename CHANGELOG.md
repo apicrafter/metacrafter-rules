@@ -18,6 +18,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     `genderbyvalue` (`м`/`ж`, `мужской`/`женский`, `m`/`f`, `male`/`female` in a gender field).
   - `httpstatuscodefield` (`Statuscode`, `status_code`, `http_status`, `response_code`) and
     `httpstatuscodevalue` (100–599 in such a field).
+- **Russian OKFS and OKOGU classifiers by value** (#48), in `rules/ru/ru_codes.yaml`:
+  - `ruokfsname`: the 33 names of OKFS (OK 027-99), any case (`Федеральная собственность`,
+    `Муниципальная собственность`), key `okfsname`; `ruokfsnamefield` by field name
+    (`okfsName`, `форма собственности`).
+  - `ruokfscodevalue` (OKFS codes in an `okfs` field) and `ruokogucodevalue` (seven digits in an
+    `okogu` field): codes were labelled only by the field name, at 36.
+  - `ruokoguname`: plural OKOGU categories of regional and local bodies (`Местные
+    администрации (исполнительно-распорядительные органы) сельских поселений`), key
+    `okoguname`; `ruokogunamefield` by field name. Federal bodies are organization names too and
+    get `okoguname` only from the field name.
+  - The keys `okfsname` and `okoguname` are new registry records
+    (apicrafter/metacrafter-registry#151): pin this pack in metacrafter after that PR is live.
+- `ruregioncode` (`ru/ru_geo.yaml`) also accepts the field names `kod_regiona`, `region_kod`,
+  `код региона` and their variants.
 
 
 ### Fixed

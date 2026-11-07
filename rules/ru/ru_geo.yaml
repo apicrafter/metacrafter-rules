@@ -200,7 +200,8 @@ rules:
     type: data
     rule: 50,51,77,02,34,76,86,46,74,07,54,23,57,59,35,42,15,52,32,66,56,71,60,43,33,27,55,36,31,14,13,28,12,89,21,61,22,10,64,65,78,63,25,05,16,53,24,67,37,44,17,87,39,72,30,26,48,69,70,58,29,79,03,68,04,38,73,41,18,45,47,49,75,20,01,09,19,83,11,62,40,08,06
     fieldrule: regcode,regioncode,region,region_code,subjectcode,subjectrfcode,код
-      субъекта рф
+      субъекта рф,kod_regiona,kod_region,kodregiona,region_kod,regionkod,код региона,код_региона,код
+      субъекта,kod_subekta
     fieldrulematch: text
   rucountryname:
     key: ruscountryname
