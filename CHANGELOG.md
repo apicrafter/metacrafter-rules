@@ -7,6 +7,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- **Field guards that matched no ordinary field name** (#17). The guards of
+  `iso3166-alpha2`, `iso3166-alpha3`, their imprecise variants, `yearbydatafiltered`,
+  `yearbydataimprecise`, `latitudevalue`, `longitudevalue` and `rupostindex` started with
+  `Optional(Word(printables))` or `Word(printables)`. That word took the whole field name,
+  and pyparsing does not backtrack, so the guards matched only names with a space before
+  the keyword (`birth country`): `country`, `country_code`, `birth_year` and `geo_lat` did
+  not run these value rules. The guards now use the form of the OKVED guard: alternatives
+  with 0 to 3 words before the keyword, separated by `_`, `-` or spaces.
+  - Country codes: a word that starts with `country` (`country`, `countrycode`,
+    `birth_country`, `place_of_birth_country`).
+  - Years: a word that starts with `year` (`year`, `Year`, `year_built`, `birth_year`);
+    the imprecise rule also accepts `date` and `time` (`created_date`, `start_time`).
+  - Latitude and longitude: the word `lat`, `lon` or `lng`, optionally with digits
+    (`geo_lat`, `lat_wgs84`, `lon2`), and not `latest`, `long` or `salon`. metacrafter
+    skips value rules on float columns, so these rules apply to text columns.
+  - Russian post index: a word that starts with `индекс` or `indeks`, or `index` after
+    `post` or `postal` (`почтовый_индекс`, `post_index`, `postindex`); not `index` or
+    `row_index`. `rupostindex` was a field rule, so its 6-digit pattern was tested on
+    field names; it is now a value rule.
+- **ATC codes reported four times**. `enatcvalue`, `deatcvalue`, `fratcvalue` and
+  `esatcvalue` were the same rule, so an ATC column reported `atccode` four times. They
+  are replaced by one rule, `atcvalue` in `rules/common/medical.yaml`. It is language
+  independent, so it also runs when a scan selects other languages (`--langs ru`).
+
 ## [0.0.6] - 2026-11-07
 
 ### Added

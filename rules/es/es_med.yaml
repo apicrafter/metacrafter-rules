@@ -24,14 +24,6 @@ rules:
     rule: codigo_atc,atc,atc_medicamento
     type: field
     match: text
-  esatcvalue:
-    key: atccode
-    name: Código ATC según el valor
-    match: ppr
-    type: data
-    rule: Word('ABCDEFGHIJKLMNOPQRSTUV', exact=1) + Word(nums, exact=2) + Word('ABCDEFGHIJKLMNOPQRSTUVWXYZ', exact=2) + Word(nums, exact=2)
-    maxlen: 7
-    minlen: 7
   escupfield:
     key: cupscode
     name: Código CUP/CUPS según el nombre del campo
