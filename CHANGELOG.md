@@ -31,6 +31,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   could never match, and `image/gif`, `image/svg+xml` or `video/mp4` were missing. It is now
   the registry regexp of `mimetype` (a registered top-level type, a subtype, optional
   parameters; case-insensitive) with priority 1.
+- **`isprefixrule`, `hasprefixrule` and `showprefixrule` need a word boundary** (#45). Their
+  field guards accepted any name that starts with `is`, `has` or `show`, so a camera ISO
+  column (`media_details.image_meta.iso`, mostly `0`) was `boolean` at 98; `issue`, `isbn`,
+  `hash` and `showroom` passed too. The prefix must now be followed by `_`, `-` or the
+  capital letter of a camelCase name (`is_active`, `IS-ACTIVE`, `isActive`, `HasPhoto`).
+  Lower-case names without a separator (`ispublic`) no longer pass: in 444k open data field
+  names they are rare next to `island`, `issuer` and `iso3_code`.
 
 ## [0.0.9] - 2026-11-07
 

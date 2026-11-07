@@ -38,7 +38,9 @@ rules:
     priority: 1
     match: text
     type: data
-    fieldrule: CaselessLiteral('is') + Optional("_") + Optional(Word(printables))
+    # is_active, IS-ACTIVE, isActive, IsActive; not iso, isbn, issue or ISO (the "is" must end
+    # at "_", "-" or a capital letter of a camelCase name).
+    fieldrule: (CaselessLiteral('is_') | CaselessLiteral('is-')) + Word(printables) | oneOf('is Is') + Word('ABCDEFGHIJKLMNOPQRSTUVWXYZ', exact=1) + Optional(Word(printables))
     fieldrulematch: ppr
   showprefixrule:
     key: boolean
@@ -49,7 +51,7 @@ rules:
     priority: 1
     match: text
     type: data
-    fieldrule: CaselessLiteral('show')+ Optional("_") + Optional(Word(printables))
+    fieldrule: (CaselessLiteral('show_') | CaselessLiteral('show-')) + Word(printables) | oneOf('show Show') + Word('ABCDEFGHIJKLMNOPQRSTUVWXYZ', exact=1) + Optional(Word(printables))
     fieldrulematch: ppr
   hasprefixrule:
     key: boolean
@@ -60,7 +62,7 @@ rules:
     priority: 1
     match: text
     type: data
-    fieldrule: CaselessLiteral('has') + Optional("_") + Optional(Word(printables))
+    fieldrule: (CaselessLiteral('has_') | CaselessLiteral('has-')) + Word(printables) | oneOf('has Has') + Word('ABCDEFGHIJKLMNOPQRSTUVWXYZ', exact=1) + Optional(Word(printables))
     fieldrulematch: ppr
   flagpostfixrule:
     key: boolean
