@@ -61,7 +61,14 @@ rules:
       exact=1))) + Literal('.') + Word(nums, min=1, max=10)
     type: data
     match: ppr
-    fieldrule: Optional(Word(printables)) + Optional('_') + "lat"
+    # The field name has the word lat, possibly with digits: lat, geo_lat, lat_wgs84, lat2,
+    # gps lat (not latest or plate). pyparsing does not backtrack, so each alternative fixes
+    # the number of words before it (0 to 3); words are separated by _, - or spaces.
+    fieldrule: >-
+      (CaselessLiteral('lat') + Optional(Word(nums)) + Optional(oneOf('_ -') + ZeroOrMore(Word(printables))))
+      ^ ((Word(alphanums) + Optional(oneOf('_ -'))) * 1 + CaselessLiteral('lat') + Optional(Word(nums)) + Optional(oneOf('_ -') + ZeroOrMore(Word(printables))))
+      ^ ((Word(alphanums) + Optional(oneOf('_ -'))) * 2 + CaselessLiteral('lat') + Optional(Word(nums)) + Optional(oneOf('_ -') + ZeroOrMore(Word(printables))))
+      ^ ((Word(alphanums) + Optional(oneOf('_ -'))) * 3 + CaselessLiteral('lat') + Optional(Word(nums)) + Optional(oneOf('_ -') + ZeroOrMore(Word(printables))))
     fieldrulematch: ppr
     priority: 2
   longitudevalue:
@@ -73,7 +80,14 @@ rules:
       exact=2))) + Literal(".") + Word(nums, min=1, max=10)
     type: data
     match: ppr
-    fieldrule: Optional(Word(printables)) + Optional('_') + (Literal("lon") ^ Literal("lng"))
+    # The field name has the word lon or lng, possibly with digits: lon, geo_lng, lon_wgs84
+    # (not long or salon). pyparsing does not backtrack, so each alternative fixes the number
+    # of words before it (0 to 3); words are separated by _, - or spaces.
+    fieldrule: >-
+      (oneOf('lon lng', caseless=True) + Optional(Word(nums)) + Optional(oneOf('_ -') + ZeroOrMore(Word(printables))))
+      ^ ((Word(alphanums) + Optional(oneOf('_ -'))) * 1 + oneOf('lon lng', caseless=True) + Optional(Word(nums)) + Optional(oneOf('_ -') + ZeroOrMore(Word(printables))))
+      ^ ((Word(alphanums) + Optional(oneOf('_ -'))) * 2 + oneOf('lon lng', caseless=True) + Optional(Word(nums)) + Optional(oneOf('_ -') + ZeroOrMore(Word(printables))))
+      ^ ((Word(alphanums) + Optional(oneOf('_ -'))) * 3 + oneOf('lon lng', caseless=True) + Optional(Word(nums)) + Optional(oneOf('_ -') + ZeroOrMore(Word(printables))))
     fieldrulematch: ppr
     priority: 2
   postindexknown:

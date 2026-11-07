@@ -24,14 +24,6 @@ rules:
     rule: atc_code,atccode,arzneimittel_atc,who_atc
     type: field
     match: text
-  deatcvalue:
-    key: atccode
-    name: ATC-Code anhand des Wertes
-    match: ppr
-    type: data
-    rule: Word('ABCDEFGHIJKLMNOPQRSTUV', exact=1) + Word(nums, exact=2) + Word('ABCDEFGHIJKLMNOPQRSTUVWXYZ', exact=2) + Word(nums, exact=2)
-    maxlen: 7
-    minlen: 7
   deopsfield:
     key: opscode
     name: OPS-Prozedurcode anhand Feldnamen
