@@ -109,6 +109,15 @@ CASES = [
     ("es/es_datetime.yaml", "esmonthbydatafiltered",
      ["1", "01", "9", "10", "11", "12"],
      ["0", "00", "13", "20", "123"]),
+    # Substance-level ATC codes (7 characters); group codes such as A13A are not matched.
+    *[(relpath, rule_id,
+       ["D08AX08", "A02BC04", "M04AA03", "J05AR21"],
+       ["A13A", "M04A03", "12345AB", "L03AX", "W01AA01"])
+      for relpath, rule_id in [("en/en_med.yaml", "enatcvalue"), ("de/de_med.yaml", "deatcvalue"),
+                               ("fr/fr_med.yaml", "fratcvalue"), ("es/es_med.yaml", "esatcvalue")]],
+    ("ru/ru_codes.yaml", "ruokpdcodepat",
+     ["35.30.12.130", "91.01.11", "21.20.10.226", "21.20.1", "21.20"],
+     ["35-30-12", "192.168.1.1", "21.20.10.22", "1.20.10.226", "21.20.10.2260"]),
 ]
 
 

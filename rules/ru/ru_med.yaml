@@ -9,19 +9,45 @@ rules:
     name: Russian international unpatented name of pharm
     match: text
     type: field
-    rule: международное непатентованное название (мнн)
+    rule: международное непатентованное название (мнн),наименование мнн
   rumnnknownshort:
     key: rumedmnn
     name: Russian international unpatented name of pharm short name
     match: text
     type: field
     rule: мнн,mnn
+  # Field names with the word mnn: std_mnn_name, norm_mnn, mnn_name. After mnn only name,
+  # names or list may follow, so identifier columns such as std_mnn_gid do not match, and
+  # smnn_* is another word. pyparsing does not backtrack, so each alternative fixes the
+  # number of words before mnn.
+  rumnnbyname:
+    key: rumedmnn
+    name: Russian international unpatented name of pharm by a field name with the word mnn
+    match: ppr
+    type: field
+    rule: >-
+      (CaselessLiteral('mnn') + oneOf('_ -') + oneOf('name names list', caseless=True))
+      ^ ((Word(alphanums) + oneOf('_ -')) * 1 + CaselessLiteral('mnn') + Optional(oneOf('_ -') + oneOf('name names list', caseless=True)))
+      ^ ((Word(alphanums) + oneOf('_ -')) * 2 + CaselessLiteral('mnn') + Optional(oneOf('_ -') + oneOf('name names list', caseless=True)))
   rumedicinetradenamebyknown:
     key: rumedicinetradename
     name: Russian name of medicines
     match: text
     type: field
-    rule: торговое наименование лекарственного препарата,название лекарственного препарата
+    rule: торговое наименование лекарственного препарата,название лекарственного препарата,торговое наименование,торговое_наименование
+  # Trade names of ESKLP catalogue positions (КЛП, каталожная позиция лекарственного
+  # препарата): klp_all_list, klp_active_list, klp_name. The name ends with name, names or
+  # list after the word klp, so counts and identifiers (smnn_all_klp_count, klp_gid) do not
+  # match.
+  rumedicinetradenamebyklp:
+    key: rumedicinetradename
+    name: Russian name of medicines by a field name with the word klp (ESKLP catalogue position)
+    match: ppr
+    type: field
+    rule: >-
+      (CaselessLiteral('klp') + oneOf('_ -') + oneOf('name names list', caseless=True))
+      ^ (CaselessLiteral('klp') + oneOf('_ -') + Word(alphanums) + oneOf('_ -') + oneOf('name names list', caseless=True))
+      ^ (Word(alphanums) + oneOf('_ -') + CaselessLiteral('klp') + oneOf('_ -') + oneOf('name names list', caseless=True))
   rumedicineregnumber:
     key: rumedicineregnum
     name: Russian registration code of the medicine
@@ -37,4 +63,10 @@ rules:
     name: Russian ATC code name by field name
     match: text
     type: field
-    rule: код атх
+    rule: код атх,код_атх,атх,ath,atx
+  rumedicationclassbyknown:
+    key: medication_class
+    name: Russian pharmacotherapeutic group by field name
+    match: text
+    type: field
+    rule: ftg,фтг,фармакотерапевтическая группа
