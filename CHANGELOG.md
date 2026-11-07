@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.0.4] - 2026-11-07
+
 ### Fixed
 
 - **Person name rules report the universal registry datatypes** (apicrafter/metacrafter#42).
