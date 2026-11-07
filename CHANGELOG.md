@@ -21,6 +21,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `00000000000000000111` are no longer Russian bank accounts. `is_bank_account` also accepts
   accounts in yuan, tenge, Belarusian rubles, lira, dirham, rupees, yen and Hong Kong dollars,
   and the ISO 4217 ruble code 643.
+- **`fqdnbyvalidators` needs a delegated top-level domain** (#43). `is_fqdn` accepted any
+  dotted name, so SharePoint type names (`SP.ContentType`) and thumbnail file names
+  (`2-150x150.png`) were domains at 86–100. The last label must now be in the IANA root zone:
+  `metacrafterext/rules/common/tlds.py` (1436 TLDs, IANA version 2026110700), regenerated with
+  `scripts/update_tlds.py`. Internationalized TLDs (`рф`) are compared in their `xn--` form.
 
 ## [0.0.9] - 2026-11-07
 

@@ -1,6 +1,8 @@
 from ipaddress import IPv4Address, IPv6Address, AddressValueError
 from validators import domain, mac_address
 
+from metacrafterext.rules.common.tlds import TLDS
+
 
 def validate_macaddr(s):
     return mac_address(s)
@@ -131,13 +133,26 @@ def validate_torrent_info_hash(value):
 _IDNA_DOTS = ("\u3002", "\uff0e", "\uff61")
 
 
+def is_known_tld(label):
+    """True when ``label`` is a top-level domain of the IANA root zone (any case, IDN or xn--)."""
+    label = label.lower()
+    if not label.isascii():
+        try:
+            label = label.encode("idna").decode("ascii")
+        except UnicodeError:
+            return False
+    return label in TLDS
+
+
 def is_fqdn(value):
-    """Fully qualified domain name, checked with validators.domain.
+    """Fully qualified domain name, checked with validators.domain and the IANA TLD list.
 
     Values with the ideographic and fullwidth full stops (。 ． ｡) or without an ASCII dot
     are rejected: IDNA treats those stops as dots, so text such as
     "ニコラ･プッサン。リナルドとアルミーダ" passed as a domain. Internationalized names
-    with ASCII dots (слово.рф) still match.
+    with ASCII dots (слово.рф) still match. The last label must be a delegated top-level
+    domain: type names such as SP.ContentType and file names such as 2-150x150.png are not
+    domains.
     """
     if not isinstance(value, str):
         return False
@@ -145,6 +160,8 @@ def is_fqdn(value):
     if "." not in text or any(dot in text for dot in _IDNA_DOTS):
         return False
     try:
-        return bool(domain(text))
+        if not domain(text):
+            return False
     except Exception:  # noqa: BLE001 - a validator error means no match
         return False
+    return is_known_tld(text.rstrip(".").rsplit(".", 1)[-1])
