@@ -7,6 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- **Placeholder numbers no longer pass check digit validators** (#42). A value made of one
+  repeated digit (`0000000000`, `1111111111`) passes most weighted-sum checks, so a budget
+  classifier column of `0000000000` got ISBN-10, INN, NHS number and NIP at 100. The new
+  `metacrafterext.rules.common.placeholders.rejects_repeated_digits` wraps the check digit
+  validators of ISBN, ISBN-10, ISSN, ISNI, GTIN/EAN/UPC, GLN, SSCC, DUNS, IMEI, IMSI, ICCID,
+  IMO number, SNOMED CT, NHS number, NIP, PESEL, SIREN, French CNI, Indonesian NIK, Turkish
+  VKN, Vietnamese tax code, Saudi Iqama, CUSIP, US SSN, Aadhaar, CLABE, VIN and INN.
+- `rusbankaccountvalue` checks the balance account and the currency of a 20-digit number
+  (`is_bank_account`, as `bankaccountpat` does), so zero-padded codes such as
+  `00000000000000000111` are no longer Russian bank accounts. `is_bank_account` also accepts
+  accounts in yuan, tenge, Belarusian rubles, lira, dirham, rupees, yen and Hong Kong dollars,
+  and the ISO 4217 ruble code 643.
+
 ## [0.0.9] - 2026-11-07
 
 ### Added

@@ -2,6 +2,7 @@
 import datetime
 
 from pyparsing import oneOf, lineStart, ParseException, Word, printables, Optional
+from metacrafterext.rules.common.placeholders import rejects_repeated_digits
 
 RU_ORG_PREFIXES = ['ооо',
                    'зао',
@@ -225,6 +226,7 @@ def calc_personal_check_digits(number):
     return d1 + d2
 
 
+@rejects_repeated_digits
 def _check_inn(code):
     """Validates INN code"""
     if code is not None and code.isdigit():

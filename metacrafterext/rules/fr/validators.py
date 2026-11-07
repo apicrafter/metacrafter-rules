@@ -2,6 +2,8 @@
 Validation functions for French-specific identifiers.
 """
 
+from metacrafterext.rules.common.placeholders import rejects_repeated_digits
+
 # Characters of the check key; I and O are not used.
 _FR_VAT_KEY_ALPHABET = '0123456789ABCDEFGHJKLMNPQRSTUVWXYZ'
 
@@ -67,6 +69,7 @@ FR_CNI_FIRST_YEAR = 1988
 FR_CNI_LAST_YEAR = 2021
 
 
+@rejects_repeated_digits
 def validate_fr_cni(value):
     """
     Validates the number of a French national identity card (CNI) issued from 1988 to 2021.

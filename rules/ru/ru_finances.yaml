@@ -62,6 +62,7 @@ rules:
     match: ppr
     type: data
     rule: Word(nums, exact=20)
+    validator: metacrafterext.rules.ru.finances.is_bank_account
     maxlen: 20
     minlen: 20
   rueqsecregfield:
