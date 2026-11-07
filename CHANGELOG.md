@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.0.9] - 2026-11-07
+
 ### Added
 
 - **Foreign trade and customs rules** (#39): `rules/common/trade.yaml` (context `trade`)
