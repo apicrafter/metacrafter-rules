@@ -7,6 +7,12 @@ rules:
   percentagebyfield:
     key: percentage
     name: Percentage field
-    rule: Literal('_').suppress() + (Literal('percentage') ^ Literal('percent'))
+    # The field name ends with the word percent or percentage after 1 to 3 other
+    # words (tax_percent, discount percentage).
+    # pyparsing does not backtrack, so each number of words is an alternative.
+    rule: >-
+      ((Word(alphanums) + Optional(oneOf('_ -'))) * 1 + oneOf('percent percentage', caseless=True))
+      ^ ((Word(alphanums) + Optional(oneOf('_ -'))) * 2 + oneOf('percent percentage', caseless=True))
+      ^ ((Word(alphanums) + Optional(oneOf('_ -'))) * 3 + oneOf('percent percentage', caseless=True))
     type: field
     match: ppr

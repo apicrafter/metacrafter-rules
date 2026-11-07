@@ -59,7 +59,13 @@ rules:
   yearknownpat:
     key: year
     name: Year by known name pattern
-    rule: Word(printables) + "year" +  lineEnd
+    # The field name ends with the word year after 1 to 3 other words (birth_year,
+    # fiscal year, Model-Year).
+    # pyparsing does not backtrack, so each number of words is an alternative.
+    rule: >-
+      ((Word(alphanums) + Optional(oneOf('_ -'))) * 1 + CaselessLiteral('year'))
+      ^ ((Word(alphanums) + Optional(oneOf('_ -'))) * 2 + CaselessLiteral('year'))
+      ^ ((Word(alphanums) + Optional(oneOf('_ -'))) * 3 + CaselessLiteral('year'))
     type: field
     match: ppr
     priority: 2
@@ -73,7 +79,13 @@ rules:
   timestampknownpat:
     key: unixtime
     name: Timestamp by known name pattern
-    rule: Word(printables) + "timestamp" +  lineEnd
+    # The field name ends with the word timestamp after 1 to 3 other words
+    # (created_timestamp, event timestamp).
+    # pyparsing does not backtrack, so each number of words is an alternative.
+    rule: >-
+      ((Word(alphanums) + Optional(oneOf('_ -'))) * 1 + CaselessLiteral('timestamp'))
+      ^ ((Word(alphanums) + Optional(oneOf('_ -'))) * 2 + CaselessLiteral('timestamp'))
+      ^ ((Word(alphanums) + Optional(oneOf('_ -'))) * 3 + CaselessLiteral('timestamp'))
     type: field
     match: ppr
     priority: 2
@@ -87,14 +99,26 @@ rules:
   timezoneknownpat:
     key: timezone
     name: Timezone by known name pattern
-    rule: Word(printables) + "timezone" +  lineEnd
+    # The field name ends with the word timezone after 1 to 3 other words
+    # (user_timezone, local timezone).
+    # pyparsing does not backtrack, so each number of words is an alternative.
+    rule: >-
+      ((Word(alphanums) + Optional(oneOf('_ -'))) * 1 + CaselessLiteral('timezone'))
+      ^ ((Word(alphanums) + Optional(oneOf('_ -'))) * 2 + CaselessLiteral('timezone'))
+      ^ ((Word(alphanums) + Optional(oneOf('_ -'))) * 3 + CaselessLiteral('timezone'))
     type: field
     match: ppr
     priority: 2
   monthknownpat:
     key: month
     name: Month by known name pattern
-    rule: Word(printables) + Literal("month")
+    # The field name ends with the word month after 1 to 3 other words (birth_month,
+    # start month, Report-Month).
+    # pyparsing does not backtrack, so each number of words is an alternative.
+    rule: >-
+      ((Word(alphanums) + Optional(oneOf('_ -'))) * 1 + CaselessLiteral('month'))
+      ^ ((Word(alphanums) + Optional(oneOf('_ -'))) * 2 + CaselessLiteral('month'))
+      ^ ((Word(alphanums) + Optional(oneOf('_ -'))) * 3 + CaselessLiteral('month'))
     type: field
     match: ppr
     priority: 2

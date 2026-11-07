@@ -39,7 +39,13 @@ rules:
     name: Latitude by known name pattern
     maxlen: 100
     minlen: 10
-    rule: Word(printables) + Optional('_') + "latitude"
+    # The field name ends with the word latitude after 1 to 3 other words
+    # (geo_latitude, start latitude).
+    # pyparsing does not backtrack, so each number of words is an alternative.
+    rule: >-
+      ((Word(alphanums) + Optional(oneOf('_ -'))) * 1 + CaselessLiteral('latitude'))
+      ^ ((Word(alphanums) + Optional(oneOf('_ -'))) * 2 + CaselessLiteral('latitude'))
+      ^ ((Word(alphanums) + Optional(oneOf('_ -'))) * 3 + CaselessLiteral('latitude'))
     type: field
     match: ppr
     priority: 2
@@ -48,7 +54,13 @@ rules:
     name: Longitude by known name pattern
     maxlen: 100
     minlen: 11
-    rule: Word(printables) + Optional('_') + "longitude"
+    # The field name ends with the word longitude after 1 to 3 other words
+    # (geo_longitude, start longitude).
+    # pyparsing does not backtrack, so each number of words is an alternative.
+    rule: >-
+      ((Word(alphanums) + Optional(oneOf('_ -'))) * 1 + CaselessLiteral('longitude'))
+      ^ ((Word(alphanums) + Optional(oneOf('_ -'))) * 2 + CaselessLiteral('longitude'))
+      ^ ((Word(alphanums) + Optional(oneOf('_ -'))) * 3 + CaselessLiteral('longitude'))
     type: field
     match: ppr
     priority: 2

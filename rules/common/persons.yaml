@@ -43,7 +43,13 @@ rules:
     key: person_firstname
     is_pii: true
     name: Person firstname by known
-    rule: Word(printables) + "firstname" +  lineEnd
+    # The field name ends with the word firstname after 1 to 3 other words
+    # (user_firstname, contact firstname).
+    # pyparsing does not backtrack, so each number of words is an alternative.
+    rule: >-
+      ((Word(alphanums) + Optional(oneOf('_ -'))) * 1 + CaselessLiteral('firstname'))
+      ^ ((Word(alphanums) + Optional(oneOf('_ -'))) * 2 + CaselessLiteral('firstname'))
+      ^ ((Word(alphanums) + Optional(oneOf('_ -'))) * 3 + CaselessLiteral('firstname'))
     type: field
     match: ppr
     priority: 2
@@ -51,7 +57,13 @@ rules:
     key: person_surname
     is_pii: true
     name: Person surname by known
-    rule: Word(printables) + "surname" +  lineEnd
+    # The field name ends with the word surname after 1 to 3 other words
+    # (user_surname, maiden surname).
+    # pyparsing does not backtrack, so each number of words is an alternative.
+    rule: >-
+      ((Word(alphanums) + Optional(oneOf('_ -'))) * 1 + CaselessLiteral('surname'))
+      ^ ((Word(alphanums) + Optional(oneOf('_ -'))) * 2 + CaselessLiteral('surname'))
+      ^ ((Word(alphanums) + Optional(oneOf('_ -'))) * 3 + CaselessLiteral('surname'))
     type: field
     match: ppr
     priority: 2
@@ -59,7 +71,13 @@ rules:
     key: person_surname
     is_pii: true
     name: Person lastname by known
-    rule: Word(printables) + "lastname" +  lineEnd
+    # The field name ends with the word lastname after 1 to 3 other words
+    # (user_lastname, contact lastname).
+    # pyparsing does not backtrack, so each number of words is an alternative.
+    rule: >-
+      ((Word(alphanums) + Optional(oneOf('_ -'))) * 1 + CaselessLiteral('lastname'))
+      ^ ((Word(alphanums) + Optional(oneOf('_ -'))) * 2 + CaselessLiteral('lastname'))
+      ^ ((Word(alphanums) + Optional(oneOf('_ -'))) * 3 + CaselessLiteral('lastname'))
     type: field
     match: ppr
     priority: 2
@@ -67,7 +85,13 @@ rules:
     key: person_midname
     is_pii: true
     name: Person midname by known
-    rule: Word(printables) + "midname" +  lineEnd
+    # The field name ends with the word midname after 1 to 3 other words
+    # (user_midname, father midname).
+    # pyparsing does not backtrack, so each number of words is an alternative.
+    rule: >-
+      ((Word(alphanums) + Optional(oneOf('_ -'))) * 1 + CaselessLiteral('midname'))
+      ^ ((Word(alphanums) + Optional(oneOf('_ -'))) * 2 + CaselessLiteral('midname'))
+      ^ ((Word(alphanums) + Optional(oneOf('_ -'))) * 3 + CaselessLiteral('midname'))
     type: field
     match: ppr
     priority: 2

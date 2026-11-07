@@ -5,6 +5,10 @@ matches it against the field name as it is (not lower-cased). pyparsing does not
 a guard such as ``Optional(Word(printables)) + Literal('year') + Optional(Word(printables))``
 never matches ``birth_year``: ``Word(printables)`` consumes the whole name. Such guards made
 their value rules run only for names like ``birth year``.
+
+ppr field-name rules (``type: field``, ``match: ppr``) are compiled the same way
+(apicrafter/metacrafter-rules#25). A rule that ends with ``+ lineEnd`` never matches: the first
+``lineEnd`` consumes the end of the text and metacrafter's own ``lineEnd`` then fails.
 """
 import pathlib
 import warnings
@@ -63,6 +67,19 @@ def all_ppr_guards():
                 yield path.relative_to(RULES).as_posix(), rule_id, rule["fieldrule"]
 
 
+def all_ppr_field_name_rules():
+    for path in sorted(RULES.rglob("*.yaml")):
+        data = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+        for rule_id, rule in (data.get("rules") or {}).items():
+            if rule.get("type") == "field" and rule.get("match") == "ppr":
+                yield path.relative_to(RULES).as_posix(), rule_id, rule["rule"]
+
+
+def all_name_expressions():
+    """Every ppr expression that metacrafter matches against field names."""
+    return list(all_ppr_guards()) + list(all_ppr_field_name_rules())
+
+
 COUNTRY_NAMES = ["country", "Country", "COUNTRY", "country_code", "countrycode", "CountryCode",
                  "birth_country", "birth-country", "birth country", "country_of_birth",
                  "place_of_birth_country", "Country (ISO)", "country2"]
@@ -96,7 +113,76 @@ CASES = [
       "airport_icao", "icao_airport_code", "departure_airport", "arrival-airport-icao",
       "Airport ICAO", "origin airport code"],
      ["status", "infoinclusion", "code", "iata", "airline", "departureairport", "port"]),
+    # apicrafter/metacrafter-rules#25: Literal('_asn') + lineEnd matched no name.
+    ("common/internet.yaml", "asnbyvalueandpostfix",
+     ["peer_asn", "origin_asn", "Origin ASN", "src-asn", "bgp_peer_asn"],
+     ["asn", "_asn", "basn", "asn_name", "peer_asns", "peer_asn_name"]),
+    ("us/us_geo.yaml", "uszipcodebyname",
+     ["zip", "ZIP", "zipcode", "zip_code", "ZIP Code", "zip-code", "zip5", "billing_zip",
+      "mailing_zipcode", "home zip code", "Shipping-ZIP"],
+     ["unzip", "zipper", "zip_file", "zip_codes", "zips", "billingzip", "postcode"]),
 ]
+
+# Field-name rules: the keyword after 1 to 3 other words. The keyword alone is matched by the
+# text rules of the same key.
+SUFFIX_CASES = [
+    ("common/common.yaml", "phoneknownpat", "phone"),
+    ("common/common.yaml", "faxknownpat", "fax"),
+    ("common/commonurl.yaml", "urlbyknownpat", "url"),
+    ("common/internet.yaml", "urlknownpat", "url"),
+    ("common/internet.yaml", "emailknownpat", "email"),
+    ("common/dateandtime.yaml", "yearknownpat", "year"),
+    ("common/dateandtime.yaml", "timestampknownpat", "timestamp"),
+    ("common/dateandtime.yaml", "timezoneknownpat", "timezone"),
+    ("common/dateandtime.yaml", "monthknownpat", "month"),
+    ("common/geo.yaml", "latitudepat", "latitude"),
+    ("common/geo.yaml", "longitudepat", "longitude"),
+    ("common/persons.yaml", "firstnamepat", "firstname"),
+    ("common/persons.yaml", "surnamepat", "surname"),
+    ("common/persons.yaml", "lastnamepat", "lastname"),
+    ("common/persons.yaml", "midnamepat", "midname"),
+    ("common/values.yaml", "percentagebyfield", "percent"),
+    ("common/values.yaml", "percentagebyfield", "percentage"),
+]
+
+
+def suffix_names(keyword):
+    positives = [f"user_{keyword}", f"user {keyword}", f"User-{keyword.capitalize()}",
+                 f"USER_{keyword.upper()}", f"home_work_{keyword}", f"a_b_c_{keyword}"]
+    negatives = [keyword, f"_{keyword}", f"user{keyword}", f"user_{keyword}s",
+                 f"user_{keyword}_name", f"a_b_c_d_{keyword}", f"{keyword}_user"]
+    return positives, negatives
+
+
+@pytest.mark.parametrize("relpath,rule_id,keyword", SUFFIX_CASES,
+                         ids=[f"{c[1]}-{c[2]}" for c in SUFFIX_CASES])
+def test_field_name_rule_with_keyword_at_the_end(relpath, rule_id, keyword):
+    rule = load_rule(relpath, rule_id)
+    assert rule["type"] == "field" and rule["match"] == "ppr"
+    matches = guard_matcher(rule["rule"])
+    positives, negatives = suffix_names(keyword)
+    assert [name for name in positives if not matches(name)] == []
+    assert [name for name in negatives if matches(name)] == []
+
+
+@pytest.mark.parametrize("relpath,rule_id,positives,negatives", [
+    ("common/common.yaml", "phoneknownprefix",
+     ["phone2", "phone_2", "phone_number", "phonenumber", "Phone Number", "phone_no",
+      "phone-nr", "phone_mobile", "phone_home_2", "PHONE_WORK", "phone_cell2"],
+     ["phone", "phone_type", "phone_verified", "phonetic", "phones", "phone_notes",
+      "phone_numbers", "phone_country_code", "user_phone_number"]),
+    ("common/internet.yaml", "emailknownprefix",
+     ["email2", "email_1", "email_address", "Email Address", "email-work", "email_personal",
+      "EMAIL_PRIMARY_2", "emailaddr"],
+     ["email", "email_verified", "email_status", "emails", "email_sent_at", "emailing",
+      "user_email_address"]),
+], ids=["phoneknownprefix", "emailknownprefix"])
+def test_field_name_rule_with_keyword_at_the_start(relpath, rule_id, positives, negatives):
+    rule = load_rule(relpath, rule_id)
+    assert rule["type"] == "field" and rule["match"] == "ppr"
+    matches = guard_matcher(rule["rule"])
+    assert [name for name in positives if not matches(name)] == []
+    assert [name for name in negatives if matches(name)] == []
 
 
 @pytest.mark.parametrize("relpath,rule_id,positives,negatives", CASES, ids=[c[1] for c in CASES])
@@ -108,13 +194,32 @@ def test_guard_on_field_names(relpath, rule_id, positives, negatives):
     assert [name for name in negatives if matches(name)] == []
 
 
-@pytest.mark.parametrize("relpath,rule_id,expression", list(all_ppr_guards()),
-                         ids=[guard[1] for guard in all_ppr_guards()])
-def test_no_guard_starts_with_a_greedy_word(relpath, rule_id, expression):
-    """A guard that starts with Word(printables) consumes the whole name and needs a space."""
+@pytest.mark.parametrize("relpath,rule_id,expression", all_name_expressions(),
+                         ids=[item[1] for item in all_name_expressions()])
+def test_no_name_expression_starts_with_a_greedy_word(relpath, rule_id, expression):
+    """An expression that starts with Word(printables) consumes the whole name and needs a space."""
     guard_matcher(expression)
     compact = expression.replace(" ", "")
     assert not compact.startswith(("Word(printables", "Optional(Word(printables"))
+
+
+@pytest.mark.parametrize("relpath,rule_id,expression", all_name_expressions(),
+                         ids=[item[1] for item in all_name_expressions()])
+def test_no_name_expression_ends_with_line_end(relpath, rule_id, expression):
+    """metacrafter adds lineEnd itself; a second lineEnd fails at the end of the name."""
+    compact = expression.replace(" ", "").rstrip(")")
+    assert not compact.endswith(("lineEnd", "LineEnd("))
+
+
+def test_uszipcode_value_rule_checks_values():
+    # uszipcodebyname was a field rule, so its value pattern was matched against field names.
+    rule = load_rule("us/us_geo.yaml", "uszipcodebyname")
+    assert rule["type"] == "data" and rule["match"] == "ppr"
+    assert (rule["minlen"], rule["maxlen"]) == (5, 10)
+    matches = guard_matcher(rule["rule"])
+    assert [value for value in ["12345", "02134", "12345-6789"] if not matches(value)] == []
+    assert [value for value in ["1234", "123456", "12345-678", "12345-67890", "1234a",
+                                "12345 6789"] if matches(value)] == []
 
 
 def test_postindex_value_rule_checks_values():

@@ -7,12 +7,23 @@ rules:
   uszipcodebyname:
     key: uszipcode
     is_pii: False
-    name: US ZIP code by pattern
-    rule: Word(nums, exact=5)
-    type: field
+    name: US ZIP code by value and field name
+    # 5 digits or ZIP+4 (12345, 12345-6789).
+    rule: Word(nums, exact=5) + Optional(Literal('-') + Word(nums, exact=4))
+    minlen: 5
+    maxlen: 10
+    type: data
     match: ppr
-    fieldrule: Literal('_').suppress() + (Literal('zip') ^ Literal('zipcode') ^ Literal('zip_code'))
+    # The field name ends with zip, zipcode or zip_code (optionally with digits) after 0
+    # to 3 other words: zip, ZIP Code, zip5, billing_zip, mailing-zipcode. unzip, zipper
+    # and zip_file do not match.
+    fieldrule: >-
+      (CaselessLiteral('zip') + Optional(Optional(oneOf('_ -')) + CaselessLiteral('code')) + Optional(Word(nums)))
+      ^ ((Word(alphanums) + Optional(oneOf('_ -'))) * 1 + CaselessLiteral('zip') + Optional(Optional(oneOf('_ -')) + CaselessLiteral('code')) + Optional(Word(nums)))
+      ^ ((Word(alphanums) + Optional(oneOf('_ -'))) * 2 + CaselessLiteral('zip') + Optional(Optional(oneOf('_ -')) + CaselessLiteral('code')) + Optional(Word(nums)))
+      ^ ((Word(alphanums) + Optional(oneOf('_ -'))) * 3 + CaselessLiteral('zip') + Optional(Optional(oneOf('_ -')) + CaselessLiteral('code')) + Optional(Word(nums)))
     fieldrulematch: ppr
+    priority: 2
   usfips52known:
     key: fips52
     is_pii: False
