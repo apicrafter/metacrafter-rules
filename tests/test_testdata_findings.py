@@ -263,3 +263,66 @@ def test_region_code_guard_accepts_transliterated_names():
     guard = text_guard("ru/ru_geo.yaml", "ruregioncode")
     for name in ("kod_regiona", "region_kod", "Код региона", "regioncode"):
         assert guard(name), name
+
+
+# --- #49 Russian organization names and addresses ----------------------------------
+
+@pytest.mark.parametrize("value", [
+    "ООО Ромашка", "Общество с ограниченной ответственностью «ТЛМ Ком»", "ИП Краева М.А.",
+    "Дубенское ООО Алекс", "Богородицкое ПАТП ч",
+    'КИРОВСКАЯ РЕГИОНАЛЬНАЯ ОБЩЕСТВЕННАЯ ОРГАНИЗАЦИЯ "ФЕДЕРАЦИЯ ТРИАТЛОНА"',
+    "АВТОНОМНАЯ НЕКОММЕРЧЕСКАЯ ДОШКОЛЬНАЯ ОБРАЗОВАТЕЛЬНАЯ ОРГАНИЗАЦИЯ РАЗВИВАЮЩИЙ ЦЕНТР",
+    'БЛАГОТВОРИТЕЛЬНЫЙ ФОНД СОЦИАЛЬНОЙ ПОМОЩИ "ТАМБОВСКИЙ"', "МЕЖДУНАРОДНЫЙ СОЮЗ ПЕДАГОГОВ - ХУДОЖНИКОВ",
+    "МЕСТНОЕ ОТДЕЛЕНИЕ РЕГИОНАЛЬНОЙ МОЛОДЕЖНОЙ ОБЩЕСТВЕННОЙ ОРГАНИЗАЦИИ",
+    "ФНС России", "МВД России", "МИД РФ", "Минцифры России", "Минэкономразвития РФ", "ЦБ РФ",
+    "Генпрокуратура РФ", "Росстат", "Росимущество", "Правительство РФ", "Федеральное казначейство",
+    "Судебный департамент при Верховном суде РФ", "Федеральная налоговая служба",
+    "Муниципальное бюджетное дошкольное образовательное учреждение детский сад",
+])
+def test_ru_orgname_accepts(value):
+    from metacrafterext.rules.ru.orgs import is_ru_orgname
+
+    assert is_ru_orgname(value)
+
+
+@pytest.mark.parametrize("value", [
+    "аорта", "ипподром", "Москва", "Президент России", "Чемпионат России", "Россия", "Кировская область",
+    "Помощь бездомным животным", "Советский Союз", "Союзмультфильм", "Фондовый рынок", "", None,
+    "Советский Союз распался в 1991 году, и это изменило всё",
+])
+def test_ru_orgname_rejects(value):
+    from metacrafterext.rules.ru.orgs import is_ru_orgname
+
+    assert not is_ru_orgname(value)
+
+
+def test_ru_org_prefix_list_has_no_glued_entries():
+    from metacrafterext.rules.ru.orgs import RU_ORG_PREFIXES
+
+    # A missing comma once glued 'фгбну' and 'гку' into 'фгбнугку'.
+    assert "фгбну" in RU_ORG_PREFIXES and "гку" in RU_ORG_PREFIXES and "фгбнугку" not in RU_ORG_PREFIXES
+
+
+@pytest.mark.parametrize("value", [
+    "ул. Родионова, д.23, г. Нижний Новгород, Нижегородская обл.,  603093",
+    "ул. Инструментальная д.29-2, г. Таганрог, Ростовская обл.,  347900",
+    "пер. Рижский 1-й, д.3, г. Москва, 129278",
+    "пр-т Университетский, д. 28, г. Петергоф, г. Санкт-Петербург, 198504",
+    " ул. Большой Аэродром, д.10, кв.32, г. Хабаровск, Хабаровский край, 680014",
+    "г. Москва, ул. Долгоруковская, д.40, 127006",
+    "610020, г Киров, ул Профсоюзная, д 70",
+])
+def test_ru_address_accepts_parts_in_any_order(value):
+    from metacrafterext.rules.ru.addr import is_russian_address
+
+    assert is_russian_address(value)
+
+
+@pytest.mark.parametrize("value", [
+    "Кировская область", "Москва, Санкт-Петербург, Казань", "Помощь детям, взрослым, пожилым", "ул. Ленина",
+    "1, 2, 3", "Организация, проведение, анализ",
+])
+def test_ru_address_rejects_other_text(value):
+    from metacrafterext.rules.ru.addr import is_russian_address
+
+    assert not is_russian_address(value)

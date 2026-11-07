@@ -70,6 +70,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   which `validators.url` rejects. `_validate_url` checks such a URL again with numeric
   references and `&amp;` decoded (other named references are left alone: `&copy=2` is a query
   parameter), and `urlbyvalidators` now uses `_validate_url` instead of `validators.url`.
+- **Russian organization names and addresses** (#49).
+  - `is_ru_orgname` (`ruorgname`) also accepts a legal form among the first six words in any
+    case (`КИРОВСКАЯ РЕГИОНАЛЬНАЯ ОБЩЕСТВЕННАЯ ОРГАНИЗАЦИЯ …`, `Дубенское ООО Алекс`), short
+    names of federal bodies (`ФНС России`, `Минфин России`, `МИД РФ`, `Росстат`), more
+    government bodies at the start (`Федеральная налоговая служба`, `Федеральное казначейство`,
+    `Следственный комитет`, `Администрация …`). Prefixes end at a word boundary, so `аорта` and
+    `ипподром` are no longer organizations. A missing comma had glued the prefixes `фгбну` and
+    `гку` into `фгбнугку`. On metacrafter-testdata, owner columns of state bodies go from 1–2 %
+    to 94–95 % and grantee columns from 30 % to 95 %; text columns stay below 3 %.
+  - `is_russian_address` (`rusaddress`) also accepts comma-separated parts in any order, such
+    as the street first and the postal code last (`ул. Родионова, д.23, г. Нижний Новгород,
+    Нижегородская обл., 603093`): 97 % of the addresses of the register of accredited IT
+    organizations, which matched none before.
 
 ## [0.0.9] - 2026-11-07
 

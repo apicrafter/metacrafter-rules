@@ -1,5 +1,6 @@
 
 import datetime
+import re
 
 from pyparsing import oneOf, lineStart, ParseException, Word, printables, Optional
 from metacrafterext.rules.common.placeholders import rejects_repeated_digits
@@ -18,7 +19,7 @@ RU_ORG_PREFIXES = ['ооо',
                    'фгаоу',
                    'фгбу',
                    'фгбоу',
-                   'фгбну'
+                   'фгбну',
 # Regional abbr
                    'гку',
                    'гбусо',
@@ -92,21 +93,93 @@ RU_GOVBODIES_PREFIXES = [
     'законодательное собрание',
     'администрация городского округа',
     'территориальное управление',
-    'ту росимущества'
+    'ту росимущества',
+    'администрация',
+    'федеральное казначейство',
+    'федеральная нотариальная палата',
+    'нотариальная палата',
+    'следственный комитет',
+    'судебный департамент',
+    'государственная дума',
+    'совет федерации',
+    'генеральная прокуратура',
+    'генпрокуратура',
+    'прокуратура',
+    'центральная избирательная комиссия',
+    'центризбирком',
+    'избирательная комиссия',
+    'счетная палата',
+    'верховный суд',
+    'конституционный суд',
+    'арбитражный суд',
+    'тендерный комитет',
+    'местное отделение',
+    'региональное отделение',
 ]
 
 RU_ALL_ORG_PREFIXES = RU_ORG_PREFIXES + RU_GOVBODIES_PREFIXES
 
 RU_ORGNAME_RULES = oneOf(RU_ALL_ORG_PREFIXES) #+ Word(printables, min=5)
 
+# Legal forms written inside a name, after a region or other adjectives: "КИРОВСКАЯ
+# РЕГИОНАЛЬНАЯ ОБЩЕСТВЕННАЯ ОРГАНИЗАЦИЯ", "Дубенское ООО Алекс", "Богородицкое ПАТП".
+_RU_ORG_FORM_ABBREVIATIONS = (
+    'ооо', 'зао', 'оао', 'пао', 'нао', 'ао', 'ип', 'ано', 'муп', 'гуп', 'фгуп', 'патп', 'атп',
+    'тсж', 'снт', 'спк', 'нп', 'гбу', 'гку', 'гау', 'мбу', 'мку', 'мау', 'мбоу', 'маоу', 'мбдоу',
+)
+_RU_ORG_FORM_INSIDE = re.compile(
+    r'(?:^|\s)(?:' + '|'.join(_RU_ORG_FORM_ABBREVIATIONS) + r')(?=$|[\s"«.,-])'
+    r'|общественн\w*(?: \w+){0,2} (?:организаци|объединени|движени)\w*'
+    r'|некоммерческ\w*(?: \w+){0,3} (?:организаци|партнерств)\w*'
+    r'|благотворительн\w* (?:фонд|организаци)\w*'
+    r'|(?:^|\s)(?:фонд|ассоциаци\w*|партнерство|казачье общество|религиозн\w* организаци\w*'
+    r'|потребительск\w* кооператив\w*|товарищество собственников \w+)(?=$|[\s"«.,-])'
+    r'|\w+ое (?:государственное |муниципальное )?(?:бюджетное |казенное |автономное )?'
+    r'(?:\w+ое )?учреждение(?=$|[\s"«.,-])'
+    r'|\w+ое (?:унитарное )?предприятие(?=$|[\s"«.,-])'
+    r'|^(?:федеральн|государственн|региональн)\w*(?: \w+){0,3} (?:служба|агентство|инспекция)(?=$|[\s"«.,-])'
+    r'|^(?:\w+(?:ый|ий|ой) )?союз(?= \w+(?:ов|ей|ий|ых|ного|ной)\b| ")'
+)
+# Short names of federal bodies: "ФНС России", "МИД РФ", "Минфин России", "Росстат".
+_RU_GOVBODY_SHORT = re.compile(r'(?:[А-ЯЁ]{2,7}|Мин[а-яё]+|Ген[а-яё]+|Центр[а-яё]+) (?:России|РФ)')
+_RU_ROS_AGENCIES = frozenset((
+    'росстат', 'росреестр', 'роскомнадзор', 'росимущество', 'роструд', 'роспотребнадзор',
+    'росприроднадзор', 'ространснадзор', 'россотрудничество', 'росказна', 'росаккредитация',
+    'росздравнадзор', 'ростехнадзор', 'росавиация', 'росморречфлот', 'росжелдор', 'росавтодор',
+    'росгвардия', 'рослесхоз', 'росрыболовство', 'росархив', 'роснедра', 'росводресурсы',
+    'росфинмониторинг', 'росстандарт', 'роспатент', 'росалкогольтабакконтроль', 'роскосмос',
+    'росатом', 'ростуризм', 'росмолодежь', 'росгидромет', 'рособрнадзор', 'роскадастр',
+    'росморпорт', 'росгранстрой', 'росреестра',
+))
+_RU_ORG_PREFIX = re.compile(
+    '(?:' + '|'.join(re.escape(prefix) for prefix in sorted(RU_ALL_ORG_PREFIXES, key=len, reverse=True))
+    + r')(?=$|[\s"«.,()-])'
+)
+
+
 def is_ru_orgname(s):
-    s = s.strip('\"')
-    try:
-        res = RU_ORGNAME_RULES.parseString(s.lower())
+    """Russian organization or government body name.
+
+    Accepted: a legal form or a government body at the start ("ООО Ромашка", "Федеральная
+    служба ...", "Министерство ..."); a legal form among the first six words, in any case
+    ("КИРОВСКАЯ РЕГИОНАЛЬНАЯ ОБЩЕСТВЕННАЯ ОРГАНИЗАЦИЯ ...", "Дубенское ООО Алекс"); a short
+    name of a federal body ("ФНС России", "Минфин России", "Росстат"). Prefixes end at a word
+    boundary, so "аорта" and "ипподром" are not names.
+    """
+    if not isinstance(s, str):
+        return False
+    original = ' '.join(s.strip().strip('"«»\'').split())
+    if not original:
+        return False
+    text = original.lower().replace('ё', 'е')
+    if _RU_ORG_PREFIX.match(text):
         return True
-    except ParseException:
-        pass
-    return False
+    if _RU_GOVBODY_SHORT.fullmatch(original.replace('ё', 'е').replace('Ё', 'Е')):
+        return True
+    if text in _RU_ROS_AGENCIES:
+        return True
+    head = ' '.join(text.split()[:6])
+    return _RU_ORG_FORM_INSIDE.search(head) is not None
 
 
 
