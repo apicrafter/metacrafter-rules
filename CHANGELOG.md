@@ -21,6 +21,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   matches, metacrafter does not run qddate on the column, so ISO date columns report `date`
   instead of `datetime 100`. Without registry data the rule does not match.
 
+## [0.0.7] - 2026-11-07
+
 ### Fixed
 
 - **Field guards that matched no ordinary field name** (#17). The guards of
@@ -88,7 +90,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   character 13 of the MRZ line), and the issuing department in digits 5–7 is not checked.
   About 4% of random 12-digit numbers pass: on a scan with metacrafter (300 values a
   column, `--confidence 1`), random numbers report `frcni 4.67`, Aadhaar numbers `frcni 1`
-  and random INNs `frcni 3`; the default confidence of 5 hides them. INNs whose first four
+  and random INNs `frcni 3`; metacrafter's default confidence hides them. INNs whose first four
   digits (region and tax office) read as a year and a month, such as office numbers `01`–`12`
   of regions `01`–`21` or `89`–`99`, still pass. The 9-character number of the card issued
   since 2021 is not matched.
