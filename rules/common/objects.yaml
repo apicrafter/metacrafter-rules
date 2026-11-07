@@ -96,11 +96,11 @@ rules:
     imprecise: 1
   issnvaluewithoutdash:
     key: issn
-    name: International Standard Serial Number (ISSN) without dash
+    name: International Standard Serial Number (ISSN) with or without dash
     match: ppr
     type: data
-    rule: Word(nums, exact=8)
-    maxlen: 8
+    rule: Word(nums, exact=4) + Optional(Literal('-')) + Word(nums, exact=3) + Word(nums + 'Xx', exact=1)
+    maxlen: 9
     minlen: 8
     priority: 2
     validator: metacrafterext.rules.common.identifiers.validate_issn
@@ -220,7 +220,7 @@ rules:
     name: Wikidata ID by value pattern
     match: ppr
     type: data
-    rule: Literal('Q') + Word(nums, min=1, max=10)
+    rule: Literal('Q') + Word('123456789', nums, max=10)
     minlen: 2
     maxlen: 11
     priority: 1
