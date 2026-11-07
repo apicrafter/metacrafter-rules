@@ -129,12 +129,26 @@ rules:
       тыва,ненецкий автономный округ
   rusfeddistrict:
     key: rusfeddistrict
-    name: Russian region by common pattern
+    name: Russian federal district by full name or abbreviation
     match: text
     type: data
     rule: дальневосточный федеральный округ,центральный федеральный округ,приволжский
       федеральный округ,южный федеральный округ,уральский федеральный округ,северо-кавказский
-      федеральный округ,северо-западный федеральный округ,сибирский федеральный округ
+      федеральный округ,северо-западный федеральный округ,сибирский федеральный округ,цфо,сзфо,юфо,скфо,пфо,уфо,урфо,сфо,дфо,двфо
+# The adjective alone (Центральный, Южный) also names city districts and directions, so it
+# is matched only in fields named after the federal district. The rule also keeps the full
+# names and abbreviations, so such a field matches whichever form it holds.
+  rusfeddistrictbyfield:
+    key: rusfeddistrict
+    name: Russian federal district by short name in a federal district field
+    match: text
+    type: data
+    rule: центральный,северо-западный,южный,северо-кавказский,приволжский,уральский,сибирский,дальневосточный,дальневосточный
+      федеральный округ,центральный федеральный округ,приволжский федеральный округ,южный
+      федеральный округ,уральский федеральный округ,северо-кавказский федеральный округ,северо-западный
+      федеральный округ,сибирский федеральный округ,цфо,сзфо,юфо,скфо,пфо,уфо,урфо,сфо,дфо,двфо
+    fieldrule: федеральный округ,федеральный_округ,федеральныйокруг,фед округ,фед_округ,фо,federal_district,federaldistrict,fed_district,feddistrict,federal_okrug,fed_okrug,fedokrug
+    fieldrulematch: text
   ruscities:
     key: ruscity
     is_pii: true

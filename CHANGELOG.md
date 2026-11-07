@@ -33,6 +33,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   are replaced by one rule, `atcvalue` in `rules/common/medical.yaml`. It is language
   independent, so it also runs when a scan selects other languages (`--langs ru`).
 
+New examples in metacrafter-registry (`34a946c`) that the rules handled wrongly (#19):
+
+- **Wikidata id**: `wikidataidvalue` no longer accepts item numbers with a leading zero
+  (`Q01`, `Q0`) (`rules/common/objects.yaml`).
+- **ISSN**: `issnvalue` (`rules/common/media.yaml`) and `issnvaluewithoutdash`
+  (`rules/common/objects.yaml`) accept the same forms as `objects_issnvalue`: with or
+  without the hyphen, with the `X` check character (`0960-894X`, `00280836`). The MOD-11
+  validator still checks every value.
+- **Russian federal district**: `rusfeddistrict` matches the abbreviations `ЦФО`, `СЗФО`,
+  `ЮФО`, `СКФО`, `ПФО`, `УФО`, `УрФО`, `СФО`, `ДФО`, `ДВФО`. The new
+  `rusfeddistrictbyfield` also matches the short names (`Приволжский`, `Центральный`), but
+  only in fields such as `федеральный округ` or `federal_district`: a short name alone is
+  also a city district or a direction (`rules/ru/ru_geo.yaml`).
+
 ## [0.0.6] - 2026-11-07
 
 ### Added
