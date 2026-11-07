@@ -8,17 +8,47 @@ rules:
     key: aadhaar
     is_pii: True
     name: Indian Aadhaar number by known name
-    rule: aadhaar,aadhar,aadhaar_number,aadhar_number,uid,uid_number
+    # Not uid or uid_number: these are generic identifier names. inaadhaarvalue
+    # reports such a field when its values are Aadhaar numbers.
+    rule: aadhaar,aadhar,aadhaar_number,aadhar_number,aadhaar_no,aadhar_no
     type: field
     match: text
+    priority: 1
+  inaadhaarvalue:
+    key: aadhaar
+    is_pii: True
+    name: Indian Aadhaar number by value
+    match: ppr
+    type: data
+    rule: Word(nums, exact=12) | (Word(nums, exact=4) + Optional(Literal('-')) + Word(nums, exact=4) + Optional(Literal('-')) + Word(nums, exact=4))
+    minlen: 12
+    maxlen: 14
+    validator: metacrafterext.rules.in.validators.validate_in_aadhaar
+    fieldrule: aadhaar,aadhar,aadhaar_number,aadhar_number,aadhaar_no,aadhar_no,aadhaar_uid,uid,uid_number,uid_no
+    fieldrulematch: text
     priority: 1
   inpanknown:
     key: pan
     is_pii: True
     name: Indian PAN (Permanent Account Number) by known name
-    rule: pan,pan_number,pan_card,pan_card_number
+    # Not pan: in payment data it is the card's primary account number (bankcard).
+    # inpanvalue reports a pan field when its values are Indian PANs.
+    rule: pan_number,pan_no,pan_card,pancard,pan_card_number,pancard_number
     type: field
     match: text
+    priority: 1
+  inpanvalue:
+    key: pan
+    is_pii: True
+    name: Indian PAN (Permanent Account Number) by value
+    match: ppr
+    type: data
+    rule: Word('ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789', exact=10)
+    minlen: 10
+    maxlen: 10
+    validator: metacrafterext.rules.in.validators.validate_in_pan
+    fieldrule: pan,pan_number,pan_no,pan_card,pancard,pan_card_number,pancard_number
+    fieldrulematch: text
     priority: 1
   inpersonnameknown:
     key: person_fullname

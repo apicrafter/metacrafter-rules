@@ -80,6 +80,17 @@ rules:
     maxlen: 4
     minlen: 4
     priority: 1
+    # Any 4 uppercase letters match (status codes such as ACTI or DELD), so the rule runs
+    # only on fields with a word that starts with icao or airport: icao, icao_code,
+    # airport, airport_code, departure_airport, Airport ICAO. pyparsing does not backtrack,
+    # so each alternative fixes the number of words before it (0 to 3); words are
+    # separated by _, - or spaces.
+    fieldrule: >-
+      ((CaselessLiteral('icao') | CaselessLiteral('airport')) + ZeroOrMore(Word(printables)))
+      ^ ((Word(alphanums) + Optional(oneOf('_ -'))) * 1 + (CaselessLiteral('icao') | CaselessLiteral('airport')) + ZeroOrMore(Word(printables)))
+      ^ ((Word(alphanums) + Optional(oneOf('_ -'))) * 2 + (CaselessLiteral('icao') | CaselessLiteral('airport')) + ZeroOrMore(Word(printables)))
+      ^ ((Word(alphanums) + Optional(oneOf('_ -'))) * 3 + (CaselessLiteral('icao') | CaselessLiteral('airport')) + ZeroOrMore(Word(printables)))
+    fieldrulematch: ppr
   imonumberfield:
     key: imonumber
     name: IMO ship number by field name
