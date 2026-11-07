@@ -7,6 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- **Foreign trade and customs rules** (#39): `rules/common/trade.yaml` (context `trade`)
+  labels columns of customs declarations and trade statistics. Value rules: `incoterms`
+  (the registry regexp: the 11 Incoterms 2020 rules), `hs_code` in HS code fields (the
+  registry regexp: 2, 4 or 6 digits, so eight- and ten-digit national tariff lines get
+  `hs_code` from the field name only), `iso4217curcode` in currency fields (ISO 4217 codes)
+  and `unece_rec20_unit_code` in unit fields (common UN/ECE Recommendation 20 codes).
+  Field-name rules use `match: regex`, so one rule matches `HS CODE`, `hs_code` and
+  `HsCode`: `hs_code`, `incoterms`, `currency`, `unit_of_measure`, `weight`, `price`,
+  `money` (invoice, FOB, CIF, customs values, duty and tax amounts), `cost` (freight,
+  insurance, other costs), `quantity` (quantity, number of packages), and `orgname`,
+  `address` and `description` for importers, exporters, suppliers, consignees, declarants
+  and goods. Bare names with other meanings (`hs`, `unit`, `package`, `tax`, `weight`,
+  `commodity_code`) are not labelled. On a Bangladesh customs import export (40 columns),
+  metacrafter labels 28 columns instead of 5.
+
 ## [0.0.8] - 2026-11-07
 
 ### Added
