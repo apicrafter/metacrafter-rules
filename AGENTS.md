@@ -50,6 +50,7 @@ metacrafter-rules/
 │   │   ├── persons.yaml
 │   │   ├── science.yaml
 │   │   ├── software.yaml      # Software identifiers (versions, packages, licenses, hashes)
+│   │   ├── trade.yaml         # Foreign trade and customs (HS codes, Incoterms, currencies, units, values)
 │   │   ├── values.yaml
 │   │   └── vehicles.yaml
 │   ├── en/                 # English-specific rules

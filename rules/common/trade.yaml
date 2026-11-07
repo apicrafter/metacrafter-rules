@@ -1,0 +1,165 @@
+name: trade
+description: Foreign trade and customs declarations (HS codes, Incoterms, currencies, units, values)
+context: trade
+lang: common
+country_code: xx
+# Field-name rules use match: regex. metacrafter compares a text rule with the whole
+# lower-cased field name, so a text rule needs one entry for each spelling (hs_code, hscode,
+# hs code). A regex rule is matched with re.fullmatch against the field name and its lower-cased
+# form, and [ _.-]? covers spaces, underscores, dots and hyphens at once: HS CODE, hs_code,
+# HsCode, hs-code. Bare names that have other meanings are left out: hs, unit, package, tax,
+# weight (survey weights), buyer and seller (often persons), commodity code (procurement
+# category codes such as UNSPSC in public spending data).
+rules:
+  hscodebyfield:
+    key: hs_code
+    name: Harmonized System (HS) code by field name
+    type: field
+    match: regex
+    priority: 1
+    rule: >-
+      (?i)(?:hsn?|hts)(?:[ _.-]?(?:code|cd)(?:[ _.-]?(?:2|4|6|8|10))?|[ _.-]?(?:2|4|6|8|10)(?:[ _.-]?(?:code|digits?))?|[ _.-]?(?:chapter|heading|sub[ _.-]?heading))|(?:customs[ _.-]?)?tariff[ _.-]?(?:code|line|number|no)|cmd[ _.-]?code|harmoni[sz]ed[ _.-]?(?:system[ _.-]?)?code
+  hscodebyvalue:
+    key: hs_code
+    name: Harmonized System (HS) code by value in an HS code field
+    # The regexp of the registry record hs_code: chapter (01), heading (0101, 01.01) or
+    # subheading (010121, 0101.21). Eight- and ten-digit national tariff lines are not HS codes
+    # in the registry; such columns get hs_code from the field name only.
+    type: data
+    match: registry
+    rule: hs_code
+    minlen: 2
+    maxlen: 7
+    priority: 1
+    fieldrule: hs_code,hscode,hs code,hs_cd,hs6,hs_6,hs 6,hs6_code,hs_code_6,hs4,hs_4,hs2,hs_2,hsn_code,hsncode,hsn code,hts_code,htscode,hts code,tariff_code,tariffcode,tariff code,cmdcode,cmd_code,harmonized_code,harmonised_code
+    fieldrulematch: text
+  incotermsbyfield:
+    key: incoterms
+    name: Incoterms rule by field name
+    type: field
+    match: regex
+    priority: 1
+    rule: >-
+      (?i)inco[ _.-]?terms?(?:[ _.-]?(?:code|20[12]0))?|(?:delivery|trade|shipping)[ _.-]?terms?(?:[ _.-]?code)?|terms[ _.-]?of[ _.-]?delivery|delivery[ _.-]?basis
+  incotermsbyvalue:
+    key: incoterms
+    name: Incoterms 2020 rule by value (EXW, FCA, CPT, CIP, DAP, DPU, DDP, FAS, FOB, CFR, CIF)
+    # The regexp of the registry record incoterms. DAT (Incoterms 2010) is a negative example
+    # there; it was replaced by DPU.
+    type: data
+    match: registry
+    rule: incoterms
+    minlen: 3
+    maxlen: 3
+    priority: 1
+  currencybyfield:
+    key: currency
+    name: Currency by field name
+    type: field
+    match: regex
+    priority: 1
+    rule: >-
+      (?i)(?:(?:invoice|trade|transaction|price|payment|settlement|contract|declared|iso)[ _.-]?)?(?:currency|ccy)(?:[ _.-]?(?:code|cd|iso|id|alpha3?))?
+  currencycodebyvalue:
+    key: iso4217curcode
+    name: ISO 4217 currency code by value in a currency field
+    # Active codes of ISO 4217 List One, the precious metals and testing codes (XAU, XPD,
+    # XTS, XXX) and codes withdrawn since 2008 that historical data still contains (HRK,
+    # LTL, LVL, EEK, BYR, MRO, STD, VEF, ZMK, ZWL). Field guard only: three-letter codes such
+    # as ALL, TOP and CUP are ordinary words in other columns.
+    type: data
+    match: text
+    priority: 1
+    minlen: 3
+    maxlen: 3
+    rule: >-
+      AED,AFN,ALL,AMD,ANG,AOA,ARS,AUD,AWG,AZN,BAM,BBD,BDT,BGN,BHD,BIF,BMD,BND,BOB,BOV,BRL,BSD,BTN,BWP,BYN,BZD,CAD,CDF,CHE,CHF,CHW,CLF,CLP,CNY,COP,COU,CRC,CUC,CUP,CVE,CZK,DJF,DKK,DOP,DZD,EGP,ERN,ETB,EUR,FJD,FKP,GBP,GEL,GHS,GIP,GMD,GNF,GTQ,GYD,HKD,HNL,HTG,HUF,IDR,ILS,INR,IQD,IRR,ISK,JMD,JOD,JPY,KES,KGS,KHR,KMF,KPW,KRW,KWD,KYD,KZT,LAK,LBP,LKR,LRD,LSL,LYD,MAD,MDL,MGA,MKD,MMK,MNT,MOP,MRU,MUR,MVR,MWK,MXN,MXV,MYR,MZN,NAD,NGN,NIO,NOK,NPR,NZD,OMR,PAB,PEN,PGK,PHP,PKR,PLN,PYG,QAR,RON,RSD,RUB,RWF,SAR,SBD,SCR,SDG,SEK,SGD,SHP,SLE,SLL,SOS,SRD,SSP,STN,SVC,SYP,SZL,THB,TJS,TMT,TND,TOP,TRY,TTD,TWD,TZS,UAH,UGX,USD,USN,UYI,UYU,UYW,UZS,VED,VES,VND,VUV,WST,XAF,XAG,XAU,XBA,XBB,XBC,XBD,XCD,XCG,XDR,XOF,XPD,XPF,XPT,XSU,XTS,XUA,XXX,YER,ZAR,ZMW,ZWG,ZWL,HRK,LTL,LVL,EEK,BYR,MRO,STD,VEF,ZMK
+    fieldrule: currency,currency_code,currencycode,currency code,currency_cd,currency_iso,currency_id,iso_currency,iso_currency_code,ccy,ccy_code,curr,cur,invoice_currency,invoice currency,trade_currency,transaction_currency,payment_currency,price_currency,settlement_currency,valuta
+    fieldrulematch: text
+  unitofmeasurebyfield:
+    key: unit_of_measure
+    name: Unit of measure by field name
+    type: field
+    match: regex
+    priority: 1
+    rule: >-
+      (?i)(?:unit[ _.-]?of[ _.-]?measure(?:ment)?|uom|measure(?:ment)?[ _.-]?unit|(?:quantity|qty)[ _.-]?unit)(?:[ _.-]?(?:code|name|cd))?
+  unitcodebyvalue:
+    key: unece_rec20_unit_code
+    name: UN/ECE Recommendation 20 unit code by value in a unit field
+    # Common codes of UN/ECE Recommendation 20 (mass, length, area, volume, counts, energy,
+    # time) and PCE (piece), a deleted code that customs data still uses.
+    type: data
+    match: text
+    priority: 1
+    minlen: 2
+    maxlen: 3
+    rule: >-
+      C62,H87,EA,PCE,NAR,NPR,PR,SET,DZN,GRO,KGM,GRM,MGM,TNE,LBR,ONZ,MTR,CMT,MMT,KMT,INH,FOT,YRD,MTK,CMK,FTK,HAR,MTQ,CMQ,FTQ,LTR,MLT,HLT,GLL,GLI,KWH,KWT,MWH,HUR,MIN,SEC,DAY,WEE,MON,ANN,P1,XBX,XCT,XBG,XPK,XPX,XCR,XBE
+    fieldrule: unit,units,unit_code,unitcode,unit code,uom,uom_code,unit_of_measure,unit of measure,unit_of_measure_code,unit_of_measurement,measure_unit,measurement_unit,quantity_unit,quantity unit,quantity_unit_code,qty_unit,qty unit,unece_unit,rec20,rec20_code
+    fieldrulematch: text
+  weightbyfield:
+    key: weight
+    name: Weight (mass) by field name
+    type: field
+    match: regex
+    priority: 1
+    rule: >-
+      (?i)(?:gross|net|tare|shipment|cargo|package|total|chargeable|item|body)[ _.-]?(?:weight|wt|wgt|mass)(?:(?:[ _.-](?:in[ _.-])?)?(?:kg|kgs|g|grams?|lbs?|tons?|tonnes?|mt))?|weight(?:[ _.-](?:in[ _.-])?)?(?:kg|kgs|g|grams?|lbs?|tons?|tonnes?|mt)
+  pricebyfield:
+    key: price
+    name: Price by field name
+    type: field
+    match: regex
+    priority: 1
+    # FC and LC are foreign and local currency, as in customs declarations.
+    rule: >-
+      (?i)(?:(?:unit|item|declared|assessable|fob|cif|sale|sales|selling|list|purchase|retail|wholesale|net|gross)[ _.-]?)?(?:unit[ _.-]?)?price(?:[ _.-]?per[ _.-]?unit)?(?:[ _.-]?(?:fc|lc|usd|eur|gbp|inr|bdt|cny|rmb|rub|jpy|krw|thb|idr|vnd|pkr|lkr|myr|sgd|aed|try))?|unit[ _.-]?value(?:[ _.-]?(?:fc|lc|usd|eur|gbp|inr|bdt|cny|rmb|rub|jpy|krw|thb|idr|vnd|pkr|lkr|myr|sgd|aed|try))?
+  tradevaluebyfield:
+    key: money
+    name: Trade value, invoice value or duty amount by field name
+    type: field
+    match: regex
+    priority: 1
+    rule: >-
+      (?i)(?:total[ _.-]?)?(?:invoice|fob|cif|customs|assessable|declared|statistical|trade|primary|goods|shipment)[ _.-]?(?:value|amount|amt)(?:[ _.-]?(?:in[ _.-]?)?(?:fc|lc|usd|eur|gbp|inr|bdt|cny|rmb|rub|jpy|krw|thb|idr|vnd|pkr|lkr|myr|sgd|aed|try))?|(?:total[ _.-]?)?value[ _.-]?(?:in[ _.-]?)?(?:fc|lc|usd|eur|gbp|inr|bdt|cny|rmb|rub|jpy|krw|thb|idr|vnd|pkr|lkr|myr|sgd|aed|try)|total[ _.-]?(?:value|amount|duty|duties|tax|taxes)(?:[ _.-]?(?:amount|amt|paid))?(?:[ _.-]?(?:fc|lc|usd|eur|gbp|inr|bdt|cny|rmb|rub|jpy|krw|thb|idr|vnd|pkr|lkr|myr|sgd|aed|try))?|(?:customs[ _.-]?|import[ _.-]?|export[ _.-]?)?(?:duty|duties|tax|taxes)[ _.-]?(?:amount|amt|paid)(?:[ _.-]?(?:fc|lc|usd|eur|gbp|inr|bdt|cny|rmb|rub|jpy|krw|thb|idr|vnd|pkr|lkr|myr|sgd|aed|try))?
+  tradecostbyfield:
+    key: cost
+    name: Freight, insurance and other trade costs by field name
+    type: field
+    match: regex
+    priority: 1
+    rule: >-
+      (?i)(?:total[ _.-]?)?(?:other|freight|insurance|shipping|handling|landing|transport)[ _.-]?(?:costs?|charges?)(?:[ _.-]?(?:fc|lc|usd|eur|gbp|inr|bdt|cny|rmb|rub|jpy|krw|thb|idr|vnd|pkr|lkr|myr|sgd|aed|try))?
+  quantitybyfield:
+    key: quantity
+    name: Quantity or number of packages by field name
+    type: field
+    match: regex
+    priority: 1
+    rule: >-
+      (?i)(?:total[ _.-]?)?(?:quantity|qty)(?:[ _.-]?(?:shipped|ordered|declared|imported|exported))?|(?:total|no[ _.-]?of|number[ _.-]?of|num[ _.-]?of)[ _.-]?(?:packages?|pkgs?)(?:[ _.-]?items?)?|(?:packages?|pkgs?)[ _.-]?(?:count|qty|quantity)
+  tradepartyaddressbyfield:
+    key: address
+    name: Address of a trade party (importer, exporter, consignee) by field name
+    type: field
+    match: regex
+    priority: 1
+    rule: >-
+      (?i)(?:importer|exporter|supplier|consignee|consignor|shipper|declarant|notify[ _.-]?party|manufacturer|vendor|carrier|forwarder)[ _.-]?(?:address|addr)(?:[ _.-]?(?:line[ _.-]?)?[1-3])?
+  tradepartynamebyfield:
+    key: orgname
+    name: Name of a trade party (importer, exporter, consignee) by field name
+    type: field
+    match: regex
+    priority: 1
+    rule: >-
+      (?i)(?:importer|exporter|supplier|consignee|consignor|shipper|declarant|notify[ _.-]?party|manufacturer|vendor|carrier|forwarder|freight[ _.-]?forwarder|customs[ _.-]?broker)(?:[ _.-]?(?:name|company|company[ _.-]?name|organi[sz]ation))?
+  goodsdescriptionbyfield:
+    key: description
+    name: Description of goods by field name
+    type: field
+    match: regex
+    priority: 1
+    rule: >-
+      (?i)(?:product|goods|item|commodity|cargo|merchandise|article)[ _.-]?(?:description|desc|descr)|description[ _.-]?of[ _.-]?goods
