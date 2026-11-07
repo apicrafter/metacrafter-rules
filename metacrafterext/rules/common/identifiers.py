@@ -451,128 +451,120 @@ def validate_lei(value):
         return False
 
 
+# ISO 3166-1 alpha-2 codes assigned to countries and territories.
+ISO_3166_1_ALPHA2 = frozenset("""
+AD AE AF AG AI AL AM AO AQ AR AS AT AU AW AX AZ BA BB BD BE BF BG BH BI BJ BL BM BN BO BQ
+BR BS BT BV BW BY BZ CA CC CD CF CG CH CI CK CL CM CN CO CR CU CV CW CX CY CZ DE DJ DK DM
+DO DZ EC EE EG EH ER ES ET FI FJ FK FM FO FR GA GB GD GE GF GG GH GI GL GM GN GP GQ GR GS
+GT GU GW GY HK HM HN HR HT HU ID IE IL IM IN IO IQ IR IS IT JE JM JO JP KE KG KH KI KM KN
+KP KR KW KY KZ LA LB LC LI LK LR LS LT LU LV LY MA MC MD ME MF MG MH MK ML MM MN MO MP MQ
+MR MS MT MU MV MW MX MY MZ NA NC NE NF NG NI NL NO NP NR NU NZ OM PA PE PF PG PH PK PL PM
+PN PR PS PT PW PY QA RE RO RS RU RW SA SB SC SD SE SG SH SI SJ SK SL SM SN SO SR SS ST SV
+SX SY SZ TC TD TF TG TH TJ TK TL TM TN TO TR TT TV TW TZ UA UG UM US UY UZ VA VC VE VG VI
+VN VU WF WS YE YT ZA ZM ZW
+""".split())
+
+# Country code elements of ISRC beyond ISO 3166-1 alpha-2. The International ISRC Agency
+# allocates extra codes to national agencies (QM, QT, QZ for the US, UK and GX for PPL UK,
+# BC, BK, BP, BX for Brazil, CB for Canada, FX for France, KS for South Korea, ZB for South
+# Africa), keeps CP, DG and ZZ for itself, and uses QN, XK and YU. ISRCs are permanent, so
+# codes withdrawn from ISO 3166-1 after the ISRC began in 1986 stay valid in old codes.
+ISRC_EXTRA_COUNTRY_CODES = frozenset("""
+BC BK BP BX CB CP DG FX GX KS QM QN QT QZ UK XK YU ZB ZZ
+AN BU CS DD NT SU TP YD ZR
+""".split())
+
+_ISRC_PATTERN = re.compile(r'^([A-Z]{2})[A-Z0-9]{3}[0-9]{7}$')
+
+
 def validate_isrc(value):
     """
-    Validates ISRC format (no check digit, but format validation).
-    
+    Validates ISRC format and its country code (ISRC has no check digit).
+
+    Format: CC XXX YY NNNNN (country code, 3 alphanumeric registrant characters,
+    2-digit year, 5-digit designation). The country code must be an ISO 3166-1
+    alpha-2 code or a code the International ISRC Agency allocated
+    (ISRC_EXTRA_COUNTRY_CODES); unassigned codes such as XX are rejected.
+
     Args:
-        value: ISRC string (12 characters)
-        
+        value: ISRC string (12 characters, dashes and spaces are ignored)
+
     Returns:
-        bool: True if valid ISRC format, False otherwise
+        bool: True if valid ISRC, False otherwise
     """
     if not isinstance(value, str):
         return False
-    
+
     isrc = value.upper().replace('-', '').replace(' ', '')
-    
-    if len(isrc) != 12:
+
+    match = _ISRC_PATTERN.match(isrc)
+    if match is None:
         return False
-    
-    # Format: CCXXXNNNNNNN (2-letter country, 3 alphanumeric, 7 digits)
-    # Country code must be 2 uppercase letters (ISO 3166-1 alpha-2)
-    # Note: We validate format only, not against full country code list
-    if not isrc[:2].isalpha() or not isrc[:2].isupper():
+
+    country = match.group(1)
+    return country in ISO_3166_1_ALPHA2 or country in ISRC_EXTRA_COUNTRY_CODES
+
+
+_MOD11_2_PATTERN = re.compile(r'^[0-9]{15}[0-9X]$')
+
+
+def _iso7064_mod11_2_is_valid(number):
+    """
+    Checks a 16-character number whose last character is an ISO 7064 MOD 11-2 check
+    character (a digit or X), as used by ISNI (ISO 27729) and ORCID.
+    """
+    if not _MOD11_2_PATTERN.match(number):
         return False
-    # Registrant code: 3 alphanumeric characters (can be letters or digits)
-    if not isrc[2:5].isalnum():
-        return False
-    # Year and designation: 7 digits
-    if not isrc[5:].isdigit():
-        return False
-    
-    # Basic country code validation: reject obviously invalid patterns
-    # XX is reserved/unassigned in ISO 3166-1, but we'll allow it for format validation
-    # since we can't validate against full country code list without external data
-    
-    return True
+    total = 0
+    for digit in number[:-1]:
+        total = (total + int(digit)) * 2
+    check_value = (12 - total % 11) % 11
+    check_char = 'X' if check_value == 10 else str(check_value)
+    return number[-1] == check_char
 
 
 def validate_isni(value):
     """
-    Validates ISNI using MOD-11-2 algorithm.
-    
+    Validates ISNI (ISO 27729) using the ISO 7064 MOD 11-2 check character.
+
     Args:
-        value: ISNI string (16 characters, with or without spaces)
-        
+        value: ISNI string (16 characters, with or without spaces or dashes;
+            the check character can be X)
+
     Returns:
         bool: True if valid ISNI, False otherwise
     """
     if not isinstance(value, str):
         return False
-    
-    isni = value.replace(' ', '').replace('-', '')
-    
-    if len(isni) != 16:
-        return False
-    
-    if not isni.isdigit():
-        return False
-    
-    # MOD-11-2 check (ISO 27729)
-    # Weights are 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 2, 3, 4, 5, 6 (repeating pattern)
-    # For 16 digits, we need weights for positions 0-14
-    base_weights = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
-    weights = []
-    for i in range(15):
-        weights.append(base_weights[i % 10])
-    
-    total = sum(int(isni[i]) * weights[i] for i in range(15))
-    
-    check_value = (12 - (total % 11)) % 11
-    check_char = 'X' if check_value == 10 else str(check_value)
-    
-    return isni[15] == check_char
+
+    isni = value.upper().replace(' ', '').replace('-', '')
+    return _iso7064_mod11_2_is_valid(isni)
 
 
 def validate_orcid(value):
     """
-    Validates ORCID using MOD-11-2 algorithm.
-    
+    Validates ORCID using the ISO 7064 MOD 11-2 check character.
+
     ORCID format: 0000-0001-2345-6789 (16 digits with dashes) or 0000-0001-2345-678X
-    The last character is a check digit calculated using MOD-11-2.
-    
+    The last character is a check character calculated using ISO 7064 MOD 11-2.
+    ORCID iDs start with 0000-000 or, since 2023, with 0009-00.
+
     Args:
         value: ORCID string (with or without dashes)
-        
+
     Returns:
         bool: True if valid ORCID, False otherwise
     """
     if not isinstance(value, str):
         return False
-    
-    # Remove dashes and spaces
-    orcid = value.replace('-', '').replace(' ', '')
-    
-    # Must be 16 characters
-    if len(orcid) != 16:
+
+    orcid = value.upper().replace('-', '').replace(' ', '')
+
+    # Must start with 0000-000 or 0009-00
+    if not orcid.startswith(('0000000', '000900')):
         return False
-    
-    # Must start with 0000-000
-    if not orcid.startswith('0000000'):
-        return False
-    
-    # Last character can be digit or X
-    if not (orcid[-1].isdigit() or orcid[-1] == 'X'):
-        return False
-    
-    # All other characters must be digits
-    if not orcid[:-1].isdigit():
-        return False
-    
-    # MOD-11-2 check digit calculation
-    # Weights: 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 2, 3, 4, 5, 6 (repeating)
-    base_weights = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
-    weights = []
-    for i in range(15):
-        weights.append(base_weights[i % 10])
-    
-    total = sum(int(orcid[i]) * weights[i] for i in range(15))
-    
-    check_value = (12 - (total % 11)) % 11
-    check_char = 'X' if check_value == 10 else str(check_value)
-    
-    return orcid[15] == check_char
+
+    return _iso7064_mod11_2_is_valid(orcid)
 
 
 def validate_grid(value):
@@ -943,97 +935,53 @@ def validate_asn(value):
         return False
 
 
+# Language tag syntax of RFC 5646 (section 2.1), subtags in their fixed order.
+_LANGUAGE_TAG_PATTERN = re.compile(
+    r'[a-z]{2,3}(?:-[a-z]{3}){0,3}'           # language, up to 3 extlang subtags
+    r'(?:-[a-z]{4})?'                          # script
+    r'(?:-(?:[a-z]{2}|[0-9]{3}))?'             # region
+    r'(?:-(?:[a-z0-9]{5,8}|[0-9][a-z0-9]{3}))*'  # variants
+    r'(?:-[a-wyz0-9](?:-[a-z0-9]{2,8})+)*'     # extensions: singleton other than x
+    r'(?:-x(?:-[a-z0-9]{1,8})+)?'              # private use
+)
+
+
 def validate_language_tag(value):
     """
-    Validates IETF BCP 47 language tag format.
-    
-    Format: language[-script][-region][-variant][-extension][-privateuse]
-    - language: 2-3 letters (ISO 639-1/639-2) or 5-8 alphanumeric (registered)
+    Validates IETF BCP 47 language tag syntax (RFC 5646), case-insensitive.
+
+    Format: language[-extlang][-script][-region][-variant]*[-extension]*[-privateuse]
+    - language: 2-3 letters (ISO 639), optionally followed by up to 3 extlang
+      subtags of 3 letters (zh-yue)
     - script: 4 letters (ISO 15924)
     - region: 2 letters (ISO 3166-1) or 3 digits (UN M.49)
-    - variant: 5-8 alphanumeric or 1 letter + 3 alphanumeric
-    - extension: 1 letter + 1-8 alphanumeric
-    - privateuse: 'x' + 1-8 alphanumeric
-    
+    - variant: 5-8 alphanumeric, or a digit + 3 alphanumeric (de-CH-1901)
+    - extension: a singleton (one letter or digit other than x) followed by
+      subtags of 2-8 alphanumeric (en-u-ca-gregory)
+    - privateuse: 'x' followed by subtags of 1-8 alphanumeric (en-US-x-private)
+
+    The check is syntactic: a region such as XX is accepted (XA..XZ are private-use
+    regions in the IANA registry). 4-letter (reserved) and 5-8 letter (registered)
+    language subtags are well-formed in RFC 5646, but the IANA registry has none,
+    so they are rejected: values such as "english" are words, not language tags.
+    Private-use-only tags (x-...) and grandfathered tags (i-klingon) are rejected too.
+
     Args:
         value: Language tag string
-        
+
     Returns:
         bool: True if valid BCP 47 format, False otherwise
     """
     if not isinstance(value, str):
         return False
-    
+
+    # Non-ASCII letters can lower-case to ASCII ones (the Kelvin sign to k).
+    if not value.isascii():
+        return False
+
     tag = value.strip().lower()
-    
-    if not tag:
-        return False
-    
-    # Split by hyphens
-    parts = tag.split('-')
-    
-    if not parts:
-        return False
-    
-    # First part is language subtag
-    lang = parts[0]
-    if not lang:
-        return False
-    
-    # Language subtag: 2-3 letters (ISO 639) or 5-8 alphanumeric (registered)
-    if len(lang) < 2 or len(lang) > 8:
-        return False
-    
-    if len(lang) <= 3:
-        # ISO 639 codes: 2-3 letters
-        if not lang.isalpha():
-            return False
-    else:
-        # Registered language tags: 5-8 alphanumeric
-        if len(lang) < 5 or len(lang) > 8:
-            return False
-        if not lang.isalnum():
-            return False
-    
-    # Process remaining subtags
-    i = 1
-    while i < len(parts):
-        subtag = parts[i]
-        if not subtag:
-            return False
-        
-        # Script subtag: exactly 4 letters
-        if len(subtag) == 4 and subtag.isalpha():
-            i += 1
-            continue
-        
-        # Region subtag: 2 letters or 3 digits
-        if (len(subtag) == 2 and subtag.isalpha()) or (len(subtag) == 3 and subtag.isdigit()):
-            i += 1
-            continue
-        
-        # Variant: 5-8 alphanumeric, or 1 letter + 3 alphanumeric
-        if len(subtag) >= 5 and len(subtag) <= 8 and subtag.isalnum():
-            i += 1
-            continue
-        if len(subtag) == 4 and subtag[0].isalpha() and subtag[1:].isalnum():
-            i += 1
-            continue
-        
-        # Extension: 1 letter + 1-8 alphanumeric
-        if len(subtag) >= 2 and len(subtag) <= 9 and subtag[0].isalpha() and subtag[1:].isalnum():
-            i += 1
-            continue
-        
-        # Private use: 'x' + 1-8 alphanumeric
-        if subtag[0] == 'x' and len(subtag) >= 2 and len(subtag) <= 9 and subtag[1:].isalnum():
-            i += 1
-            continue
-        
-        # If we get here, subtag doesn't match any valid pattern
-        return False
-    
-    return True
+
+    return _LANGUAGE_TAG_PATTERN.fullmatch(tag) is not None
 
 
 # VAT number formats of the VIES system (country prefix, then the number).

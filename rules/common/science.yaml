@@ -16,8 +16,8 @@ rules:
     name: ORCID unique identifier by value pattern
     match: ppr
     type: data
-    rule: Literal("0000-000") + Word(nums, exact=4) + Literal("-") + Word(nums, exact=4) + Optional(Literal("-") + Word('0123456789X', exact=1))
-    minlen: 16
+    rule: Literal("000") + Word('09', exact=1) + Literal("-") + Word(nums, exact=4) + Literal("-") + Word(nums, exact=4) + Literal("-") + Word(nums, exact=3) + Word('0123456789X', exact=1)
+    minlen: 19
     maxlen: 19
     priority: 1
     validator: metacrafterext.rules.common.identifiers.validate_orcid
