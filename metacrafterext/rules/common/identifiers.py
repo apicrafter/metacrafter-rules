@@ -1375,12 +1375,31 @@ def validate_oid(value):
             return False
         if not part.isdigit():
             return False
-    
+        # Dot notation writes arcs without leading zeros (0.0391 is a decimal fraction)
+        if len(part) > 1 and part[0] == '0':
+            return False
+
+    # Under the root arcs 0 (itu-t) and 1 (iso) the second arc is 0..39 (ITU-T X.660), so
+    # 0.39106583072100315 is a fraction, not an OID.
+    if parts[0] in ('0', '1') and int(parts[1]) > 39:
+        return False
+
     # Reasonable length check
     if len(oid) > 100:
         return False
     
     return True
+
+
+def validate_oid_value(value):
+    """
+    Validates an OID found by value alone: validate_oid() and at least three arcs.
+
+    Two arcs (0.1, 1.5) are far more often decimal numbers than OIDs, such as crop offsets
+    or ratios, so a value-only match needs three arcs (2.5.4, 1.3.6.1.4.1.343). Fields
+    named as OIDs are matched by the field-name rule.
+    """
+    return validate_oid(value) and value.strip().count('.') >= 2
 
 
 def validate_eidr(value):

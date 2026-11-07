@@ -1,0 +1,29 @@
+name: culture
+description: Museum and cultural heritage object descriptions
+context: common
+lang: common
+country_code: xx
+rules:
+  artmediumfield:
+    key: art_medium
+    name: Technique and material of an artwork by field name
+    rule: technique,techniques,art_medium,artmedium,artwork_medium,technique_material,material_technique,техника,техника исполнения,материал и техника,материал_и_техника
+    type: field
+    match: text
+    priority: 1
+  objectdimensionsfield:
+    key: object_dimensions
+    name: Object dimensions by field name
+    rule: dimensions,object_dimensions,objectdimensions,размеры,размеры предмета
+    type: field
+    match: text
+    priority: 1
+  objectdimensionsvalue:
+    key: object_dimensions
+    name: Object dimensions as text (30х40 см, 68 x 82 cm)
+    match: regex
+    type: data
+    rule: '\d+(?:[.,]\d+)?\s*[xXхХ×]\s*\d+(?:[.,]\d+)?(?:\s*[xXхХ×]\s*\d+(?:[.,]\d+)?)?\s*(?:мм|см|м|mm|cm|m|in)\.?'
+    minlen: 5
+    maxlen: 60
+    priority: 1

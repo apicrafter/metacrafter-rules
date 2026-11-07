@@ -12,7 +12,25 @@ rules:
     priority: 1
     match: func
     type: data
-    rule: validators.domain
+    rule: metacrafterext.rules.common.internet.is_fqdn
+  slugfield:
+    key: slug
+    name: URL slug by field name
+    rule: slug,slugs,url_slug,urlslug,page_slug,post_slug,slug_url
+    type: field
+    match: text
+    priority: 1
+  slugvalue:
+    key: slug
+    name: URL slug by value in a slug field
+    rule: '[a-z0-9]+(?:-[a-z0-9]+)*'
+    match: regex
+    type: data
+    minlen: 1
+    maxlen: 200
+    priority: 1
+    fieldrule: slug,slugs,url_slug,urlslug,page_slug,post_slug,slug_url
+    fieldrulematch: text
   urlbyvalidators:
     key: url
     name: Web URL

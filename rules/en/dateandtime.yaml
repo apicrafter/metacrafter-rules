@@ -39,3 +39,19 @@ rules:
     type: field
     match: text
     priority: 1
+  enhistoricaldatingfield:
+    key: historical_dating
+    name: Historical dating by field name
+    rule: dating,dating_text,date_text
+    type: field
+    match: text
+    priority: 1
+  enhistoricaldatingvalue:
+    key: historical_dating
+    name: Historical dating in English (19th century, early 20th century, 1950s)
+    match: func
+    type: data
+    rule: metacrafterext.rules.common.dating.is_historical_dating
+    minlen: 5
+    maxlen: 120
+    priority: 1

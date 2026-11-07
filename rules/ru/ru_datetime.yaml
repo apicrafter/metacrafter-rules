@@ -38,3 +38,19 @@ rules:
     match: text
     type: field
     rule: год,Годы,Отчетный год
+  rushistoricaldatingfield:
+    key: ru_historical_dating
+    name: Historical dating (Russian) by field name
+    match: text
+    type: field
+    rule: датировка,датировка предмета,датировка объекта,время создания
+    priority: 1
+  rushistoricaldatingvalue:
+    key: ru_historical_dating
+    name: Historical dating in Russian (XIX век, конец XIX века, 1950-е гг.)
+    match: func
+    type: data
+    rule: metacrafterext.rules.ru.dating.is_ru_historical_dating
+    minlen: 4
+    maxlen: 120
+    priority: 1

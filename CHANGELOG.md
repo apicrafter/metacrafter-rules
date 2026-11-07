@@ -7,6 +7,55 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+Rules for museum and cultural heritage data, found on an export of the ar.culture.ru
+"Артефакт" API (16077 objects): on a full scan with metacrafter, labelled fields rose from
+100 to 125 of 193.
+
+- **Goskatalog registration number** (#13): fields such as `goskatalogNumber` report
+  `ru_goskatalog_regnum` by name, and their 7–8 digit values match by value
+  (`rules/ru/ru_gov.yaml`). The value rule applies only to those field names.
+- **Russian surname with initials** (#14): `rusinitialssurname` reports
+  `rus_initials_surname` for `Иванов И.И.`, `И.И. Иванов`, `Бринцева А.` with the
+  registry regexp (`rules/ru/ru_persons.yaml`). Fields named `author` or `автор` report
+  `dc_creator` (`rules/common/dublincore.yaml`): an author can be a person or an
+  organization.
+- **Historical dating** (metacrafter-registry#138): `ru_historical_dating` for `XIX век`,
+  `конец XIX века`, `1950-е гг.`, `III тыс. до н.э.` (`rules/ru/ru_datetime.yaml`,
+  `metacrafterext.rules.ru.dating`), and `historical_dating` for `19th century`,
+  `early 20th century`, `1950s` (`rules/en/dateandtime.yaml`,
+  `metacrafterext.rules.common.dating`). Plain years are left to the year rules.
+- **URL slug** (metacrafter-registry#135): fields named `slug` report `slug`, and their
+  lowercase hyphenated values match by value (`rules/common/commonurl.yaml`).
+- **Technique and material of an artwork** (metacrafter-registry#136): fields named
+  `technique` or `техника` report `art_medium` (`rules/common/culture.yaml`).
+- **Object dimensions as text** (metacrafter-registry#137): values such as `30х40 см` and
+  `68 x 82 cm` report `object_dimensions`, as do fields named `dimensions` or `размеры`
+  (`rules/common/culture.yaml`).
+
+The keys `slug`, `art_medium`, `object_dimensions` and `historical_dating` are new in
+metacrafter-registry (apicrafter/metacrafter-registry#142); until it is published they
+are unresolved rule keys.
+
+### Fixed
+
+- **`fqdn` on Japanese and Chinese text** (#11). `validators.domain` IDNA-encodes the
+  value, and IDNA maps the ideographic full stop `。` to a dot, so titles such as
+  `ニコラ･プッサン。リナルドとアルミーダ` were domain names at 75. `fqdnbyvalidators`
+  now calls `metacrafterext.rules.common.internet.is_fqdn`, which rejects values with
+  `。`, `．` or `｡` or without an ASCII dot. `слово.рф` still matches.
+- **`oid` on decimal fractions** (#12). `oidvalue` matched crop offsets such as `0.1` and
+  `0.39106583072100315` at 96. `validate_oid` now rejects arcs with leading zeros and a
+  second arc above 39 under the root arcs 0 and 1 (ITU-T X.660), and the value rule uses
+  `validate_oid_value`, which also needs three arcs (`2.5.4`, `1.3.6.1.4.1.343`).
+- **Language codes in `locale` fields** (#15). The field guard of `languagetag`
+  (`Optional(Word(printables)) + CaselessLiteral('lang') + …`) never matched, because
+  `Word(printables)` takes the whole name, so the rule matched no field. The guard is now
+  a list of names (`lang`, `lang_code`, `language_code`, `locale`, `locales`, …) and the
+  rule is no longer imprecise. The new field rule `languagetagfield` reports
+  `languagetag` for the same names.
+
 ## [0.0.5] - 2026-11-07
 
 ### Added
