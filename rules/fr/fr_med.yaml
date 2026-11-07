@@ -29,7 +29,7 @@ rules:
     name: Code ATC selon la valeur
     match: ppr
     type: data
-    rule: Word('ABCDEFGHIJKLMNOPQRSTUVWXYZ', exact=1) + Word(nums, exact=2) + Word('ABCDEFGHIJKLMNOPQRSTUVWXYZ', exact=1) + Word(nums, exact=2)
+    rule: Word('ABCDEFGHIJKLMNOPQRSTUV', exact=1) + Word(nums, exact=2) + Word('ABCDEFGHIJKLMNOPQRSTUVWXYZ', exact=2) + Word(nums, exact=2)
     maxlen: 7
     minlen: 7
   frccamfield:
