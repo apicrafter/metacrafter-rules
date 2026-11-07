@@ -23,7 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   They now use `validate_ae_emirates_id`: the value starts with `784` and has a year from
   1900 to the current year in digits 4–7. The check digit is not checked, because no
   official source confirms the algorithm. The registry example `784123456789012` (year 1234)
-  no longer matches; metacrafter-registry branch `claude/aeemiratesid-examples` replaces it.
+  no longer matches; apicrafter/metacrafter-registry#144 replaces it.
 
 ## [0.0.6] - 2026-11-07
 
