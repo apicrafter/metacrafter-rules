@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- **Unix time, gender and HTTP status codes by value** (#47).
+  - `unixtimevalue`: seconds from 630000000 to 2209999999 (about 1990 to 2040), or the same in
+    milliseconds, in a field named as a timestamp (`timestamp`, `created_timestamp`,
+    `created_ts`, `epoch`). `timestampknownpat` (`created_timestamp`, `event timestamp`) gets
+    priority 1, so it reports on its own (it scored 48, below the default confidence 50).
+  - `genderbyname` (`sex`, `author_sex`, `patient_gender`, `sex_code`, `пол`) and
+    `genderbyvalue` (`м`/`ж`, `мужской`/`женский`, `m`/`f`, `male`/`female` in a gender field).
+  - `httpstatuscodefield` (`Statuscode`, `status_code`, `http_status`, `response_code`) and
+    `httpstatuscodevalue` (100–599 in such a field).
+
+
 ### Fixed
 
 - **Placeholder numbers no longer pass check digit validators** (#42). A value made of one

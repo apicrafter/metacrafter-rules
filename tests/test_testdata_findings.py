@@ -104,3 +104,80 @@ def test_url_validator_rejects_other_text(value):
 def test_url_rules_use_the_url_validator():
     for path, rule_id in (("common/commonurl.yaml", "urlbyvalidators"), ("ext/ext_internet.yaml", "url")):
         assert load(path, rule_id)["rule"] == "metacrafterext.rules.common.common._validate_url"
+
+
+# --- #47 unixtime, gender, HTTP status codes ---------------------------------------
+
+def regex_field(path, rule_id):
+    spec = load(path, rule_id)
+    assert spec["type"] == "field" and spec["match"] == "regex"
+    pattern = re.compile(spec["rule"])
+    return lambda name: bool(pattern.fullmatch(name) or pattern.fullmatch(name.lower()))
+
+
+def text_guard(path, rule_id):
+    spec = load(path, rule_id)
+    assert spec["fieldrulematch"] == "text"
+    names = {name.strip().lower() for name in spec["fieldrule"].split(",")}
+    return lambda name: name.lower() in names
+
+
+@pytest.mark.parametrize("value", ["1471181882", "1652190194", "631152000", "2208988799", "1471181882123",
+                                   "1652190195.25"])
+def test_unixtime_value_accepts_timestamps(value):
+    assert regex_values("common/dateandtime.yaml", "unixtimevalue")(value)
+
+
+@pytest.mark.parametrize("value", ["0", "12345", "123456789", "3000000000", "99999999999999", "2021-09-17"])
+def test_unixtime_value_rejects_other_numbers(value):
+    assert not regex_values("common/dateandtime.yaml", "unixtimevalue")(value)
+
+
+def test_unixtime_value_needs_a_timestamp_field():
+    guard = field_guard("common/dateandtime.yaml", "unixtimevalue")
+    for name in ("timestamp", "created_timestamp", "Event Timestamp", "created_ts", "epoch", "unix_time"):
+        assert guard(name), name
+    for name in ("inn", "phone", "posts", "id", "createdtimestamp"):
+        assert not guard(name), name
+
+
+def test_timestamp_name_pattern_reports_on_its_own():
+    assert load("common/dateandtime.yaml", "timestampknownpat")["priority"] == 1
+
+
+@pytest.mark.parametrize("name", ["sex", "Sex", "gender", "author_sex", "patient_gender", "sex_code",
+                                  "Пол", "person sex"])
+def test_gender_field_names(name):
+    assert regex_field("pii/pii.yaml", "genderbyname")(name)
+
+
+@pytest.mark.parametrize("name", ["essex", "sex_ratio", "unisex", "sexton", "polygon", "пол помещения"])
+def test_gender_field_rejects_other_names(name):
+    assert not regex_field("pii/pii.yaml", "genderbyname")(name)
+
+
+def test_gender_values_need_a_gender_field():
+    spec = load("pii/pii.yaml", "genderbyvalue")
+    values = set(spec["rule"].split(","))
+    assert {"м", "ж", "мужской", "женский", "m", "f", "male", "female"} <= values
+    guard = text_guard("pii/pii.yaml", "genderbyvalue")
+    assert guard("author_sex") and guard("Пол") and not guard("size")
+
+
+@pytest.mark.parametrize("name", ["Statuscode", "status_code", "HTTP Status", "http_code", "response_code",
+                                  "HttpStatusCode"])
+def test_http_status_field_names(name):
+    assert regex_field("common/internet.yaml", "httpstatuscodefield")(name)
+
+
+@pytest.mark.parametrize("name", ["status", "code", "statuses", "zip_code"])
+def test_http_status_field_rejects_other_names(name):
+    assert not regex_field("common/internet.yaml", "httpstatuscodefield")(name)
+
+
+def test_http_status_values():
+    check = regex_values("common/internet.yaml", "httpstatuscodevalue")
+    assert all(check(v) for v in ("200", "301", "404", "503", "101"))
+    assert not any(check(v) for v in ("600", "99", "2000", "abc"))
+    guard = text_guard("common/internet.yaml", "httpstatuscodevalue")
+    assert guard("Statuscode") and not guard("status") and not guard("price")

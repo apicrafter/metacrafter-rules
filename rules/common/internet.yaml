@@ -61,6 +61,24 @@ rules:
     fieldrulematch: ppr
     priority: 2
     validator: metacrafterext.rules.common.identifiers.validate_asn
+  httpstatuscodefield:
+    key: http_status_code
+    name: HTTP status code by field name
+    rule: '(?i)(?:http[ _.-]?)?(?:status|response)[ _.-]?code|http[ _.-]?(?:status|code)'
+    match: regex
+    type: field
+    priority: 1
+  httpstatuscodevalue:
+    key: http_status_code
+    name: HTTP status code (100-599) in a status code field
+    rule: '[1-5]\d{2}'
+    minlen: 3
+    maxlen: 3
+    match: regex
+    type: data
+    priority: 1
+    fieldrule: statuscode,status_code,status code,http_status,http_status_code,httpstatus,httpstatuscode,http_code,httpcode,response_code,responsecode,http status,http code
+    fieldrulematch: text
   fqdnbyknown:
     key: fqdn
     name: Domain or host name (FQDN) by known names

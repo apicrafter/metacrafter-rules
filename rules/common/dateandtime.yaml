@@ -88,7 +88,26 @@ rules:
       ^ ((Word(alphanums) + Optional(oneOf('_ -'))) * 3 + CaselessLiteral('timestamp'))
     type: field
     match: ppr
-    priority: 2
+    priority: 1
+  unixtimevalue:
+    key: unixtime
+    name: Unix time in seconds or milliseconds in a timestamp field
+    priority: 1
+    minlen: 9
+    maxlen: 20
+    match: regex
+    type: data
+    # Seconds from 630000000 to 2209999999 (about 1990 to 2040), or the same in milliseconds,
+    # with an optional fraction. Bare 10-digit numbers are also INNs and phone numbers, so the
+    # field name must name a timestamp: timestamp, created_timestamp, created_ts, epoch.
+    rule: '(?:6[3-9]\d{7}|[7-9]\d{8}|1\d{9}|2[01]\d{8}|220\d{7})(?:\d{3})?(?:\.\d{1,6})?'
+    fieldrule: >-
+      CaselessLiteral('timestamp')
+      ^ oneOf('unixtime unix_time unix_timestamp epoch epoch_time ts', caseless=True)
+      ^ ((Word(alphanums) + Optional(oneOf('_ -'))) * 1 + (CaselessLiteral('timestamp') | CaselessLiteral('ts')))
+      ^ ((Word(alphanums) + Optional(oneOf('_ -'))) * 2 + CaselessLiteral('timestamp'))
+      ^ ((Word(alphanums) + Optional(oneOf('_ -'))) * 3 + CaselessLiteral('timestamp'))
+    fieldrulematch: ppr
   timezoneknown:
     key: timezone
     name: Timezone by known name
