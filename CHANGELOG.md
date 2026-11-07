@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.0.6] - 2026-11-07
+
 ### Added
 
 Rules for museum and cultural heritage data, found on an export of the ar.culture.ru
@@ -34,9 +36,9 @@ Rules for museum and cultural heritage data, found on an export of the ar.cultur
   `68 x 82 cm` report `object_dimensions`, as do fields named `dimensions` or `размеры`
   (`rules/common/culture.yaml`).
 
-The keys `slug`, `art_medium`, `object_dimensions` and `historical_dating` are new in
-metacrafter-registry (apicrafter/metacrafter-registry#142); until it is published they
-are unresolved rule keys.
+The keys `slug`, `art_medium`, `object_dimensions` and `historical_dating` need a
+metacrafter-registry that includes apicrafter/metacrafter-registry#142; with an older
+registry they are unresolved rule keys.
 
 ### Fixed
 
