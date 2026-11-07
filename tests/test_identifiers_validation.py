@@ -39,6 +39,7 @@ from metacrafterext.rules.common.identifiers import (
     validate_th_idcard,
     validate_sa_id,
     validate_sa_iqama,
+    validate_ae_emirates_id,
     validate_th_taxid,
     validate_vn_taxcode,
     validate_isbn,
@@ -738,6 +739,32 @@ class TestIMSIValidation:
         ]
         for imsi in invalid_imsis:
             assert validate_imsi(imsi) == False, f"IMSI {imsi} should be invalid"
+
+    def test_unassigned_mcc(self):
+        """Test 15-digit numbers whose first three digits are not an assigned MCC."""
+        invalid_imsis = [
+            "100150123456789",  # MCC 100 is not assigned
+            "200150123456789",  # MCC 200 is not assigned
+            "304123456789012",  # OGRNIP of 2004: MCC 304 is not assigned
+            "320406564823662",  # OGRNIP of 2020: MCC 320 is not assigned
+            "784199012345676",  # UAE Emirates ID: MCC 784 is not assigned
+            "800150123456789",  # Zone 8 has no MCCs
+        ]
+        for imsi in invalid_imsis:
+            assert validate_imsi(imsi) == False, f"IMSI {imsi} should be invalid"
+
+    def test_special_mccs(self):
+        """Test network, international and private network MCCs are accepted."""
+        for imsi in ["001010123456789", "901280123456789", "999990123456789"]:
+            assert validate_imsi(imsi) == True, f"IMSI {imsi} should be valid"
+
+    def test_random_numbers_rarely_pass(self):
+        """Only numbers that start with an assigned MCC pass: about a quarter."""
+        import random
+        rnd = random.Random(42)
+        values = [str(rnd.randint(10**14, 10**15 - 1)) for _ in range(10000)]
+        rate = sum(validate_imsi(v) for v in values) / len(values)
+        assert rate < 0.3
     
     def test_imsi_type_validation(self):
         """Test IMSI validation with non-string types."""
@@ -1087,6 +1114,32 @@ class TestSaIdValidation:
         assert validate_sa_id("100000000") is False  # 9 digits
         assert validate_sa_id("abcdefghij") is False
         assert validate_sa_id(None) is False
+
+
+class TestAeEmiratesIdValidation:
+    """Tests for UAE Emirates ID validation (784, year, 7 digits, check digit)."""
+
+    def test_valid(self):
+        assert validate_ae_emirates_id("784199012345676") is True
+        assert validate_ae_emirates_id("784-1990-1234567-6") is True
+        assert validate_ae_emirates_id("784 2001 7654321 0") is True
+
+    def test_wrong_prefix(self):
+        assert validate_ae_emirates_id("785199012345674") is False
+        assert validate_ae_emirates_id("310150123456789") is False  # IMSI
+
+    def test_implausible_year(self):
+        assert validate_ae_emirates_id("784123456789012") is False  # year 1234
+        assert validate_ae_emirates_id("784189912345674") is False  # year 1899
+        assert validate_ae_emirates_id("784999912345674") is False  # future year
+
+    def test_invalid_format(self):
+        assert validate_ae_emirates_id("78419901234567") is False  # 14 digits
+        assert validate_ae_emirates_id("7841990123456761") is False  # 16 digits
+        assert validate_ae_emirates_id("78419901234567A") is False
+        assert validate_ae_emirates_id("") is False
+        assert validate_ae_emirates_id(None) is False
+        assert validate_ae_emirates_id(784199012345676) is False
 
 
 class TestSaIqamaValidation:
