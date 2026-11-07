@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- **ISO 8601 dates by value** (#27): `isodatevalue` reports `date` for values such as
+  `2025-05-15` (`rules/common/dateandtime.yaml`). It is a `match: registry` rule on the
+  registry record `date` (YYYY-MM-DD, month 01-12, day 01-31) with the validator
+  `metacrafterext.rules.common.dateandtime.is_iso_date`, which rejects days that the month
+  does not have (`2025-02-30`, `2023-02-29`). Dates with a time (`2025-05-15T10:00:00`)
+  do not match. Since metacrafter defaults to `--registry-detectors checksum`
+  (apicrafter/metacrafter#66), `registry:date`, which has no checksum, is not a default
+  detector, and such columns reported only `datetime` (qddate) or a field-name label. On the
+  metacrafter benchmark, recall for `date` goes from 0.0 back to 1.0. When this rule
+  matches, metacrafter does not run qddate on the column, so ISO date columns report `date`
+  instead of `datetime 100`. Without registry data the rule does not match.
+
 ## [0.0.7] - 2026-11-07
 
 ### Fixed

@@ -18,6 +18,18 @@ rules:
     type: field
     match: text
     priority: 1
+  isodatevalue:
+    key: date
+    name: ISO 8601 calendar date (YYYY-MM-DD) by value
+    # The regexp of the registry record date: YYYY-MM-DD, month 01-12, day 01-31. The
+    # validator rejects days that the month does not have (2025-02-30). Dates with a time
+    # (2025-05-15T10:00:00) are datetime and do not match.
+    rule: date
+    match: registry
+    type: data
+    validator: metacrafterext.rules.common.dateandtime.is_iso_date
+    minlen: 10
+    maxlen: 10
   yearbydatafiltered:
     key: year
     name: Modern years in range 1001-2199 by data and fieldname
