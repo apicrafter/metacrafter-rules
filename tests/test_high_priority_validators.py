@@ -8,15 +8,22 @@ Tests for:
 - validate_de_hrb
 - validate_de_ust
 - validate_fr_vat
+- validate_fr_cni
 - validate_de_vehicle_plate
 """
 
+import pathlib
+import random
+
 import pytest
+import yaml
 from metacrafterext.rules.common.identifiers import validate_eu_vat, validate_euid
 from metacrafterext.rules.es.validators import validate_es_nie
 from metacrafterext.rules.de.transport import validate_de_vehicle_plate
 from metacrafterext.rules.de.validators import validate_de_hrb, validate_de_ust
-from metacrafterext.rules.fr.validators import validate_fr_vat
+from metacrafterext.rules.common.identifiers import _verhoeff_is_valid
+from metacrafterext.rules.fr.validators import validate_fr_cni, validate_fr_vat
+from metacrafterext.rules.ru.orgs import _check_inn
 
 
 class TestValidateEUVAT:
@@ -240,6 +247,71 @@ class TestValidateFRVAT:
         assert validate_fr_vat('FR40303265046') is False  # SIREN fails the Luhn check
         assert validate_fr_vat('FR4030326504') is False
         assert validate_fr_vat(None) is False
+
+
+class TestValidateFRCNI:
+    """Tests for the 12-digit French national identity card number (apicrafter/metacrafter-rules#30)."""
+
+    RULES = pathlib.Path(__file__).resolve().parent.parent / "rules"
+
+    def test_valid(self):
+        assert validate_fr_cni('880692310285') is True  # June 1988, Hauts-de-Seine (French Wikipedia)
+        assert validate_fr_cni('190600112345') is True  # June 2019, 3-digit department 001 (dcode.fr)
+        assert validate_fr_cni('991275012345') is True
+        assert validate_fr_cni('050113054321') is True
+        assert validate_fr_cni('210897100001') is True  # 2021, last year of the 12-digit card
+        assert validate_fr_cni('8806 923 10285') is True
+
+    def test_year_of_issue(self):
+        assert validate_fr_cni('870692310285') is False  # 1987, before the card
+        assert validate_fr_cni('220175012345') is False  # 2022, after the 9-character card
+        assert validate_fr_cni('500175012345') is False
+
+    def test_month_of_issue(self):
+        assert validate_fr_cni('880092310285') is False
+        assert validate_fr_cni('881392310285') is False
+
+    def test_invalid_form(self):
+        assert validate_fr_cni('88069231028') is False
+        assert validate_fr_cni('8806923102858') is False  # number with the MRZ check digit
+        assert validate_fr_cni('X4RTBPFW4') is False  # card issued since 2021
+        assert validate_fr_cni('88069231028A') is False
+        assert validate_fr_cni('８８０６９２３１０２８５') is False  # full-width digits
+        assert validate_fr_cni(None) is False
+        assert validate_fr_cni(880692310285) is False
+
+    @staticmethod
+    def _accepted_share(values):
+        return sum(validate_fr_cni(v) for v in values) / len(values)
+
+    def test_rejects_most_random_numbers(self):
+        rng = random.Random(30)
+        values = [''.join(rng.choice('0123456789') for _ in range(12)) for _ in range(5000)]
+        # 34 of 100 years and 12 of 100 months: about 4% pass.
+        assert self._accepted_share(values) < 0.05
+
+    def test_rejects_most_aadhaar_numbers(self):
+        rng = random.Random(30)
+        values = []
+        while len(values) < 5000:
+            base = rng.choice('23456789') + ''.join(rng.choice('0123456789') for _ in range(10))
+            values += [base + d for d in '0123456789' if _verhoeff_is_valid(base + d)]
+        assert self._accepted_share(values) < 0.05
+
+    def test_rejects_most_russian_inns(self):
+        rng = random.Random(30)
+        values = []
+        while len(values) < 5000:
+            base = ''.join(rng.choice('0123456789') for _ in range(10))
+            values += [base + d for d in (f'{n:02d}' for n in range(100)) if _check_inn(base + d)]
+        assert self._accepted_share(values) < 0.05
+
+    @pytest.mark.parametrize("relpath,rule_id", [("fr/fr_persons.yaml", "frcnivalue"),
+                                                 ("pii/fr/fr_pii.yaml", "fr_pii_frcnivalue")])
+    def test_value_rules_use_the_validator(self, relpath, rule_id):
+        rule = yaml.safe_load((self.RULES / relpath).read_text(encoding="utf-8"))["rules"][rule_id]
+        assert rule["key"] == "frcni"
+        assert rule["validator"] == "metacrafterext.rules.fr.validators.validate_fr_cni"
 
 
 class TestValidateDEVehiclePlate:
