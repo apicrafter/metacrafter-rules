@@ -253,36 +253,61 @@ def validate_imei(value):
         return True  # 14-digit IMEI without check digit is also valid
 
 
+# Mobile country codes (MCC) assigned in ITU-T E.212, with the codes in use that
+# ITU does not list (289 Abkhazia, 995 British Indian Ocean Territory).
+# 001 is the test network code, 901/902 are international operators, 991 is for
+# trials of international services and 999 is for internal use (private networks).
+IMSI_MCC_CODES = frozenset("""
+001
+202 204 206 208 212 213 214 216 218 219 220 221 222 225 226 228 230 231 232 234
+235 238 240 242 244 246 247 248 250 255 257 259 260 262 266 268 270 272 274 276
+278 280 282 283 284 286 288 289 290 292 293 294 295 297
+302 308 310 311 312 313 314 315 316 330 332 334 338 340 342 344 346 348 350 352
+354 356 358 360 362 363 364 365 366 368 370 372 374 376
+400 401 402 404 405 406 410 412 413 414 415 416 417 418 419 420 421 422 424 425
+426 427 428 429 430 431 432 434 436 437 438 440 441 450 452 454 455 456 457 460
+461 466 467 470 472
+502 505 510 514 515 520 525 528 530 536 537 539 540 541 542 543 544 545 546 547
+548 549 550 551 552 553 554 555
+602 603 604 605 606 607 608 609 610 611 612 613 614 615 616 617 618 619 620 621
+622 623 624 625 626 627 628 629 630 631 632 633 634 635 636 637 638 639 640 641
+642 643 645 646 647 648 649 650 651 652 653 654 655 657 658 659
+702 704 706 708 710 712 714 716 722 724 730 732 734 736 738 740 742 744 746 748
+750
+901 902 991 995 999
+""".split())
+
+
 def validate_imsi(value):
     """
     Validates IMSI (International Mobile Subscriber Identity).
-    
+
     IMSI is a 15-digit number with structure: MCC (3 digits) + MNC (2-3 digits) + MSIN (9-10 digits)
-    
+    The MCC must be an assigned mobile country code (IMSI_MCC_CODES): about a
+    quarter of random 15-digit numbers start with one.
+
     Args:
         value: IMSI string (15 digits)
-        
+
     Returns:
         bool: True if valid IMSI format, False otherwise
     """
     if not isinstance(value, str):
         return False
-    
+
     imsi = value.replace(' ', '').replace('-', '')
-    
-    if not imsi.isdigit():
+
+    if not (imsi.isascii() and imsi.isdigit()):
         return False
-    
+
     if len(imsi) != 15:
         return False
-    
+
     # Structure: MCC (3 digits) + MNC (2-3 digits) + MSIN (9-10 digits)
-    # MCC: Mobile Country Code (3 digits, range 001-999)
-    mcc = imsi[:3]
-    mcc_num = int(mcc)
-    if mcc_num < 1 or mcc_num > 999:
+    # MCC: Mobile Country Code, one of the assigned codes
+    if imsi[:3] not in IMSI_MCC_CODES:
         return False
-    
+
     # MNC: Mobile Network Code (2-3 digits)
     # IMSI is always 15 digits total
     # If MNC is 2 digits: MSIN is 10 digits (positions 5-14)
@@ -1933,6 +1958,36 @@ def validate_sa_id(value):
     if sid[0] != '1':
         return False
     return _luhn_is_valid(sid)
+
+
+AE_EMIRATES_ID_FIRST_YEAR = 1900
+
+
+def validate_ae_emirates_id(value):
+    """
+    Validates a UAE Emirates ID number.
+
+    15 digits: ``784`` (ISO 3166 numeric code of the UAE), a four-digit year
+    (usually the year of birth), a seven-digit number and a check digit. The
+    year must be from 1900 to the current year. The check digit is not checked:
+    no official source confirms the algorithm.
+
+    Args:
+        value: Emirates ID string (spaces and dashes are ignored)
+
+    Returns:
+        bool: True if the value has the Emirates ID structure, False otherwise.
+    """
+    if not isinstance(value, str):
+        return False
+
+    eid = value.replace(' ', '').replace('-', '')
+    if len(eid) != 15 or not (eid.isascii() and eid.isdigit()):
+        return False
+    if not eid.startswith('784'):
+        return False
+    year = int(eid[3:7])
+    return AE_EMIRATES_ID_FIRST_YEAR <= year <= datetime.date.today().year
 
 
 def validate_sa_iqama(value):

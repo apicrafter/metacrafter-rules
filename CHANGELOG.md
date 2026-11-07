@@ -32,6 +32,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `esatcvalue` were the same rule, so an ATC column reported `atccode` four times. They
   are replaced by one rule, `atcvalue` in `rules/common/medical.yaml`. It is language
   independent, so it also runs when a scan selects other languages (`--langs ru`).
+- **`imsi` on any 15-digit number** (#3). `validate_imsi` accepted every MCC from 001 to
+  999, so `imsivalue` matched 300 random 15-digit numbers and 15-digit OGRNIP numbers at
+  100. It now accepts only assigned mobile country codes (ITU-T E.212, plus 289 and 995,
+  which are in use; 001 test networks, 901/902 international, 991 trials, 999 private
+  networks). About 27% of random 15-digit numbers pass: on a scan with metacrafter, random
+  numbers report `imsi 29` and OGRNIP numbers of mixed years `ogrn 100, imsi 37`. OGRNIP
+  numbers issued in 2008 or 2010–2016 start with an assigned MCC (308, 310–316), so a column
+  of those still reports `imsi 100` next to `ogrn 100`.
+- **`aeemiratesid` on any 15-digit number**. `aeemiratesidvalue` and
+  `ae_pii_aeemiratesidvalue` had no validator. Metacrafter hid them behind `imsi 100`; with
+  the IMSI fix they reported random 15-digit numbers and OGRNIP numbers as `aeemiratesid 100`.
+  They now use `validate_ae_emirates_id`: the value starts with `784` and has a year from
+  1900 to the current year in digits 4–7. The check digit is not checked, because no
+  official source confirms the algorithm. The registry example `784123456789012` (year 1234)
+  no longer matches; apicrafter/metacrafter-registry#144 replaces it.
 
 New examples in metacrafter-registry (`34a946c`) that the rules handled wrongly (#19):
 
