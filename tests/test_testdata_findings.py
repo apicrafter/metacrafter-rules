@@ -77,3 +77,30 @@ def test_boolean_prefix_guards_need_a_word_boundary(rule_id, names, others):
         assert guard(name), name
     for name in others:
         assert not guard(name), name
+
+
+# --- #46 URLs with character references --------------------------------------------
+
+@pytest.mark.parametrize("value", [
+    "https://www.paih.gov.pl/?post_type=events&#038;p=60566",
+    "https://www.paih.gov.pl/?post_type=news&#038;p=60028",
+    "https://example.org/?x=1&amp;y=2",
+    "https://example.org/?a=1&copy=2",
+    "http://nalog.ru",
+])
+def test_url_validator_accepts_urls_from_html_exports(value):
+    from metacrafterext.rules.common.common import _validate_url
+
+    assert _validate_url(value)
+
+
+@pytest.mark.parametrize("value", ["not a url", "ftp//bad", "", None, "&#038;"])
+def test_url_validator_rejects_other_text(value):
+    from metacrafterext.rules.common.common import _validate_url
+
+    assert not _validate_url(value)
+
+
+def test_url_rules_use_the_url_validator():
+    for path, rule_id in (("common/commonurl.yaml", "urlbyvalidators"), ("ext/ext_internet.yaml", "url")):
+        assert load(path, rule_id)["rule"] == "metacrafterext.rules.common.common._validate_url"

@@ -38,6 +38,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   capital letter of a camelCase name (`is_active`, `IS-ACTIVE`, `isActive`, `HasPhoto`).
   Lower-case names without a separator (`ispublic`) no longer pass: in 444k open data field
   names they are rare next to `island`, `issuer` and `iso3_code`.
+- **URL rules accept URLs with HTML character references** (#46). WordPress REST exports write
+  `&` in `guid.rendered` as `&#038;` (`https://example.org/?post_type=events&#038;p=60566`),
+  which `validators.url` rejects. `_validate_url` checks such a URL again with numeric
+  references and `&amp;` decoded (other named references are left alone: `&copy=2` is a query
+  parameter), and `urlbyvalidators` now uses `_validate_url` instead of `validators.url`.
 
 ## [0.0.9] - 2026-11-07
 

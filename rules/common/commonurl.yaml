@@ -39,7 +39,7 @@ rules:
     priority: 1
     match: func
     type: data
-    rule: validators.url
+    rule: metacrafterext.rules.common.common._validate_url
   urlbyknownpat:
     key: url
     name: URL/website by known name pattern
