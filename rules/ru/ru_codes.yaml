@@ -28,6 +28,12 @@ rules:
     rule: okved,okved_code,okved_2,okved2,okved_1,оквэд
     type: field
     match: text
+  ruokpdknown:
+    key: okpd
+    name: Russian OKPD2 product code by known name
+    rule: okpd,okpd2,okpd_2,okpd_code,okpd2_code,окпд,окпд2,код окпд,код окпд2,код по окпд,код по окпд2
+    type: field
+    match: text
   ruokoguknown:
     key: okogu
     name: Russian ОКОГУ by known name
@@ -173,7 +179,14 @@ rules:
     rule: (Word(nums, min=1, max=3) + Literal('.') + Word(nums, min=1, max=3)) ^ (Word(nums,
       min=1, max=3) + 2*(Literal('.')+Word(nums, min=1, max=3))) ^ (Word(nums, min=1,
       max=3) + 3*(Literal('.')+Word(nums, min=1, max=3)))
-    fieldrule: Optional(Word(printables)) + Literal('okved') + Optional(Word(printables))
+    # The field name has a word that starts with okved, оквэд or оквед: okved2, main_okved,
+    # код оквэд. pyparsing does not backtrack, so each alternative fixes the number of words
+    # before it (0 to 3); words are separated by _, - or spaces.
+    fieldrule: >-
+      (oneOf('okved оквэд оквед', caseless=True) + ZeroOrMore(Word(printables + 'абвгдеёжзийклмнопрстуфхцчшщъыьэюяАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ')))
+      ^ ((Word(alphanums + 'абвгдеёжзийклмнопрстуфхцчшщъыьэюяАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ') + Optional(oneOf('_ -'))) * 1 + oneOf('okved оквэд оквед', caseless=True) + ZeroOrMore(Word(printables + 'абвгдеёжзийклмнопрстуфхцчшщъыьэюяАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ')))
+      ^ ((Word(alphanums + 'абвгдеёжзийклмнопрстуфхцчшщъыьэюяАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ') + Optional(oneOf('_ -'))) * 2 + oneOf('okved оквэд оквед', caseless=True) + ZeroOrMore(Word(printables + 'абвгдеёжзийклмнопрстуфхцчшщъыьэюяАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ')))
+      ^ ((Word(alphanums + 'абвгдеёжзийклмнопрстуфхцчшщъыьэюяАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ') + Optional(oneOf('_ -'))) * 3 + oneOf('okved оквэд оквед', caseless=True) + ZeroOrMore(Word(printables + 'абвгдеёжзийклмнопрстуфхцчшщъыьэюяАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ')))
     fieldrulematch: ppr
   ruookvedcodepatimprecise:
     key: okved
@@ -186,3 +199,49 @@ rules:
       min=1, max=3) + 2*(Literal('.')+Word(nums, min=1, max=3))) ^ (Word(nums, min=1,
       max=3) + 3*(Literal('.')+Word(nums, min=1, max=3)))
     imprecise: 1
+  # OKPD2 codes: class.group (21.20), subgroup (21.20.1), type (91.01.11) and category or
+  # subcategory (21.20.10.226). By value alone they look like OKVED codes, decimals and,
+  # with four parts, IPv4 addresses, so the precise rule needs okpd in the field name.
+  ruokpdcodepat:
+    key: okpd
+    name: Russian OKPD2 product code by field name and value
+    match: ppr
+    type: data
+    maxlen: 12
+    minlen: 5
+    rule: Word(nums, exact=2) + Literal('.') + Word(nums, exact=2) + Optional((Literal('.') + Word(nums, exact=1)) ^ (Literal('.') + Word(nums, exact=2) + Optional(Literal('.') + Word(nums, exact=3))))
+    # The field name has a word that starts with okpd or окпд: okpd2, okpd2_code, main_okpd2,
+    # код окпд2. pyparsing does not backtrack, so each alternative fixes the number of words
+    # before it (0 to 3); words are separated by _, - or spaces.
+    fieldrule: >-
+      (oneOf('okpd окпд', caseless=True) + ZeroOrMore(Word(printables + 'абвгдеёжзийклмнопрстуфхцчшщъыьэюяАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ')))
+      ^ ((Word(alphanums + 'абвгдеёжзийклмнопрстуфхцчшщъыьэюяАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ') + Optional(oneOf('_ -'))) * 1 + oneOf('okpd окпд', caseless=True) + ZeroOrMore(Word(printables + 'абвгдеёжзийклмнопрстуфхцчшщъыьэюяАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ')))
+      ^ ((Word(alphanums + 'абвгдеёжзийклмнопрстуфхцчшщъыьэюяАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ') + Optional(oneOf('_ -'))) * 2 + oneOf('okpd окпд', caseless=True) + ZeroOrMore(Word(printables + 'абвгдеёжзийклмнопрстуфхцчшщъыьэюяАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ')))
+      ^ ((Word(alphanums + 'абвгдеёжзийклмнопрстуфхцчшщъыьэюяАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ') + Optional(oneOf('_ -'))) * 3 + oneOf('okpd окпд', caseless=True) + ZeroOrMore(Word(printables + 'абвгдеёжзийклмнопрстуфхцчшщъыьэюяАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ')))
+    fieldrulematch: ppr
+  ruokpdcodepatimprecise:
+    key: okpd
+    name: Russian OKPD2 product code by value
+    match: ppr
+    type: data
+    maxlen: 12
+    minlen: 5
+    rule: Word(nums, exact=2) + Literal('.') + Word(nums, exact=2) + Optional((Literal('.') + Word(nums, exact=1)) ^ (Literal('.') + Word(nums, exact=2) + Optional(Literal('.') + Word(nums, exact=3))))
+    imprecise: 1
+  # OKEI national symbols of units (условные обозначения: шт., мл, мг, ЕД). Matching ignores
+  # case. One-letter symbols (г, м, л, т) and Вт (also Tuesday) are ambiguous, so only
+  # ruokeisymbolbyfield accepts them, in a field with a unit name.
+  ruokeisymbol:
+    key: unit_of_measure
+    name: Russian OKEI unit symbol by value
+    match: text
+    type: data
+    rule: шт,шт.,тыс. шт,тыс.шт,тыс. шт.,упак,упак.,уп,уп.,компл,компл.,рул,чел,чел.,ед.,ЕД,МЕ,тыс. ЕД,тыс.ЕД,млн. ЕД,млн.ЕД,тыс. МЕ,тыс.МЕ,млн. МЕ,млн.МЕ,усл. ед,усл. ед.,усл.ед,усл.ед.,доз,доза,доз(а),тыс. доз,мм,см,дм,км,пог. м,мм2,см2,дм2,м2,км2,кв. м,кв.м,тыс. м2,га,мл,мм3,см3,дм3,м3,куб. м,куб.м,тыс. м3,мг,мкг,кг,тыс. т,ммоль,мкмоль,кВт,МВт,кВт·ч,кВт*ч,кВт.ч,Гкал,кБк,МБк,ГБк
+  ruokeisymbolbyfield:
+    key: unit_of_measure
+    name: Russian OKEI unit symbol by field name and value
+    match: text
+    type: data
+    rule: шт,шт.,тыс. шт,тыс.шт,тыс. шт.,упак,упак.,уп,уп.,компл,компл.,рул,чел,чел.,ед.,ЕД,МЕ,тыс. ЕД,тыс.ЕД,млн. ЕД,млн.ЕД,тыс. МЕ,тыс.МЕ,млн. МЕ,млн.МЕ,усл. ед,усл. ед.,усл.ед,усл.ед.,доз,доза,доз(а),тыс. доз,мм,см,дм,км,пог. м,мм2,см2,дм2,м2,км2,кв. м,кв.м,тыс. м2,га,мл,мм3,см3,дм3,м3,куб. м,куб.м,тыс. м3,мг,мкг,кг,тыс. т,ммоль,мкмоль,Вт,кВт,МВт,кВт·ч,кВт*ч,кВт.ч,Гкал,кБк,МБк,ГБк,г,г.,м,м.,л,л.,т,т.,ц,%,мин,ч,сут,нед,мес,руб,руб.,тыс. руб,тыс. руб.,тыс.руб,тыс.руб.,пар,набор,лист,дал
+    fieldrule: unit,units,uom,unit_of_measure,unit_of_measurement,measure_unit,measurement_unit,unit_name,ед_изм,ед изм,едизм,ед_измерения,единица измерения,единица_измерения,единицы измерения,наименование единицы измерения,okei_name,okeiname
+    fieldrulematch: text

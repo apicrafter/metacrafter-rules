@@ -7,6 +7,50 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- **OKPD2 product codes** (`rules/ru/ru_codes.yaml`, #8). `ruokpdknown` labels `okpd`,
+  `okpd2`, `okpd_2`, `okpd_code`, `okpd2_code`, `окпд`, `окпд2`, `код окпд`, `код окпд2`,
+  `код по окпд` and `код по окпд2` fields as `okpd`. `ruokpdcodepat` labels the values
+  `XX.XX`, `XX.XX.X`, `XX.XX.XX` and `XX.XX.XX.XXX` (`21.20.10.226`, `91.01.11`) in fields
+  whose name has a word that starts with `okpd` or `окпд` (`main_okpd2`, `код окпд2`).
+  `ruokpdcodepatimprecise` matches the same values without the field name. It is imprecise:
+  by value, such codes are also OKVED codes, decimals or IPv4 addresses.
+- **Field names of the ESKLP medicine catalogue** (`rules/ru/ru_med.yaml`, #9):
+  - `ath`, `atx`, `атх` and `код_атх` are `atccode` fields.
+  - `rumnnbyname` labels names with the word `mnn` as `rumedmnn`: `std_mnn_name`,
+    `norm_mnn`, `mnn_name`. Only `name`, `names` or `list` may follow `mnn`, so `std_mnn_gid`
+    and `mnn_id` do not match. `наименование мнн` is also a `rumedmnn` field.
+  - `торговое наименование` and `торговое_наименование` are `rumedicinetradename` fields.
+    `rumedicinetradenamebyklp` labels `klp_all_list`, `klp_active_list` and `klp_name`
+    (trade names of ESKLP catalogue positions, КЛП), but not `smnn_all_klp_count` or
+    `klp_gid`.
+  - `rumedicationclassbyknown` labels `ftg`, `фтг` and `фармакотерапевтическая группа`
+    (pharmacotherapeutic group) as `medication_class`.
+- **OKEI unit symbols** (`rules/ru/ru_codes.yaml`, #10). `ruokeisymbol` labels values such as
+  `шт.`, `мл`, `мг`, `доз(а)`, `ЕД`, `МЕ` and `м3` as `unit_of_measure`; case is ignored. It
+  has symbols of two and more characters only. `ruokeisymbolbyfield` also accepts one-letter
+  symbols (`г`, `м`, `л`, `т`), `%`, and units of time and money, but only in fields named
+  `unit`, `uom`, `ед_изм`, `единица измерения` and the like.
+- **ESKLP medicine codes** (`rules/ru/ru_med.yaml`). `ruesklpcodevalue` labels catalogue codes
+  of the ESKLP (SMNN nodes and KLP positions, `21.20.10.226-000001-1-00008-0000000000000`) as
+  `ru_esklp_code`; `ruesklpcodeknown` labels `esklp_code`, `smnn_code`, `klp_code`,
+  `код есклп` and similar fields. The key needs metacrafter-registry with `ru_esklp_code`
+  (apicrafter/metacrafter-registry#128). A curated rule is used because the registry
+  detector for a Russian type without a checksum reports matches only with `--country-codes ru`.
+
+### Fixed
+
+- **ATC codes by value** (#7). `enatcvalue`, `deatcvalue`, `fratcvalue` and `esatcvalue`
+  described 6 characters (`A99A99`) with a length of 7, so they matched no value. They now
+  match substance-level codes: a letter A–V, 2 digits, 2 letters and 2 digits (`M04AA03`,
+  `D08AX08`). Group codes (`A13A`, `L03AX`) do not match.
+- **OKVED codes by field name and value** (`ruookvedcodepat`). Its field guard,
+  `Optional(Word(printables)) + Literal('okved') + Optional(Word(printables))`, matched no
+  field name without a space before `okved`: `Word(printables)` consumed the whole name, and
+  pyparsing does not backtrack. The guard now accepts names with a word that starts with
+  `okved`, `оквэд` or `оквед` (`okved`, `okved2`, `main_okved`, `код оквэд`).
+
 ## [0.0.4] - 2026-11-07
 
 ### Fixed
