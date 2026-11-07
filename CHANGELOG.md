@@ -47,6 +47,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   1900 to the current year in digits 4–7. The check digit is not checked, because no
   official source confirms the algorithm. The registry example `784123456789012` (year 1234)
   no longer matches; apicrafter/metacrafter-registry#144 replaces it.
+- **Generic field names reported as Indian identifiers** (#28).
+  - `inaadhaarknown` and `in_pii_inaadhaarknown` no longer list `uid` and `uid_number`.
+    These are generic identifier names: integer `uid` fields in Russian open data were
+    reported as Aadhaar numbers, a PII type. The new value rules `inaadhaarvalue` and
+    `in_pii_inaadhaarvalue` run on fields named `uid`, `uid_number`, `aadhaar` and similar
+    names. They accept 12 digits, optionally in groups of 4, that do not start with 0 or 1
+    and pass the Verhoeff check (`validate_in_aadhaar`).
+  - `inpanknown` and `in_pii_inpanknown` no longer list `pan`, which in payment data is
+    the primary account number of a bank card. They list `pan_number`, `pan_no`,
+    `pan_card`, `pancard`, `pan_card_number` and `pancard_number`. The new value rules
+    `inpanvalue` and `in_pii_inpanvalue` report a `pan` field when its values have the
+    PAN format: 5 letters, 4 digits and a letter, with a holder type (`P`, `C`, `H`, `F`,
+    `A`, `T`, `B`, `L`, `J` or `G`) as the fourth letter (`validate_in_pan`).
+  - These value rules replace the registry-derived detectors of `aadhaar` and `pan`, which
+    check only the pattern.
+- **`icaoairportcode` on any 4 uppercase letters** (#28). `icaoairportcodevalue`
+  (`rules/common/transport.yaml`) had no field guard, so status codes such as `ACTI` and
+  `DELD` scored 100. It now runs only on fields with a word that starts with `icao` or
+  `airport` (`icao`, `icao_code`, `airport_code`, `departure_airport`, `Airport ICAO`).
 
 New examples in metacrafter-registry (`34a946c`) that the rules handled wrongly (#19):
 
