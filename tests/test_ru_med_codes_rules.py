@@ -175,3 +175,23 @@ def test_unit_symbols_have_no_empty_or_padded_values(rule_id):
     values = load_rules("ru/ru_codes.yaml")[rule_id]["rule"].split(",")
     assert [value for value in values if not value or value != value.strip()] == []
     assert len(values) == len(set(map(str.lower, values)))
+
+
+def test_esklp_code_by_value():
+    rule = load_rules("ru/ru_med.yaml")["ruesklpcodevalue"]
+    assert rule["key"] == "ru_esklp_code"
+    check(
+        matcher(rule["rule"]),
+        [
+            "21.20.10.226-000001-1-00008-0000000000000",
+            "21.20.10.194-000111-1-00001-0000000000000",
+            "21.20.21.120-000097-1-00072-0000000000000",
+        ],
+        ["21.20.10.226", "21.20.10.226-000001-1-00008", "21.20.10.226-000001-1-00008-000000000000", "21.20.10.22-000001-1-00008-0000000000000"],
+    )
+    assert all(rule["minlen"] <= len(v) <= rule["maxlen"] for v in ["21.20.10.226-000001-1-00008-0000000000000"])
+
+
+def test_esklp_code_field_names():
+    rule = load_rules("ru/ru_med.yaml")["ruesklpcodeknown"]
+    assert {"smnn_code", "klp_code", "esklp_code", "код есклп"} <= keywords(rule["rule"])

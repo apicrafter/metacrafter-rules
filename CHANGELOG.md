@@ -32,6 +32,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   has symbols of two and more characters only. `ruokeisymbolbyfield` also accepts one-letter
   symbols (`г`, `м`, `л`, `т`), `%`, and units of time and money, but only in fields named
   `unit`, `uom`, `ед_изм`, `единица измерения` and the like.
+- **ESKLP medicine codes** (`rules/ru/ru_med.yaml`). `ruesklpcodevalue` labels catalogue codes
+  of the ESKLP (SMNN nodes and KLP positions, `21.20.10.226-000001-1-00008-0000000000000`) as
+  `ru_esklp_code`; `ruesklpcodeknown` labels `esklp_code`, `smnn_code`, `klp_code`,
+  `код есклп` and similar fields. The key needs metacrafter-registry with `ru_esklp_code`
+  (apicrafter/metacrafter-registry#128). A curated rule is used because the registry
+  detector for a Russian type without a checksum reports matches only with `--country-codes ru`.
 
 ### Fixed
 

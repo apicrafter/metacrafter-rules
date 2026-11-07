@@ -48,6 +48,26 @@ rules:
       (CaselessLiteral('klp') + oneOf('_ -') + oneOf('name names list', caseless=True))
       ^ (CaselessLiteral('klp') + oneOf('_ -') + Word(alphanums) + oneOf('_ -') + oneOf('name names list', caseless=True))
       ^ (Word(alphanums) + oneOf('_ -') + CaselessLiteral('klp') + oneOf('_ -') + oneOf('name names list', caseless=True))
+  # Code of the ESKLP catalogue (Единый справочник-каталог лекарственных препаратов): an SMNN
+  # node or a KLP position, 21.20.10.226-000001-1-00008-0000000000000. The format is distinctive,
+  # so the value rule needs no field name.
+  ruesklpcodeknown:
+    key: ru_esklp_code
+    name: Russian ESKLP medicine code by field name
+    match: text
+    type: field
+    rule: esklp,esklp_code,код есклп,код_есклп,smnn_code,klp_code,код смнн,код клп
+  ruesklpcodevalue:
+    key: ru_esklp_code
+    name: Russian ESKLP medicine code by value
+    match: ppr
+    type: data
+    rule: Word(nums, exact=2) + Literal('.') + Word(nums, exact=2) + Literal('.') + Word(nums, exact=2)
+      + Literal('.') + Word(nums, exact=3) + Literal('-') + Word(nums, exact=6) + Literal('-') + Word(nums,
+      exact=1) + Literal('-') + Word(nums, exact=5) + Literal('-') + Word(nums, exact=13)
+    minlen: 41
+    maxlen: 41
+    priority: 1
   rumedicineregnumber:
     key: rumedicineregnum
     name: Russian registration code of the medicine
