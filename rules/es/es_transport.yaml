@@ -1,0 +1,18 @@
+name: es-transport
+description: Spanish transport identifiers
+context: transport
+lang: es
+country_code: es
+rules:
+  esadifstationvalue:
+    key: es_adif_station_code
+    name: ADIF railway station code by field name and value
+    # A 5-digit GTFS stop_id alone is not evidence of ADIF: only station code names.
+    rule: '\d{5}'
+    type: data
+    match: regex
+    minlen: 5
+    maxlen: 5
+    fieldrule: codigo_estacion,código_estación,cod_estacion,codestacion,id_estacion,codigo estacion,código estación,adif_code,codigo_adif
+    fieldrulematch: text
+    priority: 1

@@ -25,4 +25,14 @@ rules:
     type: field
     match: text
     priority: 1
-
+  mxinegimunicipalityvalue:
+    key: mx_inegi_municipality_code
+    name: Mexican INEGI municipality key by field name and value
+    rule: '(?:\d{2})?\d{3}'
+    type: data
+    match: regex
+    minlen: 3
+    maxlen: 5
+    fieldrule: cve_mun,cve_municipio,clave_mun,clave_municipio,cve_ent_mun,clave del municipio,cvegeo_mun
+    fieldrulematch: text
+    priority: 1

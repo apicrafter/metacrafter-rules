@@ -127,3 +127,19 @@ rules:
     type: field
     match: text
     priority: 1
+  dwcbasisofrecordvalue:
+    key: dwc_basis_of_record
+    name: Darwin Core basisOfRecord vocabulary
+    rule: PreservedSpecimen,FossilSpecimen,LivingSpecimen,MaterialSample,MaterialEntity,MaterialCitation,HumanObservation,MachineObservation,Occurrence,PRESERVED_SPECIMEN,FOSSIL_SPECIMEN,LIVING_SPECIMEN,MATERIAL_SAMPLE,MATERIAL_CITATION,HUMAN_OBSERVATION,MACHINE_OBSERVATION,OBSERVATION,OCCURRENCE,LITERATURE
+    type: data
+    match: text
+    minlen: 8
+    maxlen: 20
+    priority: 1
+  dwcbasisofrecordknown:
+    key: dwc_basis_of_record
+    name: Darwin Core basisOfRecord by field name
+    rule: basisofrecord,basis_of_record,dwc:basisofrecord
+    type: field
+    match: text
+    priority: 1

@@ -1,0 +1,28 @@
+name: tw-datetime
+description: Dates of the ROC (Minguo) calendar used in Taiwan
+context: datetime
+lang: zh
+country_code: tw
+rules:
+  twrocdatevalue:
+    key: date_roc
+    name: ROC (Minguo) date YYYMMDD in a date field
+    rule: '[01]\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])'
+    type: data
+    match: regex
+    minlen: 7
+    maxlen: 7
+    fieldrule: 日期,異動日期,最近異動日期,設立日期,核准設立日期,變更日期,登記日期,發布日期,資料日期,統計日期,生效日期,更新日期,建檔日期,開始日期,結束日期,民國日期,roc_date
+    fieldrulematch: text
+    priority: 1
+  twrocyearmonthvalue:
+    key: yearmonth_roc
+    name: ROC (Minguo) year and month YYYMM in a year-month field
+    rule: '[01]?\d{2}(?:0[1-9]|1[0-2])'
+    type: data
+    match: regex
+    minlen: 4
+    maxlen: 5
+    fieldrule: statistic_yyymm,yyymm,資料年月,統計年月,年月,民國年月
+    fieldrulematch: text
+    priority: 1

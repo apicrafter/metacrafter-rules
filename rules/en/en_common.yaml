@@ -21,9 +21,20 @@ rules:
   endescriptionknown:
     key: description
     name: English description by known
-    rule: description,details
+    rule: description
     type: field
     match: text
+    priority: 1
+  endescriptiondetails:
+    key: description
+    name: Description in a details field (values with letters; 4585/8 is a lot number)
+    rule: metacrafterext.rules.common.generic.has_letters
+    type: data
+    match: func
+    minlen: 1
+    maxlen: 100000
+    fieldrule: details
+    fieldrulematch: text
     priority: 1
   encategoryknown:
     key: category

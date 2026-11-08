@@ -1,0 +1,17 @@
+name: cl-geo
+description: Chilean geographic identifiers
+context: geo
+lang: es
+country_code: cl
+rules:
+  clregionvalue:
+    key: cl_region_code
+    name: Chilean region number (1-16) by field name and value
+    rule: '(?:[1-9]|1[0-6])'
+    type: data
+    match: regex
+    minlen: 1
+    maxlen: 2
+    fieldrule: region tributaria,cod_region,codigo_region,código región,codigo region,cut_region,region_cut,num_region,n_region
+    fieldrulematch: text
+    priority: 1

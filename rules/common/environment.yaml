@@ -1,0 +1,18 @@
+name: environmentcommon
+description: Environmental monitoring identifiers
+context: environment
+lang: common
+country_code: xx
+rules:
+  eeaeoistationcodevalue:
+    key: eea_eoi_station_code
+    name: EEA air quality station code (EoI) by field name and value
+    rule: '[A-Z]{2}[A-Z0-9]{5}'
+    type: data
+    match: regex
+    minlen: 7
+    maxlen: 7
+    validator: metacrafterext.rules.common.generic.validate_eea_station_code
+    fieldrule: station code,station_code,stationcode,eoi_code,ab_eoi_code,eoi code,airbase_code,eu_code,station_eoi_code,international_code,code_eoi
+    fieldrulematch: text
+    priority: 1

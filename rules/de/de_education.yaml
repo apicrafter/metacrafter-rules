@@ -1,0 +1,17 @@
+name: de-education
+description: German education identifiers
+context: education
+lang: de
+country_code: de
+rules:
+  deschulnummervalue:
+    key: de_schulnummer
+    name: German school number by field name and value
+    rule: '\d{6}'
+    type: data
+    match: regex
+    minlen: 6
+    maxlen: 6
+    fieldrule: schulnummer,schul_nr,schulnr,schul_nummer,schulnummer_nrw
+    fieldrulematch: text
+    priority: 1

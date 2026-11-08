@@ -126,4 +126,42 @@ rules:
     maxlen: 9
     minlen: 9
     priority: 1
-
+  gtfslocationtypevalue:
+    key: gtfs_location_type
+    name: GTFS stop location type (0-4) in a location_type field
+    rule: '\s*[0-4]\s*'
+    type: data
+    match: regex
+    minlen: 1
+    maxlen: 300
+    fieldrule: location_type,stop_location_type
+    fieldrulematch: text
+    priority: 1
+  gtfswheelchairboardingvalue:
+    key: gtfs_wheelchair_boarding
+    name: GTFS wheelchair boarding (0-2) in a wheelchair_boarding field
+    # Fixed-width GTFS exports pad the values with spaces.
+    rule: '\s*[0-2]\s*'
+    type: data
+    match: regex
+    minlen: 1
+    maxlen: 300
+    fieldrule: wheelchair_boarding,wheelchair_accessible
+    fieldrulematch: text
+    priority: 1
+  ifoptstopidvalue:
+    key: ifopt_stop_id
+    name: IFOPT / DHID stop place, area or quay id (de:05966:24128:1:1)
+    rule: '[a-z]{2}:\d+:\d+(?::[0-9A-Za-z_]+){0,2}'
+    type: data
+    match: regex
+    minlen: 6
+    maxlen: 60
+    priority: 1
+  ifoptstopidknown:
+    key: ifopt_stop_id
+    name: IFOPT / DHID stop id by field name
+    rule: dhid,ifopt,ifopt_id,stop_ifopt,globale id,steig globale id,haltestellen-id,global_stop_id
+    type: field
+    match: text
+    priority: 1

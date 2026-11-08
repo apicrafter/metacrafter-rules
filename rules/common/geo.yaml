@@ -4,6 +4,21 @@ context: geo
 lang: common
 country_code: xx
 rules:
+  postindexzipvalue:
+    key: postindex
+    name: Five-digit postal code in a zip code field
+    rule: '\d{5}'
+    type: data
+    match: regex
+    minlen: 5
+    maxlen: 5
+    fieldrule: >-
+      (CaselessLiteral('zip') + Optional(Optional(oneOf('_ -')) + CaselessLiteral('code')) + Optional(Word(nums)))
+      ^ ((Word(alphanums) + Optional(oneOf('_ -'))) * 1 + CaselessLiteral('zip') + Optional(Optional(oneOf('_ -')) + CaselessLiteral('code')) + Optional(Word(nums)))
+      ^ ((Word(alphanums) + Optional(oneOf('_ -'))) * 2 + CaselessLiteral('zip') + Optional(Optional(oneOf('_ -')) + CaselessLiteral('code')) + Optional(Word(nums)))
+      ^ ((Word(alphanums) + Optional(oneOf('_ -'))) * 3 + CaselessLiteral('zip') + Optional(Optional(oneOf('_ -')) + CaselessLiteral('code')) + Optional(Word(nums)))
+    fieldrulematch: ppr
+    priority: 2
   geopointbyname:
     key: geopoint
     name: Geopoint by knownname
@@ -264,7 +279,8 @@ rules:
     is_pii: true
     name: Street address line by field name
     # 5. STREET ADDRESS, company_address_1, address_line_2, registered_address.
-    rule: (?i)(?:\d+\.\s*)?street[ _.-]?address(?:[ _.-]?\d)?|address[ _.-]?(?:line[ _.-]?)?\d|(?:company|business|mailing|registered|postal)[ _.-]?address(?:[ _.-]?\d)?
+    # Lines 3 and 4 hold the town, county and country (company_address_4: DUBLIN 13).
+    rule: (?i)(?:\d+\.\s*)?street[ _.-]?address(?:[ _.-]?[12])?|address[ _.-]?(?:line[ _.-]?)?[12]|(?:company|business|mailing|registered|postal)[ _.-]?address(?:[ _.-]?[12])?
     type: field
     match: regex
     priority: 1

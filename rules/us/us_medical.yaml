@@ -1,0 +1,17 @@
+name: us-medical
+description: US health care identifiers
+context: medical
+lang: en
+country_code: us
+rules:
+  uscmsccnvalue:
+    key: us_cms_ccn
+    name: CMS Certification Number by field name and value
+    rule: '\d{2}[0-9A-Z]\d{3}'
+    type: data
+    match: regex
+    minlen: 6
+    maxlen: 6
+    fieldrule: facility id,facility_id,ccn,cms_certification_number,cms certification number (ccn),provider_id,provider id,provider number,provider_number,prvdr_num,medicare provider number
+    fieldrulematch: text
+    priority: 1

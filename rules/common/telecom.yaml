@@ -18,9 +18,10 @@ rules:
     name: International Mobile Equipment Identity (IMEI) by value pattern
     match: ppr
     type: data
-    rule: Word(nums, exact=14) + Optional(Word(nums, exact=1))
+    # 15 digits with the Luhn check digit: 14-digit SIRET, CNPJ and PDL numbers are not IMEIs.
+    rule: Word(nums, exact=15)
     maxlen: 15
-    minlen: 14
+    minlen: 15
     priority: 1
     validator: metacrafterext.rules.common.identifiers.validate_imei
   imeivaluewithdashes:

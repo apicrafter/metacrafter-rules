@@ -39,4 +39,32 @@ rules:
     type: field
     match: text
     priority: 1
-
+  jpdateeravalue:
+    key: date_jp_era
+    name: Date in a Japanese era (平成 9. 4.27, 令和7年7月20日)
+    rule: '(?:明治|大正|昭和|平成|令和)\s*(?:元|[0-9０-９]{1,2})[年.．]\s*[0-9０-９]{1,2}[月.．]\s*[0-9０-９]{1,2}日?'
+    type: data
+    match: regex
+    minlen: 6
+    maxlen: 20
+    priority: 1
+  jpyeareravalue:
+    key: year_jp_era
+    name: Year in a Japanese era (平成4年, 昭58, 令元)
+    rule: '(?:明治|大正|昭和|平成|令和|明|大|昭|平|令)\s*(?:元|[0-9０-９]{1,2})(?:年度?)?'
+    type: data
+    match: regex
+    minlen: 2
+    maxlen: 8
+    priority: 1
+  jpestattimecodevalue:
+    key: jp_estat_time_code
+    name: e-Stat time axis code (10 digits) by field name
+    rule: '\d{10}'
+    type: data
+    match: regex
+    minlen: 10
+    maxlen: 10
+    fieldrule: 時間軸コード,時間軸（年次）コード,時間軸（月次）コード,時間軸（年度次）コード,time_code,cat_time
+    fieldrulematch: text
+    priority: 1

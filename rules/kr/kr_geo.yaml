@@ -44,4 +44,25 @@ rules:
     type: field
     priority: 3
     match: text
-
+  krbusstoparsvalue:
+    key: kr_bus_stop_ars
+    name: Korean bus stop ARS number by field name and value
+    rule: '\d{5}'
+    type: data
+    match: regex
+    minlen: 5
+    maxlen: 5
+    fieldrule: arsno,ars_no,ars_id,ars,ars번호,정류소번호,정류장번호,정류소 번호
+    fieldrulematch: text
+    priority: 1
+  kradmindongcodevalue:
+    key: kr_admin_dong_code
+    name: Korean administrative dong code (행정기관코드) by field name and value
+    rule: '\d{10}'
+    type: data
+    match: regex
+    minlen: 10
+    maxlen: 10
+    fieldrule: 행정기관코드,행정동코드,행정구역코드,adm_cd,adm_code,admcd,h_code,adm_dr_cd
+    fieldrulematch: text
+    priority: 1

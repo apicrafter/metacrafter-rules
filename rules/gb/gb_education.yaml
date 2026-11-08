@@ -53,3 +53,14 @@ rules:
     type: field
     priority: 1
     match: text
+  gbdfelacodevalue:
+    key: gb_dfe_la_code
+    name: English DfE local authority code by field name and value
+    rule: '\d{3}'
+    type: data
+    match: regex
+    minlen: 3
+    maxlen: 3
+    fieldrule: la (code),la_code,lacode,la code,local authority code,local_authority_code,lea_code,lea code,la_number,la number
+    fieldrulematch: text
+    priority: 1

@@ -12,7 +12,8 @@ rules:
     priority: 1
     match: text
   frdatetimename:
-    key: datetime
+    # date_ouverture, date_maj: the names say date; a time of day comes from the values.
+    key: date
     name: French date name
     match: text
     type: field

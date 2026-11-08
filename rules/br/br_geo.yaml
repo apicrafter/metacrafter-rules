@@ -32,4 +32,14 @@ rules:
     type: field
     match: text
     priority: 1
-
+  brsiafimunicipalityvalue:
+    key: br_siafi_municipality_code
+    name: Brazilian SIAFI municipality code (4 digits) by field name and value
+    rule: '\d{4}'
+    type: data
+    match: regex
+    minlen: 4
+    maxlen: 4
+    fieldrule: cod_mun,codigo_siafi,cod_siafi,siafi,cod_municipio_siafi,codigo_municipio_siafi,cd_municipio_siafi,id_municipio_siafi
+    fieldrulematch: text
+    priority: 1

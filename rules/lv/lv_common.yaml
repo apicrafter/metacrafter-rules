@@ -1,0 +1,37 @@
+name: lv-common
+description: Latvian register identifiers
+context: common
+lang: lv
+country_code: lv
+rules:
+  lvbisregistervalue:
+    key: lv_bis_register_number
+    name: Latvian construction merchant register number (11239-R)
+    rule: '\d{1,6}-R'
+    type: data
+    match: regex
+    minlen: 3
+    maxlen: 8
+    priority: 1
+  lvmedicinenumbervalue:
+    key: lv_medicine_number
+    name: Latvian medicinal product register number (00-0003-01) by field name and value
+    rule: '\d{2}-\d{4}-\d{2}'
+    type: data
+    match: regex
+    minlen: 10
+    maxlen: 10
+    fieldrule: product_id,reg_nr,regnr,reg_numurs,registracijas_numurs,registration_number,zāļu reģistrācijas numurs,medicine_number,zales_reg_nr
+    fieldrulematch: text
+    priority: 1
+  lvregistrationnumbervalue:
+    key: lv_registration_number
+    name: Latvian company registration number by field name and value
+    rule: '[45]\d{10}'
+    type: data
+    match: regex
+    minlen: 11
+    maxlen: 11
+    fieldrule: registracijas_numurs,registracijas_numurs_mitnes_valsti,reģistrācijas numurs,reģistrācijas_numurs,registracijas_nr,uznemuma_registracijas_numurs
+    fieldrulematch: text
+    priority: 1

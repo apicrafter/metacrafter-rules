@@ -38,10 +38,28 @@ rules:
     type: data
   mongodbidfield:
     key: mongodbid
-    name: MongoDB ObjectId by field name
-    rule: mongodb_id,objectid,_id,mongo_id,mongodb_objectid,object_id
-    match: text
-    type: field
+    name: MongoDB ObjectId by field name and value
+    # ArcGIS OBJECTID columns and CKAN _id row numbers are integers: an ObjectId is 24
+    # hexadecimal characters.
+    rule: Word(hexnums, exact=24)
+    match: ppr
+    type: data
+    minlen: 24
+    maxlen: 24
+    validator: metacrafterext.rules.common.identifiers.validate_mongodb_objectid
+    fieldrule: mongodb_id,objectid,_id,mongo_id,mongodb_objectid,object_id,$oid,_id.$oid
+    fieldrulematch: text
+    priority: 1
+  arcgisobjectidvalue:
+    key: objectid
+    name: ArcGIS object ID (OBJECTID, FID) by field name and integer value
+    rule: '(?:0|[1-9]\d{0,15})(?:\.0)?'
+    match: regex
+    type: data
+    minlen: 1
+    maxlen: 18
+    fieldrule: objectid,object_id,objectid_1,fid,oid,esri_oid
+    fieldrulematch: text
     priority: 1
   mongodbidvalue:
     key: mongodbid

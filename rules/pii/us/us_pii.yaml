@@ -127,6 +127,10 @@ rules:
     validator: metacrafterext.rules.common.identifiers.validate_us_npi
     maxlen: 10
     minlen: 10
+    # One ten-digit number in ten passes the NPI check (an e-Stat time code, a phone number):
+    # the field must name the NPI.
+    fieldrule: usnpi,npi,npi_number,npi_id,us_npi,national_provider_identifier,provider_npi,npi number,nppes_npi
+    fieldrulematch: text
     priority: 1
   usdeanumberfield:
     key: usdeanumber

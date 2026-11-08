@@ -27,9 +27,19 @@ rules:
     match: text
   nldatetimepattern:
     key: datetime
-    name: DateTime pattern in Dutch format
+    name: DateTime pattern in Dutch format (DD-MM-YYYY hh:mm)
     match: ppr
     type: data
-    rule: Word(nums, exact=2) + Literal('-').suppress() + Word(nums, exact=2) + Literal('-').suppress() + Word(nums, exact=4) + Optional(Literal(' ').suppress() + Word(nums, exact=2) + Literal(':').suppress() + Word(nums, exact=2))
+    # A time of day is required: DD-MM-YYYY alone is a date (nldatepattern).
+    rule: Word(nums, exact=2) + Literal('-').suppress() + Word(nums, exact=2) + Literal('-').suppress() + Word(nums, exact=4) + Literal(' ').suppress() + Word(nums, exact=2) + Literal(':').suppress() + Word(nums, exact=2)
     maxlen: 16
+    minlen: 16
+  nldatepattern:
+    key: date
+    name: Date pattern in Dutch format (DD-MM-YYYY)
+    match: ppr
+    type: data
+    rule: Word(nums, exact=2) + Literal('-').suppress() + Word(nums, exact=2) + Literal('-').suppress() + Word(nums, exact=4)
+    validator: metacrafterext.rules.common.generic.validate_dmy_date
+    maxlen: 10
     minlen: 10

@@ -88,7 +88,9 @@ rules:
       ^ ((Word(alphanums) + Optional(oneOf('_ -'))) * 3 + CaselessLiteral('timestamp'))
     type: field
     match: ppr
-    priority: 1
+    # Name evidence only: AKT_TIMESTAMP holds dates (2026-09-01Z). Integer values make it
+    # unixtime through unixtimevalue.
+    priority: 2
   unixtimevalue:
     key: unixtime
     name: Unix time in seconds or milliseconds in a timestamp field
@@ -208,4 +210,13 @@ rules:
     match: text
     type: field
     rule: start_time,end_time
+    priority: 1
+  datedmonyyvalue:
+    key: date_dmony
+    name: Date as DDMONYY (06NOV26, SAS DATE7.)
+    rule: '(?:0[1-9]|[12]\d|3[01])(?:JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC)\d{2}'
+    type: data
+    match: regex
+    minlen: 7
+    maxlen: 7
     priority: 1

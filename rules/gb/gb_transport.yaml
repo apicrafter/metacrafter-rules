@@ -21,4 +21,15 @@ rules:
     maxlen: 8
     priority: 1
     validator: metacrafterext.rules.gb.transport.validate_gb_vehicle_plate
-
+  gbnaptanatcovalue:
+    key: gb_naptan_atco
+    name: NaPTAN ATCO code in a stop code field
+    # Three-digit ATCO area code, then the stop part (2580AUD0009, 069000010180).
+    rule: '\d{3}0[0-9A-Z]{1,8}'
+    type: data
+    match: regex
+    minlen: 5
+    maxlen: 12
+    fieldrule: atcocode,atco_code,atco code,naptan_code,naptancode,stop_code,stoppointref
+    fieldrulematch: text
+    priority: 1

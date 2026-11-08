@@ -21,4 +21,12 @@ rules:
     maxlen: 9
     priority: 1
     validator: metacrafterext.rules.fr.transport.validate_fr_vehicle_plate
-
+  frirveidvalue:
+    key: fr_irve_id
+    name: AFIREV charging station or point id (FRS56E..., FR*S56*P...)
+    rule: 'FR\*?[A-Z0-9]{3}\*?[PE][A-Z0-9]{1,30}'
+    type: data
+    match: regex
+    minlen: 7
+    maxlen: 38
+    priority: 1
