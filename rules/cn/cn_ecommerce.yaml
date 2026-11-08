@@ -9,6 +9,7 @@ rules:
     name: Alibaba order ID by field name
     rule: alibaba_order_id,taobao_order_id,tmall_order_id,1688_order_id,alibaba_order
     type: field
+    priority: 1
     match: text
   cnalibabaordervalue:
     key: cnalibabaorder
@@ -27,6 +28,7 @@ rules:
     name: JD.com order ID by field name
     rule: jd_order_id,jd_order,jingdong_order_id
     type: field
+    priority: 1
     match: text
   cnjdordervalue:
     key: cnjdorder

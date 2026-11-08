@@ -55,6 +55,7 @@ rules:
     name: Russian bank account by field name
     rule: bank_account,account_number,расчетный_счет,raschetnyy_schet,счет,schet
     type: field
+    priority: 3
     match: text
   rusbankaccountvalue:
     key: rusbankaccount
@@ -70,6 +71,7 @@ rules:
     name: Russian equity securities registration by field name
     rule: гос_регистрация_выпуска,gos_registratsiya_vypuska
     type: field
+    priority: 1
     match: text
   rueqsecregvalue:
     key: rueqsecreg

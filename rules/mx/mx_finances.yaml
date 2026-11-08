@@ -9,6 +9,7 @@ rules:
     name: Mexican CLABE by field name
     rule: clabe,clabe_number,clabe_account
     type: field
+    priority: 1
     match: text
   clabevalue:
     key: clabe

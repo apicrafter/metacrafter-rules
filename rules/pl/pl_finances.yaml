@@ -9,6 +9,7 @@ rules:
     name: Polish NIP by field name
     rule: nip,nip_number,nip_no,polish_tax_number,numer_identyfikacji_podatkowej
     type: field
+    priority: 1
     match: text
   plnipvalue:
     key: plnip
@@ -24,6 +25,7 @@ rules:
     name: Polish REGON by field name
     rule: regon,regon_number,regon_no,business_id,polish_business_id,numer_regon
     type: field
+    priority: 1
     match: text
   plregonvalue:
     key: plregon
@@ -39,6 +41,7 @@ rules:
     name: Polish bank account by field name
     rule: numer_konta,polish_iban
     type: field
+    priority: 3
     match: text
   plbankaccountvalue:
     key: plbankaccount
@@ -54,6 +57,7 @@ rules:
     name: Polish IBAN by field name
     rule: polish_iban
     type: field
+    priority: 3
     match: text
   plibanvalue:
     key: pliban

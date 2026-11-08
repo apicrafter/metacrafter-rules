@@ -10,6 +10,7 @@ rules:
     name: Swedish personal number by field name
     rule: swedish_personal_number,personnummer,personnummer_se,swedish_id,personal_id_se
     type: field
+    priority: 1
     match: text
 # Disabled: matches any 10-11 digit number (with optional -/+ separator) and has
 # no checksum/date validation, so phone numbers and generic numeric ids are
@@ -30,6 +31,7 @@ rules:
     name: Swedish passport by field name
     rule: swedish_passport,passport_se,passport_sweden
     type: field
+    priority: 1
     match: text
   se_persons_sepassportvalue:
     key: sepassport

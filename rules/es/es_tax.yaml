@@ -10,6 +10,7 @@ rules:
     name: NIF por nombre de campo
     rule: nif,numero_nif,dni
     type: field
+    priority: 3
     match: text
   es_tax_esnifvalue:
     key: nif
@@ -28,6 +29,7 @@ rules:
     name: CIF por nombre de campo
     rule: cif,numero_cif,cif_empresa
     type: field
+    priority: 1
     match: text
   escifvalue:
     key: cif
@@ -44,6 +46,7 @@ rules:
     name: IVA intracomunitario por nombre de campo
     rule: iva,iva_intra,numero_iva,es_vat
     type: field
+    priority: 3
     match: text
   esvatvalue:
     key: esvat

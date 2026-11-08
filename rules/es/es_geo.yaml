@@ -9,12 +9,14 @@ rules:
     name: Spanish latitude by name
     rule: latitud
     type: field
+    priority: 1
     match: text
   eslongitudebyname:
     key: longitude
     name: Spanish longitude by name
     rule: longitud
     type: field
+    priority: 1
     match: text
   espostindexknown:
     key: postindex
@@ -23,17 +25,20 @@ rules:
     rule: codigo_postal,codigopostal,cod_postal,codigo_postal_argentino
     match: text
     type: field
+    priority: 3
   esgeopointbyname:
     key: geopoint
     name: Spanish geopoint by knownname
     rule: coordenadas
     type: field
+    priority: 1
     match: text
   espostcodefield:
     key: espostcode
     name: Spanish postal code by field name
     rule: postcode,postal_code,codigo_postal,codigopostal
     type: field
+    priority: 3
     match: text
 # Disabled: matches any 5-digit number, colliding with US ZIP codes and generic
 # numeric ids/counts. Cannot be distinguished from an arbitrary 5-digit value;

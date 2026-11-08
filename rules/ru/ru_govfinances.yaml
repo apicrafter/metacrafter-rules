@@ -9,24 +9,28 @@ rules:
     name: Russian budget code
     rule: budgetcode
     type: field
+    priority: 1
     match: text
   rubudgetname:
     key: budgetname
     name: Russian budget name
     rule: budgetname
     type: field
+    priority: 1
     match: text
   rugrbscode:
     key: fedgrbs
     name: Code of GRBS by known name
     rule: grbs_code,grbs,grbscode,codegrbs
     type: field
+    priority: 1
     match: text
   rukbkcode:
     key: kbk
     name: Russian KBK code
     rule: kbk,кбк,КБК РФ(Пр),КБК РФ(Рз)
     type: field
+    priority: 1
     match: text
   rukbkcoodefull:
     key: kbk
@@ -35,18 +39,21 @@ rules:
       классификации,Код по бюджетной классификации,Код расхода по бюджетной классификации,Коды
       бюджетной классификации
     type: field
+    priority: 1
     match: text
   tofkcode:
     key: tofkcode
     name: Russian TOFK (Treasury) code
     rule: tofkcode,tofk_code
     type: field
+    priority: 1
     match: text
   tofkname:
     key: tofkname
     name: Russian TOFK (Treasury) name
     rule: tofkname
     type: field
+    priority: 1
     match: text
   tofkcodepat:
     key: tofkcode
@@ -81,12 +88,14 @@ rules:
     name: Russian budget KVR code
     rule: kvrcode,kvr_code
     type: field
+    priority: 1
     match: text
   rucsrcode:
     key: csrcode
     name: Russian budget CSR code
     rule: csrcode,csr_code
     type: field
+    priority: 1
     match: text
   ruskosgucode:
     key: kosgucode
@@ -101,10 +110,12 @@ rules:
     name: Russian public legal entities (PPO) code
     rule: ppocode
     type: field
+    priority: 1
     match: text
   rupponame:
     key: pponame
     name: Russian public legal entities (PPO) name
     rule: pponame
     type: field
+    priority: 1
     match: text

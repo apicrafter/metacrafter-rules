@@ -9,6 +9,7 @@ rules:
     name: Indian IFSC code by field name
     rule: ifsc,ifsc_code,bank_ifsc
     type: field
+    priority: 1
     match: text
   ifscvalue:
     key: ifsc

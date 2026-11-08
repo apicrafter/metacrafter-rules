@@ -10,6 +10,7 @@ rules:
     name: Vietnamese CCCD by field name
     rule: cccd,can_cuoc_cong_dan,so_cccd,cccd_number,vietnamese_id,national_id
     type: field
+    priority: 3
     match: text
   vncccdvalue:
     key: vncccd
@@ -29,6 +30,7 @@ rules:
     name: Vietnamese passport by field name
     rule: ho_chieu,so_ho_chieu,ho_chieu_no
     type: field
+    priority: 1
     match: text
   vnpassportvalue:
     key: vnpassport
@@ -45,6 +47,7 @@ rules:
     name: Vietnamese driver license by field name
     rule: bang_lai,so_bang_lai,bang_lai_xe
     type: field
+    priority: 1
     match: text
   vndriverlicvalue:
     key: vndriverlic

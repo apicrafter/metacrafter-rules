@@ -9,18 +9,21 @@ rules:
     name: UK ward code by known name
     match: text
     type: field
+    priority: 1
     rule: ward code,ward_code
   ukwardnamebyknown:
     key: ukwardname
     name: UK ward name by known name
     match: text
     type: field
+    priority: 1
     rule: ward name,ward_name,wardname,ward
   ukpostcodefield:
     key: ukpostalcode
     name: UK postal code by field name
     rule: postcode,postal_code,zip_code,uk_postcode
     type: field
+    priority: 3
     match: text
   ukpostcodevalue:
     key: ukpostalcode
@@ -35,6 +38,7 @@ rules:
     name: UK UPRN by field name
     rule: uprn,unique_property_reference_number,property_reference
     type: field
+    priority: 3
     match: text
   uprnvalue:
     key: uprn
@@ -50,48 +54,56 @@ rules:
     name: UK Lower Super Output Area (LSOA) code by field name
     match: text
     type: field
+    priority: 1
     rule: lsoa,lsoa code,lsoa_code,lsoa11cd,lsoa11_cd,lsoa code 2011,lsoa 2011 code,lsoa 2011 name
   ukmsoafield:
     key: ukmsoa
     name: UK Middle Super Output Area (MSOA) code by field name
     match: text
     type: field
+    priority: 1
     rule: msoa,msoa code,msoa_code,msoa11cd,msoa11_cd,msoa name,msoa04cd,msoa04_cd
   ukonscodefield:
     key: ukonscode
     name: UK ONS (Office for National Statistics) code by field name
     match: text
     type: field
+    priority: 1
     rule: ons code,ons_code,ons ref,ons_ref,ons body code,ons_body_code,ons_administrative_area,ons codes
   ukgsscodefield:
     key: ukgsscode
     name: UK GSS (Geographic Statistical Standard) code by field name
     match: text
     type: field
+    priority: 1
     rule: gss code,gss_code,gssla code,gssla_code
   ukboroughcodefield:
     key: ukboroughcode
     name: UK borough code by field name
     match: text
     type: field
+    priority: 1
     rule: borough code,borough_code,borough ref,borough_ref,boroughcd
   uklacodefield:
     key: uklacode
     name: UK Local Authority (LA) code by field name
     match: text
     type: field
+    priority: 1
     rule: la code,la_code,local authority code,previous local authority code,pre 2009 la code,post 2009 la code,old la code
   ukparishcodefield:
     key: ukparishcode
     name: UK parish code by field name
     match: text
     type: field
+    priority: 1
     rule: parish code,parish_code,parish_ward,parish
   ukdistrictcodefield:
     key: ukdistrictcode
     name: UK district code by field name
     match: text
     type: field
+    priority: 1
     rule: district code,district_code,ons_district_code,ogss_district_code,polling district code,local authority district code
 
   

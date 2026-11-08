@@ -9,6 +9,7 @@ rules:
     name: Property ID by field name
     rule: property_id,propertyid,property_number,parcel_id,parcel_number,lot_number,lot_id
     type: field
+    priority: 3
     match: text
   propertyidvalue:
     key: propertyid
@@ -27,6 +28,7 @@ rules:
     name: Cadastral number by field name
     rule: cadastral_number,cadastral_no,cadastral_id,cadastre_number,parcel_cadastral
     type: field
+    priority: 3
     match: text
   cadastralnumbervalue:
     key: cadastralnumber
@@ -45,6 +47,7 @@ rules:
     name: Parcel number by field name
     rule: parcel_number,parcel_no,parcel_id,lot_parcel,apn,assessor_parcel_number
     type: field
+    priority: 3
     match: text
   parcelnumbervalue:
     key: parcelnumber
@@ -63,6 +66,7 @@ rules:
     name: Building number by field name
     rule: building_number,building_no,building_id,structure_number
     type: field
+    priority: 1
     match: text
   buildingnumbervalue:
     key: buildingnumber

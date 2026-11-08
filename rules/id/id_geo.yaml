@@ -9,6 +9,7 @@ rules:
     name: Indonesian postal code by field name
     rule: postcode,kode_pos,postal_code,zip_code,zipcode
     type: field
+    priority: 3
     match: text
 # Disabled: matches any 5-digit number, colliding with US ZIP codes and generic
 # numeric ids/counts. Cannot be distinguished from an arbitrary 5-digit value;
@@ -26,6 +27,7 @@ rules:
     name: Indonesian province by field name
     rule: province,provinsi,province_name,nama_provinsi
     type: field
+    priority: 3
     match: text
   idprovincevalue:
     key: idprovince
@@ -40,5 +42,6 @@ rules:
     name: Indonesian city name by field name
     rule: city,kota,city_name,nama_kota,kabupaten
     type: field
+    priority: 3
     match: text
 

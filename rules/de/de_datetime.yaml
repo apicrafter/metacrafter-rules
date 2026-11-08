@@ -9,10 +9,12 @@ rules:
     name: German year name
     match: text
     type: field
+    priority: 1
     rule: jahr
   dedatetimename:
     key: datetime
     name: Date name in German
     match: text
     type: field
+    priority: 3
     rule: datum,ereignisdatum

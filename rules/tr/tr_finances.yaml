@@ -9,6 +9,7 @@ rules:
     name: Turkish tax number by field name
     rule: vergi_numarası,vergi_no,tax_id,turkish_tax_number
     type: field
+    priority: 3
     match: text
   trtaxnumbervalue:
     key: trtaxnumber
@@ -24,6 +25,7 @@ rules:
     name: Turkish bank account by field name
     rule: banka_hesabı,hesap_numarası,account_number,iban
     type: field
+    priority: 3
     match: text
   trbankaccountvalue:
     key: trbankaccount
@@ -39,6 +41,7 @@ rules:
     name: Turkish IBAN by field name
     rule: turkish_iban
     type: field
+    priority: 1
     match: text
   tribanvalue:
     key: triban

@@ -9,6 +9,7 @@ rules:
     name: Russian cadastral number by field name
     rule: kadastr,kadastral_number,кадастровый_номер,кадастр,кадастровый_номер_участка
     type: field
+    priority: 1
     match: text
   rukadastrvalue:
     key: rukadastr
@@ -24,6 +25,7 @@ rules:
     name: Russian property number by field name
     rule: property_number,номер_объекта,property_id,идентификатор_объекта,Номер объекта
     type: field
+    priority: 3
     match: text
   rupropertynumbervalue:
     key: rupropertynumber

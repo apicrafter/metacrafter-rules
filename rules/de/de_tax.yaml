@@ -10,6 +10,7 @@ rules:
     name: USt-IdNr. anhand Feldname
     rule: ust_idnr,ustid,de_vat,ust_id,ustidnr
     type: field
+    priority: 1
     match: text
   deustvalue:
     key: deust
@@ -27,6 +28,7 @@ rules:
     name: Steuer-ID anhand Feldname
     rule: steuer_id,steuerid,steueridentifikationsnummer
     type: field
+    priority: 3
     match: text
   detaxidvalue:
     key: steuerid
@@ -43,6 +45,7 @@ rules:
     name: Handelsregisternummer anhand Feldname
     rule: hrb,handelsregisternr,handelsregister_nr
     type: field
+    priority: 1
     match: text
 # This rule generates a lot of False positives because the pattern (single letter + 1-6 digits) matches many common codes
 # Examples: product codes, reference numbers, invoice numbers, etc.

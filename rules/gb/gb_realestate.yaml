@@ -9,6 +9,7 @@ rules:
     name: UK UPRN by field name
     rule: uprn,unique_property_reference_number,property_reference,property_reference_number,uprn_number
     type: field
+    priority: 3
     match: text
   gbuprnvalue:
     key: gbuprn
@@ -24,6 +25,7 @@ rules:
     name: UK postal code by field name (for property identification)
     rule: postcode,postal_code,zip_code,uk_postcode,property_postcode
     type: field
+    priority: 3
     match: text
   gbpostcodevalue:
     key: gbpostcode

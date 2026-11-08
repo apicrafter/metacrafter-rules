@@ -9,6 +9,7 @@ rules:
     name: US order ID by field name
     rule: us_order_id,order_id_us,amazon_order_id,ebay_order_id,shopify_order_id
     type: field
+    priority: 3
     match: text
   usorderidvalue:
     key: usorderid
@@ -27,6 +28,7 @@ rules:
     name: Amazon order ID by field name
     rule: amazon_order_id,amazon_order,amzn_order_id
     type: field
+    priority: 3
     match: text
   usamazonordervalue:
     key: usamazonorder

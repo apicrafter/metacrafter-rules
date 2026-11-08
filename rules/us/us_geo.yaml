@@ -31,6 +31,7 @@ rules:
     rule: state_fips_code,state_fips,statefips,fips_state,cntyfips,stfips,fips_state_code,fips_state,st_fips
     match: text
     type: field
+    priority: 1
   usfips64known:
     key: fips64
     is_pii: False
@@ -38,6 +39,7 @@ rules:
     rule: county_fips_code,fips_county_code,countyfips,fips_county,cnty_fips,fips_count,county_fips,local_fips,city_fips
     match: text
     type: field
+    priority: 1
   uscitybyvalue:
     key: uscity
     name: US city name by value

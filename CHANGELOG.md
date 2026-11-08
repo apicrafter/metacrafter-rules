@@ -33,6 +33,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `ruregioncode` (`ru/ru_geo.yaml`) also accepts the field names `kod_regiona`, `region_kod`,
   `код региона` and their variants.
 
+### Changed
+
+- **Every field rule has an explicit priority** (apicrafter/metacrafter#76). Since metacrafter
+  2.0 a field-name-only match of a rule without priority scores 36, below the default
+  confidence 50, so 380 field rules (72 of 75 in `rules/ru/`) reported nothing on their own.
+  Each of them now sets a priority, decided on 444k field names of open data catalogs:
+  - `priority: 1` (238 rules) when at least 90 % of the names it matches are matched by no rule
+    of another key: `okogu`, `okfs`, `okopf`, `tofkcode`, `kbk`, `inn`, `ogrn` by name,
+    `telefon`/`телефон`, `адрес`, `ФИО`, `code_insee`, `annee`, `jahr`, `ward`, `naics`.
+  - `priority: 3` (142 rules) for names shared with rules of other keys, so they stay name
+    evidence for a value match: country variants of generic names (`city`, `postcode`,
+    `zip_code`, `account_number`, `province` in tr, eg, id, kr, sa, ae, es, gb), synonym pairs
+    (`siret`/`siretcode`, `siren`/`sirencode`, `uprn`/`gbuprn`), `vat` (often a tax amount),
+    `fips_code`, and `de_pii_ibanfield` (`iban`, `bank_account`).
+  - `metacrafter rules lint` now reports no field rule below the default confidence.
+  - On the metacrafter benchmark the results are unchanged.
+
+
 
 ### Fixed
 
@@ -83,6 +101,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     as the street first and the postal code last (`ул. Родионова, д.23, г. Нижний Новгород,
     Нижегородская обл., 603093`): 97 % of the addresses of the register of accredited IT
     organizations, which matched none before.
+- **Russian field-name lists no longer contain fragments of other names**. Text field rules
+  are comma-separated, so names with commas (`Адрес, телефон`, `Фамилия, Имя, Отчество,
+  должность`) were cut into keywords: `rusaddressknown` matched `телефон`, `ruphoneknown`
+  matched `адрес`, `фамилия` and `имя`, `rupfioknown` matched `должность`, `russurnamesbyfield`
+  matched `имя` and `отчество`, and `rusdatetimename` listed `Место проведения`. The lists
+  keep their whole names; `фамилия имя отчество` moved to `rupfioknown` (full name).
+  `runpabyknown` no longer matches `Реквизиты`, `Наимнование поля` or the act type (`runpakind`).
 
 ## [0.0.9] - 2026-11-07
 

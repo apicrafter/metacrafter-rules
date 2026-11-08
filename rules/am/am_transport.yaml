@@ -9,6 +9,7 @@ rules:
     name: Armenian vehicle registration plate by field name
     rule: arm_vehicle_plate,am_vehicle_plate,armenian_plate,license_plate_am,vehicle_plate_am,reg_plate_am,համարանիշ,մեքենայի_համարանիշ
     type: field
+    priority: 1
     match: text
   amvehicleplatevalue:
     key: am_vehicle_plate

@@ -10,6 +10,7 @@ rules:
     name: BTW-nummer op veldnaam
     rule: btw,btw_nummer,btw-nummer,btwidentificatienummer
     type: field
+    priority: 1
     match: text
   nlbtwvalue:
     key: nlbtw
@@ -28,6 +29,7 @@ rules:
     name: Burgerservicenummer op veldnaam
     rule: bsn,burgerservicenummer,persoonsnummer
     type: field
+    priority: 1
     match: text
   nlbsnvalue:
     key: bsn

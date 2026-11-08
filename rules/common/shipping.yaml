@@ -9,6 +9,7 @@ rules:
     name: Shipping tracking number by field name
     rule: tracking_number,tracking_no,tracking_id,tracking_code,shipment_id,delivery_tracking,consignment_number
     type: field
+    priority: 1
     match: text
   trackingnumbervalue:
     key: trackingnumber
@@ -24,6 +25,7 @@ rules:
     name: UPS tracking number by field name
     rule: ups_tracking,ups_tracking_number,ups_tracking_no,ups_shipment
     type: field
+    priority: 1
     match: text
   upstrackingvalue:
     key: upstracking
@@ -41,6 +43,7 @@ rules:
     name: FedEx tracking number by field name
     rule: fedex_tracking,fedex_tracking_number,fedex_tracking_no,fedex_shipment
     type: field
+    priority: 1
     match: text
   fedextrackingvalue:
     key: fedextracking
@@ -59,6 +62,7 @@ rules:
     name: DHL tracking number by field name
     rule: dhl_tracking,dhl_tracking_number,dhl_tracking_no,dhl_shipment,dhl_awb
     type: field
+    priority: 1
     match: text
   dhltrackingvalue:
     key: dhltracking
@@ -77,6 +81,7 @@ rules:
     name: USPS tracking number by field name
     rule: usps_tracking,usps_tracking_number,usps_tracking_no,usps_shipment
     type: field
+    priority: 1
     match: text
   uspstrackingvalue:
     key: uspstracking
@@ -95,6 +100,7 @@ rules:
     name: Air Waybill number by field name
     rule: awb,air_waybill,awb_number,air_waybill_number,airbill_number
     type: field
+    priority: 1
     match: text
   awbnumbervalue:
     key: awbnumber
@@ -113,6 +119,7 @@ rules:
     name: Shipping container number by field name
     rule: container_number,container_no,container_id,iso_container_number
     type: field
+    priority: 1
     match: text
   containernumbervalue:
     key: containernumber

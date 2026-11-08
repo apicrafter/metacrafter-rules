@@ -10,6 +10,7 @@ rules:
     name: Korean RRN by field name
     rule: rrn,resident_registration_number,주민등록번호,rrn_number,korean_id,national_id
     type: field
+    priority: 3
     match: text
   kr_pii_krrrnvalue:
     key: krrrn
@@ -26,6 +27,7 @@ rules:
     name: Korean passport by field name
     rule: passport,여권,passport_number,여권번호,passport_no
     type: field
+    priority: 3
     match: text
   kr_pii_krpassportvalue:
     key: krpassport
@@ -42,6 +44,7 @@ rules:
     name: Korean driver license by field name
     rule: driver_license,운전면허,운전면허번호,license_number,driving_license
     type: field
+    priority: 3
     match: text
   kr_pii_krdriverlicvalue:
     key: krdriverlic

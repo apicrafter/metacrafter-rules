@@ -9,36 +9,42 @@ rules:
     name: Russian TN VED code by known name (customs code)
     rule: tnved,тнвэд,код тн вэд,тн вэд
     type: field
+    priority: 1
     match: text
   ruokeiknown:
     key: okei
     name: Russian OKEI code by known name
     rule: okei_code,okeicode,океи,code_okei,код по океи,Код  по ОКЕИ
     type: field
+    priority: 1
     match: text
   ruokfsknown:
     key: okfs
     name: Russian OKFS code by known name
     rule: okfs_code,okfs,okfscode,окфс
     type: field
+    priority: 1
     match: text
   ruokvedknown:
     key: okved
     name: Russian OKVED by known name
     rule: okved,okved_code,okved_2,okved2,okved_1,оквэд
     type: field
+    priority: 1
     match: text
   ruokpdknown:
     key: okpd
     name: Russian OKPD2 product code by known name
     rule: okpd,okpd2,okpd_2,okpd_code,okpd2_code,окпд,окпд2,код окпд,код окпд2,код по окпд,код по окпд2
     type: field
+    priority: 1
     match: text
   ruokoguknown:
     key: okogu
     name: Russian ОКОГУ by known name
     rule: okogu,окогу,okogu_code,okogucode
     type: field
+    priority: 1
     match: text
   ruokfscodevalue:
     key: okfs
@@ -101,6 +107,7 @@ rules:
     name: Russian OKOPF by known name
     rule: okopf,okopf_code,okopfcode
     type: field
+    priority: 1
     match: text
   ruokeiname:
     key: okeiname

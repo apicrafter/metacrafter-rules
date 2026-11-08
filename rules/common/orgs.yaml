@@ -10,6 +10,7 @@ rules:
     rule: legalname,companyname,orgname,org_name,company_name,organization_name,legal_name,organizationname,company
       name
     type: field
+    priority: 1
     match: text
   dunsfield:
     key: duns

@@ -9,6 +9,7 @@ rules:
     name: KvK-nummer op veldnaam
     rule: kvk,kvk_nummer,kvknummer,kamer_van_koophandel
     type: field
+    priority: 1
     match: text
   nlkvkvalue:
     key: kvk
@@ -24,6 +25,7 @@ rules:
     name: RSIN op veldnaam
     rule: rsin,rsin_nummer,fiscaal_nummer
     type: field
+    priority: 1
     match: text
   nlrsinvalue:
     key: rsin
@@ -39,4 +41,5 @@ rules:
     name: Organisatienaam op veldnaam
     rule: organisatie,organisatie_naam,bedrijfsnaam,naam_instelling
     type: field
+    priority: 1
     match: text

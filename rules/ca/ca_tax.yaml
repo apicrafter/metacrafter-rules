@@ -9,6 +9,7 @@ rules:
     name: Canada Business Number by field name
     rule: business_number,bn,canada_bn,cra_bn
     type: field
+    priority: 1
     match: text
   cabnvalue:
     key: cabn
@@ -24,6 +25,7 @@ rules:
     name: GST/HST account number by field name
     rule: gst_number,gst_hst_number,gsthst,canada_gst
     type: field
+    priority: 1
     match: text
   cagstvalue:
     key: cagst
@@ -38,6 +40,7 @@ rules:
     name: CRA program account number by field name
     rule: program_account,program_account_number,cra_program
     type: field
+    priority: 1
     match: text
   caprogramvalue:
     key: caprogramacct
@@ -52,6 +55,7 @@ rules:
     name: Charity registration number by field name
     rule: charity_number,charity_registration,charity_bn
     type: field
+    priority: 1
     match: text
   cacharityvalue:
     key: cacharity
@@ -67,6 +71,7 @@ rules:
     name: Social Insurance Number by field name
     rule: sin,sin_number,canadian_sin
     type: field
+    priority: 1
     match: text
   casinvalue:
     key: casin

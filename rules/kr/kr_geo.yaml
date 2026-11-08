@@ -9,6 +9,7 @@ rules:
     name: Korean postal code by field name
     rule: postcode,우편번호,postal_code,zip_code,zipcode
     type: field
+    priority: 3
     match: text
 # Disabled: matches any 5-digit number (and #####-### form), colliding with US
 # ZIP codes and generic numeric ids/counts. Cannot be distinguished from an
@@ -26,6 +27,7 @@ rules:
     name: Korean province by field name
     rule: province,도,province_name,도명
     type: field
+    priority: 3
     match: text
   krprovincevalue:
     key: krprovince
@@ -40,5 +42,6 @@ rules:
     name: Korean city name by field name
     rule: city,시,city_name,시명
     type: field
+    priority: 3
     match: text
 

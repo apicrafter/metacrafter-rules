@@ -9,4 +9,5 @@ rules:
     name: German website/url field names
     rule: webseite
     type: field
+    priority: 1
     match: text

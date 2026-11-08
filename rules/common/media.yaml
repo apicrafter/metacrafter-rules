@@ -9,6 +9,7 @@ rules:
     name: ISBN by field name
     rule: isbn,isbn_number,isbn_code,isbn_10,isbn_13,book_isbn
     type: field
+    priority: 3
     match: text
   isbnvalue:
     key: isbn
@@ -24,6 +25,7 @@ rules:
     name: ISSN by field name
     rule: issn,issn_number,issn_code,periodical_issn,journal_issn
     type: field
+    priority: 1
     match: text
   issnvalue:
     key: issn
@@ -40,6 +42,7 @@ rules:
     name: DOI by field name
     rule: doi,digital_object_identifier,doi_number,doi_code
     type: field
+    priority: 1
     match: text
   doivalue:
     key: doi
@@ -55,6 +58,7 @@ rules:
     name: YouTube video ID by field name
     rule: youtube_id,youtube_video_id,video_id,youtube_url
     type: field
+    priority: 3
     match: text
 # Disabled: matches any 11-character [alphanumeric-_] token, so a large range of
 # generic short ids/codes are flagged. A YouTube video ID cannot be
@@ -73,6 +77,7 @@ rules:
     name: Vimeo video ID by field name
     rule: vimeo_id,vimeo_video_id,vimeo_url
     type: field
+    priority: 3
     match: text
   vimeovideoidvalue:
     key: vimeovideoid
@@ -88,6 +93,7 @@ rules:
     name: ISRC by field name
     rule: isrc,isrc_code,isrc_number,international_standard_recording_code
     type: field
+    priority: 1
     match: text
   isrcvalue:
     key: isrc
@@ -102,6 +108,7 @@ rules:
     name: EAN by field name
     rule: ean,ean_code,ean_number,ean_13,ean_8,european_article_number
     type: field
+    priority: 3
     match: text
   eanvalue:
     key: ean

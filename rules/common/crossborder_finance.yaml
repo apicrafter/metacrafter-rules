@@ -9,6 +9,7 @@ rules:
     name: International Bank Account Number by field name
     rule: iban,iban_account,iban_number,international_bank_account
     type: field
+    priority: 3
     match: text
   ibanvalue:
     key: iban
@@ -24,6 +25,7 @@ rules:
     name: SWIFT/BIC code by field name
     rule: bic,swift,swift_code,swiftbic
     type: field
+    priority: 1
     match: text
   bicvalue:
     key: bic

@@ -9,6 +9,7 @@ rules:
     name: Código CIE-10 según el nombre del campo
     rule: cie10,codigo_cie10,diagnostico_cie10,cod_diag
     type: field
+    priority: 1
     match: text
   esicd10value:
     key: icd10code
@@ -23,12 +24,14 @@ rules:
     name: Código ATC según el nombre del campo
     rule: codigo_atc,atc,atc_medicamento
     type: field
+    priority: 1
     match: text
   escupfield:
     key: cupscode
     name: Código CUP/CUPS según el nombre del campo
     rule: cup,cups,codigo_cups
     type: field
+    priority: 1
     match: text
   escupvalue:
     key: cupscode

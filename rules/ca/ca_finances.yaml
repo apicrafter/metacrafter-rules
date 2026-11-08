@@ -9,6 +9,7 @@ rules:
     name: Canadian branch transit number by field name
     rule: transit_number,canada_transit,branch_transit
     type: field
+    priority: 1
     match: text
   catransitvalue:
     key: catransit

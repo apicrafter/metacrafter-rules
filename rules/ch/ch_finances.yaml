@@ -9,6 +9,7 @@ rules:
     name: Swiss UID by field name
     rule: swiss_uid,uid_ch,uid_switzerland,unternehmens_identifikationsnummer
     type: field
+    priority: 1
     match: text
   chuidvalue:
     key: chuid
@@ -24,6 +25,7 @@ rules:
     name: Swiss bank account by field name
     rule: swiss_bank_account,bankkonto_ch,kontonummer_ch,iban_ch
     type: field
+    priority: 3
     match: text
   chbankaccountvalue:
     key: chbankaccount
@@ -39,6 +41,7 @@ rules:
     name: Swiss IBAN by field name
     rule: swiss_iban,iban_ch
     type: field
+    priority: 3
     match: text
   chibanvalue:
     key: chiban

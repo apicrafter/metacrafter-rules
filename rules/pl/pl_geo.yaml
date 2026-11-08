@@ -9,6 +9,7 @@ rules:
     name: Polish postal code by field name
     rule: kod_pocztowy
     type: field
+    priority: 1
     match: text
   plpostcodevalue:
     key: plpostcode
@@ -23,6 +24,7 @@ rules:
     name: Polish city name by field name
     rule: miasto,nazwa_miasta
     type: field
+    priority: 1
     match: text
   plcityvalue:
     key: plcity

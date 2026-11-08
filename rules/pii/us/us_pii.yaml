@@ -10,6 +10,7 @@ rules:
     name: US Social Security Number by field name
     rule: ssn,social_security_number,ss_number,ssn_number,social_security,ssn_id
     type: field
+    priority: 3
     match: text
   usssnvalue:
     key: usssn
@@ -30,6 +31,7 @@ rules:
     name: US EIN by field name
     rule: ein,employer_id,employer_identification_number,ein_number
     type: field
+    priority: 1
     match: text
   useinvalue:
     key: usein
@@ -50,6 +52,7 @@ rules:
     name: US ITIN by field name
     rule: itin,individual_taxpayer_id,individual_taxpayer_identification_number
     type: field
+    priority: 1
     match: text
   usitinvalue:
     key: usitin
@@ -69,6 +72,7 @@ rules:
     name: US passport by field name
     rule: passport,passport_number,us_passport,passport_id
     type: field
+    priority: 3
     match: text
   uspassportvalue:
     key: uspassport
@@ -89,6 +93,7 @@ rules:
     name: US driver license by field name
     rule: driver_license,drivers_license,dl_number,license_number,driving_license
     type: field
+    priority: 3
     match: text
 # This rule generates a lot of False positives because Word(alphanums, min=6, max=18) matches almost any alphanumeric string
 # Many identifiers, codes, and other values match this pattern but are not driver license numbers
@@ -184,6 +189,7 @@ rules:
     name: US Social Security Number by field name
     rule: ssn,socialsecuritynumber,social_security_number,social_security_no
     type: field
+    priority: 3
     match: text
   enssnvalue:
     key: ssn

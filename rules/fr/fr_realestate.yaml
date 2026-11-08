@@ -9,6 +9,7 @@ rules:
     name: French cadastral reference by field name
     rule: cadastral,cadastre,reference_cadastrale,numero_cadastral,parcelle_cadastrale
     type: field
+    priority: 1
     match: text
   frcadastralvalue:
     key: frcadastral
@@ -24,6 +25,7 @@ rules:
     name: French property number by field name
     rule: property_number,numero_propriete,identifiant_propriete,reference_propriete
     type: field
+    priority: 3
     match: text
   frpropertynumbervalue:
     key: frpropertynumber

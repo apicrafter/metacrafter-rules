@@ -10,6 +10,7 @@ rules:
     name: Swiss AHV number by field name
     rule: swiss_ahv,ahv_number,ahv_nummer,ahv_se,swiss_social_security
     type: field
+    priority: 1
     match: text
   ch_pii_chahvvalue:
     key: chahv
@@ -26,6 +27,7 @@ rules:
     name: Swiss passport by field name
     rule: swiss_passport,passport_ch,passport_switzerland,schweizer_pass
     type: field
+    priority: 1
     match: text
   ch_pii_chpassportvalue:
     key: chpassport

@@ -9,6 +9,7 @@ rules:
     name: Indonesian NPWP by field name
     rule: npwp,nomor_pokok_wajib_pajak,tax_number,tax_id,indonesian_tax_number
     type: field
+    priority: 3
     match: text
   idnpwpvalue:
     key: idnpwp
@@ -23,6 +24,7 @@ rules:
     name: Indonesian bank account by field name
     rule: bank_account,rekening_bank,account_number,nomor_rekening,no_rekening
     type: field
+    priority: 3
     match: text
   idbankaccountvalue:
     key: idbankaccount

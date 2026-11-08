@@ -9,6 +9,7 @@ rules:
     name: Thai postal code by field name
     rule: thai_postcode,รหัสไปรษณีย์,รหัสไปรษณีย์ไทย
     type: field
+    priority: 1
     match: text
 # Disabled: matches any 5-digit number, colliding with US ZIP codes and generic
 # numeric ids/counts. Cannot be distinguished from an arbitrary 5-digit value;
@@ -26,6 +27,7 @@ rules:
     name: Thai province by field name
     rule: thai_province,จังหวัด,ชื่อจังหวัด
     type: field
+    priority: 1
     match: text
   thprovincevalue:
     key: thprovince

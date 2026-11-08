@@ -10,6 +10,7 @@ rules:
     name: Saudi Iqama by field name
     rule: iqama,iqama_number,iqama_no,residence_permit,saudi_iqama,إقامة,رقم_الإقامة
     type: field
+    priority: 1
     match: text
   sa_persons_saiqamavalue:
     key: saiqama
@@ -27,6 +28,7 @@ rules:
     name: Saudi ID by field name
     rule: saudi_id,national_id,saudi_national_id,id_number,identity_number,الهوية_الوطنية,رقم_الهوية
     type: field
+    priority: 3
     match: text
   sa_persons_saidvalue:
     key: said
@@ -44,6 +46,7 @@ rules:
     name: Saudi passport by field name
     rule: passport,passport_number,saudi_passport,جواز_السفر,رقم_جواز_السفر
     type: field
+    priority: 3
     match: text
   sa_persons_sapassportvalue:
     key: sapassport

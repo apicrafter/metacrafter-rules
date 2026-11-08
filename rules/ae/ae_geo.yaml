@@ -9,6 +9,7 @@ rules:
     name: UAE postal code by field name
     rule: postcode,postal_code,zip_code,uae_postcode,po_box,po_box_number,صندوق_البريد
     type: field
+    priority: 3
     match: text
 # Disabled: matches any 4-6 digit number, colliding with years, ZIP codes and
 # generic numeric ids/counts. Cannot be distinguished from an arbitrary number;
@@ -31,6 +32,7 @@ rules:
     # positives. UAE city detection now relies on the enumerated value list below.
     rule: emirate,uae_city,emirate_name,الإمارة
     type: field
+    priority: 1
     match: text
   aecityvalue:
     key: aecity

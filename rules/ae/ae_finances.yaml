@@ -9,6 +9,7 @@ rules:
     name: UAE tax number by field name
     rule: tax_number,tax_id,vat_number,uae_tax,uae_vat,trn,trade_license_number,الرقم_الضريبي
     type: field
+    priority: 3
     match: text
   aetaxnumbervalue:
     key: aetaxnumber
@@ -24,6 +25,7 @@ rules:
     name: UAE bank account by field name
     rule: bank_account,account_number,iban,uae_iban,رقم_الحساب
     type: field
+    priority: 3
     match: text
   aebankaccountvalue:
     key: aebankaccount
@@ -39,6 +41,7 @@ rules:
     name: UAE IBAN by field name
     rule: iban,iban_number,uae_iban
     type: field
+    priority: 3
     match: text
   aeibanvalue:
     key: aeiban

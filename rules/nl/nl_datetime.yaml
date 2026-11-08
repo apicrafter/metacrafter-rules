@@ -9,18 +9,21 @@ rules:
     name: Year by known name common in Dutch
     rule: jaar
     type: field
+    priority: 1
     match: text
   nldatefield:
     key: date
     name: Date field by Dutch names
     rule: datum,startdatum,einddatum,aanmaakdatum,laatst_bijgewerkt
     type: field
+    priority: 3
     match: text
   nltimefield:
     key: time
     name: Time field by Dutch names
     rule: tijd,starttijd,eindtijd
     type: field
+    priority: 1
     match: text
   nldatetimepattern:
     key: datetime

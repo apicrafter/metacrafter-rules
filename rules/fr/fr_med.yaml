@@ -9,6 +9,7 @@ rules:
     name: Code CIM-10 selon le nom du champ
     rule: cim10,code_cim10,diagnostic_cim10,code_diagnostic
     type: field
+    priority: 1
     match: text
   fricd10value:
     key: icd10code
@@ -23,12 +24,14 @@ rules:
     name: Code ATC selon le nom du champ
     rule: code_atc,atc,code_medicament_atc
     type: field
+    priority: 1
     match: text
   frccamfield:
     key: ccamcode
     name: Code CCAM selon le nom du champ
     rule: ccam,code_ccam,acte_ccam
     type: field
+    priority: 1
     match: text
   frccamvalue:
     key: ccamcode
