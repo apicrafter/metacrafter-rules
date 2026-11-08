@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.0.10] - 2026-11-08
+
 ### Added
 
 - **Unix time, gender and HTTP status codes by value** (#47).
