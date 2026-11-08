@@ -29,4 +29,5 @@ rules:
     name: Spanish date name
     match: text
     type: field
+    priority: 1
     rule: fecha_data,fecha

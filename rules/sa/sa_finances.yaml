@@ -9,6 +9,7 @@ rules:
     name: Saudi tax number by field name
     rule: tax_number,tax_id,vat_number,saudi_tax,saudi_vat,الرقم_الضريبي
     type: field
+    priority: 3
     match: text
   sataxnumbervalue:
     key: sataxnumber
@@ -24,6 +25,7 @@ rules:
     name: Saudi bank account by field name
     rule: bank_account,account_number,iban,saudi_iban,رقم_الحساب
     type: field
+    priority: 3
     match: text
   sabankaccountvalue:
     key: sabankaccount
@@ -39,6 +41,7 @@ rules:
     name: Saudi IBAN by field name
     rule: iban,iban_number,saudi_iban
     type: field
+    priority: 3
     match: text
   saibanvalue:
     key: saiban

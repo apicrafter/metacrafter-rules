@@ -2,7 +2,10 @@
 Validation functions for Mexican-specific identifiers.
 """
 
+from metacrafterext.rules.common.placeholders import rejects_repeated_digits
 
+
+@rejects_repeated_digits
 def validate_clabe(value):
     """
     Validates Mexican CLABE (Clave Bancaria Estandarizada) using MOD-10 checksum.

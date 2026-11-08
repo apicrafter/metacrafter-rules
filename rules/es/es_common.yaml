@@ -10,4 +10,5 @@ rules:
     name: Spanish phone number by known name
     rule: telefono,telefono_de_contacto
     type: field
+    priority: 1
     match: text

@@ -7,6 +7,108 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- **Unix time, gender and HTTP status codes by value** (#47).
+  - `unixtimevalue`: seconds from 630000000 to 2209999999 (about 1990 to 2040), or the same in
+    milliseconds, in a field named as a timestamp (`timestamp`, `created_timestamp`,
+    `created_ts`, `epoch`). `timestampknownpat` (`created_timestamp`, `event timestamp`) gets
+    priority 1, so it reports on its own (it scored 48, below the default confidence 50).
+  - `genderbyname` (`sex`, `author_sex`, `patient_gender`, `sex_code`, `пол`) and
+    `genderbyvalue` (`м`/`ж`, `мужской`/`женский`, `m`/`f`, `male`/`female` in a gender field).
+  - `httpstatuscodefield` (`Statuscode`, `status_code`, `http_status`, `response_code`) and
+    `httpstatuscodevalue` (100–599 in such a field).
+- **Russian OKFS and OKOGU classifiers by value** (#48), in `rules/ru/ru_codes.yaml`:
+  - `ruokfsname`: the 33 names of OKFS (OK 027-99), any case (`Федеральная собственность`,
+    `Муниципальная собственность`), key `okfsname`; `ruokfsnamefield` by field name
+    (`okfsName`, `форма собственности`).
+  - `ruokfscodevalue` (OKFS codes in an `okfs` field) and `ruokogucodevalue` (seven digits in an
+    `okogu` field): codes were labelled only by the field name, at 36.
+  - `ruokoguname`: plural OKOGU categories of regional and local bodies (`Местные
+    администрации (исполнительно-распорядительные органы) сельских поселений`), key
+    `okoguname`; `ruokogunamefield` by field name. Federal bodies are organization names too and
+    get `okoguname` only from the field name.
+  - The keys `okfsname` and `okoguname` are new registry records
+    (apicrafter/metacrafter-registry#151): pin this pack in metacrafter after that PR is live.
+- `ruregioncode` (`ru/ru_geo.yaml`) also accepts the field names `kod_regiona`, `region_kod`,
+  `код региона` and their variants.
+
+### Changed
+
+- **Every field rule has an explicit priority** (apicrafter/metacrafter#76). Since metacrafter
+  2.0 a field-name-only match of a rule without priority scores 36, below the default
+  confidence 50, so 380 field rules (72 of 75 in `rules/ru/`) reported nothing on their own.
+  Each of them now sets a priority, decided on 444k field names of open data catalogs:
+  - `priority: 1` (238 rules) when at least 90 % of the names it matches are matched by no rule
+    of another key: `okogu`, `okfs`, `okopf`, `tofkcode`, `kbk`, `inn`, `ogrn` by name,
+    `telefon`/`телефон`, `адрес`, `ФИО`, `code_insee`, `annee`, `jahr`, `ward`, `naics`.
+  - `priority: 3` (142 rules) for names shared with rules of other keys, so they stay name
+    evidence for a value match: country variants of generic names (`city`, `postcode`,
+    `zip_code`, `account_number`, `province` in tr, eg, id, kr, sa, ae, es, gb), synonym pairs
+    (`siret`/`siretcode`, `siren`/`sirencode`, `uprn`/`gbuprn`), `vat` (often a tax amount),
+    `fips_code`, and `de_pii_ibanfield` (`iban`, `bank_account`).
+  - `metacrafter rules lint` now reports no field rule below the default confidence.
+  - On the metacrafter benchmark the results are unchanged.
+
+
+
+### Fixed
+
+- **Placeholder numbers no longer pass check digit validators** (#42). A value made of one
+  repeated digit (`0000000000`, `1111111111`) passes most weighted-sum checks, so a budget
+  classifier column of `0000000000` got ISBN-10, INN, NHS number and NIP at 100. The new
+  `metacrafterext.rules.common.placeholders.rejects_repeated_digits` wraps the check digit
+  validators of ISBN, ISBN-10, ISSN, ISNI, GTIN/EAN/UPC, GLN, SSCC, DUNS, IMEI, IMSI, ICCID,
+  IMO number, SNOMED CT, NHS number, NIP, PESEL, SIREN, French CNI, Indonesian NIK, Turkish
+  VKN, Vietnamese tax code, Saudi Iqama, CUSIP, US SSN, Aadhaar, CLABE, VIN and INN.
+- `rusbankaccountvalue` checks the balance account and the currency of a 20-digit number
+  (`is_bank_account`, as `bankaccountpat` does), so zero-padded codes such as
+  `00000000000000000111` are no longer Russian bank accounts. `is_bank_account` also accepts
+  accounts in yuan, tenge, Belarusian rubles, lira, dirham, rupees, yen and Hong Kong dollars,
+  and the ISO 4217 ruble code 643.
+- **`fqdnbyvalidators` needs a delegated top-level domain** (#43). `is_fqdn` accepted any
+  dotted name, so SharePoint type names (`SP.ContentType`) and thumbnail file names
+  (`2-150x150.png`) were domains at 86–100. The last label must now be in the IANA root zone:
+  `metacrafterext/rules/common/tlds.py` (1436 TLDs, IANA version 2026110700), regenerated with
+  `scripts/update_tlds.py`. Internationalized TLDs (`рф`) are compared in their `xn--` form.
+- **`mimetypebyvalue` matches any registered media type** (#44). It was a closed list with
+  `minlen: 10`, so listed values such as `image/png`, `text/csv`, `text/xml` and `text/html`
+  could never match, and `image/gif`, `image/svg+xml` or `video/mp4` were missing. It is now
+  the registry regexp of `mimetype` (a registered top-level type, a subtype, optional
+  parameters; case-insensitive) with priority 1.
+- **`isprefixrule`, `hasprefixrule` and `showprefixrule` need a word boundary** (#45). Their
+  field guards accepted any name that starts with `is`, `has` or `show`, so a camera ISO
+  column (`media_details.image_meta.iso`, mostly `0`) was `boolean` at 98; `issue`, `isbn`,
+  `hash` and `showroom` passed too. The prefix must now be followed by `_`, `-` or the
+  capital letter of a camelCase name (`is_active`, `IS-ACTIVE`, `isActive`, `HasPhoto`).
+  Lower-case names without a separator (`ispublic`) no longer pass: in 444k open data field
+  names they are rare next to `island`, `issuer` and `iso3_code`.
+- **URL rules accept URLs with HTML character references** (#46). WordPress REST exports write
+  `&` in `guid.rendered` as `&#038;` (`https://example.org/?post_type=events&#038;p=60566`),
+  which `validators.url` rejects. `_validate_url` checks such a URL again with numeric
+  references and `&amp;` decoded (other named references are left alone: `&copy=2` is a query
+  parameter), and `urlbyvalidators` now uses `_validate_url` instead of `validators.url`.
+- **Russian organization names and addresses** (#49).
+  - `is_ru_orgname` (`ruorgname`) also accepts a legal form among the first six words in any
+    case (`КИРОВСКАЯ РЕГИОНАЛЬНАЯ ОБЩЕСТВЕННАЯ ОРГАНИЗАЦИЯ …`, `Дубенское ООО Алекс`), short
+    names of federal bodies (`ФНС России`, `Минфин России`, `МИД РФ`, `Росстат`), more
+    government bodies at the start (`Федеральная налоговая служба`, `Федеральное казначейство`,
+    `Следственный комитет`, `Администрация …`). Prefixes end at a word boundary, so `аорта` and
+    `ипподром` are no longer organizations. A missing comma had glued the prefixes `фгбну` and
+    `гку` into `фгбнугку`. On metacrafter-testdata, owner columns of state bodies go from 1–2 %
+    to 94–95 % and grantee columns from 30 % to 95 %; text columns stay below 3 %.
+  - `is_russian_address` (`rusaddress`) also accepts comma-separated parts in any order, such
+    as the street first and the postal code last (`ул. Родионова, д.23, г. Нижний Новгород,
+    Нижегородская обл., 603093`): 97 % of the addresses of the register of accredited IT
+    organizations, which matched none before.
+- **Russian field-name lists no longer contain fragments of other names**. Text field rules
+  are comma-separated, so names with commas (`Адрес, телефон`, `Фамилия, Имя, Отчество,
+  должность`) were cut into keywords: `rusaddressknown` matched `телефон`, `ruphoneknown`
+  matched `адрес`, `фамилия` and `имя`, `rupfioknown` matched `должность`, `russurnamesbyfield`
+  matched `имя` and `отчество`, and `rusdatetimename` listed `Место проведения`. The lists
+  keep their whole names; `фамилия имя отчество` moved to `rupfioknown` (full name).
+  `runpabyknown` no longer matches `Реквизиты`, `Наимнование поля` or the act type (`runpakind`).
+
 ## [0.0.9] - 2026-11-07
 
 ### Added

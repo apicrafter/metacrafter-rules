@@ -11,6 +11,7 @@ rules:
     match: text
     rule: adresse_codepostal,adresse_code_postal,adressecodepostal
     type: field
+    priority: 1
   frinseecodebyknown:
     key: inseecode
     is_pii: False
@@ -18,6 +19,7 @@ rules:
     match: text
     rule: code_insee,insee,insee_com,code_insee_region,code_insee_commune,codeinsee,com_insee,insee_reg,insee_dep,code_insee_etab,code_insee_into,code_commune_insee,commune_insee,code_insee_ancienne_commune,insee_commune,city_insee_code,code_insee_departement,region_insee_code,department_insee_code,num_insee,code_insee_de_la_commune,codinsee
     type: field
+    priority: 1
   frepcicodebyknown:
     key: epcicode
     is_pii: False
@@ -25,15 +27,18 @@ rules:
     match: text
     rule: code_epci_metropole,code_epci,nom_epci,epci_code,epci_metropole,epci_current_code,epci_area_code,nom_officiel_epci,code_insee_epci,code_officiel_epci,epci_nom,codeepci
     type: field
+    priority: 1
   frsiretcodeknown:
     key: siretcode
     name: French SIRET code by name
     rule: coll_siret,siret,num_siret,numero_siret,code_siret
     type: field
+    priority: 3
     match: text  
   frgeopointbyname:
     key: geopoint
     name: French geopoint by knownname
     rule: position_geographique,coordonnees_geographiques,coordonnees,coordonnees_geo
     type: field
+    priority: 1
     match: text

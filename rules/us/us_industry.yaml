@@ -11,3 +11,4 @@ rules:
     rule: naics,naics_sector,naics_code,naics_industry_code,naics_major_sector,naicscode
     match: text
     type: field
+    priority: 1

@@ -9,6 +9,7 @@ rules:
     name: UK BNF drug code
     match: text
     type: field
+    priority: 1
     rule: bnf code
   engmcfield:
     key: gmcnumber
@@ -16,6 +17,7 @@ rules:
     name: UK GMC registration number by field name
     rule: gmc_number,gmc,gmc_reg
     type: field
+    priority: 1
     match: text
   engmcvalue:
     key: gmcnumber

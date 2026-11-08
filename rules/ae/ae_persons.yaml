@@ -10,6 +10,7 @@ rules:
     name: UAE Emirates ID by field name
     rule: emirates_id,emirates_id_number,uae_id,national_id,emirates_id_no,الهوية_الإماراتية,رقم_الهوية
     type: field
+    priority: 3
     match: text
   aeemiratesidvalue:
     key: aeemiratesid
@@ -27,6 +28,7 @@ rules:
     name: UAE passport by field name
     rule: passport,passport_number,uae_passport,emirates_passport,جواز_السفر,رقم_جواز_السفر
     type: field
+    priority: 3
     match: text
 # Disabled: matches any alphanumeric string 8-9 chars, so most generic
 # ids/codes/words are flagged. A UAE passport number cannot be distinguished from

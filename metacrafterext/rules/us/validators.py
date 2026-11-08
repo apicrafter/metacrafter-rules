@@ -2,6 +2,8 @@
 Validation functions for US-specific identifiers.
 """
 
+from metacrafterext.rules.common.placeholders import rejects_repeated_digits
+
 
 def validate_us_driver_license(value):
     """
@@ -114,6 +116,7 @@ def validate_aba_routing(value):
     return total % 10 == 0
 
 
+@rejects_repeated_digits
 def validate_cusip(value):
     """
     Validates CUSIP (Committee on Uniform Securities Identification Procedures) using check digit algorithm.
@@ -187,6 +190,7 @@ def validate_cusip(value):
     return int(cusip[8]) == check_digit
 
 
+@rejects_repeated_digits
 def validate_us_ssn(value):
     """
     Validates US Social Security Number format.

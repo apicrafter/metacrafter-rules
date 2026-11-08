@@ -10,6 +10,7 @@ rules:
     name: French birthday by known field names
     rule: date_de_naissance,date_naissance
     type: field
+    priority: 1
     match: text
   fr_pii_frnirfield:
     key: frnir
@@ -17,6 +18,7 @@ rules:
     name: French NIR by field name
     rule: nir,numéro_inscription_répertoire,numero_inscription_repertoire,social_security_number
     type: field
+    priority: 3
     match: text
   fr_pii_frnirvalue:
     key: frnir
@@ -34,6 +36,7 @@ rules:
     name: French CNI by field name
     rule: cni,carte_nationale_identité,carte_nationale_identite,identity_card
     type: field
+    priority: 1
     match: text
   fr_pii_frcnivalue:
     key: frcni
@@ -51,6 +54,7 @@ rules:
     name: French passport by field name
     rule: passport,passeport,passport_number,numero_passeport
     type: field
+    priority: 3
     match: text
   fr_pii_frpassportvalue:
     key: frpassport

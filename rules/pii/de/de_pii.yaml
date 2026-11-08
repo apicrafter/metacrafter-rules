@@ -29,6 +29,7 @@ rules:
     name: German IBAN by field name
     rule: iban,bank_account,kontonummer,konto
     type: field
+    priority: 3
     match: text
   de_pii_ibanvalue:
     key: de_iban
@@ -46,4 +47,5 @@ rules:
     name: German social insurance number by field name
     rule: versicherungsnummer,sozialversicherungsnummer,rentenversicherungsnummer,social_insurance_number
     type: field
+    priority: 3
     match: text

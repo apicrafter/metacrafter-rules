@@ -10,6 +10,7 @@ rules:
     name: Egyptian National ID by field name
     rule: national_id,egyptian_id,id_number,identity_number,الرقم_القومي,البطاقة_الوطنية
     type: field
+    priority: 3
     match: text
   egnationalidvalue:
     key: egnationalid
@@ -26,6 +27,7 @@ rules:
     name: Egyptian passport by field name
     rule: passport,passport_number,egyptian_passport,جواز_السفر,رقم_جواز_السفر
     type: field
+    priority: 3
     match: text
   egpassportvalue:
     key: egpassport

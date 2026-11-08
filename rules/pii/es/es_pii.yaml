@@ -24,6 +24,7 @@ rules:
     name: Spanish passport by field name
     rule: passport,pasaporte,numero_pasaporte
     type: field
+    priority: 3
     match: text
 # This rule generates a lot of False positives because the pattern Word(alphanums, min=2, max=3) matches many common 2-3 character codes
 # It is marked as imprecise and could be filtered if it's set
@@ -44,6 +45,7 @@ rules:
     name: Spanish NIE by field name
     rule: nie,numero_identidad_extranjero,foreigner_id
     type: field
+    priority: 1
     match: text
   es_pii_esnievalue:
     key: esnie
@@ -60,6 +62,7 @@ rules:
     name: Spanish NIF by field name
     rule: nif,dni,numero_identificacion_fiscal
     type: field
+    priority: 3
     match: text
   es_pii_esnifvalue:
     key: esnif

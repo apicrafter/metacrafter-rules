@@ -9,42 +9,49 @@ rules:
     name: Russian geopoint by knownname
     rule: географические координаты
     type: field
+    priority: 1
     match: text
   ruokatoknown:
     key: okato
     name: Russian OKATO classifier by known name
     rule: okato,okatocode,codeokato,окато,код окато
     type: field
+    priority: 1
     match: text
   rulongitudeknown:
     key: longitude
     name: Russian longitude
     rule: долгота,coord_dolgota,koordinaty_wgs_84_dolgota,dolgota
     type: field
+    priority: 1
     match: text
   rulatitutdeknown:
     key: latitude
     name: Russian latitude
     rule: широта,coord_shirota,koordinaty_wgs_84_shirota,shirota
     type: field
+    priority: 1
     match: text
   ruoktmoknown:
     key: oktmo
     name: Russian OKTMO classifier by known name
     rule: oktmo,oktmocode,октмо,код октмо
     type: field
+    priority: 1
     match: text
   ruoktmonameknown:
     key: oktmoname
     name: Russian OKTMO classifier name by known name
     rule: oktmoname,oktmo_name
     type: field
+    priority: 1
     match: text
   rukladrknown:
     key: kladr
     name: Russian KLADR by known name
     rule: kladr,кладр,Код КЛАДР или ФИАС
     type: field
+    priority: 1
     match: text
   rukadstrbyname:
     key: rukadastr
@@ -53,6 +60,7 @@ rules:
       number,Кадастро- вый номер
     match: text
     type: field
+    priority: 1
   rukadastrbypat:
     key: rukadastr
     name: Russian land territory cadastral identifier by data pattern
@@ -84,19 +92,14 @@ rules:
     name: Russian address by known name
     match: text
     type: field
-    rule: адрес,adres,юридический адрес,почтовый адрес,фактический адрес,адрес местонахождения,yuridicheskiy_adres,pochtovyy_adres,adres_mestonakhozhdeniya,Адрес
-      (местонахождение),телефон,Адрес администрации,Адрес застройщика,Адрес и телефон
-      администрации,Адрес местонахождения (почтовый индекс,город,улица …… ),Адрес
-      местонахождения,телефон,Адрес объекта,Адрес организации,Адрес площадки,Адрес
-      учреждения,Адрес фактический,Адрес эл.почты,Адрес,телефон,Адреса,Место нахождения,Местонахождение,Почтовые
-      адреса,Почтовый адрес,индекс,Фактические адреса,Эл.адрес,Юр адрес,э/адрес,Адрес
-      (местонахождение), телефон,Адрес местонахождения (почтовый индекс, город, улица
-      …… ),Адрес местонахождения, телефон,Адрес, телефон,Почтовый адрес, индекс
+    priority: 1
+    rule: адрес,adres,юридический адрес,почтовый адрес,фактический адрес,адрес местонахождения,yuridicheskiy_adres,pochtovyy_adres,adres_mestonakhozhdeniya,адрес (местонахождение),адрес администрации,адрес застройщика,адрес и телефон администрации,адрес объекта,адрес организации,адрес площадки,адрес учреждения,адрес фактический,адреса,место нахождения,местонахождение,почтовые адреса,фактические адреса,юр адрес
   rusregionnamebyknown:
     key: rusregion
     name: Russian region by known name
     match: text
     type: field
+    priority: 1
     rule: наименование субъекта российской федерации,субъект российской федерации,субъект
       рф,subekt_rossiyskoy_federatsii,subekt_rf,наименование субъекта рф,наименование
       субъекта,Cубъект Российской Федерации,Код субъекта РФ,Субъект,бюджет субъекта
@@ -200,7 +203,8 @@ rules:
     type: data
     rule: 50,51,77,02,34,76,86,46,74,07,54,23,57,59,35,42,15,52,32,66,56,71,60,43,33,27,55,36,31,14,13,28,12,89,21,61,22,10,64,65,78,63,25,05,16,53,24,67,37,44,17,87,39,72,30,26,48,69,70,58,29,79,03,68,04,38,73,41,18,45,47,49,75,20,01,09,19,83,11,62,40,08,06
     fieldrule: regcode,regioncode,region,region_code,subjectcode,subjectrfcode,код
-      субъекта рф
+      субъекта рф,kod_regiona,kod_region,kodregiona,region_kod,regionkod,код региона,код_региона,код
+      субъекта,kod_subekta
     fieldrulematch: text
   rucountryname:
     key: ruscountryname
@@ -302,6 +306,7 @@ rules:
     match: text
     rule: почтовый индекс,индекс,pochtovyy_indeks,indeks
     type: field
+    priority: 1
 # Disabled: matches any 6-digit number, colliding with OKATO/other codes and
 # generic numeric ids/counts. Cannot be distinguished from an arbitrary 6-digit
 # value; Russian post index detection remains via rupostindexbyknown and
@@ -330,6 +335,7 @@ rules:
     rule: улица,ulitsa
     match: text
     type: field
+    priority: 1
   rucityknown:
     key: ruscity
     is_pii: true
@@ -337,11 +343,13 @@ rules:
     rule: город,населенный пункт
     match: text
     type: field
+    priority: 1
   rufiasfield:
     key: rufias
     name: Russian FIAS address identifier by field name
     rule: fias,fias_id,fias_guid,fias_code,фиас,идентификатор фиас,код фиас
     type: field
+    priority: 1
     match: text
   rufiasvalue:
     key: rufias
@@ -359,4 +367,5 @@ rules:
     name: Russian address by field name
     match: text
     type: field
+    priority: 1
     rule: Месторасположение,Месторасположение объекта

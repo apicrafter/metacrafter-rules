@@ -10,6 +10,7 @@ rules:
     name: Armenian Social Security Number by field name
     rule: arm_ssn,am_ssn,armenian_ssn,arm_social_security,հասարակական_ապահովագրության_համար,հասարակական_ապահովագրության_նույնականացման_համար
     type: field
+    priority: 1
     match: text
   amssnvalue:
     key: am_ssn
@@ -28,6 +29,7 @@ rules:
     name: Armenian passport by field name
     rule: arm_passport,am_passport,armenian_passport,passport_am,passport_armenia,հայտարարագիր,հայտարարագրի_համար
     type: field
+    priority: 1
     match: text
   ampassportvalue:
     key: am_passport
@@ -46,6 +48,7 @@ rules:
     name: Armenian driver license by field name
     rule: arm_driver_license,am_dl,armenian_dl,driver_license_am,driver_license_armenia,վարորդական_իրավունք,վարորդական_իրավունքի_համար
     type: field
+    priority: 1
     match: text
   amdriverlicensevalue:
     key: am_driver_license

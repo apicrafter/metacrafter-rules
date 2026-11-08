@@ -10,6 +10,7 @@ rules:
     name: Armenian full name by field name
     rule: arm_fullname,am_fullname,armenian_fullname,fullname_am,անուն_ազգանուն,լրիվ_անուն
     type: field
+    priority: 1
     match: text
   amfirstnamefield:
     key: person_firstname
@@ -17,6 +18,7 @@ rules:
     name: Armenian first name by field name
     rule: arm_firstname,am_firstname,armenian_firstname,firstname_am,անուն
     type: field
+    priority: 1
     match: text
   amsurnamefield:
     key: person_surname
@@ -24,5 +26,6 @@ rules:
     name: Armenian surname by field name
     rule: arm_surname,am_surname,armenian_surname,surname_am,ազգանուն
     type: field
+    priority: 1
     match: text
 

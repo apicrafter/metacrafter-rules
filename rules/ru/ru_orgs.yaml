@@ -9,12 +9,14 @@ rules:
     name: Russian OKPO code
     rule: okpo,okpocode,окпо,код по окпо,Код ОКПО
     type: field
+    priority: 1
     match: text
   ruinnknown:
     key: inn
     name: Russian INN code by field name
     rule: inn,инн,ИНН ФОИВ,ИНН заказчика,ИНН лицензиата
     type: field
+    priority: 1
     match: text
   ruinnfulltext:
     key: inn
@@ -22,6 +24,7 @@ rules:
     rule: идентификационный номер налогоплательщика (инн),идентификационный номер
       налогоплательщика,identifikatsionnyy_nomer_nalogoplatelshchika_inn
     type: field
+    priority: 1
     match: text
   ruogrnfulltext:
     key: ogrn
@@ -31,12 +34,14 @@ rules:
       (огрн),основной государственный регистрационный номер индивидуального предпринимателя,основной
       государственный регистрационный номер индивидуального предпринимателя (огрнип),osnovnoy_gosudarstvennyy_registratsionnyy_nomer
     type: field
+    priority: 1
     match: text
   rukppknown:
     key: kpp
     name: Russian KPP code by field name
     rule: kpp
     type: field
+    priority: 1
     match: text
   ruogrnknown:
     key: ogrn
@@ -46,6 +51,7 @@ rules:
       ИП,ОГРН организации,ОГРН юридического лица,ОГРН заказчика,ОГРН поставщика,ОГРН лицензиата,ОГРН
       индивидуального предпринимателя
     type: field
+    priority: 1
     match: text
   ruinn:
     key: inn
@@ -163,4 +169,5 @@ rules:
       организации,наименование предприятия,наименование учреждения,Местонахождение
       юридического лица,Наминование юридического / физического лица
     type: field
+    priority: 3
     match: text

@@ -9,6 +9,7 @@ rules:
     name: US NCES school identifier by field name
     rule: nces_id,nces_school_id,ncesdistrictid
     type: field
+    priority: 1
     match: text
   ennecsvalue:
     key: ncesid
@@ -27,4 +28,5 @@ rules:
     name: Student identifier by field name
     rule: student_id,studentid,pupil_id
     type: field
+    priority: 1
     match: text

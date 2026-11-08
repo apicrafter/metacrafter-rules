@@ -49,6 +49,28 @@ def test_fqdn_rejects_text_with_ideographic_full_stops(value):
     assert not is_fqdn(value)
 
 
+@pytest.mark.parametrize("value", [
+    # SharePoint type names and WordPress thumbnail file names (#43): no such TLD.
+    "SP.ContentType", "SP.ContentTypeId", "2-150x150.png", "cave-768x470.png", "report.pdf",
+    "data.csv", "index.html",
+])
+def test_fqdn_rejects_names_without_a_delegated_tld(value):
+    assert not is_fqdn(value)
+
+
+@pytest.mark.parametrize("value", ["gov.ru", "www.osm.gov.ru", "EXAMPLE.ORG", "a.b.c.xn--p1ai", "test.москва"])
+def test_fqdn_accepts_delegated_tlds(value):
+    assert is_fqdn(value)
+
+
+def test_tld_list_is_the_iana_root_zone():
+    from metacrafterext.rules.common.tlds import TLDS
+
+    assert len(TLDS) > 1000
+    assert {"ru", "com", "xn--p1ai", "zip"} <= TLDS
+    assert not {"png", "pdf", "csv", "contenttype"} & TLDS
+
+
 def test_fqdn_rule_uses_is_fqdn():
     assert rule("common/commonurl.yaml", "fqdnbyvalidators")["rule"] == "metacrafterext.rules.common.internet.is_fqdn"
 

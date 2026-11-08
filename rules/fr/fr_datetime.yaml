@@ -9,10 +9,12 @@ rules:
     name: Year by known name common in France
     rule: annee,budget_annee,annee_reelle,annee_scolaire,annee_universitaire,annee_de_naissance
     type: field
+    priority: 1
     match: text
   frdatetimename:
     key: datetime
     name: French date name
     match: text
     type: field
+    priority: 1
     rule: date_debut,date_maj,date_fin,date_de_publication,delib_date,date_immatriculation,date_ouverture

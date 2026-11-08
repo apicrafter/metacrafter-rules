@@ -9,10 +9,12 @@ rules:
     name: Year by known name common in Italian
     rule: anno
     type: field
+    priority: 1
     match: text
   itdeathdayname:
     key: deathday
     name: Italian death day
     match: text
     type: field
+    priority: 1
     rule: data_morte

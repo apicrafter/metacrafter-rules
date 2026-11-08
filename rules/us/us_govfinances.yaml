@@ -9,4 +9,5 @@ rules:
     name: CFDA number by known name
     rule: cfda_number,cfda,cfda_program_number,federal_cfda_number
     type: field
+    priority: 1
     match: text

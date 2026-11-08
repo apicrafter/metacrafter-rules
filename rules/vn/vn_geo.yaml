@@ -9,6 +9,7 @@ rules:
     name: Vietnamese postal code by field name
     rule: ma_buu_chinh,ma_buu_dien
     type: field
+    priority: 1
     match: text
 # Disabled: matches any bare 5-digit number (and the US-style #####-#### form),
 # colliding with US ZIP codes and generic numeric ids/counts, causing too many
@@ -27,6 +28,7 @@ rules:
     name: Vietnamese province by field name
     rule: tinh,ten_tinh
     type: field
+    priority: 1
     match: text
   vnprovincevalue:
     key: vnprovince
@@ -41,5 +43,6 @@ rules:
     name: Vietnamese city name by field name
     rule: thanh_pho,ten_thanh_pho
     type: field
+    priority: 1
     match: text
 

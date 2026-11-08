@@ -10,6 +10,7 @@ rules:
     name: Russian birthday by known field names
     rule: дата рождения
     type: field
+    priority: 1
     match: text
   rudeathdayknown:
     key: deathday
@@ -17,6 +18,7 @@ rules:
     name: Russian deathday by known field names
     rule: дата смерти
     type: field
+    priority: 1
     match: text
   ru_pii_passportbyknown:
     key: ruintpassport
@@ -24,6 +26,7 @@ rules:
     name: Russian passport by field name
     rule: номер паспорта,паспорт,номер и серия паспорта,nomer_passporta
     type: field
+    priority: 1
     match: text
   passportbypat:
     key: ruintpassport
@@ -38,6 +41,7 @@ rules:
     name: Russian SNILS number by known names
     rule: снилс,номер снилс,snils,snils_number
     type: field
+    priority: 1
     match: text
   rusnils:
     key: rusnils
@@ -56,6 +60,7 @@ rules:
     name: Russian passport foreign number by field name
     rule: passport,passport_number,загранпаспорт,номер_загранпаспорта
     type: field
+    priority: 3
     match: text
   russurnamefield:
     key: russurname
@@ -63,6 +68,7 @@ rules:
     name: Russian surname by field name
     rule: surname,lastname,last_name,фамилия,familiya
     type: field
+    priority: 3
     match: text
   rusfirstnamefield:
     key: rusfirstname
@@ -70,6 +76,7 @@ rules:
     name: Russian first name by field name
     rule: firstname,first_name,имя,imya
     type: field
+    priority: 3
     match: text
   rusmidnamefield:
     key: rusmidname
@@ -77,6 +84,7 @@ rules:
     name: Russian middle name by field name
     rule: middlename,middle_name,отчество,otchestvo
     type: field
+    priority: 3
     match: text
   rusfullnamefield:
     key: rusfullname
@@ -84,6 +92,7 @@ rules:
     name: Russian full name by field name
     rule: fullname,full_name,полное_имя,polnoe_imya,фио,fio
     type: field
+    priority: 3
     match: text
   rudriverlicensefield:
     key: rudriverlicense
@@ -91,6 +100,7 @@ rules:
     name: Russian driver's license by field name
     rule: водительское удостоверение,номер водительского удостоверения,водительские права,driver_license,driverlicense,водительское_удостоверение
     type: field
+    priority: 3
     match: text
   rudriverlicensevalue:
     key: rudriverlicense

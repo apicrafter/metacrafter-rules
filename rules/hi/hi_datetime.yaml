@@ -9,6 +9,7 @@ rules:
     name: Hindi date format by field name
     rule: hindi_date,हिंदी_तारीख,तारीख,दिनांक
     type: field
+    priority: 3
     match: text
   hidatevalue:
     key: hidate

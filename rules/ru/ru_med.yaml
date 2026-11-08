@@ -9,12 +9,14 @@ rules:
     name: Russian international unpatented name of pharm
     match: text
     type: field
+    priority: 1
     rule: международное непатентованное название (мнн),наименование мнн
   rumnnknownshort:
     key: rumedmnn
     name: Russian international unpatented name of pharm short name
     match: text
     type: field
+    priority: 1
     rule: мнн,mnn
   # Field names with the word mnn: std_mnn_name, norm_mnn, mnn_name. After mnn only name,
   # names or list may follow, so identifier columns such as std_mnn_gid do not match, and
@@ -25,6 +27,7 @@ rules:
     name: Russian international unpatented name of pharm by a field name with the word mnn
     match: ppr
     type: field
+    priority: 1
     rule: >-
       (CaselessLiteral('mnn') + oneOf('_ -') + oneOf('name names list', caseless=True))
       ^ ((Word(alphanums) + oneOf('_ -')) * 1 + CaselessLiteral('mnn') + Optional(oneOf('_ -') + oneOf('name names list', caseless=True)))
@@ -34,6 +37,7 @@ rules:
     name: Russian name of medicines
     match: text
     type: field
+    priority: 1
     rule: торговое наименование лекарственного препарата,название лекарственного препарата,торговое наименование,торговое_наименование
   # Trade names of ESKLP catalogue positions (КЛП, каталожная позиция лекарственного
   # препарата): klp_all_list, klp_active_list, klp_name. The name ends with name, names or
@@ -44,6 +48,7 @@ rules:
     name: Russian name of medicines by a field name with the word klp (ESKLP catalogue position)
     match: ppr
     type: field
+    priority: 1
     rule: >-
       (CaselessLiteral('klp') + oneOf('_ -') + oneOf('name names list', caseless=True))
       ^ (CaselessLiteral('klp') + oneOf('_ -') + Word(alphanums) + oneOf('_ -') + oneOf('name names list', caseless=True))
@@ -56,6 +61,7 @@ rules:
     name: Russian ESKLP medicine code by field name
     match: text
     type: field
+    priority: 1
     rule: esklp,esklp_code,код есклп,код_есклп,smnn_code,klp_code,код смнн,код клп
   ruesklpcodevalue:
     key: ru_esklp_code
@@ -83,10 +89,12 @@ rules:
     name: Russian ATC code name by field name
     match: text
     type: field
+    priority: 1
     rule: код атх,код_атх,атх,ath,atx
   rumedicationclassbyknown:
     key: medication_class
     name: Russian pharmacotherapeutic group by field name
     match: text
     type: field
+    priority: 1
     rule: ftg,фтг,фармакотерапевтическая группа

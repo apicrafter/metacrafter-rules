@@ -9,6 +9,7 @@ rules:
     name: SIREN by field name
     rule: siren,siren_code,numero_siren
     type: field
+    priority: 3
     match: text
   sirenvalue:
     key: sirencode

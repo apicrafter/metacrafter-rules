@@ -9,6 +9,7 @@ rules:
     name: Federal corporation number by field name
     rule: corporation_number,corp_number,federal_corp,corp_no
     type: field
+    priority: 1
     match: text
   cacorpvalue:
     key: cacorp
@@ -27,6 +28,7 @@ rules:
     name: Extra-provincial registration number by field name
     rule: extra_provincial_number,epn,registration_no
     type: field
+    priority: 1
     match: text
   caextraProvvalue:
     key: caextra
@@ -41,6 +43,7 @@ rules:
     name: Business licence number by field name
     rule: business_licence,business_license,licence_number,licence_no
     type: field
+    priority: 3
     match: text
   cabuslicvalue:
     key: cabizlic

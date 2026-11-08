@@ -11,6 +11,7 @@ rules:
     rule: strasse
     match: text
     type: field
+    priority: 1
   decountrynamebyvalue:
     key: decountryname
     name: Country name by value in German

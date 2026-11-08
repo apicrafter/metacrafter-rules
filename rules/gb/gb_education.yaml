@@ -9,6 +9,7 @@ rules:
     name: UK school URN by field name
     rule: urn,uk_urn,school_urn
     type: field
+    priority: 1
     match: text
   enukurnvalue:
     key: ukurn
@@ -26,6 +27,7 @@ rules:
     name: UK provider UKPRN by field name
     rule: ukprn,uk_prn
     type: field
+    priority: 1
     match: text
   enukprnvalue:
     key: ukprn
@@ -42,10 +44,12 @@ rules:
     name: Student identifier by field name
     rule: student_id,studentid,pupil_id
     type: field
+    priority: 1
     match: text
   ukestablishmentnumberfield:
     key: ukestablishmentnumber
     name: UK establishment number by field name
     rule: establishment number,establishment_number,establishmentnumber,previous establishment number
     type: field
+    priority: 1
     match: text

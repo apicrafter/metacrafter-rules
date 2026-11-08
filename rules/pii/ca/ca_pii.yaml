@@ -42,4 +42,5 @@ rules:
     name: Canadian postal code by field name
     rule: postal_code,postalcode,zip,zip_code,code_postal
     type: field
+    priority: 3
     match: text

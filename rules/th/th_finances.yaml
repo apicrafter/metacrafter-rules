@@ -9,6 +9,7 @@ rules:
     name: Thai tax ID by field name
     rule: thai_tax_id,เลขประจำตัวผู้เสียภาษี,เลขผู้เสียภาษี,เลขที่ผู้เสียภาษี
     type: field
+    priority: 1
     match: text
   thtaxidvalue:
     key: thtaxid
@@ -25,6 +26,7 @@ rules:
     name: Thai bank account by field name
     rule: thai_bank_account,เลขบัญชี,เลขที่บัญชี,บัญชีธนาคาร
     type: field
+    priority: 1
     match: text
   thbankaccountvalue:
     key: thbankaccount

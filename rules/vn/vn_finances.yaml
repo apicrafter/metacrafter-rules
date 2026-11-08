@@ -9,6 +9,7 @@ rules:
     name: Vietnamese tax code by field name
     rule: ma_so_thue,mst,vietnamese_tax_number
     type: field
+    priority: 1
     match: text
   vntaxcodevalue:
     key: vntaxcode
@@ -24,6 +25,7 @@ rules:
     name: Vietnamese bank account by field name
     rule: so_tai_khoan,so_tk,tai_khoan_ngan_hang
     type: field
+    priority: 1
     match: text
   vnbankaccountvalue:
     key: vnbankaccount
@@ -39,6 +41,7 @@ rules:
     name: Vietnamese IBAN by field name
     rule: vietnamese_iban
     type: field
+    priority: 1
     match: text
   vnibanvalue:
     key: vniban

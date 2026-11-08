@@ -6,6 +6,7 @@ false positives in pattern matching.
 """
 import datetime
 import re
+from metacrafterext.rules.common.placeholders import rejects_repeated_digits
 
 
 def validate_iban(value):
@@ -99,6 +100,7 @@ def validate_isin(value):
     return total % 10 == 0
 
 
+@rejects_repeated_digits
 def validate_gtin(value):
     """
     Validates GTIN (EAN/UPC) using check digit algorithm.
@@ -136,6 +138,7 @@ def validate_gtin(value):
     return calculated_check == check_digit
 
 
+@rejects_repeated_digits
 def validate_sscc(value):
     """
     Validates SSCC (Serial Shipping Container Code) using GTIN check digit algorithm.
@@ -177,6 +180,7 @@ def validate_sscc(value):
     return calculated_check == check_digit
 
 
+@rejects_repeated_digits
 def validate_issn(value):
     """
     Validates ISSN using MOD-11 algorithm.
@@ -210,6 +214,7 @@ def validate_issn(value):
     return issn[7] == check_char
 
 
+@rejects_repeated_digits
 def validate_imei(value):
     """
     Validates IMEI using Luhn algorithm.
@@ -278,6 +283,7 @@ IMSI_MCC_CODES = frozenset("""
 """.split())
 
 
+@rejects_repeated_digits
 def validate_imsi(value):
     """
     Validates IMSI (International Mobile Subscriber Identity).
@@ -364,6 +370,7 @@ def validate_msisdn(value):
     return True
 
 
+@rejects_repeated_digits
 def validate_iccid(value):
     """
     Validates ICCID (Integrated Circuit Card Identifier) using Luhn algorithm.
@@ -523,6 +530,7 @@ def _iso7064_mod11_2_is_valid(number):
     return number[-1] == check_char
 
 
+@rejects_repeated_digits
 def validate_isni(value):
     """
     Validates ISNI (ISO 27729) using the ISO 7064 MOD 11-2 check character.
@@ -711,6 +719,7 @@ def validate_figi(value):
     return check == int(figi[11])
 
 
+@rejects_repeated_digits
 def validate_tr_vkn(value):
     """
     Validates a Turkish tax identification number (Vergi Kimlik Numarası).
@@ -742,6 +751,7 @@ def validate_tr_vkn(value):
     return check == int(vkn[9])
 
 
+@rejects_repeated_digits
 def validate_id_nik(value):
     """
     Validates the structure of an Indonesian NIK (Nomor Induk Kependudukan).
@@ -858,6 +868,7 @@ def validate_nl_rsin(value):
     return _nl_elfproef(value.replace(' ', '').replace('-', ''))
 
 
+@rejects_repeated_digits
 def validate_fr_siren(value):
     """
     Validates a French SIREN company identifier.
@@ -879,6 +890,7 @@ def validate_fr_siren(value):
     return _luhn_is_valid(siren)
 
 
+@rejects_repeated_digits
 def validate_gln(value):
     """
     Validates GLN (Global Location Number) using GTIN check digit algorithm.
@@ -1428,6 +1440,7 @@ def validate_eidr(value):
     return True
 
 
+@rejects_repeated_digits
 def validate_isbn10(value):
     """
     Validates ISBN-10 using MOD-11 check digit algorithm.
@@ -1468,6 +1481,7 @@ def validate_isbn10(value):
     return isbn[9].upper() == check_char
 
 
+@rejects_repeated_digits
 def validate_duns(value):
     """
     Validates DUNS (Data Universal Numbering System) format.
@@ -1511,6 +1525,7 @@ def validate_duns(value):
     return True
 
 
+@rejects_repeated_digits
 def validate_imo_number(value):
     """
     Validates an IMO ship identification number using its check digit.
@@ -1580,6 +1595,7 @@ def _verhoeff_is_valid(number):
     return c == 0
 
 
+@rejects_repeated_digits
 def validate_snomed_ct(value):
     """
     Validates a SNOMED CT identifier (SCTID).
@@ -1656,6 +1672,7 @@ def validate_pl_regon(value):
     return expected == int(regon[13])
 
 
+@rejects_repeated_digits
 def validate_pl_pesel(value):
     """
     Validates a Polish PESEL national identification number.
@@ -1737,6 +1754,7 @@ def validate_tr_tckimlik(value):
     return eleventh == d[10]
 
 
+@rejects_repeated_digits
 def validate_pl_nip(value):
     """
     Validates a Polish NIP (tax identification number).
@@ -1938,6 +1956,7 @@ def validate_ae_emirates_id(value):
     return AE_EMIRATES_ID_FIRST_YEAR <= year <= datetime.date.today().year
 
 
+@rejects_repeated_digits
 def validate_sa_iqama(value):
     """
     Validates a Saudi Arabian Iqama (residence permit) number.
@@ -1988,6 +2007,7 @@ def validate_th_taxid(value):
     return check == int(tid[12])
 
 
+@rejects_repeated_digits
 def validate_vn_taxcode(value):
     """
     Validates a Vietnamese tax code (Mã số thuế).
@@ -2023,6 +2043,7 @@ def validate_vn_taxcode(value):
     return check == int(base[9])
 
 
+@rejects_repeated_digits
 def validate_isbn(value):
     """
     Validates an ISBN in either the 10- or 13-digit form.
@@ -2047,6 +2068,7 @@ def validate_isbn(value):
     return False
 
 
+@rejects_repeated_digits
 def validate_uk_nhs(value):
     """
     Validates a UK NHS number.

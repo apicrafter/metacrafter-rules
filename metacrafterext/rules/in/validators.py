@@ -3,6 +3,7 @@ Validation functions for Indian-specific identifiers.
 """
 
 from metacrafterext.rules.common.identifiers import _verhoeff_is_valid
+from metacrafterext.rules.common.placeholders import rejects_repeated_digits
 
 # Fourth character of a PAN: the holder type (P person, C company, H Hindu undivided
 # family, F firm, A association of persons, T trust, B body of individuals, L local
@@ -10,6 +11,7 @@ from metacrafterext.rules.common.identifiers import _verhoeff_is_valid
 _PAN_HOLDER_TYPES = frozenset("PCHFATBLJG")
 
 
+@rejects_repeated_digits
 def validate_in_aadhaar(value):
     """
     Validates an Indian Aadhaar number.

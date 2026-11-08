@@ -10,6 +10,7 @@ rules:
     name: Polish PESEL by field name
     rule: pesel,pesel_number,pesel_no,polish_id,national_id,polish_national_id
     type: field
+    priority: 3
     match: text
   pl_persons_plpeselvalue:
     key: plpesel
@@ -27,6 +28,7 @@ rules:
     name: Polish passport by field name
     rule: passport,paszport,passport_number,numer_paszportu,paszport_no
     type: field
+    priority: 3
     match: text
   pl_persons_plpassportvalue:
     key: plpassport
@@ -43,6 +45,7 @@ rules:
     name: Polish driver license by field name
     rule: driver_license,prawo_jazdy,numer_prawa_jazdy,license_number,driving_license
     type: field
+    priority: 3
     match: text
   pl_persons_pldriverlicvalue:
     key: pldriverlic

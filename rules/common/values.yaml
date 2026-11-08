@@ -15,4 +15,5 @@ rules:
       ^ ((Word(alphanums) + Optional(oneOf('_ -'))) * 2 + oneOf('percent percentage', caseless=True))
       ^ ((Word(alphanums) + Optional(oneOf('_ -'))) * 3 + oneOf('percent percentage', caseless=True))
     type: field
+    priority: 1
     match: ppr

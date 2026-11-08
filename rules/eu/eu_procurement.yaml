@@ -9,6 +9,7 @@ rules:
     name: TED notice id by field name
     rule: ted_notice_id,tednotice,ted_id,ted_reference
     type: field
+    priority: 1
     match: text
   tednoticevalue:
     key: tednoticeid
@@ -24,6 +25,7 @@ rules:
     name: Official Journal reference by field name
     rule: oj_reference,ojref,oj_notice,oj_id
     type: field
+    priority: 1
     match: text
   ojreferencevalue:
     key: ojreference
@@ -38,6 +40,7 @@ rules:
     name: Contract award notice id by field name
     rule: award_notice_id,contract_award_id,contractnotice
     type: field
+    priority: 1
     match: text
   contractawardvalue:
     key: awardnotice
@@ -52,6 +55,7 @@ rules:
     name: NUTS region code by field name
     rule: nuts,nuts_code,region_nuts
     type: field
+    priority: 1
     match: text
   nutsvalue:
     key: nutsregion

@@ -10,4 +10,5 @@ rules:
     name: Portugenese description as known
     rule: descricao
     type: field
+    priority: 1
     match: text

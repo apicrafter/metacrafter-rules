@@ -10,6 +10,7 @@ rules:
     name: Thai ID card by field name
     rule: thai_id,thai_id_card,บัตรประชาชน,เลขบัตรประชาชน,เลขประจำตัวประชาชน
     type: field
+    priority: 1
     match: text
   thidcardvalue:
     key: thidcard
@@ -28,6 +29,7 @@ rules:
     name: Thai passport by field name
     rule: thai_passport,passport_thai,หนังสือเดินทาง,เลขหนังสือเดินทาง
     type: field
+    priority: 1
     match: text
   thpassportvalue:
     key: thpassport
@@ -44,6 +46,7 @@ rules:
     name: Thai driver license by field name
     rule: thai_driver_license,ใบขับขี่,เลขใบขับขี่,ใบอนุญาตขับขี่
     type: field
+    priority: 1
     match: text
   thdriverlicvalue:
     key: thdriverlic

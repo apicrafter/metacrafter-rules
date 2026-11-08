@@ -10,6 +10,7 @@ rules:
     name: UK National Insurance number by field name
     rule: nino,national_insurance_number,ni_number,insurance_number
     type: field
+    priority: 3
     match: text
   ukninovalue:
     key: uknino
@@ -26,6 +27,7 @@ rules:
     name: UK UTR by field name
     rule: utr,unique_taxpayer_reference,tax_reference,taxpayer_reference
     type: field
+    priority: 1
     match: text
   ukutrvalue:
     key: ukutr
@@ -43,6 +45,7 @@ rules:
     name: UK passport by field name
     rule: passport,passport_number,uk_passport,british_passport
     type: field
+    priority: 3
     match: text
   ukpassportvalue:
     key: ukpassport
@@ -60,6 +63,7 @@ rules:
     name: UK NHS Number by field name
     rule: nhs_number,nhs_num,national_health_service_number
     type: field
+    priority: 3
     match: text
   uknhsnumvalue:
     key: uknhsnum

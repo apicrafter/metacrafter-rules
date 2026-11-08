@@ -9,6 +9,7 @@ rules:
     name: User ID by field name
     rule: user_id,userid,user_identifier,account_id,account_identifier
     type: field
+    priority: 3
     match: text
   useridvalue:
     key: userid
@@ -24,6 +25,7 @@ rules:
     name: Username by field name
     rule: username,user_name,login_name,user_login
     type: field
+    priority: 1
     match: text
   usernamevalue:
     key: username
@@ -42,6 +44,7 @@ rules:
     name: User handle by field name
     rule: user_handle,handle,social_handle,twitter_handle,instagram_handle
     type: field
+    priority: 1
     match: text
   userhandlevalue:
     key: userhandle
@@ -60,6 +63,7 @@ rules:
     name: User UUID by field name
     rule: user_uuid,account_uuid,user_guid,account_guid
     type: field
+    priority: 1
     match: text
   useruuidvalue:
     key: useruuid

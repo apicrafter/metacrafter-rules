@@ -9,6 +9,7 @@ rules:
     name: UK sort code by field name
     rule: sortcode,sort_code,uk_sortcode
     type: field
+    priority: 1
     match: text
   sortcodevalue:
     key: uksortcode

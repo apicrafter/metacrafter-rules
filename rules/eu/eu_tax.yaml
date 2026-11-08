@@ -10,6 +10,7 @@ rules:
     name: VAT number by field name
     rule: vat,vatnumber,vat_number,eu_vat,vatid
     type: field
+    priority: 3
     match: text
   vatvalue:
     key: euvat
@@ -28,6 +29,7 @@ rules:
     name: European Unique Identifier (EUID) by field name
     rule: euid,eu_id,european_unique_id
     type: field
+    priority: 1
     match: text
   euidvalue:
     key: euid
@@ -45,6 +47,7 @@ rules:
     name: IBAN by field name
     rule: iban,iban_account,iban_number
     type: field
+    priority: 3
     match: text
   eu_tax_ibanvalue:
     key: iban

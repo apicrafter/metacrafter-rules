@@ -5,7 +5,10 @@ These functions validate vehicle identifiers such as VIN (Vehicle Identification
 chassis numbers, engine numbers, and vehicle registration plates.
 """
 
+from metacrafterext.rules.common.placeholders import rejects_repeated_digits
 
+
+@rejects_repeated_digits
 def validate_vin(value):
     """
     Validates Vehicle Identification Number (VIN) format.

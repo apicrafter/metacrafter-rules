@@ -9,24 +9,28 @@ rules:
     name: French name/title by name
     rule: title_fr,nom,intitule,titre
     type: field
+    priority: 1
     match: text
   frcommentknown:
     key: comment
     name: French comment/note by known
     rule: commentaire,commentair,commentaires,remarque,remarques
     type: field
+    priority: 1
     match: text
   frdescriptionknown:
     key: description
     name: French description by known
     rule: description_fr,descriptif,description_longue,descriptionlongue
     type: field
+    priority: 1
     match: text
   frcategoryknown:
     key: category
     name: French category by known
     rule: categorie
     type: field
+    priority: 1
     match: text
   frphoneknown:
     key: phone
@@ -34,4 +38,5 @@ rules:
     name: French phone number by known name
     rule: telephone_du_lieu,numero de telephone,numero_de_telephone
     type: field
+    priority: 1
     match: text

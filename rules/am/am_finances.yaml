@@ -9,6 +9,7 @@ rules:
     name: Armenian Taxpayer Identification Number by field name
     rule: arm_tin,am_tin,armenian_tin,tin_am,tin_armenia,հարկ_վճարողի_նույնականացման_համար,հարկային_համար
     type: field
+    priority: 1
     match: text
   amtinvalue:
     key: am_tin
@@ -25,6 +26,7 @@ rules:
     name: Armenian bank account by field name
     rule: arm_bank_account,am_bank_account,armenian_bank_account,bank_account_am,bank_account_armenia,բանկային_հաշիվ,հաշվեհամար_am
     type: field
+    priority: 1
     match: text
   ambankaccountvalue:
     key: am_bank_account
@@ -41,6 +43,7 @@ rules:
     name: Armenian organization TIN by field name
     rule: arm_org_tin,am_org_tin,armenian_org_tin,org_tin_am,company_tin_am,business_tin_am,կազմակերպության_հարկային_համար
     type: field
+    priority: 1
     match: text
   amorgtinvalue:
     key: am_org_tin

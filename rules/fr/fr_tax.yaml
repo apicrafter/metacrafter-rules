@@ -9,6 +9,7 @@ rules:
     name: Code SIREN par nom de champ
     rule: siren,code_siren,num_siren
     type: field
+    priority: 3
     match: text
   frsirenvalue:
     key: siren
@@ -25,6 +26,7 @@ rules:
     name: Code SIRET par nom de champ
     rule: siret,code_siret,num_siret
     type: field
+    priority: 3
     match: text
   frsiretvalue:
     key: siret
@@ -40,6 +42,7 @@ rules:
     name: TVA intracommunautaire par nom de champ
     rule: tva,tva_intra,numero_tva
     type: field
+    priority: 1
     match: text
   frvatvalue:
     key: frvat

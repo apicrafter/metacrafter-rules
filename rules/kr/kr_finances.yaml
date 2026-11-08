@@ -9,6 +9,7 @@ rules:
     name: Korean business registration number by field name
     rule: 사업자등록번호
     type: field
+    priority: 1
     match: text
   krbusinessregvalue:
     key: krbusinessreg
@@ -23,6 +24,7 @@ rules:
     name: Korean tax number by field name
     rule: 세무서번호,korean_tax_number
     type: field
+    priority: 1
     match: text
   krtaxnumbervalue:
     key: krtaxnumber
@@ -38,6 +40,7 @@ rules:
     name: Korean bank account by field name
     rule: 계좌번호,은행계좌
     type: field
+    priority: 1
     match: text
   krbankaccountvalue:
     key: krbankaccount

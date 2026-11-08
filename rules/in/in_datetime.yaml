@@ -9,6 +9,7 @@ rules:
     name: Indian date format by field name
     rule: hindi_date,indian_date,तारीख,दिनांक
     type: field
+    priority: 3
     match: text
   indatevalue:
     key: indate

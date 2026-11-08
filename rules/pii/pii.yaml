@@ -28,6 +28,25 @@ rules:
     type: field
     match: text
     priority: 1
+  genderbyname:
+    key: gender
+    is_pii: True
+    name: Gender or sex by field name (sex, author_sex, patient_gender, пол)
+    # One or two words before sex or gender, optionally followed by code or id.
+    rule: '(?i)(?:[a-z0-9]+[ _.-]){0,2}(?:sex|gender)(?:[ _.-](?:code|id))?|пол'
+    type: field
+    match: regex
+    priority: 1
+  genderbyvalue:
+    key: gender
+    is_pii: True
+    name: Gender or sex values in a gender field
+    rule: м,ж,муж,жен,муж.,жен.,мужской,женский,мужчина,женщина,m,f,male,female,man,woman
+    type: data
+    match: text
+    priority: 1
+    fieldrule: sex,gender,пол,author_sex,person_sex,patient_sex,patient_gender,client_sex,client_gender,employee_sex,employee_gender,user_gender,applicant_sex,sex_code,gender_code,sex_id,gender_id
+    fieldrulematch: text
   nationalitybyknown:
     key: nationality
     is_pii: True

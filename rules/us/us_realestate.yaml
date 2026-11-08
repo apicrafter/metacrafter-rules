@@ -9,6 +9,7 @@ rules:
     name: US Assessor Parcel Number by field name
     rule: apn,assessor_parcel_number,parcel_number,parcel_id,assessor_parcel,apn_number
     type: field
+    priority: 3
     match: text
   usapnvalue:
     key: usapn
@@ -24,6 +25,7 @@ rules:
     name: US parcel number by field name
     rule: parcel_number,parcel_no,parcel_id,lot_parcel,lot_number
     type: field
+    priority: 3
     match: text
   usparcelnumbervalue:
     key: usparcelnumber
@@ -39,6 +41,7 @@ rules:
     name: US FIPS property code by field name
     rule: fips_property,property_fips,fips_code,property_fips_code
     type: field
+    priority: 3
     match: text
   usfipspropertyvalue:
     key: usfipsproperty
