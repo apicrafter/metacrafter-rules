@@ -62,7 +62,7 @@ def field_matches(path, rule_id, name):
     ("fr/fr_geo.yaml", "frpostcodeknown", "postindex", ["Code_postal"]),
     ("fr/fr_geo.yaml", "frcodgeoknown", "inseecode", ["CODGEO", "code_commune", "DEPCOM"]),
     ("es/es_geo.yaml", "esstreetknown", "street", ["CALLE"]),
-    ("es/es_geo.yaml", "espostcodespelledknown", "espostcode", ["COD. POSTAL", "Código postal"]),
+    ("es/es_geo.yaml", "espostcodespelledknown", "postindex", ["COD. POSTAL", "Código postal"]),
     ("eu/eu_procurement.yaml", "nutslevelbyfield", "nutsregion", ["NUTS1", "nuts_3_code", "NUTS3"]),
     ("gb/gb_geo.yaml", "ukgsscodebyfield", "ukgsscode",
      ["LSOA (code)", "ParliamentaryConstituency (code)", "LSOA21CD", "LAD23CD"]),

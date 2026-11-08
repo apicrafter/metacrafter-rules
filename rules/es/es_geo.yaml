@@ -64,9 +64,10 @@ rules:
     match: text
     priority: 1
   espostcodespelledknown:
-    key: espostcode
+    # Mexico and the rest of Latin America use the same names (Código postal): generic postindex.
+    key: postindex
     is_pii: true
-    name: Spanish postal code by spelled-out field name
+    name: Postal code by a spelled-out Spanish field name
     rule: cod. postal,cod_postal,cod postal,código postal,codigo postal,c.p.
     type: field
     match: text

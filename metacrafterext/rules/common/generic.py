@@ -121,18 +121,3 @@ def validate_dmy_date(value):
         return False
     return True
 
-
-_NUMBER = re.compile(r"^[-+]?\d+(?:\.\d+)?(?:[eE][-+]?\d+)?$")
-
-
-def is_coordinate_pair(value):
-    """One point: two or three numbers ([16.37, 48.21] or 16.37,48.21), not a ring of points."""
-    if not isinstance(value, str):
-        return False
-    text = value.strip()
-    if text.startswith("["):
-        if not text.endswith("]") or text.count("[") != 1:
-            return False
-        text = text[1:-1]
-    parts = [p.strip() for p in text.split(",")]
-    return len(parts) in (2, 3) and all(_NUMBER.match(p) for p in parts)

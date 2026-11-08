@@ -49,7 +49,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `siret` by value checks the Luhn digit (`validate_fr_siret`);
   - the value rules of `frcni`, `egnationalid`, `powerplantid` and the US NPI need their
     field names;
-  - `geopoint` by a `coordinates` name needs one point (a GeoJSON Polygon is not a point);
   - `postcode` (Italian `cap`), `ukwardname` (`ward`) and `description` (`details`) need
     values that fit (five digits; letters);
   - `headline` no longer takes a bare `title`, `person_firstname` a bare Italian `nome`
@@ -57,7 +56,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `unixtime` by a timestamp name is name evidence only (`AKT_TIMESTAMP` holds dates);
   - German municipality key names give `de_ags` for 8 digits and `de_ars` for 12;
   - a five-digit value in a zip code field is a generic `postindex`, so `uszipcode` needs a
-    US scan (`--country-codes us`) when no country is given.
+    US scan (`--country-codes us`) when no country is given; the spelled-out Spanish names
+    (`Código postal`, `COD. POSTAL`) give `postindex` too (Mexican files use them).
 - **`datetime` on date-only fields** (#55): `frdatetimename` (`date_ouverture`, `date_maj`)
   gives `date`; `nldatetimepattern` needs a time, and `nldatepattern` gives `date` for
   DD-MM-YYYY. The `datetime` of qddate dates and the `date` of field names on datetime values

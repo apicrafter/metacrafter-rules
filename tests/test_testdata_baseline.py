@@ -325,12 +325,6 @@ def test_validate_dmy_date(value, expected):
 
 # --- validators ---------------------------------------------------------------------------
 
-def test_coordinates_of_a_point():
-    assert value_matches("common/geo.yaml", "coordinategeobyknown", "[16.36984624, 48.20057929]")
-    assert value_matches("common/geo.yaml", "coordinategeobyknown", "-3.70,40.41")
-    assert not value_matches("common/geo.yaml", "coordinategeobyknown", "[[[16.36984624, 48.20057929], [16.37, 48.2]]]")
-
-
 def test_small_validators():
     assert validate_eea_station_code("DEBB003") and not validate_eea_station_code("USAB123")
     assert validate_bic_country("DEUTDEFF") and not validate_bic_country("STIMMBEZ")

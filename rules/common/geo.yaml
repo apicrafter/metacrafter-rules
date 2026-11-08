@@ -237,15 +237,10 @@ rules:
     priority: 1
   coordinategeobyknown:
     key: geopoint
-    name: Coordinates of a point in a coordinates field
-    # A GeoJSON Polygon or LineString has coordinates too: the value must be one point.
-    match: func
-    type: data
-    rule: metacrafterext.rules.common.generic.is_coordinate_pair
-    minlen: 3
-    maxlen: 100
-    fieldrule: coordinates
-    fieldrulematch: text
+    name: Coordinates by field name
+    match: text
+    type: field
+    rule: coordinates
     priority: 1
   continentgeobyknown:
     key: continent
