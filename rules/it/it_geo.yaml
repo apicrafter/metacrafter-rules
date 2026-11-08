@@ -26,3 +26,17 @@ rules:
     match: text
     priority: 1
 
+  itlatitudeknown:
+    key: latitude
+    name: Latitude (latitudine) by known name
+    rule: latitudine,lat_wgs84_it,coordinata_latitudine
+    type: field
+    match: text
+    priority: 1
+  itlongitudeknown:
+    key: longitude
+    name: Longitude (longitudine) by known name
+    rule: longitudine,lon_wgs84_it,coordinata_longitudine
+    type: field
+    match: text
+    priority: 1

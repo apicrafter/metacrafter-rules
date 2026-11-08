@@ -35,3 +35,17 @@ rules:
     match: text
     priority: 1
 
+  kolatitudeknown:
+    key: latitude
+    name: Latitude (위도) by known name
+    rule: 위도,위도(wgs84),위도좌표
+    type: field
+    match: text
+    priority: 1
+  kolongitudeknown:
+    key: longitude
+    name: Longitude (경도) by known name
+    rule: 경도,경도(wgs84),경도좌표
+    type: field
+    match: text
+    priority: 1

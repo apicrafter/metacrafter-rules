@@ -32,6 +32,10 @@ rules:
     priority: 1
     match: text
   escifvalue:
+    # The check character and a CIF field name: one letter + 8 characters is also a GSS code.
+    validator: metacrafterext.rules.es.validators.validate_es_cif
+    fieldrule: cif,nif,nif_cif,cif_nif,numero_cif,cif_empresa,nif_empresa,cif_proveedor,nif_proveedor,cif/nif,nif/cif
+    fieldrulematch: text
     key: cif
     is_pii: True
     name: CIF por patrón

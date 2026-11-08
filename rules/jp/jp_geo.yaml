@@ -26,3 +26,33 @@ rules:
     match: text
     priority: 1
 
+  jplatitudeknown:
+    key: latitude
+    name: Latitude (緯度) by known name
+    # The recommended datasets (推奨データセット) name the WGS84 columns 緯度 and 経度.
+    rule: 緯度,緯度（世界測地系）,緯度_世界測地系
+    type: field
+    match: text
+    priority: 1
+  jplongitudeknown:
+    key: longitude
+    name: Longitude (経度) by known name
+    rule: 経度,経度（世界測地系）,経度_世界測地系
+    type: field
+    match: text
+    priority: 1
+  jplgcodeknown:
+    key: jp_lg_code
+    name: Japanese local government code (全国地方公共団体コード) by known name
+    rule: 全国地方公共団体コード,地方公共団体コード,団体コード,市区町村コード,自治体コード
+    type: field
+    match: text
+    priority: 1
+  jpmoneyknown:
+    key: money
+    name: Money amount (金額, 価格) by field name
+    # 予定価格, 最低制限価格, 落札金額, 契約金額.
+    rule: .*(?:金額|価格)
+    type: field
+    match: regex
+    priority: 1

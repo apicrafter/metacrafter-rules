@@ -1,0 +1,23 @@
+name: fi-companies
+description: Finnish company identifiers
+context: companies
+lang: fi
+country_code: fi
+rules:
+  fiytunnusknown:
+    key: fi_ytunnus
+    name: Finnish business ID (Y-tunnus) by known name
+    rule: y-tunnus,ytunnus,y_tunnus,yritystunnus,y-tunnus_ytunnus,business_id_fi
+    type: field
+    match: text
+    priority: 1
+  fiytunnusvalue:
+    key: fi_ytunnus
+    name: Finnish business ID (Y-tunnus) by pattern and check digit
+    rule: Word(nums, exact=7) + Literal('-') + Word(nums, exact=1)
+    type: data
+    match: ppr
+    minlen: 9
+    maxlen: 9
+    validator: metacrafterext.rules.common.identifiers.validate_fi_ytunnus
+    priority: 1

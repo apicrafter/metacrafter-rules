@@ -248,3 +248,35 @@ def validate_es_vat(value):
     
     return False
 
+
+
+def validate_es_cif(value):
+    """Validates a Spanish CIF (tax code of a legal entity), such as A28015865.
+
+    A letter for the entity type, seven digits and a control character. The digits in odd
+    positions are doubled and their digits summed, the digits in even positions are added;
+    the control digit is (10 - total mod 10) mod 10, and the control letter is that digit
+    in JABCDEFGHI. Entities K, P, Q, R, S, N and W use the letter, A, B, E and H the digit,
+    the others either.
+
+    Args:
+        value: CIF string (spaces, dashes and dots are ignored)
+
+    Returns:
+        bool: True if the control character is valid, False otherwise
+    """
+    if not isinstance(value, str):
+        return False
+    cif = value.replace(" ", "").replace("-", "").replace(".", "").upper()
+    if len(cif) != 9 or cif[0] not in "ABCDEFGHJKLMNPQRSUVW" or not cif[1:8].isdigit():
+        return False
+    digits = [int(c) for c in cif[1:8]]
+    odd = sum(sum(divmod(d * 2, 10)) for d in digits[0::2])
+    even = sum(digits[1::2])
+    control = (10 - (odd + even) % 10) % 10
+    letter = "JABCDEFGHI"[control]
+    if cif[0] in "KPQRSNW":
+        return cif[8] == letter
+    if cif[0] in "ABEH":
+        return cif[8] == str(control)
+    return cif[8] in (str(control), letter)

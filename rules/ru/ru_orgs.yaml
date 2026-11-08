@@ -63,6 +63,9 @@ rules:
     type: data
     rule: metacrafterext.rules.ru.orgs._check_inn
   rukpp:
+    # Nine digits with a valid tax office prefix are common (German regional keys): names only.
+    fieldrule: kpp,кпп,kpp_kod,код кпп,кпп организации,код причины постановки на учет,код причины постановки на учёт
+    fieldrulematch: text
     key: kpp
     name: Russian KPP tax identifier
     maxlen: 9

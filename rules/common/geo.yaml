@@ -234,3 +234,37 @@ rules:
     type: field
     rule: continent_name
     priority: 1
+  eastingbyfield:
+    key: easting
+    name: Easting (projected x coordinate) by field name
+    # UTM and national grids: Easting, UTM_Easting, UTMRechtswert, Rechtswert, X-UTM32N,
+    # UTM32_X, coordx_origine, Souradnice Y (S-JTSK Y grows westwards, like an easting).
+    rule: (?i)(?:utm[ _.-]?\d{0,2}[ns]?[ _.-]?)?(?:easting|rechtswert)|x[ _.-]?utm[ _.-]?\d{0,2}[ns]?|utm[ _.-]?\d{0,2}[ns]?[ _.-]?x|coordx(?:[ _.-]\w+)?|sou[rř]adnice[ _.-]?y
+    type: field
+    match: regex
+    priority: 1
+  northingbyfield:
+    key: northing
+    name: Northing (projected y coordinate) by field name
+    rule: (?i)(?:utm[ _.-]?\d{0,2}[ns]?[ _.-]?)?(?:northing|hochwert)|y[ _.-]?utm[ _.-]?\d{0,2}[ns]?|utm[ _.-]?\d{0,2}[ns]?[ _.-]?y|coordy(?:[ _.-]\w+)?|sou[rř]adnice[ _.-]?x
+    type: field
+    match: regex
+    priority: 1
+  postindexbyfield:
+    key: postindex
+    is_pii: true
+    name: Postal code by field name (post code, postal-code, zip code with qualifiers)
+    # Supplier Post Code, postal-code (JSON-LD), station zip code, mailing_postcode.
+    rule: (?i)(?:[a-z]+[ _.-]){0,3}(?:post(?:al)?[ _.-]?code|zip[ _.-]?code|postcode)
+    type: field
+    match: regex
+    priority: 1
+  streetaddressbyfield:
+    key: street_address
+    is_pii: true
+    name: Street address line by field name
+    # 5. STREET ADDRESS, company_address_1, address_line_2, registered_address.
+    rule: (?i)(?:\d+\.\s*)?street[ _.-]?address(?:[ _.-]?\d)?|address[ _.-]?(?:line[ _.-]?)?\d|(?:company|business|mailing|registered|postal)[ _.-]?address(?:[ _.-]?\d)?
+    type: field
+    match: regex
+    priority: 1

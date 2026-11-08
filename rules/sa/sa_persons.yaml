@@ -13,6 +13,9 @@ rules:
     priority: 1
     match: text
   sa_persons_saiqamavalue:
+    # Ten digits starting with 2 and a valid Luhn digit are also Swedish organization numbers.
+    fieldrule: iqama,iqama_number,iqama_no,residence_permit,saudi_iqama,إقامة,رقم_الإقامة,رقم الإقامة
+    fieldrulematch: text
     key: saiqama
     is_pii: True
     name: Saudi Iqama by pattern
