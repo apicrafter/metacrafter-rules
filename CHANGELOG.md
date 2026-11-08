@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.0.11] - 2026-11-08
+
 ### Added
 
 - **Field names of the multilingual metacrafter-testdata files** (#52):
