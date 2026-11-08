@@ -55,3 +55,19 @@ rules:
 
 
 
+  esstreetknown:
+    key: street
+    is_pii: true
+    name: Street name (calle) by known name
+    rule: calle,nombre_calle,nombre de la calle
+    type: field
+    match: text
+    priority: 1
+  espostcodespelledknown:
+    key: espostcode
+    is_pii: true
+    name: Spanish postal code by spelled-out field name
+    rule: cod. postal,cod_postal,cod postal,código postal,codigo postal,c.p.
+    type: field
+    match: text
+    priority: 1

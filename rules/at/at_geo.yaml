@@ -1,0 +1,13 @@
+name: at-geo
+description: Austrian geographic identifiers
+context: geo
+lang: de
+country_code: at
+rules:
+  atgkzknown:
+    key: at_gkz
+    name: Austrian municipality code (Gemeindekennziffer) by known name
+    rule: gkz,gemeindekennziffer,gemeindekennzahl,stataustria_gem_code
+    type: field
+    match: text
+    priority: 1

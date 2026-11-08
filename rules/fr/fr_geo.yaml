@@ -42,3 +42,18 @@ rules:
     type: field
     priority: 1
     match: text
+  frpostcodeknown:
+    key: postindex
+    is_pii: true
+    name: French postal code (code postal) by known name
+    rule: code_postal,codepostal,code postal,code_postal_commune,cp_commune
+    type: field
+    match: text
+    priority: 1
+  frcodgeoknown:
+    key: inseecode
+    name: INSEE commune code by known name (CODGEO, code commune)
+    rule: codgeo,code_commune,code_commune_insee,code commune,depcom,insee_code,codecommune
+    type: field
+    match: text
+    priority: 1

@@ -1,0 +1,13 @@
+name: ch-geo
+description: Swiss geographic identifiers
+context: geo
+lang: de
+country_code: ch
+rules:
+  chbfsgemeindeknown:
+    key: ch_bfs_gemeinde
+    name: Swiss municipality number (BFS-Nr.) by known name
+    rule: bfsnr,bfs_nr,bfs-nr,bfs-nr.,bfs_nummer,bfs_gemeindenummer,gemeinde_bfs,gdenr,gde_nr
+    type: field
+    match: text
+    priority: 1

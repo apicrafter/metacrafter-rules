@@ -1,0 +1,29 @@
+name: cz-geo
+description: Czech geographic identifiers
+context: geo
+lang: cs
+country_code: cz
+rules:
+  czpostcodeknown:
+    key: postindex
+    is_pii: true
+    name: Czech postal code (PSČ) by known name
+    rule: psč,psc,psč_kod,poštovní směrovací číslo
+    type: field
+    match: text
+    priority: 1
+  czmunicipalityknown:
+    key: cz_municipality_code
+    name: Czech municipality code (kód obce) by known name
+    rule: kód obce,kod obce,kod_obce,kód_obce,obec_kod
+    type: field
+    match: text
+    priority: 1
+  czstreetknown:
+    key: street
+    is_pii: true
+    name: Street name (název ulice) by known name
+    rule: název ulice,nazev ulice,nazev_ulice,ulice
+    type: field
+    match: text
+    priority: 1

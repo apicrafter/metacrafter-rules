@@ -33,6 +33,9 @@ rules:
     priority: 1
     match: text
   vnpassportvalue:
+    # Letter + 7-8 digits is also a GSS code, a product or a file id: names only.
+    fieldrule: passport,passport_number,passport_no,passportnumber,passport_id,passport number,paspor,nomor_paspor,paspor_no,swiss_passport,passport_ch,passport_switzerland,schweizer_pass,reisepass,pass_nr,passnummer,여권,여권번호,ho_chieu,so_ho_chieu,ho_chieu_no,passeport,numero_passeport,pasaporte,numero_pasaporte
+    fieldrulematch: text
     key: vnpassport
     is_pii: True
     name: Vietnamese passport by pattern

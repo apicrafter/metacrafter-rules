@@ -12,6 +12,9 @@ rules:
     match: text
     priority: 1
   devehicleplatevalue:
+    # Short codes such as PWRK1 or GXRM1 have the shape of a plate: names only.
+    fieldrule: kennzeichen,nummernschild,fahrzeugkennzeichen,license_plate,registration_plate,de_plate,kfz_kennzeichen,kfz-kennzeichen,amtliches_kennzeichen,plate,licence_plate
+    fieldrulematch: text
     key: de_vehicle_plate
     name: German vehicle license plate by pattern
     match: ppr

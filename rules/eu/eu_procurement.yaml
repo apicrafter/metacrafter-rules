@@ -66,3 +66,10 @@ rules:
     maxlen: 5
     minlen: 3
     imprecise: 1
+  nutslevelbyfield:
+    key: nutsregion
+    name: NUTS region code by field name with level (NUTS1, nuts_3_code)
+    rule: (?i)nuts[ _.-]?[0-3](?:[ _.-]?(?:code|id|cd))?|nuts[ _.-]?(?:region|id)
+    type: field
+    match: regex
+    priority: 1

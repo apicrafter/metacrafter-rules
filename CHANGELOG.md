@@ -7,6 +7,39 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- **Field names of the multilingual metacrafter-testdata files** (#52):
+  - coordinates: `緯度`/`経度` (the Japanese recommended datasets), `위도`/`경도`,
+    `latitudine`/`longitudine`; projected coordinates `easting`/`northing` by name (`Easting`,
+    `UTMRechtswert`, `X-UTM32N`, `utm_x`, `coordx_origine`, `Souřadnice X/Y`);
+  - postal codes: `PLZ`/`Postleitzahl`, `PSČ`, `Code_postal`, `COD. POSTAL`, `Eircode`
+    (`ie_postcode`, with a guarded value rule), and qualified names such as
+    `Supplier Post Code`, `station zip code`, `address.postal-code` (`postindex`);
+  - money amounts (`money`): `amount` with qualifiers, `importe`, `monto`, `montant`,
+    `betrag`, `bedrag`, `importo` with any suffix, and Japanese `金額`/`価格`;
+  - region and municipality codes: German AGS, ARS and Kreisschlüssel, Austrian GKZ, Swiss
+    BFS-Nr, Czech kód obce, Japanese 全国地方公共団体コード, INSEE `CODGEO`/`code_commune`,
+    NUTS with a level (`NUTS1`, `nuts_3_code`), GB GSS codes by ONS and GIAS column names;
+  - streets and addresses: `calle`, `název ulice`, `5. STREET ADDRESS`,
+    `company_address_1`, `address line 2`;
+  - identifiers: Finnish Y-tunnus and Chilean RUT by name and by value with check digit
+    validators (`validate_fi_ytunnus`, `validate_cl_rut`), Swedish `orgnr`/`PeOrgNr`.
+  - New rule files: `rules/at/at_geo.yaml`, `rules/ch/ch_geo.yaml`, `rules/cl/cl_finances.yaml`,
+    `rules/cz/cz_geo.yaml`, `rules/fi/fi_companies.yaml`, `rules/ie/ie_geo.yaml`.
+
+### Fixed
+
+- **Value rules of one country no longer label other countries' codes** (#52). The value
+  rules of the Indonesian, Swiss, Korean and Vietnamese passports (one letter and 7-8 digits),
+  the Spanish CIF, the Russian KPP, the Saudi Iqama and the German vehicle plate apply only to
+  fields named for them: they labelled GB GSS codes (`E01032739`), German regional keys,
+  Swedish organization numbers and charging point ids. The CIF rule also checks the control
+  character (`validate_es_cif`), and the PII copy of the NIE rule its check letter.
+- `district code` alone is name evidence only for `ukdistrictcode` (an Austrian
+  `DISTRICT_CODE` was labelled as a UK district), and `PLZ` gives the generic `postindex`
+  (Austria and Switzerland use the name too).
+
 ## [0.0.10] - 2026-11-08
 
 ### Added

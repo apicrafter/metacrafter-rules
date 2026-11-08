@@ -1,0 +1,25 @@
+name: ie-geo
+description: Irish geographic identifiers
+context: geo
+lang: en
+country_code: ie
+rules:
+  ieeircodeknown:
+    key: ie_postcode
+    is_pii: true
+    name: Irish postal code (Eircode) by known name
+    rule: eircode,eir_code,eircode_full,eir code
+    type: field
+    match: text
+    priority: 1
+  ieeircodevalue:
+    key: ie_postcode
+    is_pii: true
+    name: Eircode by pattern (routing key and unique identifier)
+    rule: (?i)(?:[ACDEFHKNPRTVWXY]\d{2}|D6W) ?[0-9ACDEFHKNPRTVWXY]{4}
+    type: data
+    match: regex
+    minlen: 7
+    maxlen: 8
+    fieldrule: eircode,eir_code,eircode_full,eir code,postcode,post_code,postal_code
+    fieldrulematch: text

@@ -104,6 +104,22 @@ rules:
     match: text
     type: field
     priority: 1
-    rule: district code,district_code,ons_district_code,ogss_district_code,polling district code,local authority district code
+    rule: ons_district_code,ogss_district_code,polling district code,local authority district code
 
   
+  ukgsscodebyfield:
+    key: ukgsscode
+    name: GSS code (ONS statistical geography) by field name
+    # ONS column names (LSOA21CD, LAD23CD, PCON24CD) and GIAS ones (LSOA (code)).
+    rule: (?i)(?:lsoa|msoa|oa|lad|lau1|wd|ward|pcon|cty|rgn|ctry|ccg|icb|utla|ltla)\d{0,2}cd|(?:lsoa|msoa|gss|gssla|districtadministrative|administrativeward|parliamentaryconstituency|gor|lad|ward)[ _.-]?(?:\(code\)|code|cd)
+    type: field
+    match: regex
+    priority: 1
+  ukdistrictcodegenericfield:
+    key: ukdistrictcode
+    name: District code (United Kingdom) by generic field name
+    # A district code in any country: name evidence only (score 36), a GB value rule decides.
+    rule: district code,district_code
+    type: field
+    match: text
+    priority: 3

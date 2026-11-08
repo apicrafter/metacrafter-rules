@@ -36,3 +36,10 @@ rules:
     minlen: 11
     imprecise: 1
 
+  seorgnumberknownname:
+    key: seorgnumber
+    name: Swedish organization number by short field name
+    rule: orgnr,org_nr,org.nr,organisationsnr,peorgnr,huvudmannorgnr
+    type: field
+    match: text
+    priority: 1

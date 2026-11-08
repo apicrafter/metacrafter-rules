@@ -1,0 +1,31 @@
+name: cl-finances
+description: Chilean tax identifiers
+context: finances
+lang: es
+country_code: cl
+rules:
+  clrutknown:
+    key: cl_rut
+    name: Chilean tax number (RUT) by known name
+    rule: rut_empresa,rut_contribuyente,rut_proveedor,rut_sociedad
+    type: field
+    match: text
+    priority: 1
+  clrutsharedname:
+    key: cl_rut
+    name: Chilean tax number (RUT) by the shared name rut
+    # Uruguay also calls its tax number RUT (uy_rut): name evidence only.
+    rule: rut
+    type: field
+    match: text
+    priority: 3
+  clrutvalue:
+    key: cl_rut
+    name: Chilean RUT by pattern and check digit (12.345.678-5, 76123456-K)
+    rule: (?i)\d{1,2}\.?\d{3}\.?\d{3}-[0-9k]
+    type: data
+    match: regex
+    minlen: 9
+    maxlen: 12
+    validator: metacrafterext.rules.common.identifiers.validate_cl_rut
+    priority: 1

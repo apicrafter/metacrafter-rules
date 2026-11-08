@@ -2100,3 +2100,53 @@ def validate_uk_nhs(value):
         return False
     return check == int(nhs[9])
 
+
+
+@rejects_repeated_digits
+def validate_fi_ytunnus(value):
+    """Validates a Finnish business ID (Y-tunnus), such as 0112038-9.
+
+    Seven digits, a hyphen and a check digit: the digits are weighted 7, 9, 10, 5, 8, 4, 2;
+    the remainder of the sum modulo 11 gives check digit 0 (remainder 0) or 11 - remainder.
+    A remainder of 1 is never issued.
+
+    Args:
+        value: Business ID string
+
+    Returns:
+        bool: True if the check digit is valid, False otherwise
+    """
+    if not isinstance(value, str):
+        return False
+    match = re.fullmatch(r"(\d{7})-?(\d)", value.strip())
+    if not match:
+        return False
+    remainder = sum(int(d) * w for d, w in zip(match.group(1), (7, 9, 10, 5, 8, 4, 2))) % 11
+    if remainder == 1:
+        return False
+    return int(match.group(2)) == (0 if remainder == 0 else 11 - remainder)
+
+
+@rejects_repeated_digits
+def validate_cl_rut(value):
+    """Validates a Chilean RUT/RUN, such as 76.123.456-K or 78325576-6.
+
+    The body digits are weighted 2, 3, 4, 5, 6, 7 from the right (repeating); 11 minus the
+    sum modulo 11 is the check character, with 11 written 0 and 10 written K.
+
+    Args:
+        value: RUT string, with or without dots
+
+    Returns:
+        bool: True if the check character is valid, False otherwise
+    """
+    if not isinstance(value, str):
+        return False
+    match = re.fullmatch(r"(\d{1,2}(?:\.?\d{3}){2})-?([\dkK])", value.strip())
+    if not match:
+        return False
+    body = match.group(1).replace(".", "")
+    total = sum(int(d) * (2 + i % 6) for i, d in enumerate(reversed(body)))
+    check = 11 - total % 11
+    expected = "0" if check == 11 else "K" if check == 10 else str(check)
+    return match.group(2).upper() == expected
