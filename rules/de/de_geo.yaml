@@ -38,7 +38,8 @@ rules:
   deagsknown:
     key: de_ags
     name: German municipality key (AGS, 8 digits) by known name and value
-    rule: '\d{8}'
+    # Two digits of a state 01-16 first.
+    rule: '(?:0[1-9]|1[0-6])\d{6}'
     type: data
     match: regex
     minlen: 8
@@ -49,7 +50,7 @@ rules:
   deagsarsknown:
     key: de_ars
     name: German regional key (ARS, 12 digits) in a municipality key field
-    rule: '\d{12}'
+    rule: '(?:0[1-9]|1[0-6])\d{10}'
     type: data
     match: regex
     minlen: 12

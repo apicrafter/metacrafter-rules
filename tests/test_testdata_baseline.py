@@ -247,7 +247,8 @@ def test_has_legal_form(value, expected):
     ("gb/gb_geo.yaml", "ukwardnamebyknown", ["3", "8"]),
     ("it/it_geo.yaml", "itpostcodeknown", ["0", "0.36"]),
     ("fr/fr_tax.yaml", "frsiretvalue", ["05938540000134", "50076628911092"]),
-    ("de/de_geo.yaml", "deagsknown", ["130030000000"]),
+    ("de/de_geo.yaml", "deagsknown", ["130030000000", "17060020"]),
+    ("de/de_geo.yaml", "deagsarsknown", ["174565404000"]),
 ])
 def test_values_that_are_refused(path, rule_id, refused):
     for value in refused:
