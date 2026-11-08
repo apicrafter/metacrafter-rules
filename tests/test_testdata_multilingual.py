@@ -139,6 +139,7 @@ def test_validate_fi_ytunnus(value, expected):
 
 @pytest.mark.parametrize("value,expected", [
     ("78325576-6", True), ("78.325.576-6", True), ("78325555-3", True), ("78325576-5", False),
+    ("95566826K", True), ("95.566.826-K", True), ("676347704", True),
     ("11.111.111-1", False), ("78325576", False), ("", False), (None, False),
 ])
 def test_validate_cl_rut(value, expected):
