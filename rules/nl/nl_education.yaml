@@ -1,0 +1,28 @@
+name: nl-education
+description: Dutch education identifiers
+context: education
+lang: nl
+country_code: nl
+rules:
+  nlbrinvestigingvalue:
+    key: nl_brin_vestiging
+    name: Dutch school location code (BRIN + location number) by field name and value
+    rule: '\d{2}[A-Z]{2}\d{2}'
+    type: data
+    match: regex
+    minlen: 6
+    maxlen: 6
+    fieldrule: vestigingscode,vestigings_code,brin_vestiging,brinvest,vestigingsnummer,brin_vestigingsnummer,brin vestiging
+    fieldrulematch: text
+    priority: 1
+  nlbevoegdgezagvalue:
+    key: nl_bevoegd_gezag
+    name: Dutch school board number (bevoegd gezag) by field name and value
+    rule: '\d{5}'
+    type: data
+    match: regex
+    minlen: 5
+    maxlen: 5
+    fieldrule: bevoegd gezag nummer,bevoegd_gezag_nummer,bevoegd gezag,bevoegd_gezag,bevoegdgezagnummer,bg_nummer
+    fieldrulematch: text
+    priority: 1

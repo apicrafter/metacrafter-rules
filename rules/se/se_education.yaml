@@ -1,0 +1,17 @@
+name: se-education
+description: Swedish education identifiers
+context: education
+lang: sv
+country_code: se
+rules:
+  seskolenhetskodvalue:
+    key: se_skolenhetskod
+    name: Swedish school unit code by field name and value
+    rule: '\d{8}'
+    type: data
+    match: regex
+    minlen: 8
+    maxlen: 8
+    fieldrule: skolenhetskod,skolenhet_kod,skolenhetkod,skolenhets_kod,skolenhetskoden
+    fieldrulematch: text
+    priority: 1

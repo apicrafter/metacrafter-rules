@@ -1,0 +1,13 @@
+name: hu-legal
+description: Hungarian legal identifiers
+context: legal
+lang: hu
+country_code: hu
+rules:
+  hulegislationknown:
+    key: legislationname
+    name: Hungarian law name (jogszabály) by known name
+    rule: jogszabály,jogszabaly,jogszabály neve,jogszabály megnevezése
+    type: field
+    match: text
+    priority: 1

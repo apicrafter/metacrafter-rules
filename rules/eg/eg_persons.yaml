@@ -21,6 +21,9 @@ rules:
     rule: Word(nums, exact=14)
     maxlen: 14
     minlen: 14
+    # Fourteen digits are also a SIRET, CNPJ or French electricity delivery point.
+    fieldrule: national_id,egyptian_id,id_number,identity_number,الرقم_القومي,البطاقة_الوطنية,الرقم القومي,national_id_number
+    fieldrulematch: text
   egpassportfield:
     key: egpassport
     is_pii: True

@@ -1,0 +1,27 @@
+name: pl-gov
+description: Polish government identifiers
+context: government
+lang: pl
+country_code: pl
+rules:
+  pladevalue:
+    key: pl_ade
+    is_pii: true
+    name: Polish e-delivery address (AE:PL-55546-38867-UJDEW-16)
+    rule: 'AE:PL-\d{5}-\d{5}-[A-Z]{5}-\d{2}'
+    type: data
+    match: regex
+    minlen: 26
+    maxlen: 26
+    priority: 1
+  plexcisenumbervalue:
+    key: pl_excise_number
+    name: Polish excise number (PL + 11 digits) by field name and value
+    rule: 'PL\d{11}'
+    type: data
+    match: regex
+    minlen: 13
+    maxlen: 13
+    fieldrule: numer_akcyzowy,numer akcyzowy,nr_akcyzowy,nr akcyzowy,excise_number,excise number,numer_seed
+    fieldrulematch: text
+    priority: 1

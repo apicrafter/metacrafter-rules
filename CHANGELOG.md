@@ -7,6 +7,62 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- **Rules for the datatypes of metacrafter-registry #154-#158** (#58), found in the
+  metacrafter-testdata baseline. Most are value rules guarded by field names:
+  - transport: GTFS `location_type` and `wheelchair_boarding` (padded values too), IFOPT/DHID
+    stop ids (`de:05966:24128:1:1`, by value and by `Globale ID`/`DHID`), NaPTAN ATCO codes in
+    `stop_code`, ADIF station codes, Korean bus stop ARS numbers;
+  - dates: Japanese era dates and years (`平成 9. 4.27`, `昭58`, `令元`, full-width digits),
+    ROC dates and year-months in date fields (`1081223`, `10506`, new `rules/tw/`), DDMONYY
+    (`06NOV26`), e-Stat time axis codes;
+  - codes: Korean administrative dong, DIVIPOLA, SIAFI, INEGI municipality, Austrian
+    Bezirkskennziffer, Swiss BFS district, COROP, CBS codes with a year, Finnish wellbeing
+    services counties, Chilean regions, Québec municipal codes, Portuguese INE geocodes, DfE
+    local authority codes, US Census SUMLEV/REGION/DIVISION/LSAD, NYC BBL/BIN/NTA, Russian
+    tax office codes, Ukrainian budget classifications (new `rules/ua/`);
+  - registers: Muséofile, Mérimée (semicolon lists too), AFIREV charging ids, Enedis PDL,
+    REPS, ANP authorisations, Latvian BIS and medicine numbers (new `rules/lv/`), Polish
+    e-delivery address and excise number, Dutch school location and board numbers, Swedish
+    school unit codes, German school numbers, CMS Certification Numbers, Qatar activity codes;
+  - EEA air quality station codes (`validate_eea_station_code`), Darwin Core basisOfRecord,
+    SharePoint content type ids, `area` by field name (`Fläche`, `ALAND`, `oppervlakte*`,
+    `Terület`), ArcGIS `objectid` by name and integer value, `iso3166code_compact` (`UYAR`);
+  - existing types without a hit: `jp_cn` (`法人番号`), `lv_registration_number`,
+    `legislationname` (`jogszabály`).
+- **Generic types by multilingual field names** (#57), in `rules/common/generic.yaml`:
+  `category` (type, status, kind, Вид, Състояние, Είδος, 種別, 유형, tipologia ...),
+  `city` (municipality, Gemeinde, Název obce, POBLACIÓN, 市区町村名, البلدية ...; codes of
+  municipalities are excluded), `orgname` (Razon Social, Denominación, Nosaukums, BETREIBER,
+  Φορέας, 업체명, 公司名稱 ...) and `id` (`*_id`, nummer, номер, 番号, 번호). Organization
+  names are also found by a legal form in the values (`has_legal_form`: SIA, GmbH, S.L., Ltd,
+  株式会社, ㈜, 有限公司, ООО), not by initials of persons (`Lazkov G.A.`).
+
+### Fixed
+
+- **Identifier rules that matched other codes** (#56):
+  - `imei` needs 15 digits: 14-digit SIRET, CNPJ and PDL numbers are not IMEIs;
+  - `mongodbid` by field name needs a 24-hex ObjectId (ArcGIS `OBJECTID`, CKAN `_id`);
+  - `gtin` by field name needs a valid GTIN check digit (`product_id` `00-0003-01`);
+  - `bic` checks that positions 5-6 are a country code (`STIMMBEZIRK`);
+  - `siret` by value checks the Luhn digit (`validate_fr_siret`);
+  - the value rules of `frcni`, `egnationalid`, `powerplantid` and the US NPI need their
+    field names;
+  - `geopoint` by a `coordinates` name needs one point (a GeoJSON Polygon is not a point);
+  - `postcode` (Italian `cap`), `ukwardname` (`ward`) and `description` (`details`) need
+    values that fit (five digits; letters);
+  - `headline` no longer takes a bare `title`, `person_firstname` a bare Italian `nome`
+    (now `name`), `street_address` the address lines 3 and 4;
+  - `unixtime` by a timestamp name is name evidence only (`AKT_TIMESTAMP` holds dates);
+  - German municipality key names give `de_ags` for 8 digits and `de_ars` for 12;
+  - a five-digit value in a zip code field is a generic `postindex`, so `uszipcode` needs a
+    US scan (`--country-codes us`) when no country is given.
+- **`datetime` on date-only fields** (#55): `frdatetimename` (`date_ouverture`, `date_maj`)
+  gives `date`; `nldatetimepattern` needs a time, and `nldatepattern` gives `date` for
+  DD-MM-YYYY. The `datetime` of qddate dates and the `date` of field names on datetime values
+  are fixed in metacrafter (apicrafter/metacrafter, same baseline).
+
 ## [0.0.11] - 2026-11-08
 
 ### Added

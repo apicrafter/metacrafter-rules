@@ -1,0 +1,17 @@
+name: fi-geo
+description: Finnish geographic identifiers
+context: geo
+lang: fi
+country_code: fi
+rules:
+  fiwellbeingcountyvalue:
+    key: fi_wellbeing_services_county
+    name: Finnish wellbeing services county code by field name and value
+    rule: '\d{2}'
+    type: data
+    match: regex
+    minlen: 2
+    maxlen: 2
+    fieldrule: hyvinvointialue,hyvinvointialuekoodi,hyvinvointialue_koodi,hva,hva_koodi,välfärdsområde,wellbeing_services_county
+    fieldrulematch: text
+    priority: 1

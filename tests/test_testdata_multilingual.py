@@ -52,7 +52,6 @@ def field_matches(path, rule_id, name):
      ["Amount", "Net Amount", "IMPORTE ADJUDICACION IVA INC.", "MONTO_DEFINITIVO", "montant",
       "Bedrag (x1000)", "importo_euro"]),
     ("de/de_geo.yaml", "depostcodeknown", "postindex", ["PLZ", "Postleitzahl"]),
-    ("de/de_geo.yaml", "deagsknown", "de_ags", ["Gemeindeschluessel", "gemeinde_schluessel", "AGS"]),
     ("de/de_geo.yaml", "dearsknown", "de_ars", ["Amtlicher Regionalschlüssel"]),
     ("de/de_geo.yaml", "dekreisknown", "de_kreisschluessel", ["kreis_schluessel"]),
     ("at/at_geo.yaml", "atgkzknown", "at_gkz", ["GKZ", "STATAUSTRIA_GEM_CODE"]),
@@ -120,6 +119,15 @@ def test_value_rules_are_guarded_by_field_names(path, rule_id, allowed, refused)
     assert spec["type"] == "data" and spec["fieldrulematch"] == "text"
     names = {k.strip().lower() for k in spec["fieldrule"].split(",")}
     assert allowed in names and refused not in names
+
+
+@pytest.mark.parametrize("rule_id,key", [("deagsknown", "de_ags"), ("deagsarsknown", "de_ars")])
+def test_german_municipality_key_names_take_the_value_length(rule_id, key):
+    # #56: gemeinde_schluessel holds 8-digit AGS or 12-digit ARS (hro:gemeinde_schluessel).
+    spec = load("de/de_geo.yaml", rule_id)
+    assert spec["key"] == key and spec["type"] == "data"
+    names = {k.strip().lower() for k in spec["fieldrule"].split(",")}
+    assert {"gemeindeschluessel", "gemeinde_schluessel", "ags"} <= names
 
 
 def test_cif_and_nie_values_have_validators():

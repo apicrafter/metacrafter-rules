@@ -95,7 +95,8 @@ rules:
   headlinefield:
     key: headline
     name: Headline by field name
-    rule: headline,headline_text,article_headline,title,article_title,news_headline,story_headline
+    # A bare title names a site, museum or document as often as an article (enitemnameknown).
+    rule: headline,headline_text,article_headline,article_title,news_headline,story_headline
     type: field
     match: text
     priority: 1

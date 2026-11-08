@@ -41,13 +41,16 @@ rules:
   fr_pii_frcnivalue:
     key: frcni
     is_pii: True
-    name: French CNI by pattern
+    name: French CNI by pattern in an identity card field
     match: ppr
     type: data
     rule: Word(nums, exact=12)
     validator: metacrafterext.rules.fr.validators.validate_fr_cni
     maxlen: 12
     minlen: 12
+    # Twelve digits are a common shape (Japanese municipal ids): the field must name the card.
+    fieldrule: cni,numero_cni,num_cni,no_cni,carte_identite,carte_d_identite,numero_carte_identite,numero_piece_identite,piece_identite,carte nationale d'identité,numéro de carte d'identité
+    fieldrulematch: text
   fr_pii_frpassportfield:
     key: frpassport
     is_pii: True

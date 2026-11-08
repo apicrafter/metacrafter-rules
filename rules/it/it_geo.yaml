@@ -6,8 +6,20 @@ country_code: it
 rules:
   itpostcodeknown:
     key: postcode
-    name: Italian postal code (CAP) by known name
-    rule: cap,codice_postale,postal_code
+    name: Italian postal code (CAP) by known name and five-digit value
+    # cap is also a capacity (0.36).
+    rule: '\d{5}'
+    type: data
+    match: regex
+    minlen: 5
+    maxlen: 5
+    fieldrule: cap,codice_postale,postal_code
+    fieldrulematch: text
+    priority: 1
+  itnomeknown:
+    key: name
+    name: Italian name by field name (nome, denominazione)
+    rule: nome,denominazione
     type: field
     match: text
     priority: 1

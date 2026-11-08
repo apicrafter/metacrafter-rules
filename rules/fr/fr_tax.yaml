@@ -36,6 +36,8 @@ rules:
     rule: Word(nums, exact=14)
     maxlen: 14
     minlen: 14
+    # Luhn check (La Poste establishments: digit sum divisible by 5): a CNPJ or a PDL is not a SIRET.
+    validator: metacrafterext.rules.fr.validators.validate_fr_siret
   frvatfield:
     key: frvat
     is_pii: True

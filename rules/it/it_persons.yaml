@@ -16,7 +16,8 @@ rules:
     key: person_firstname
     is_pii: True
     name: Italian first name by known name
-    rule: nome,primo_nome
+    # nome alone is the name of anything (a school, a street): it is name evidence in it_geo.
+    rule: primo_nome,nome_proprio,nome_persona
     type: field
     match: text
     priority: 1

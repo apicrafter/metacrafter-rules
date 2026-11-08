@@ -11,3 +11,14 @@ rules:
     type: field
     match: text
     priority: 1
+  chbfsbezirkvalue:
+    key: ch_bfs_bezirk
+    name: Swiss BFS district number by field name and value
+    rule: '\d{3,4}'
+    type: data
+    match: regex
+    minlen: 3
+    maxlen: 4
+    fieldrule: bezkid,bezirksnummer,bezirk_nr,bezirknr,bfs_bezirk,bezirks_nr,bezirk_id,bezirk_bfs
+    fieldrulematch: text
+    priority: 1

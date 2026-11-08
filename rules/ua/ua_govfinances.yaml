@@ -1,0 +1,50 @@
+name: ua-govfinances
+description: Ukrainian budget classifications
+context: government
+lang: uk
+country_code: ua
+rules:
+  uakpkvkvalue:
+    key: ua_kpkvk
+    name: Ukrainian programme classification code of expenditure by field name and value
+    rule: '\d{4}(?:\d{3})?'
+    type: data
+    match: regex
+    minlen: 4
+    maxlen: 7
+    fieldrule: cod_cons_mb_pk,kpkvk,kpkvkmb,tpkvkmb,кпквк,кпквкмб,тпквкмб,код програмної класифікації
+    fieldrulematch: text
+    priority: 1
+  uafkvkvalue:
+    key: ua_fkvk
+    name: Ukrainian functional classification code of expenditure by field name and value
+    rule: '\d{4}'
+    type: data
+    match: regex
+    minlen: 4
+    maxlen: 4
+    fieldrule: cod_cons_mb_fk,fkvk,fkvkb,фквк,фквкб,код функціональної класифікації
+    fieldrulematch: text
+    priority: 1
+  uakekvvalue:
+    key: ua_kekv
+    name: Ukrainian economic classification code of expenditure (КЕКВ) by field name and value
+    rule: '\d{4}'
+    type: data
+    match: regex
+    minlen: 4
+    maxlen: 4
+    fieldrule: cod_cons_ek,kekv,кекв,cod_ek,код економічної класифікації
+    fieldrulematch: text
+    priority: 1
+  uabudgetcodevalue:
+    key: ua_budget_code
+    name: Ukrainian budget code (11 digits) by field name and value
+    rule: '\d{11}'
+    type: data
+    match: regex
+    minlen: 11
+    maxlen: 11
+    fieldrule: cod_budget,budget_code,код бюджету,kod_budzhetu,budgetcode,код_бюджету
+    fieldrulematch: text
+    priority: 1

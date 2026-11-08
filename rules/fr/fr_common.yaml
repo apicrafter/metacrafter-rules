@@ -40,3 +40,35 @@ rules:
     type: field
     priority: 1
     match: text
+  frmuseofilevalue:
+    key: fr_museofile
+    name: Muséofile museum identifier (M1128) by field name and value
+    rule: 'M\d{4}(?:-\d{1,2})?'
+    type: data
+    match: regex
+    minlen: 5
+    maxlen: 8
+    fieldrule: identifiant,museofile,id_museofile,ref_museofile,identifiant museofile,code_museofile,ref_musee,id_musee
+    fieldrulematch: text
+    priority: 1
+  frmerimeevalue:
+    key: fr_merimee
+    name: Mérimée heritage identifier, one or a semicolon list (PA00084643;SPR4400040)
+    rule: '(?:[PEI]A\d[0-9AB]\d{6}|ACR\d{7}|MDI\d{3}B?|JAR\d{7}|SPR\d{7}|PJR\d{8})(?:\s*;\s*(?:[PEI]A\d[0-9AB]\d{6}|ACR\d{7}|MDI\d{3}B?|JAR\d{7}|SPR\d{7}|PJR\d{8}))*'
+    type: data
+    match: regex
+    minlen: 6
+    maxlen: 400
+    priority: 1
+  frpdlvalue:
+    key: fr_pdl
+    is_pii: true
+    name: Electricity delivery point number (PDL / PRM) by field name and value
+    rule: '\d{14}'
+    type: data
+    match: regex
+    minlen: 14
+    maxlen: 14
+    fieldrule: num_pdl,pdl,prm,numero_pdl,num_prm,numero_prm,point_de_livraison,n_pdl,pdl_prm,id_pdl,ref_pdl
+    fieldrulematch: text
+    priority: 1

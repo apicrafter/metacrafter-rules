@@ -1,0 +1,17 @@
+name: co-medical
+description: Colombian health identifiers
+context: medical
+lang: es
+country_code: co
+rules:
+  corepscodevalue:
+    key: co_reps_code
+    name: Colombian REPS provider (10 digits) or site (12 digits) code by field name and value
+    rule: '\d{10}(?:\d{2})?'
+    type: data
+    match: regex
+    minlen: 10
+    maxlen: 12
+    fieldrule: codigoprestador,codigo_prestador,cod_prestador,codigohabilitacion,codigo_habilitacion,cod_habilitacion,codigohabilitacionsede,codigo_habilitacion_sede,codigo_reps,codhabilitacion
+    fieldrulematch: text
+    priority: 1

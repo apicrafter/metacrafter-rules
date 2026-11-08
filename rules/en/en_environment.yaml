@@ -36,6 +36,9 @@ rules:
     rule: Word('ABCDEFGHIJKLMNOPQRSTUVWXYZ', exact=2) + Word(nums, min=3, max=6)
     maxlen: 8
     minlen: 5
+    # Two letters and digits is also a NUTS 3 or CBS municipality code (AT124, GM0998).
+    fieldrule: power_plant_id,powerplant_id,plant_id,plant_code,powerplant_code,gppd_idnr,energy_point_id,power_plant_code
+    fieldrulematch: text
     priority: 2
   engridnodefield:
     key: gridnode

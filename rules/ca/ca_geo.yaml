@@ -1,0 +1,17 @@
+name: ca-geo
+description: Canadian geographic identifiers
+context: geo
+lang: fr
+country_code: ca
+rules:
+  caqcmunicipalitycodevalue:
+    key: ca_qc_municipality_code
+    name: Québec municipal geographic code by field name and value
+    rule: '\d{5}'
+    type: data
+    match: regex
+    minlen: 5
+    maxlen: 5
+    fieldrule: mcode,code_mun,code_municipalite,code_municipalité,code géographique,code_geographique,code_geo_mun
+    fieldrulematch: text
+    priority: 1

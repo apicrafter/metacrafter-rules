@@ -56,4 +56,80 @@ rules:
     minlen: 4
     type: data
     match: text
-
+  uscensussumlevvalue:
+    key: us_census_sumlev
+    name: US Census summary level by field name and value
+    rule: '\d{3}'
+    type: data
+    match: regex
+    minlen: 3
+    maxlen: 3
+    fieldrule: sumlev,summary_level,sumlevel,summary level
+    fieldrulematch: text
+    priority: 1
+  uscensusregionvalue:
+    key: us_census_region
+    name: US Census region code (1-4) by field name and value
+    rule: '[1-4]'
+    type: data
+    match: regex
+    minlen: 1
+    maxlen: 1
+    fieldrule: region,census_region,regioncode,region_code
+    fieldrulematch: text
+    priority: 1
+  uscensusdivisionvalue:
+    key: us_census_division
+    name: US Census division code (1-9) by field name and value
+    rule: '[0-9]'
+    type: data
+    match: regex
+    minlen: 1
+    maxlen: 1
+    fieldrule: division,census_division,divisioncode,division_code
+    fieldrulematch: text
+    priority: 1
+  uscensuslsadvalue:
+    key: us_census_lsad
+    name: US Census legal/statistical area description code by field name and value
+    rule: '[0-9A-Z]{2}'
+    type: data
+    match: regex
+    minlen: 2
+    maxlen: 2
+    fieldrule: lsad,lsad_code,lsad10,lsad20
+    fieldrulematch: text
+    priority: 1
+  usnycbblvalue:
+    key: us_nyc_bbl
+    name: New York City borough, block and lot (BBL) by field name and value
+    rule: '[1-5]\d{9}(?:\.0+)?'
+    type: data
+    match: regex
+    minlen: 10
+    maxlen: 25
+    fieldrule: bbl,borough_block_lot,bbl_code,boro_block_lot
+    fieldrulematch: text
+    priority: 1
+  usnycbinvalue:
+    key: us_nyc_bin
+    name: New York City building identification number (BIN) by field name and value
+    rule: '[1-5]\d{6}(?:\.0+)?'
+    type: data
+    match: regex
+    minlen: 7
+    maxlen: 22
+    fieldrule: bin,bin_number,building_id_number,building identification number,bldg_bin
+    fieldrulematch: text
+    priority: 1
+  usnycntavalue:
+    key: us_nyc_nta
+    name: New York City neighborhood tabulation area code by field name and value
+    rule: '(?:BK|BX|MN|QN|SI)\d{2}(?:\d{2})?'
+    type: data
+    match: regex
+    minlen: 4
+    maxlen: 6
+    fieldrule: ntacode,nta,nta_code,nta2020,ntacode2020,nta_2020,ntacode_2010
+    fieldrulematch: text
+    priority: 1

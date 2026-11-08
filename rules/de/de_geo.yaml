@@ -37,10 +37,25 @@ rules:
     priority: 1
   deagsknown:
     key: de_ags
-    name: German municipality key (AGS) by known name
-    rule: ags,gemeindeschluessel,gemeindeschlüssel,amtlicher_gemeindeschluessel,amtlicher gemeindeschlüssel,amtlicher_gemeindeschlüssel,gemeinde_schluessel,gemeindekennziffer_de
-    type: field
-    match: text
+    name: German municipality key (AGS, 8 digits) by known name and value
+    rule: '\d{8}'
+    type: data
+    match: regex
+    minlen: 8
+    maxlen: 8
+    fieldrule: ags,gemeindeschluessel,gemeindeschlüssel,amtlicher_gemeindeschluessel,amtlicher gemeindeschlüssel,amtlicher_gemeindeschlüssel,gemeinde_schluessel,gemeindekennziffer_de
+    fieldrulematch: text
+    priority: 1
+  deagsarsknown:
+    key: de_ars
+    name: German regional key (ARS, 12 digits) in a municipality key field
+    rule: '\d{12}'
+    type: data
+    match: regex
+    minlen: 12
+    maxlen: 12
+    fieldrule: ags,gemeindeschluessel,gemeindeschlüssel,amtlicher_gemeindeschluessel,amtlicher gemeindeschlüssel,amtlicher_gemeindeschlüssel,gemeinde_schluessel,gemeindekennziffer_de
+    fieldrulematch: text
     priority: 1
   dearsknown:
     key: de_ars

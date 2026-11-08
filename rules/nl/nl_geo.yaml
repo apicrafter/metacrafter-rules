@@ -25,4 +25,23 @@ rules:
     type: field
     match: text
     priority: 1
-
+  nlcoropvalue:
+    key: nl_corop
+    name: Dutch COROP region code by field name and value
+    rule: '(?:CR)?(?:0[1-9]|[1-3]\d|40)'
+    type: data
+    match: regex
+    minlen: 2
+    maxlen: 4
+    fieldrule: coropgebied code,coropgebied,corop,corop_code,coropcode,corop gebied code,coropgebiedcode
+    fieldrulematch: text
+    priority: 1
+  nlcbsregionyearvalue:
+    key: nl_cbs_region_code_year
+    name: CBS region code with a year (2024GM0034)
+    rule: '\d{4}(?:GM\d{4}|WK\d{6}|BU\d{8})'
+    type: data
+    match: regex
+    minlen: 10
+    maxlen: 14
+    priority: 1

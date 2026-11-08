@@ -60,10 +60,16 @@ rules:
     validator: metacrafterext.rules.common.identifiers.validate_isbn10
   objects_gtinfield:
     key: gtin
-    name: Global Trade Item Number (GTIN) by field name
-    rule: gtin,ean,upc,barcode,product_code,gtin_code,ean_code,upc_code,product_id
-    type: field
-    match: text
+    name: Global Trade Item Number (GTIN) by field name and check digit
+    # product_id and product_code hold any product number (00-0003-01): the value must be a GTIN.
+    rule: Word(nums, min=8, max=14)
+    type: data
+    match: ppr
+    minlen: 8
+    maxlen: 14
+    validator: metacrafterext.rules.common.identifiers.validate_gtin
+    fieldrule: gtin,ean,upc,barcode,product_code,gtin_code,ean_code,upc_code,product_id
+    fieldrulematch: text
     priority: 1
   gtinvalue:
     key: gtin

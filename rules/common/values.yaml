@@ -26,3 +26,12 @@ rules:
     type: field
     match: regex
     priority: 1
+  areabyfield:
+    key: area
+    name: Area (surface measure) by field name
+    # Fläche, FLAECHE, Fläche km², ALAND, AWATER, Shape__Area, superficie_ha, oppervlakteTotaalInHa,
+    # Terület, площадь. A bare "area" often names a region, so it needs a unit or a qualifier.
+    rule: (?i)(?:[\w-]+:)?(?:fl(?:ä|ae)che|terület|terulet|площадь|площа|powierzchnia|superficie|m?superf|oppervlakte|aland|awater|shape_{1,2}area|st_area(?:\(shape\))?|(?:total|land|water|surface|floor|site|plot|gross_floor)[ _]?area|area[ _]?(?:km2|km²|sqkm|sq_km|ha|m2|m²))(?:[ _]?(?:totaal(?:inha)?(?:_\d+)?|\d+|in_?ha|\(?(?:km2|km²|m2|m²|ha)\)?))?(?:\s*[¹²³⁴⁵⁶⁷⁸⁹⁰⁾)*]+)?
+    type: field
+    match: regex
+    priority: 1

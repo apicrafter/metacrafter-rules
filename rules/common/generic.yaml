@@ -1,0 +1,49 @@
+name: genericcommon
+description: Generic types (category, city, organization name, identifier) by multilingual field names
+context: common
+lang: common
+country_code: xx
+rules:
+  categorybyfield:
+    key: category
+    name: Category (type, status, kind) by multilingual field name
+    # Expense Type, company_status, tipologia, Вид на водата, Състояние, Είδος Μητρώου, 種別, 유형.
+    # MIME and content types have their own datatypes; a bare or nested type key (GeoJSON
+    # geometry.type) is a structural key.
+    rule: (?i)(?!(?:.*\.)?type$)(?!.*(?:mime|content|media)[ _.-]?type)(?:.*[ _.-])?(?:type|status|kind|category|categorie|categoría|categoria|kategorie|kategori|tipo|tipologia|typ|soort|veids|statuss|statut|вид|тип|статус|състояние|статут|είδος|種別|区分|分類|유형|구분|종류|类别|類別|類型|ownership|auspice)(?:[ _.-].*)?
+    type: field
+    match: regex
+    priority: 1
+  citybyfield:
+    key: city
+    name: City or municipality name by multilingual field name
+    # municipality, Gemeinde, Název obce, settlement, POBLACIÓN, 市区町村名, البلدية. Codes of
+    # municipalities (code_commune, cod_comune, Gemeindeschlüssel) are not names.
+    rule: (?i)(?!name\b)(?!.*(?:code|cod_|codice|kod|kód|schl|clave|insee|istat|nummer|number|\bnr\b|_id$|\bid\b))(?:.*[ _.-])?(?:city|town|municipality|municipio|município|comune|comuna|commune|gemeinde|gemeentenaam|gemname|ort|ortsteil|ortschaft|stadt|kommun|obec|název obce|gmina|miasto|settlement|locality|localidad|localité|poblaci[oó]n|населенный пункт|населено място|город|місто|населений пункт|市区町村名?|市町村名?|地方公共団体名|bölge|البلدية|بلدية|المدينة|lbldy|munnom|vogename|addresslocality|addresspostname)(?:[ _.-]?(?:name|nom|naam|nimi|namn|nombre|nome|tributaria|siedziby))?
+    type: field
+    match: regex
+    priority: 1
+  orgnamebyfield:
+    key: orgname
+    name: Organization name by multilingual field name
+    # Razon Social, Denominación, Nosaukums, BETREIBER, Φορέας, 업체명, 公司名稱, service_provider_english.
+    rule: (?i)(?!.*(?:code|kod|kód|nummer|number|\bnr\b|\bid\b|^cd_|type|tipo|typ|status|address|adres|adresse|direcci))(?:.*[ _.-])?(?:company|company_name|organisation|organization|org_name|orgname|razon social|razón social|razon_social|razaosocial|raz[aã]o social|denominaci[oó]n|denumire|nosaukums|betreiber|operator|provider|service_provider|empresa|entidade|entidad|unternehmen|firma|firmenname|bedrijfsnaam|ontvanger|adjudicatario|φορέας|предприятие|организация|наименование организации|назва\s+(?:місцевого\s+)?(?:суду|організації|підприємства|установи)|업체명|기관명|회사명|業者名|団体名|事業者名|法人名|会社名|公司名稱|單位名稱|機構名稱|facility name|premises name|nombreprestador|kekva_nev)(?:[ _.-]?(?:name|nom|naam|nimi|namn|nombre|nome|english|arabic|de verificat))?
+    type: field
+    match: regex
+    priority: 1
+  orgnamelegalformvalue:
+    key: orgname
+    name: Organization name with a legal form (SIA, GmbH, S.L., 株式会社, ㈜, 有限公司, ООО)
+    rule: metacrafterext.rules.common.generic.has_legal_form
+    type: data
+    match: func
+    minlen: 4
+    maxlen: 300
+    priority: 2
+  idbyfield:
+    key: id
+    name: Identifier by multilingual field name (*_id, nummer, номер, 番号, 번호)
+    rule: (?i)(?!_id$)(?:.*[ _.-])?(?:id|nummer|номер|番号|번호|編號|identifiant|identificador|tunnus)(?:[ _.-].*)?
+    type: field
+    match: regex
+    priority: 1

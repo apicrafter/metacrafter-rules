@@ -141,8 +141,10 @@ def test_unixtime_value_needs_a_timestamp_field():
         assert not guard(name), name
 
 
-def test_timestamp_name_pattern_reports_on_its_own():
-    assert load("common/dateandtime.yaml", "timestampknownpat")["priority"] == 1
+def test_timestamp_name_pattern_is_name_evidence():
+    # #56: AKT_TIMESTAMP holds dates (2026-09-01Z), so the name alone does not report unixtime;
+    # integer values in such a field do, through unixtimevalue.
+    assert load("common/dateandtime.yaml", "timestampknownpat")["priority"] == 2
 
 
 @pytest.mark.parametrize("name", ["sex", "Sex", "gender", "author_sex", "patient_gender", "sex_code",

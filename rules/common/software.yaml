@@ -423,3 +423,14 @@ rules:
     fieldrule: tag,release_tag,version_tag,git_tag
     fieldrulematch: text
     imprecise: 1
+  sharepointcontenttypeidvalue:
+    key: sharepoint_content_type_id
+    name: SharePoint content type id (0x0101...) by field name and value
+    rule: '0x(?:[0-9A-Fa-f]{2})*'
+    type: data
+    match: regex
+    minlen: 2
+    maxlen: 512
+    fieldrule: stringid,contenttypeid,content_type_id,contenttype_id,ctid,content type id,contenttypeidstring
+    fieldrulematch: text
+    priority: 1

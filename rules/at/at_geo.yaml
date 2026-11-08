@@ -11,3 +11,14 @@ rules:
     type: field
     match: text
     priority: 1
+  atbezirkvalue:
+    key: at_bezirkskennziffer
+    name: Austrian political district code (Bezirkskennziffer) by field name and value
+    rule: '[1-9]\d{2}'
+    type: data
+    match: regex
+    minlen: 3
+    maxlen: 3
+    fieldrule: stataustria_bez_code,bezirkskennziffer,bkz,bez_code,bezirk_code,bezirkscode,bezirk_kz
+    fieldrulematch: text
+    priority: 1

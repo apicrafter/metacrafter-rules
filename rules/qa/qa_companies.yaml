@@ -1,0 +1,17 @@
+name: qa-companies
+description: Qatar company identifiers
+context: companies
+lang: ar
+country_code: qa
+rules:
+  qabusinessactivityvalue:
+    key: qa_business_activity_code
+    name: Qatar commercial activity code by field name and value
+    rule: '\d{7}'
+    type: data
+    match: regex
+    minlen: 7
+    maxlen: 7
+    fieldrule: رمز النشاط التجاري,رمز النشاط,رمز_النشاط,activity_code,activity code,commercial_activity_code,business_activity_code
+    fieldrulematch: text
+    priority: 1

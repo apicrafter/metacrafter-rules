@@ -104,3 +104,15 @@ def validate_fr_cni(value):
     year += 1900 if year >= FR_CNI_FIRST_YEAR % 100 else 2000
     month = int(cni[2:4])
     return FR_CNI_FIRST_YEAR <= year <= FR_CNI_LAST_YEAR and 1 <= month <= 12
+
+
+def validate_fr_siret(value):
+    """SIRET (14 digits): Luhn check, or for La Poste (SIREN 356000000) a digit sum divisible by 5."""
+    if not isinstance(value, str):
+        return False
+    digits = value.replace(" ", "")
+    if len(digits) != 14 or not digits.isdigit():
+        return False
+    if digits.startswith("356000000"):
+        return sum(int(d) for d in digits) % 5 == 0
+    return _luhn_is_valid(digits)

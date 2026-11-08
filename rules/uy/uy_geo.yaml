@@ -1,0 +1,17 @@
+name: uy-geo
+description: Uruguayan geographic identifiers
+context: geo
+lang: es
+country_code: uy
+rules:
+  uyiso3166compactvalue:
+    key: iso3166code_compact
+    name: Uruguayan department as an ISO 3166-2 code without the hyphen (UYAR) by field name
+    rule: 'UY[A-Z]{2}'
+    type: data
+    match: regex
+    minlen: 4
+    maxlen: 4
+    fieldrule: depto,departamento,cod_depto,codigo_departamento,iso_depto
+    fieldrulematch: text
+    priority: 1

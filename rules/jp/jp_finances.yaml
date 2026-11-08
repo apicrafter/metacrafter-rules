@@ -26,4 +26,10 @@ rules:
     type: field
     match: text
     priority: 1
-
+  jpcnknown:
+    key: jp_cn
+    name: Japanese corporate number (法人番号) by known name
+    rule: 法人番号,法人番号（13桁）,houjin_bangou,hojin_bango,corporate_number
+    type: field
+    match: text
+    priority: 1

@@ -1,0 +1,15 @@
+name: br-industry
+description: Brazilian industry identifiers
+context: industry
+lang: pt
+country_code: br
+rules:
+  branpauthorizationvalue:
+    key: br_anp_authorization
+    name: ANP authorisation number (PR/AC0167611)
+    rule: '[A-Z]{2}/[A-Z]{2}\d{7}'
+    type: data
+    match: regex
+    minlen: 12
+    maxlen: 12
+    priority: 1

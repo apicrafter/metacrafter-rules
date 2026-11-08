@@ -14,10 +14,15 @@ rules:
   ukwardnamebyknown:
     key: ukwardname
     name: UK ward name by known name
-    match: text
-    type: field
+    # A bare ward holds a ward number in Toronto (3, 8): the values must be names.
+    match: func
+    type: data
     priority: 1
-    rule: ward name,ward_name,wardname,ward
+    rule: metacrafterext.rules.common.generic.has_letters
+    minlen: 1
+    maxlen: 200
+    fieldrule: ward name,ward_name,wardname,ward
+    fieldrulematch: text
   ukpostcodefield:
     key: ukpostalcode
     name: UK postal code by field name

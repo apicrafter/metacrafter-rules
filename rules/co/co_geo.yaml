@@ -1,0 +1,17 @@
+name: co-geo
+description: Colombian geographic identifiers
+context: geo
+lang: es
+country_code: co
+rules:
+  codivipolavalue:
+    key: co_divipola
+    name: Colombian DIVIPOLA municipality code by field name and value
+    rule: '\d{5}'
+    type: data
+    match: regex
+    minlen: 5
+    maxlen: 5
+    fieldrule: divipola,cod_divipola,codigo_divipola,cod_mpio,codigo_municipio,cod_municipio,cod_dane,codigo_dane,cod_dane_municipio,mpio_cdpmp,municipio_prestador,municipiosede
+    fieldrulematch: text
+    priority: 1
