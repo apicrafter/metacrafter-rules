@@ -27,3 +27,23 @@ rules:
     type: field
     match: text
     priority: 1
+  czruianaddresspointbyfield:
+    key: cz_ruian_address_point
+    name: Czech RÚIAN address point code by field name
+    rule: adresnibod,adresni_bod,adresní bod,kod_adm,kód_adm,kód adresního místa,kod adresniho mista,kod_adresniho_mista,adresni_misto_kod,ruian_adm,kod_adresniho_bodu
+    type: field
+    match: text
+    priority: 1
+  czruianaddresspointvalue:
+    key: cz_ruian_address_point
+    name: Czech RÚIAN address point code by field name and value
+    # The codes pass the IČO check digit, so the cz_ico detector reports them without
+    # field-name evidence; this rule names them (#61, #63).
+    rule: \d{1,9}
+    type: data
+    match: regex
+    minlen: 1
+    maxlen: 9
+    fieldrule: adresnibod,adresni_bod,adresní bod,kod_adm,kód_adm,kód adresního místa,kod adresniho mista,kod_adresniho_mista,adresni_misto_kod,ruian_adm,kod_adresniho_bodu
+    fieldrulematch: text
+    priority: 1

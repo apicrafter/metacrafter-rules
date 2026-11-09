@@ -1,0 +1,17 @@
+name: rs-education
+description: Serbian education identifiers
+context: education
+lang: sr
+country_code: rs
+rules:
+  rsjispidvalue:
+    key: rs_jisp_id
+    name: Serbian JISP institution id by field name and value
+    rule: \d{1,5}
+    type: data
+    match: regex
+    minlen: 1
+    maxlen: 5
+    fieldrule: jisp id,jisp_id,jisp,jisp šifra,jisp_sifra,šifra jisp
+    fieldrulematch: text
+    priority: 1

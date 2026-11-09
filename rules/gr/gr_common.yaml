@@ -1,0 +1,27 @@
+name: gr-common
+description: Greek register and school identifiers
+context: common
+lang: el
+country_code: gr
+rules:
+  grgemibyfield:
+    key: gr_gemi
+    name: Greek General Commercial Registry number (ΓΕΜΗ) by field name
+    # Αριθμός Γ.Ε.ΜΗ.: 9 to 12 digits (sheets drop the leading zero). The chamber or court
+    # column next to it (Υ.Γ.Ε.ΜΗ.) holds names, which the validator rejects.
+    rule: (?i)(?:.*[^a-zα-ωά-ώ])?(?:γ\.?ε\.?μ\.?η\.?|gemi)(?:[^a-zα-ωά-ώ].*)?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.identifiers.validate_gr_gemi
+    priority: 1
+  grschoolcodevalue:
+    key: gr_school_code
+    name: Greek Ministry of Education school code by field name and value
+    rule: 9\d{5,6}
+    type: data
+    match: regex
+    minlen: 6
+    maxlen: 7
+    fieldrule: school_code,κωδικός σχολείου,κωδικός σχολικής μονάδας,κωδικος σχολειου,κωδικός μονάδας,kodikos_sxoleiou
+    fieldrulematch: text
+    priority: 1

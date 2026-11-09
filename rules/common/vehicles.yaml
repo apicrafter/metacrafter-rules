@@ -8,6 +8,8 @@ rules:
     key: vehiclenumber
     name: Vehicle number by known fieldnames
     rule: vehiclenumber,vehicle number,vehicle_number,license_plate,plate_number,registration_plate,reg_plate,vehicle_id,car_number,auto_number,vehicle_registration,plate,license,registration,vehicle_plate_number
+    # A license field of cc-by or license URLs holds no number plates (#60).
+    validator: metacrafterext.rules.common.generic.validate_vehicle_number_text
     match: text
     type: field
     priority: 1

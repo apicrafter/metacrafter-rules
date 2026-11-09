@@ -9,6 +9,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Rules for the datatypes of metacrafter-registry #161 and #163-#168** (#62, #63), from the
+  second metacrafter-testdata baseline. Codes of digits are value rules guarded by field names:
+  - registers and identifiers: NTEE codes, GLEIF registration authority codes (`RA000554`, by
+    value), Bank of Russia registration numbers (`3553-К`, `3349/76`), Greek ΓΕΜΗ numbers (by
+    the name `Αριθμός Γ.Ε.ΜΗ.` with a value check, new `rules/gr/`), NZ Companies Office
+    numbers (new `rules/nz/`), EU PICs and grant agreement numbers (`rules/eu/eu_funding.yaml`),
+    Turkish İKN, Romanian LMI codes (by value, new `rules/ro/`), Lithuanian KVR codes (new
+    `rules/lt/`), Czech library numbers;
+  - bank codes: Hungarian routing codes with their check digit (`validate_hu_giro`), Ukrainian
+    MFO, Indian MICR;
+  - schools and health facilities: Greek school codes, SIIIR and SIRUES (RO), JISP (new
+    `rules/rs/`), oppilaitosnumero (FI), EMIS (new `rules/za/`), NPSN and puskesmas codes (ID),
+    Kenya MFL codes (new `rules/ke/`), NEAK codes (HU), KCB codes (VN);
+  - administrative and address codes: Bulgarian oblast, obshtina and kmetstvo codes (new
+    `rules/bg/`), Hungarian járás codes, EHAK and ADS ids (new `rules/ee/`), Swedish länskod,
+    Lithuanian municipality codes, Eurostat LAU codes, OCHA p-codes, `admin_area_3` by name
+    (kecamatan, tambon), RÚIAN address point codes (by name and value, so they are no longer
+    `cz_ico`), Latvian VAR address codes; Canadian province codes (`caprovincecode`);
+  - classifications and values: KPVED (new `rules/kz/`), EVRK 2, SSYK, EV connector types
+    (`validate_ev_connectors`: `Typ 2;CCS2;CHAdeMO`), RINF operational point ids, Excel serial
+    dates in date fields, Thai Buddhist-era years, Arabic month names, LIBRIS URIs, Creative
+    Commons licenses (`content_license`, by value), GADM GIDs, Darwin Core taxonomic status and
+    taxon rank.
+
 - **Rules for the datatypes of metacrafter-registry #154-#158** (#58), found in the
   metacrafter-testdata baseline. Most are value rules guarded by field names:
   - transport: GTFS `location_type` and `wheelchair_boarding` (padded values too), IFOPT/DHID
@@ -41,6 +65,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- **Field-name rules on parts of names** (#60):
+  - `category`, `city` and `orgname` by name need their word in the last part of a flattened
+    name: the ROR columns `external_ids.type.grid.all` and `links.type.website` are no
+    categories;
+  - field rules check their values with a `validator` (metacrafter keeps a name match when at
+    least half of the values pass; older versions ignore it): `orgname` needs names
+    (`validate_name_text`: not the IRS `ORGANIZATION` codes 1, 2, 5, not OpenAlex URLs), `city`
+    and the new `province` need place names (`validate_place_name`: not numeric city ids or
+    free-text localities), `date` by name is not a column of years (`validate_not_bare_year`),
+    `software_license` and `vehiclenumber` by `license` are not Creative Commons licenses or
+    their URLs, `isbn10` by name needs ISBN-10 values, `bic` by name (now also `BIC code`,
+    `BIC kód (SWIFT)`, `@SWBIC`) needs BICs;
+  - a bare `province` is `province`, not an Indian `state`; `suburb` is not an Australian
+    `city`; `Registration_number` is not a `license_number`; a bare `isbn` is `isbn`, not
+    `isbn10`; Latvian `Nosaukums` is `name` (`rules/lv`), not `orgname`.
+- **Value rules that labelled other codes** (#61):
+  - `ninumber` by value needs the suffix letter (GLEIF codes `RA000554` are not NINOs);
+  - `bic` by value needs a digit in the location or branch code or the branch `XXX`: status
+    words (`ACCEPTED`, `DECISION`, `REORGANIZED`) have the shape of a BIC of letters; BICs of
+    letters only are found by name;
+  - `isrc` rejects values that pass the ISIN check digit with an ISO country code;
+  - `orgname` by legal form rejects names of shares (`Registered Shares`, `Inhaber-Aktien`,
+    `Ord Shs`, `o.N.`);
+  - `seorgnumber` checks the third digit and the Luhn digit (`validate_se_orgnr`), US DEA
+    numbers their check digit (`validate_us_dea`); Polish passports, Turkish tax numbers and
+    Canadian extra-provincial numbers need their field names; `ukwardname` no longer takes a
+    bare `ward`, `rusregioncode` a bare `region` or `region_code`;
+  - `semver` rejects the open-ended date `31.12.9999`; `ruokvknown` lists `usd` (was `usb`).
 - **Identifier rules that matched other codes** (#56):
   - `imei` needs 15 digits: 14-digit SIRET, CNPJ and PDL numbers are not IMEIs;
   - `mongodbid` by field name needs a 24-hex ObjectId (ArcGIS `OBJECTID`, CKAN `_id`);

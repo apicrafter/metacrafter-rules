@@ -15,6 +15,8 @@ rules:
     key: date
     name: Date by known name
     rule: date,created_date,creation_date,end_date,responsedate,createddate,completiondatem,start_date,end_date,report_date,actiondate,issue_date,closed_date,due_date,date_of_last_change,claimdate
+    # A date field of years (LIBRIS date: 2024, [2024]) holds years (#60).
+    validator: metacrafterext.rules.common.generic.validate_not_bare_year
     type: field
     match: text
     priority: 1
@@ -219,4 +221,15 @@ rules:
     match: regex
     minlen: 7
     maxlen: 7
+    priority: 1
+  excelserialdatevalue:
+    key: excel_serial_date
+    name: Date as an Excel serial day number (36872) by field name and value
+    rule: '[1-5]\d{4}'
+    type: data
+    match: regex
+    minlen: 5
+    maxlen: 5
+    fieldrule: date,дата,data,fecha,datum,contract_date,date_contract,дата договора,дата_договора,дата контракта,күні
+    fieldrulematch: text
     priority: 1

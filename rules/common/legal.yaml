@@ -35,8 +35,18 @@ rules:
   licensenumberknown:
     key: license_number
     name: License number by known name
-    rule: license_number,license_no,licence_number,permit_number,registration_number
+    rule: license_number,license_no,licence_number,permit_number
     type: field
     match: text
     priority: 1
 
+  contentlicensevalue:
+    key: content_license
+    name: Creative Commons license by short id or deed URL (cc-by, CC0-1.0, creativecommons.org/licenses/...)
+    # Licenses of works and records (OpenAlex, GBIF); software licenses are software_license (#60, #62).
+    rule: metacrafterext.rules.common.generic.validate_content_license
+    type: data
+    match: func
+    minlen: 3
+    maxlen: 120
+    priority: 1

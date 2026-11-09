@@ -139,6 +139,8 @@ rules:
     is_pii: true
     name: City/town name by field name
     rule: town,city,cityname,location (city),location_city,location_1_city,address_city,city_name
+    # Numeric city ids (Kirkanta, HayPost) are not city names (#60).
+    validator: metacrafterext.rules.common.generic.validate_place_name
     match: text
     type: field
     priority: 1
@@ -283,4 +285,32 @@ rules:
     rule: (?i)(?:\d+\.\s*)?street[ _.-]?address(?:[ _.-]?[12])?|address[ _.-]?(?:line[ _.-]?)?[12]|(?:company|business|mailing|registered|postal)[ _.-]?address(?:[ _.-]?[12])?
     type: field
     match: regex
+    priority: 1
+  gadmgidvalue:
+    key: gadm_gid
+    name: GADM area id (VNM.25.13_1)
+    rule: '[A-Z]{3}(?:\.\d+)+_\d+'
+    type: data
+    match: regex
+    minlen: 7
+    maxlen: 40
+    priority: 1
+  hdxpcodevalue:
+    key: hdx_pcode
+    name: OCHA place code (GE11) by field name and value
+    rule: '[A-Z]{2}\d{1,12}'
+    type: data
+    match: regex
+    minlen: 3
+    maxlen: 14
+    fieldrule: adm1_pcode,adm2_pcode,adm3_pcode,adm4_pcode,admin1pcode,admin2pcode,admin3pcode,admin4pcode,admin1_pcode,admin2_pcode,admin3_pcode,admin4_pcode,pcode,p_code,p-code
+    fieldrulematch: text
+    priority: 1
+  adminarea3byfield:
+    key: admin_area_3
+    name: Third-level administrative division (kecamatan, tambon) by field name
+    rule: kecamatan,nama_kecamatan,nm_kecamatan,kecamatan_nama,nama kecamatan,tambon,tambon_name,ตำบล,ตำบล/แขวง,แขวง/ตำบล,thathmblnm
+    type: field
+    match: text
+    validator: metacrafterext.rules.common.generic.validate_place_name
     priority: 1

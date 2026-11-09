@@ -15,3 +15,13 @@ rules:
     fieldrule: mcode,code_mun,code_municipalite,code_municipalité,code géographique,code_geographique,code_geo_mun
     fieldrulematch: text
     priority: 1
+  caprovincecodevalue:
+    key: caprovincecode
+    name: Canadian province or territory code (ON, BC) by field name and value
+    # Canadian province codes in a province field, not Indian states (#60).
+    rule: AB,BC,MB,NB,NL,NS,NT,NU,ON,PE,QC,SK,YT
+    type: data
+    match: text
+    fieldrule: province,prov,province_code,province/territory,province_territory,province_or_territory,prov_terr,provterr,province / territoire,province_territoire
+    fieldrulematch: text
+    priority: 1

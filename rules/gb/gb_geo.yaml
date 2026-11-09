@@ -21,7 +21,8 @@ rules:
     rule: metacrafterext.rules.common.generic.has_letters
     minlen: 1
     maxlen: 200
-    fieldrule: ward name,ward_name,wardname,ward
+    # A bare Ward is any country's ward (Kenyan wards, #61); ONS names it WDyyNM.
+    fieldrule: ward name,ward_name,wardname,wd21nm,wd22nm,wd23nm,wd24nm,wd25nm
     fieldrulematch: text
   ukpostcodefield:
     key: ukpostalcode

@@ -143,3 +143,36 @@ rules:
     type: field
     match: text
     priority: 1
+  dwctaxonomicstatusvalue:
+    key: dwc_taxonomic_status
+    name: Darwin Core taxonomic status (ACCEPTED, SYNONYM) by field name and value
+    # ACCEPTED is a taxonomic status here, not a BIC (#61, #62).
+    rule: accepted,synonym,doubtful,heterotypic_synonym,homotypic_synonym,proparte_synonym,misapplied,heterotypicsynonym,homotypicsynonym,propartesynonym
+    type: data
+    match: text
+    fieldrule: taxonomicstatus,taxonomic_status,taxonomic status,taxon_status,taxonstatus,dwc:taxonomicstatus
+    fieldrulematch: text
+    priority: 1
+  dwctaxonomicstatusknown:
+    key: dwc_taxonomic_status
+    name: Darwin Core taxonomic status by field name
+    rule: taxonomicstatus,taxonomic_status,dwc:taxonomicstatus
+    type: field
+    match: text
+    priority: 1
+  dwctaxonrankvalue:
+    key: dwc_taxon_rank
+    name: Darwin Core taxon rank (SPECIES, GENUS) by field name and value
+    rule: domain,superkingdom,kingdom,subkingdom,superphylum,phylum,subphylum,superclass,class,subclass,infraclass,superorder,order,suborder,infraorder,superfamily,family,subfamily,tribe,subtribe,genus,subgenus,section,series,species,subspecies,variety,subvariety,form,subform,cultivar,strain,unranked,infraspecific_name,species_aggregate
+    type: data
+    match: text
+    fieldrule: taxonrank,taxon_rank,taxonomic_rank,taxonomic rank,verbatimtaxonrank,dwc:taxonrank,rank
+    fieldrulematch: text
+    priority: 1
+  dwctaxonrankknown:
+    key: dwc_taxon_rank
+    name: Darwin Core taxon rank by field name
+    rule: taxonrank,taxon_rank,dwc:taxonrank,taxonomic_rank
+    type: field
+    match: text
+    priority: 1

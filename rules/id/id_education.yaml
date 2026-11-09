@@ -1,0 +1,17 @@
+name: id-education
+description: Indonesian education identifiers
+context: education
+lang: id
+country_code: id
+rules:
+  idnpsnvalue:
+    key: id_npsn
+    name: Indonesian national school number (NPSN) by field name and value
+    rule: \d{8}
+    type: data
+    match: regex
+    minlen: 8
+    maxlen: 8
+    fieldrule: npsn,nomor pokok sekolah nasional,no_npsn,npsn_sekolah
+    fieldrulematch: text
+    priority: 1

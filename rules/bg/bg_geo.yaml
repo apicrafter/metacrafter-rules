@@ -1,0 +1,39 @@
+name: bg-geo
+description: Bulgarian NSI (EKATTE) administrative codes
+context: geo
+lang: bg
+country_code: bg
+rules:
+  bgoblastcodevalue:
+    key: bg_nsi_oblast_code
+    name: Bulgarian oblast code (VTR) by field name and value
+    rule: '[A-Z]{3}'
+    type: data
+    match: regex
+    minlen: 3
+    maxlen: 3
+    fieldrule: oblast,oblast_code,област,код на област,kod_oblast,oblast code
+    fieldrulematch: text
+    priority: 1
+  bgobshtinacodevalue:
+    key: bg_nsi_obshtina_code
+    name: Bulgarian municipality code (VTR13) by field name and value
+    rule: '[A-Z]{3}\d{2}'
+    type: data
+    match: regex
+    minlen: 5
+    maxlen: 5
+    fieldrule: obshtina,obshtina_code,община,код на община,kod_obshtina
+    fieldrulematch: text
+    priority: 1
+  bgkmetstvocodevalue:
+    key: bg_nsi_kmetstvo_code
+    name: Bulgarian mayoralty code (VTR13-00) by field name and value
+    rule: '[A-Z]{3}\d{2}-\d{2}'
+    type: data
+    match: regex
+    minlen: 8
+    maxlen: 8
+    fieldrule: kmetstvo,kmetstvo_code,кметство,код на кметство,kod_kmetstvo
+    fieldrulematch: text
+    priority: 1

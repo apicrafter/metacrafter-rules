@@ -44,3 +44,13 @@ rules:
     type: field
     rule: companyId,companyid,company_companyid,company_recid
     priority: 1
+  gleifracodevalue:
+    key: gleif_ra_code
+    name: GLEIF registration authority code (RA000554)
+    # GLEIF LEI records: registeredAt.id and validatedAt.id. Not a UK NINO (#61, #62).
+    rule: RA\d{6}
+    type: data
+    match: regex
+    minlen: 8
+    maxlen: 8
+    priority: 1

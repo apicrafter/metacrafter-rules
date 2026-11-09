@@ -1,0 +1,17 @@
+name: kz-industry
+description: Kazakh product classification
+context: industry
+lang: kk
+country_code: kz
+rules:
+  kzkpvedvalue:
+    key: kz_kpved
+    name: Kazakh product classification code (KPVED) by field name and value
+    rule: '[A-U]|\d{2,8}'
+    type: data
+    match: regex
+    minlen: 1
+    maxlen: 8
+    fieldrule: кпвэд,код кпвэд,код_кпвэд,kpved,kpved_code,қэтөж,қэтөж коды
+    fieldrulematch: text
+    priority: 1

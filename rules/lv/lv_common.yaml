@@ -35,3 +35,22 @@ rules:
     fieldrule: registracijas_numurs,registracijas_numurs_mitnes_valsti,reģistrācijas numurs,reģistrācijas_numurs,registracijas_nr,uznemuma_registracijas_numurs
     fieldrulematch: text
     priority: 1
+  lvvaraddresscodevalue:
+    key: lv_var_address_code
+    name: Latvian State Address Register code by field name and value
+    rule: 1\d{8}
+    type: data
+    match: regex
+    minlen: 9
+    maxlen: 9
+    fieldrule: addressregistercode,address_register_code,adr_kods,adreses_kods,adresu_registra_kods,var_kods,adrese_kods
+    fieldrulematch: text
+    priority: 1
+  lvnamebyfield:
+    key: name
+    name: Name by Latvian field name (nosaukums)
+    # Nosaukums is any name: of a company, a monument or an institution (#60).
+    rule: nosaukums,nosaukums_lv
+    type: field
+    match: text
+    priority: 1

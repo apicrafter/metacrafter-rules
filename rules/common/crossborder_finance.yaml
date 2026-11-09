@@ -23,10 +23,13 @@ rules:
   bicfield:
     key: bic
     name: SWIFT/BIC code by field name
-    rule: bic,swift,swift_code,swiftbic
+    # BIC code, BIC kód (SWIFT), SWBICS/@SWBIC (Bank of Russia ED807): names with bic or swift,
+    # whose values are BICs.
+    rule: (?i)(?:.*[ _.@(-])?(?:bic|swift|swift_code|swiftbic|swbic|swbics)(?:[ _.)-].*)?
     type: field
     priority: 1
-    match: text
+    match: regex
+    validator: metacrafterext.rules.common.generic.validate_bic_country
   bicvalue:
     key: bic
     name: SWIFT/BIC code by value pattern
@@ -37,8 +40,10 @@ rules:
       exact=3))
     maxlen: 11
     minlen: 8
-    # Positions 5-6 are an ISO 3166 country code: STIMMBEZIRK is not a BIC.
-    validator: metacrafterext.rules.common.generic.validate_bic_country
+    # Positions 5-6 are an ISO 3166 country code: STIMMBEZIRK is not a BIC. By value alone
+    # a BIC needs a digit in its location or branch code (or branch XXX): ACCEPTED, DECISION
+    # and REORGANIZED have the shape of a BIC of letters (#61); bicfield finds those.
+    validator: metacrafterext.rules.common.generic.validate_bic_value
   leifield:
     key: lei
     name: Legal Entity Identifier by field name

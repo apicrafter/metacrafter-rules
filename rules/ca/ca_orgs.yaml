@@ -36,6 +36,10 @@ rules:
     match: ppr
     type: data
     rule: Word('ABCDEFGHIJKLMNOPQRSTUVWXYZ', exact=2) + Literal('-').suppress() + Word(nums, min=4, max=6)
+    # Two letters, a hyphen and digits are many codes (Latvian postcodes LV-1011, Slovenian
+    # register numbers IP-0001, #61): the field name must name the registration.
+    fieldrule: extra_provincial_registration_number,extraprovincial_registration_number,extra-provincial registration number,extra provincial registration number,extraprovincial_number,ep_registration_number,ep_number
+    fieldrulematch: text
     maxlen: 9
     minlen: 7
   cabuslicfield:

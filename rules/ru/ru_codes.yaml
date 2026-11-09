@@ -223,7 +223,7 @@ rules:
     type: data
     maxlen: 3
     minlen: 3
-    rule: rub,usb,eur,gbp,chf,cny
+    rule: rub,usd,eur,gbp,chf,cny
   ruokvknownname:
     key: okvname
     name: Russian OKV (currency code) alpha code by name

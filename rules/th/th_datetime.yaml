@@ -1,0 +1,17 @@
+name: th-datetime
+description: Thai calendar years
+context: datetime
+lang: th
+country_code: th
+rules:
+  thyearbevalue:
+    key: year_th_be
+    name: Year in the Thai Buddhist era (2561) by field name and value
+    rule: 25\d{2}
+    type: data
+    match: regex
+    minlen: 4
+    maxlen: 4
+    fieldrule: ปี,ปี พ.ศ.,ปีพ.ศ.,พ.ศ.,year_be,be_year,buddhist_year
+    fieldrulematch: text
+    priority: 1

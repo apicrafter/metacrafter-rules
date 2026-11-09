@@ -21,7 +21,7 @@ rules:
   instateknown:
     key: state
     name: Indian state by known name
-    rule: state,state_name,province
+    rule: state,state_name
     type: field
     match: text
     priority: 1

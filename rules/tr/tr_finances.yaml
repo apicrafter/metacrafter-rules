@@ -18,6 +18,10 @@ rules:
     type: data
     rule: Word(nums, exact=10)
     validator: metacrafterext.rules.common.identifiers.validate_tr_vkn
+    # Ten digits pass the check by chance: a Latvian encumbrance code column of six values
+    # did (7314010204, #61). The field name must name a tax number.
+    fieldrule: vkn,vergi_no,vergino,vergi no,vergi numarası,vergi_numarasi,vergi kimlik no,vergi kimlik numarası,vergi_kimlik_no,tax_number,tax_no,taxno
+    fieldrulematch: text
     maxlen: 10
     minlen: 10
   trbankaccountfield:

@@ -1,0 +1,17 @@
+name: se-industry
+description: Swedish occupation classification
+context: industry
+lang: sv
+country_code: se
+rules:
+  sessykvalue:
+    key: se_ssyk
+    name: Swedish occupation code (SSYK 2012) by field name and value
+    rule: \d{1,4}
+    type: data
+    match: regex
+    minlen: 1
+    maxlen: 4
+    fieldrule: ssyk,ssyk_code,ssyk_kod,ssyk2012,ssyk 2012,ssyk-kod,yrkeskod_ssyk
+    fieldrulematch: text
+    priority: 1

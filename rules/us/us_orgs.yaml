@@ -15,3 +15,14 @@ rules:
     rule: metacrafterext.rules.en.orgs.is_us_orgname
 
   
+  usnteecodevalue:
+    key: us_ntee_code
+    name: NTEE code of a US nonprofit (B71Z, D200) by field name and value
+    rule: '[A-Z]\d{2}[A-Z0-9]?'
+    type: data
+    match: regex
+    minlen: 3
+    maxlen: 4
+    fieldrule: ntee_cd,ntee_code,ntee,nteecode,ntee code,ntee_classification
+    fieldrulematch: text
+    priority: 1

@@ -1,0 +1,17 @@
+name: eu-geo
+description: Eurostat geographic codes
+context: geo
+lang: en
+country_code: eu
+rules:
+  eulaucodevalue:
+    key: eu_lau_code
+    name: Eurostat LAU code with a country prefix (RO_1017) by field name and value
+    rule: '[A-Z]{2}_[0-9A-Z]{1,12}'
+    type: data
+    match: regex
+    minlen: 4
+    maxlen: 15
+    fieldrule: lau,lau_code,lau_id,lau code,gisco_id,lau_cod
+    fieldrulematch: text
+    priority: 1

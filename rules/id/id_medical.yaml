@@ -1,0 +1,17 @@
+name: id-medical
+description: Indonesian health facility codes
+context: medical
+lang: id
+country_code: id
+rules:
+  idpuskesmascodevalue:
+    key: id_puskesmas_code
+    name: Indonesian puskesmas code (P5201010101) by field name and value
+    rule: P\d{10}
+    type: data
+    match: regex
+    minlen: 11
+    maxlen: 11
+    fieldrule: kode_puske,kode_puskesmas,kode puskesmas,kd_puskesmas,kode_pkm,kodepuskesmas
+    fieldrulematch: text
+    priority: 1

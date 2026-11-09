@@ -99,6 +99,8 @@ rules:
     name: UK National Insurance Number by pattern
     match: ppr
     type: data
-    rule: Word("ABCEGHJKLMNPRSTWXYZ", exact=2) + Word(nums, exact=6) + Optional(Word("ABCD", exact=1))
+    # The suffix letter is required by value alone: GLEIF registration authority codes
+    # (RA000554) are two letters and six digits (#61).
+    rule: Word("ABCEGHJKLMNPRSTWXYZ", exact=2) + Word(nums, exact=6) + Word("ABCD", exact=1)
     maxlen: 9
-    minlen: 8
+    minlen: 9

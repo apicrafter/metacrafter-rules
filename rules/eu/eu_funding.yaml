@@ -1,0 +1,28 @@
+name: eu-funding
+description: EU funding programme identifiers (CORDIS)
+context: government
+lang: en
+country_code: eu
+rules:
+  eupicvalue:
+    key: eu_pic
+    name: EU Participant Identification Code (PIC) by field name and value
+    rule: \d{9}
+    type: data
+    match: regex
+    minlen: 9
+    maxlen: 9
+    fieldrule: pic,pic_code,pic code,pic_number,participant_identification_code,organisationid
+    fieldrulematch: text
+    priority: 1
+  eugrantagreementvalue:
+    key: eu_grant_agreement_number
+    name: EU framework programme project number by field name and value
+    rule: 101\d{6}|[1-9]\d{5}
+    type: data
+    match: regex
+    minlen: 6
+    maxlen: 9
+    fieldrule: projectid,grant_agreement_number,grant agreement number,grantagreementnumber,grant_agreement_id,ga_number,cordis_project_id
+    fieldrulematch: text
+    priority: 1

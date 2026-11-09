@@ -165,3 +165,25 @@ rules:
     type: field
     match: text
     priority: 1
+  evconnectortypevalue:
+    key: ev_connector_type
+    name: EV charging connector type (Typ 2;CCS2;CHAdeMO) by field name and value
+    rule: metacrafterext.rules.common.generic.validate_ev_connectors
+    type: data
+    match: func
+    minlen: 3
+    maxlen: 120
+    fieldrule: standard_konektoru,konektor,konektory,typ_konektoru,connector,connectors,connector_type,connectortype,connector_types,plug_type,plugtype,socket_type,sockettype,steckertyp,stecker,type_prise,conector,tipo_conector
+    fieldrulematch: text
+    priority: 1
+  erarinfopidvalue:
+    key: era_rinf_op_id
+    name: RINF operational point id (HR71402) by field name and value
+    rule: (?:[A-Z]{2})?[0-9A-Z]{1,10}
+    type: data
+    match: regex
+    minlen: 1
+    maxlen: 12
+    fieldrule: uopid,op_id,opid,rinf_op_id,unique_op_id,unique op id,oznaka mjesta,oznaka_mjesta
+    fieldrulematch: text
+    priority: 1

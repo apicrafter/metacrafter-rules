@@ -1,0 +1,17 @@
+name: tr-gov
+description: Turkish public procurement identifiers
+context: government
+lang: tr
+country_code: tr
+rules:
+  trikinvalue:
+    key: tr_ikn
+    name: Turkish public procurement registration number (İKN, 2026/1947326)
+    rule: \d{4}/\d{1,7}
+    type: data
+    match: regex
+    minlen: 6
+    maxlen: 12
+    fieldrule: ihaleno,ihale_no,ihale no,ikn,ihale kayıt numarası,ihale kayit numarasi,ihale_kayit_no,ihalekayitno,ihale kayıt no
+    fieldrulematch: text
+    priority: 1

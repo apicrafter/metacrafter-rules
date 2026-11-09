@@ -85,3 +85,14 @@ rules:
     fieldrule: гос_регистрация_выпуска,gos_registratsiya_vypuska
     fieldrulematch: text
     priority: 1
+  rucbrregnumvalue:
+    key: ru_cbr_regnum
+    name: Bank of Russia registration number of a credit institution (3553-К, 3349/76) by field name and value
+    rule: \d{1,4}(?:-[КK])?(?:/\d{1,4})?
+    type: data
+    match: regex
+    minlen: 1
+    maxlen: 10
+    fieldrule: regn,@regn,regnum,reg_num,regnumber,рег. номер,рег.номер,рег_номер,регистрационный номер,регистрационный_номер,регномер,рег. №,регистрационный номер кредитной организации
+    fieldrulematch: text
+    priority: 1

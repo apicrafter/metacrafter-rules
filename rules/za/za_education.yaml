@@ -1,0 +1,17 @@
+name: za-education
+description: South African education identifiers
+context: education
+lang: en
+country_code: za
+rules:
+  zaemisnumbervalue:
+    key: za_emis_number
+    name: South African EMIS school number by field name and value
+    rule: \d{9}
+    type: data
+    match: regex
+    minlen: 9
+    maxlen: 9
+    fieldrule: emis number,emis_number,emis,emis_no,emisno,natemis,emis_code,emis nr
+    fieldrulematch: text
+    priority: 1
