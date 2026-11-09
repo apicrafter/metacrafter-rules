@@ -37,3 +37,15 @@ rules:
     fieldrule: evrk_subclass_code,evrk_kodas,evrk kodas,evrk2_kodas,evrk,evrk_code,evrk2,veiklos_kodas
     fieldrulematch: text
     priority: 1
+  ltlegalformcodevalue:
+    key: lt_legal_form_code
+    name: Lithuanian legal form code (310, 520) by field name and value
+    # form_kodas of the JAR open data, teisine_forma of the economic entities register (#66)
+    rule: '[1-9]\d{2}'
+    type: data
+    match: regex
+    minlen: 3
+    maxlen: 3
+    fieldrule: form_kodas,forma_kodas,teisine_forma,teisinė_forma,teisine_forma_kodas,teisines_formos_kodas,teisinės_formos_kodas,tf_kodas
+    fieldrulematch: text
+    priority: 1

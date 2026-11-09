@@ -58,3 +58,14 @@ rules:
     maxlen: 10
     minlen: 5
     imprecise: 1
+  cacracharitycategoryvalue:
+    key: ca_cra_charity_category
+    name: CRA charity category code (0001, 0210) by field name and value
+    rule: '0[0-2]\d{2}'
+    type: data
+    match: regex
+    minlen: 4
+    maxlen: 4
+    fieldrule: category,category_code,categorycode,category code,charity_category,charity category,charity_category_code
+    fieldrulematch: text
+    priority: 1

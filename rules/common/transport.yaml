@@ -189,3 +189,17 @@ rules:
     fieldrule: uopid,op_id,opid,rinf_op_id,unique_op_id,unique op id
     fieldrulematch: text
     priority: 1
+  gtfsstopidbyfield:
+    key: gtfs_stop_id
+    name: GTFS stop id by stops.txt / stop_times.txt field name
+    rule: stop_id,parent_station,from_stop_id,to_stop_id
+    type: field
+    match: text
+    priority: 1
+  gtfszoneidbyfield:
+    key: gtfs_zone_id
+    name: GTFS fare zone id by field name
+    rule: zone_id,origin_id,destination_id,contains_id
+    type: field
+    match: text
+    priority: 1

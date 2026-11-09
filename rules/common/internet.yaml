@@ -246,3 +246,11 @@ rules:
     validator: metacrafterext.rules.common.internet.validate_torrent_info_hash
     fieldrule: torrent_hash,info_hash,btih,bt_hash,torrent_info_hash,bittorrent_hash,torrent_id
     fieldrulematch: text
+  wifissidbyfield:
+    key: wifi_ssid
+    name: Wi-Fi network name (SSID) by field name
+    rule: ssid,wifi_ssid,wlan_ssid,ssid_name,network_ssid,wifi ssid
+    type: field
+    match: text
+    validator: metacrafterext.rules.common.generic.validate_wifi_ssid
+    priority: 1

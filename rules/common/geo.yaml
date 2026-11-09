@@ -314,3 +314,20 @@ rules:
     match: text
     validator: metacrafterext.rules.common.generic.validate_place_name
     priority: 1
+  wkbbyvalue:
+    key: wkb
+    name: Well-known binary (WKB, EWKB) geometry as bytes or hexadecimal
+    rule: metacrafterext.rules.common.formats.validate_wkb
+    type: data
+    match: func
+    minlen: 18
+    maxlen: 100000
+    priority: 1
+  gmlposlistbyfield:
+    key: gml_poslist
+    name: GML coordinates (gml:pos, gml:posList) by element name
+    rule: (?i)(?:.*[.:])?pos(?:list)?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.formats.validate_gml_poslist
+    priority: 1

@@ -176,3 +176,50 @@ rules:
     type: field
     match: text
     priority: 1
+  oastatusbyfield:
+    key: oa_status
+    name: Open access status (Unpaywall, OpenAlex) by field name
+    rule: (?i)(?:.*\.)?(?:oa|open[ _]?access)[ _]?status
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.generic.validate_oa_status
+    priority: 1
+  taxonnamebyfield:
+    key: taxon_name
+    name: Higher taxon name by Darwin Core rank term (kingdom, family, genus)
+    rule: kingdom,phylum,subphylum,superclass,subclass,infraclass,superorder,suborder,infraorder,superfamily,family,subfamily,tribe,subtribe,genus,subgenus,dwc:kingdom,dwc:phylum,dwc:family,dwc:genus,regnum,familia
+    type: field
+    match: text
+    validator: metacrafterext.rules.common.generic.validate_taxon_name
+    priority: 1
+  taxonclassorderbyfield:
+    key: taxon_name
+    name: Class or order of a taxon by Darwin Core term
+    # class and order are other things too: the values need a Latin ending of these ranks
+    rule: class,order,dwc:class,dwc:order
+    type: field
+    match: text
+    validator: metacrafterext.rules.common.generic.validate_class_or_order_name
+    priority: 1
+  dwcoccurrenceidbyfield:
+    key: dwc_occurrence_id
+    name: Darwin Core occurrenceID by field name
+    rule: occurrenceid,dwc:occurrenceid
+    type: field
+    match: text
+    priority: 1
+  dwccatalognumberbyfield:
+    key: dwc_catalog_number
+    name: Darwin Core catalogNumber by field name
+    rule: catalognumber,dwc:catalognumber
+    type: field
+    match: text
+    priority: 1
+  dwcinstitutioncodebyfield:
+    key: dwc_institution_code
+    name: Darwin Core institutionCode by field name
+    rule: institutioncode,dwc:institutioncode,ownerinstitutioncode,dwc:ownerinstitutioncode
+    type: field
+    match: text
+    validator: metacrafterext.rules.common.generic.validate_institution_code
+    priority: 1

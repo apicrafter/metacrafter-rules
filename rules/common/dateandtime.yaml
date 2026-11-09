@@ -233,3 +233,11 @@ rules:
     fieldrule: date,дата,data,fecha,datum,contract_date,date_contract,дата договора,дата_договора,дата контракта,күні
     fieldrulematch: text
     priority: 1
+  schoolyearbyfield:
+    key: school_year
+    name: School or academic year (2025/26, 202526) by multilingual field name
+    rule: (?i)(?:.*\.)?(?:anno[ _]?scolas(?:tico)?|school[ _]?year|academic[ _]?year|schooljaar|schuljahr|ann[ée]e[ _]scolaire|a[ñn]o[ _]escolar|curso[ _](?:escolar|acad[ée]mico)|ano[ _]letivo|rok[ _]szkolny|[šs]koln[ií][ _]rok|учебный[ _]год|навчальний[ _]рік|tan[ée]v|l[äa]s[åa]r|lukuvuosi)
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.generic.validate_school_year
+    priority: 1

@@ -52,3 +52,13 @@ rules:
     type: field
     match: text
     priority: 1
+  itistatprovincebyfield:
+    key: it_istat_province_code
+    name: Italian ISTAT province code (001, 015) by field name
+    # Codice Provincia (Storico)(1) of the ISTAT municipality list; a sigla (TO) in a field of
+    # the same name is rejected by the validator (it_province_code).
+    rule: (?i)(?:codice|cod)[ _.]?prov(?:incia)?(?:[ _.]?istat)?(?:[ _]?\(?storico\)?)?(?:\(\d+\))?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.identifiers.validate_it_istat_province
+    priority: 1

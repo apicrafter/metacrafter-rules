@@ -35,3 +35,11 @@ rules:
     fieldrule: cod sirues,cod_sirues,sirues,codsirues
     fieldrulematch: text
     priority: 1
+  rocountycodebyfield:
+    key: ro_county_code
+    name: Romanian SIRUTA county number (1-52) by field name
+    rule: (?i)jud|cod[ _]?jude[tț]|jude[tț][ _]?cod|cod[ _]?jud|codjud
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.identifiers.validate_ro_county_code
+    priority: 1

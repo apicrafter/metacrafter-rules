@@ -54,3 +54,24 @@ rules:
     minlen: 8
     maxlen: 8
     priority: 1
+  legalformbyfield:
+    key: legal_form
+    name: Legal form name or abbreviation by multilingual field name
+    # Rechtsform, forma jurídica, forme juridique, νομική μορφή, teisinė forma, правовая форма; the
+    # Chilean company register keeps it in Codigo de sociedad (SpA, EIRL) and GLEIF in
+    # legalForm.other (#66). legalForm.id holds the ISO 20275 code (elf_code), which the
+    # validator rejects, like the digits of a legal form code column.
+    rule: (?i)(?:.*\.)?(?:legal[ _-]?form(?:[ _.-]?(?:name|other|description|desc|text))?|form_pavadinimas|teisin[eė][ _]forma(?:[ _]pavadinimas)?|teisin[eė]s[ _]formos[ _]pavadinimas|ν[οό]μικ[ηή][ _]μορφ[ηή]|rechtsform|rechtsvorm|forma[ _]jur[ií]dica|forme[ _]juridique|forma[ _]giuridica|natureza[ _]jur[ií]dica|forma[ _]prawna|pr[aá]vn[ií][ _]forma|juridisk[ _]form|yhti[öo]muoto|(?:организационно-)?правовая[ _]форма|опф|(?:c[oó]digo|tipo)[ _]de[ _]sociedad)
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.generic.validate_legal_form_text
+    priority: 1
+  gleifentitycategoryvalue:
+    key: gleif_entity_category
+    name: GLEIF legal entity category (GENERAL, FUND, BRANCH) in a category field
+    rule: GENERAL,FUND,BRANCH,SOLE_PROPRIETOR,RESIDENT_GOVERNMENT_ENTITY,INTERNATIONAL_ORGANIZATION
+    type: data
+    match: text
+    fieldrule: category,entitycategory,entity_category,entity category,legal_entity_category
+    fieldrulematch: text
+    priority: 1
