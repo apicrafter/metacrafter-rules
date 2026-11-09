@@ -104,7 +104,7 @@ NEW_TYPES = [
     ("common/transport.yaml", "evconnectortypevalue", "ev_connector_type",
      ["Typ 2;CCS2;CHAdeMO", "CCS2;;", "TYP 2;TYP 2;", "CCS2;ChadeMO;Typ 2"], ["230 V", ";;"], "standard_konektoru"),
     # #168
-    ("common/transport.yaml", "erarinfopidvalue", "era_rinf_op_id", ["HR71402", "71402"], ["hr-71402"], "Oznaka mjesta"),
+    ("common/transport.yaml", "erarinfopidvalue", "era_rinf_op_id", ["HR71402", "DE000BL"], ["71402", "hr-71402"], "UOPID"),
     ("common/dateandtime.yaml", "excelserialdatevalue", "excel_serial_date", ["36872", "42367"], ["2015", "62367"], "date"),
     ("th/th_datetime.yaml", "thyearbevalue", "year_th_be", ["2561", "2563"], ["2018"], "ปี"),
     ("ar/ar_datetime.yaml", "armonthvalue", "ar_month", ["مارس", "يوليوز", "دجنبر", "كانون الثاني"], ["رمضان"], None),
