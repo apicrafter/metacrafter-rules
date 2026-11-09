@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.0.13] - 2026-11-09
+
 ### Added
 
 - **Rules for the datatypes of metacrafter-registry #171-#174** (#66), from the third
@@ -38,6 +40,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   the field names it guards, and metacrafter after apicrafter/metacrafter#108 drops the
   unnamed ICD-10 match when the named rule matched at least as many values; older metacrafter
   reports both.
+
+### Fixed
+
+- **Rules that the registry examples of metacrafter-registry#175 contradicted**:
+  - `euidvalue` uses the BRIS form of the EUID record: the country and register code, a dot
+    and the number (`CYDRCOR.HE139104`, `DEX1517R.HRB395KI`, `BEKBOBCE.1014.559.919`); values
+    without the dot (`CYDRCORHE139104`, `FR1234567890`) no longer match;
+  - `cusipvalue` accepts CINS numbers, which start with a letter (`DUS0421C5`);
+  - `dehrbvalue` and `validate_de_hrb` accept the court before the register number
+    (`Aachen HRA 11223`, `Frankfurt/Oder GnR 11223`);
+  - `egibanvalue` needs the 29 characters of an Egyptian IBAN and checks its check digits
+    (one character short was accepted).
 
 ## [0.0.12] - 2026-11-09
 
