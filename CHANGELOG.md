@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.0.12] - 2026-11-09
+
 ### Added
 
 - **Rules for the datatypes of metacrafter-registry #161 and #163-#168** (#62, #63), from the
@@ -28,7 +30,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     (kecamatan, tambon), RÚIAN address point codes (by name and value, so they are no longer
     `cz_ico`), Latvian VAR address codes; Canadian province codes (`caprovincecode`);
   - classifications and values: KPVED (new `rules/kz/`), EVRK 2, SSYK, EV connector types
-    (`validate_ev_connectors`: `Typ 2;CCS2;CHAdeMO`), RINF operational point ids, Excel serial
+    (`validate_ev_connectors`: `Typ 2;CCS2;CHAdeMO`), RINF operational point ids (with the country prefix), Excel serial
     dates in date fields, Thai Buddhist-era years, Arabic month names, LIBRIS URIs, Creative
     Commons licenses (`content_license`, by value), GADM GIDs, Darwin Core taxonomic status and
     taxon rank.
