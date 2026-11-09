@@ -76,9 +76,12 @@ CASES = [
     ("common/internet.yaml", "asnbyprefixname",
      ["AS64496", "AS174", "AS4294967295"],
      ["AS0", "AS4294967296", "AS012"]),
-    ("de/de_tax.yaml", "dehrbvalue",
-     ["HRA 11223", "HRB 12345 B", "GnR 11223", "HRB12345", "VR 4711"],
-     ["HRC 44123", "H12345", "HRB 0123", "HRB 1234567"]),
+    ("us/us_finances.yaml", "cusipvalue",
+     ["037833100", "38259P508", "30303M102", "DUS0421C5", "91324PAE2"],
+     ["DUS0421CN"]),
+    ("eg/eg_finances.yaml", "egibanvalue",
+     ["EG380019000500000000263180002"],
+     ["EG38001900050000000026318000"]),
     ("de/de_tax.yaml", "deustvalue",
      ["DE136695976", "DE649565454"],
      ["DE13669597", "136695976", "DE136695978"]),
@@ -195,3 +198,24 @@ def test_modules_compile_without_syntax_warnings():
         with warnings.catch_warnings():
             warnings.simplefilter("error", SyntaxWarning)
             compile(path.read_text(encoding="utf-8"), str(path), "exec")
+
+
+# Regex rules (metacrafter-registry#175 examples): rule file, rule id, positives, negatives.
+REGEX_CASES = [
+    ("de/de_tax.yaml", "dehrbvalue",
+     ["HRA 11223", "HRB 12345 B", "GnR 11223", "HRB12345", "VR 4711", "Aachen HRA 11223",
+      "Frankfurt/Oder GnR 11223"],
+     ["HRC 44123", "H12345", "HRB 0123", "HRB 1234567", "Aachen HRC 44123"]),
+    ("eu/eu_tax.yaml", "euidvalue",
+     ["CYDRCOR.HE139104", "DKCVR.11845118", "DEX1517R.HRB395KI", "MTROC.C22796", "ELGEMI.077700527000",
+      "BEKBOBCE.1014.559.919"],
+     ["CYDRCORHE139104", "FR1234567890"]),
+]
+
+
+@pytest.mark.parametrize("relpath,rule_id,positives,negatives", REGEX_CASES, ids=[c[1] for c in REGEX_CASES])
+def test_regex_rule_on_registry_examples(relpath, rule_id, positives, negatives):
+    from tests.test_testdata_baseline import value_matches
+
+    assert [v for v in positives if not value_matches(relpath, rule_id, v)] == []
+    assert [v for v in negatives if value_matches(relpath, rule_id, v)] == []

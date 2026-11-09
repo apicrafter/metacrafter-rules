@@ -52,7 +52,8 @@ rules:
     name: CUSIP by pattern
     match: ppr
     type: data
-    rule: Word(nums, exact=3) + Word(alphanums, exact=2) + Word(alphanums + '*@#', exact=3) + Word(nums, exact=1)
+    # CINS numbers start with a letter (DUS0421C5)
+    rule: Word(alphanums, exact=5) + Word(alphanums + '*@#', exact=3) + Word(nums, exact=1)
     maxlen: 9
     minlen: 9
     validator: metacrafterext.rules.us.validators.validate_cusip
