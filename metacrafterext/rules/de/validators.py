@@ -70,7 +70,10 @@ def _iso7064_mod11_10_check(digits):
     return (11 - product) % 10
 
 
-_DE_HRB_RE = re.compile(r'^(?:HRA|HRB|GnR|PR|VR) ?[1-9][0-9]{0,5}(?: ?[A-Z]{1,3})?$')
+_DE_HRB_RE = re.compile(
+    r'^(?:[A-ZÄÖÜ][A-Za-zÄÖÜäöüß.()/-]*(?: [A-Za-zÄÖÜäöüß.()/-]+)* )?'  # the court, optional
+    r'(?:HRA|HRB|GnR|PR|VR) ?[1-9][0-9]{0,5}(?: ?[A-Z]{1,3})?$'
+)
 
 
 def validate_de_hrb(value):

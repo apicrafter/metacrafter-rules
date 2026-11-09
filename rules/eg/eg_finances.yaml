@@ -46,9 +46,11 @@ rules:
   egibanvalue:
     key: egiban
     name: Egyptian IBAN by pattern
+    # 29 characters: EG, the check digits and 25 digits (SWIFT IBAN registry)
     match: ppr
     type: data
-    rule: Literal('EG') + Word(nums, exact=2) + Word(alphanums, exact=4) + Word(nums, min=16, max=24)
-    maxlen: 30
-    minlen: 28
+    rule: Literal('EG') + Word(nums, exact=2) + Word(alphanums, exact=4) + Word(nums, exact=21)
+    maxlen: 29
+    minlen: 29
+    validator: metacrafterext.rules.common.identifiers.validate_iban
 

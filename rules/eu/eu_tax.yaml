@@ -34,12 +34,13 @@ rules:
   euidvalue:
     key: euid
     name: European Unique Identifier (EUID) by pattern
-    match: ppr
+    # BRIS form of the registry record: country and register code, a dot and the number in
+    # that register (CYDRCOR.HE139104, DEX1517R.HRB395KI, BEKBOBCE.1014.559.919).
+    match: regex
     type: data
-    rule: Word('ABCDEFGHIJKLMNOPQRSTUVWXYZ', exact=2) + Word(alphanums, min=4, max=18)
-    maxlen: 20
-    minlen: 6
-    validator: metacrafterext.rules.common.identifiers.validate_euid
+    rule: '(?:ATBRA\.\d{6}-[01]{3}|BEKBOBCE\.[01]\d{3}\.\d{3}\.\d{3}|BGCOMREG\.\d{9}|CYDRCOR\.(?:AE|HE)\d{1,10}|CZVROR\.\d{8}|DE[A-Z][1-9]\d{3}[RV]?(?:_[A-Z][1-9]\d{3}[RV]?)?\.(?:G[ns]R|HR[AB]|[PV]R)\d+[A-Z]*|DKCVR\.\d{8}|EEARIREG\.\d{8}|ELGEMI\.\d{12}|ES[0-5]\d{4}\.\d{9}|FIFPRO\.\d{7}-\d|FR\d{4}\.\d{9}|HRSR\.\d{9}|HUOCCSZ\.\d{2}-\d{2}-\d{6}|IECRO\.\d{6,7}|ISREI\.[4-7]\d[01]\d{3}-\d{3}[09]|ITRI\.\d{11}|LIFL\.FL-\d{4}\.\d{3}\.\d{3}-\d|LTJAR\.\d{9}|LURCSL\.B\d{1,6}|LVUR\.(?:\d{9}|\d{11})|MTROC\.C\d{1,6}|NLNHR\.\d{8}|NOFOR\.\d{9}|PLKRS\.\d{10}|PTIRNMJ\.\d{9}|ROONRC\.[CFJ](?:\d{1,2}/\d{1,6}/\d{4}|\d{13})|SEBOLREG\.\d{10}|SIPRS\.\d{7}0{3}|SKORSR\.\d{1,18})'
+    maxlen: 40
+    minlen: 9
     priority: 1
     imprecise: 1
   eu_tax_ibanfield:
