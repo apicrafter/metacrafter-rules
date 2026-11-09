@@ -34,7 +34,9 @@ rules:
   isbn10field:
     key: isbn10
     name: International Standard Book Number (ISBN-10) by field name
-    rule: isbn10,isbn_10,isbn
+    # A bare isbn field is isbn (common/media.yaml): it holds ISBN-13 too (#60).
+    rule: isbn10,isbn_10
+    validator: metacrafterext.rules.common.identifiers.validate_isbn10
     match: text
     type: field
     priority: 1

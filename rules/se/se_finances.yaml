@@ -17,6 +17,9 @@ rules:
     match: ppr
     type: data
     rule: Word(nums, exact=6) + Literal('-') + Word(nums, exact=4)
+    # Third digit 2 or more and the Luhn check digit: Estonian procurement ids such as
+    # 315341-0000 have the shape (#61).
+    validator: metacrafterext.rules.common.identifiers.validate_se_orgnr
     maxlen: 11
     minlen: 11
   sebankaccountfield:

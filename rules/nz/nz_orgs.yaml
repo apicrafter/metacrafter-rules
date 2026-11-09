@@ -1,0 +1,17 @@
+name: nz-orgs
+description: New Zealand company and society identifiers
+context: common
+lang: en
+country_code: nz
+rules:
+  nzcompanynumbervalue:
+    key: nz_company_number
+    name: New Zealand Companies Office number by field name and value
+    rule: \d{1,8}
+    type: data
+    match: regex
+    minlen: 1
+    maxlen: 8
+    fieldrule: companiesofficenumber,companies_office_number,companies office number,nz_company_number
+    fieldrulematch: text
+    priority: 1

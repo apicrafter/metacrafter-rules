@@ -22,3 +22,14 @@ rules:
     validator: metacrafterext.rules.in.validators.validate_ifsc
     priority: 1
 
+  inmicrvalue:
+    key: in_micr
+    name: Indian MICR code by field name and value
+    rule: \d{9}
+    type: data
+    match: regex
+    minlen: 9
+    maxlen: 9
+    fieldrule: micr,micr_code,micr code,micr_no
+    fieldrulematch: text
+    priority: 1

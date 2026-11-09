@@ -1,0 +1,17 @@
+name: fi-education
+description: Finnish education identifiers
+context: education
+lang: fi
+country_code: fi
+rules:
+  fioppilaitosnumerovalue:
+    key: fi_oppilaitosnumero
+    name: Finnish educational institution number by field name and value
+    rule: \d{5}
+    type: data
+    match: regex
+    minlen: 5
+    maxlen: 5
+    fieldrule: oppilaitosnumero,oppilaitos_numero,oppilaitostunnus,oppilaitos_tunnus,oppilaitoskoodi,tunn
+    fieldrulematch: text
+    priority: 1

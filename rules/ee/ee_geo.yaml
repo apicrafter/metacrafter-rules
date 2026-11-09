@@ -1,0 +1,28 @@
+name: ee-geo
+description: Estonian administrative and address codes
+context: geo
+lang: et
+country_code: ee
+rules:
+  eeehakvalue:
+    key: ee_ehak
+    name: Estonian EHAK code by field name and value
+    rule: \d{4}
+    type: data
+    match: regex
+    minlen: 4
+    maxlen: 4
+    fieldrule: okood,mkood,akood,ehak,ehak_kood,ehak kood,ehak_code,omavalitsuse kood,maakonna kood
+    fieldrulematch: text
+    priority: 1
+  eeadsadridvalue:
+    key: ee_ads_adr_id
+    name: Estonian ADS address id by field name and value
+    rule: \d{1,9}
+    type: data
+    match: regex
+    minlen: 1
+    maxlen: 9
+    fieldrule: adr_id,ads_adr_id,adr id
+    fieldrulematch: text
+    priority: 1

@@ -1,0 +1,17 @@
+name: vn-medical
+description: Vietnamese health facility codes
+context: medical
+lang: vi
+country_code: vn
+rules:
+  vnkcbcodevalue:
+    key: vn_kcb_code
+    name: Vietnamese health insurance facility code (mã cơ sở KCB) by field name and value
+    rule: \d{5}
+    type: data
+    match: regex
+    minlen: 5
+    maxlen: 5
+    fieldrule: mã cơ sở kcb,mã cơ sở kcb (cũ),mã cơ sở kcb (mới),ma_co_so_kcb,ma co so kcb,mã kcb,ma_kcb,mã cskcb,ma_cskcb
+    fieldrulematch: text
+    priority: 1

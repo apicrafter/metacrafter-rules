@@ -1,0 +1,17 @@
+name: ke-medical
+description: Kenyan health facility codes
+context: medical
+lang: en
+country_code: ke
+rules:
+  kemflcodevalue:
+    key: ke_mfl_code
+    name: Kenya Master Facility List code by field name and value
+    rule: \d{5}
+    type: data
+    match: regex
+    minlen: 5
+    maxlen: 5
+    fieldrule: mfl_code,mflcode,mfl code,kmhfl_code,mfl,master facility list code
+    fieldrulematch: text
+    priority: 1

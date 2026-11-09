@@ -496,6 +496,9 @@ def validate_isrc(value):
     Args:
         value: ISRC string (12 characters, dashes and spaces are ignored)
 
+    A value with an ISO 3166 country code that passes the ISIN check digit is rejected:
+    ISINs have the same shape when their positions 6-12 are digits.
+
     Returns:
         bool: True if valid ISRC, False otherwise
     """
@@ -509,7 +512,12 @@ def validate_isrc(value):
         return False
 
     country = match.group(1)
-    return country in ISO_3166_1_ALPHA2 or country in ISRC_EXTRA_COUNTRY_CODES
+    if country not in ISO_3166_1_ALPHA2 and country not in ISRC_EXTRA_COUNTRY_CODES:
+        return False
+    # An ISIN has the same length and starts with a country code too; one with an ISO 3166
+    # country code that passes the ISIN check digit is an ISIN (DE0006201106), not an ISRC
+    # (metacrafter-rules #61). Codes of the ISRC Agency (UK, QM, ZZ) are not ISIN prefixes.
+    return not (country in ISO_3166_1_ALPHA2 and validate_isin(isrc))
 
 
 _MOD11_2_PATTERN = re.compile(r'^[0-9]{15}[0-9X]$')
@@ -2150,3 +2158,86 @@ def validate_cl_rut(value):
     check = 11 - total % 11
     expected = "0" if check == 11 else "K" if check == 10 else str(check)
     return match.group(2).upper() == expected
+
+
+def _luhn_ok(digits):
+    """True when a string of digits passes the Luhn (mod 10) check."""
+    total = 0
+    for i, ch in enumerate(reversed(digits)):
+        d = int(ch)
+        if i % 2:
+            d *= 2
+            if d > 9:
+                d -= 9
+        total += d
+    return total % 10 == 0
+
+
+_SE_ORGNR = re.compile(r'^(\d{6})-?(\d{4})$')
+
+
+def validate_se_orgnr(value):
+    """
+    Validates a Swedish organisation number (organisationsnummer): ten digits, written
+    NNNNNN-NNNN, whose third digit is 2 or more (personal identity numbers have a month
+    there) and whose last digit is the Luhn check digit.
+
+    Estonian procurement ids such as 315341-0000 have the same shape (metacrafter-rules #61).
+    """
+    if not isinstance(value, str):
+        return False
+    match = _SE_ORGNR.match(value.strip())
+    if match is None:
+        return False
+    digits = match.group(1) + match.group(2)
+    return int(digits[2]) >= 2 and _luhn_ok(digits)
+
+
+_US_DEA = re.compile(r'^([A-Z])([A-Z9])(\d{7})$')
+
+
+def validate_us_dea(value):
+    """
+    Validates a US DEA registration number: a registrant type letter, the first letter of
+    the registrant's last name (or 9), six digits and a check digit. The check digit is the
+    last digit of the sum of digits 1, 3 and 5 plus twice the sum of digits 2, 4 and 6.
+
+    A contract number such as EC2017481 has the shape but not the check digit
+    (metacrafter-rules #61).
+    """
+    if not isinstance(value, str):
+        return False
+    match = _US_DEA.match(value.strip().upper())
+    if match is None:
+        return False
+    d = [int(ch) for ch in match.group(3)]
+    return (d[0] + d[2] + d[4] + 2 * (d[1] + d[3] + d[5])) % 10 == d[6]
+
+
+def validate_hu_giro(value):
+    """
+    Validates a Hungarian bank branch routing code (pénzforgalmi jelzőszám): eight digits,
+    the first eight of an account number, whose digits weighted 9, 7, 3, 1, 9, 7, 3, 1 sum
+    to a multiple of 10 (the last digit is the check digit).
+    """
+    if not isinstance(value, str):
+        return False
+    digits = value.strip()
+    if len(digits) != 8 or not digits.isdigit():
+        return False
+    weights = (9, 7, 3, 1, 9, 7, 3, 1)
+    return sum(int(ch) * w for ch, w in zip(digits, weights)) % 10 == 0
+
+
+def validate_gr_gemi(value):
+    """
+    Validates the shape of a Greek General Commercial Registry number (ΓΕΜΗ): twelve
+    digits, or nine to eleven when a sheet stored it as a number and dropped the leading
+    zeros (51772519000). A float cell (51772519000.0) is read as its integer.
+    """
+    if not isinstance(value, str):
+        return False
+    text = value.strip()
+    if text.endswith(".0"):
+        text = text[:-2]
+    return 9 <= len(text) <= 12 and text.isdigit()

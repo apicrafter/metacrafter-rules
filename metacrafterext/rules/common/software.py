@@ -168,7 +168,8 @@ def _looks_like_dotted_date(value):
     a, b, c = (int(p) for p in parts)
 
     def _valid(day, month, year):
-        if not (1000 <= year <= 2999 and 1 <= month <= 12):
+        # 9999 is the open end of a validity period (31.12.9999, metacrafter-rules #61).
+        if not ((1000 <= year <= 2999 or year == 9999) and 1 <= month <= 12):
             return False
         days_in_month = [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
         return 1 <= day <= days_in_month[month - 1]

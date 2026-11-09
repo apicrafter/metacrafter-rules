@@ -14,7 +14,7 @@ rules:
   aucityknown:
     key: city
     name: Australian city by known name
-    rule: city,city_name,town,suburb
+    rule: city,city_name,town
     type: field
     match: text
     priority: 1

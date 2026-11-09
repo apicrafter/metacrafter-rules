@@ -39,6 +39,9 @@ rules:
     rule: Word(alphas, exact=2) + Word(nums, exact=7)
     maxlen: 9
     minlen: 9
+    # Two letters and seven digits are many codes (contract number EC2017481, #61).
+    fieldrule: paszport,nr_paszportu,numer_paszportu,numer paszportu,nr paszportu,seria i numer paszportu,passport,passport_number,passport_no,passport number
+    fieldrulematch: text
   pl_persons_pldriverlicfield:
     key: pldriverlic
     is_pii: True

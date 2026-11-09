@@ -354,6 +354,8 @@ rules:
     key: software_license
     name: Software license by field name
     rule: license,licence,software_license,license_type,lic_type,spdx_license,open_source_license
+    # Creative Commons licenses of data and works are content_license (#60).
+    validator: metacrafterext.rules.common.generic.validate_software_license_text
     type: field
     match: text
     priority: 1

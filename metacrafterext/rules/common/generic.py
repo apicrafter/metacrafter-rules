@@ -1,5 +1,6 @@
 """Validators of generic types: organization names with a legal form, EEA station codes,
-values with letters, BIC country codes and day-month-year dates."""
+values with letters, BIC country codes and day-month-year dates, and the value checks of
+field-name rules (names, place names, licenses, vehicle numbers, dates that are not years)."""
 import datetime
 import re
 
@@ -44,12 +45,27 @@ _PERSON_INITIALS = re.compile(
 _FORM_DESCRIPTION = re.compile(r"^[A-Z.&/]{2,8}\s+[-–]\s+\w")
 
 
+# Words of the name of a share or another security (ESMA FIRDS: "Veritas Pharma Inc.
+# Registered Shares o.N.", "Nemetschek SE Inhaber-Aktien o.N."): the instrument, not its issuer.
+_SECURITY = re.compile(
+    r"(?:\b(?:registered shares?|bearer shares?|ord(?:inary)? sh(?:are)?s|shs|adrs?|gdrs?|warrants?|"
+    r"aktien?|inhaber-aktien|namens-aktien|cmn|common stock)\b|\bo\.n\.)",
+    re.IGNORECASE,
+)
+
+
 def has_legal_form(value):
-    """True when a text holds the legal form of a company: SIA, GmbH, S.L., Ltd, 株式会社, ㈜, ООО."""
+    """True when a text holds the legal form of a company: SIA, GmbH, S.L., Ltd, 株式会社, ㈜, ООО.
+
+    The name of a share (Registered Shares, Inhaber-Aktien, Ord Shs, o.N.) is a financial
+    instrument, not an organization (metacrafter-rules #61).
+    """
     if not isinstance(value, str):
         return False
     text = value.strip()
     if len(text) < 4 or not any(ch.isalpha() for ch in text):
+        return False
+    if _SECURITY.search(text):
         return False
     if _ANYWHERE.search(text):
         return True
@@ -105,6 +121,19 @@ def validate_bic_country(value):
     return isinstance(value, str) and len(value) in (8, 11) and value[4:6] in _ISO_COUNTRIES
 
 
+def validate_bic_value(value):
+    """A BIC that a value alone shows: a country code in positions 5-6 and a digit in the
+    location or branch code, or the branch code XXX.
+
+    Status and type words have the shape of a BIC of letters (ACCEPTED, DECISION,
+    REORGANIZED) and pass the country check; BICs of letters only (DEUTDEFF) need a field
+    name (metacrafter-rules #61).
+    """
+    if not validate_bic_country(value):
+        return False
+    return any(ch.isdigit() for ch in value[6:]) or value.endswith("XXX")
+
+
 def validate_dmy_date(value):
     """A real calendar date written DD-MM-YYYY (or with dots or slashes), years 1000-2999."""
     if not isinstance(value, str):
@@ -121,3 +150,90 @@ def validate_dmy_date(value):
         return False
     return True
 
+
+
+_URL = re.compile(r"^(?:https?://|www\.)", re.IGNORECASE)
+
+
+def validate_name_text(value):
+    """A name: a text with letters that is not a URL or an e-mail address.
+
+    The value check of field-name rules for names: an ORGANIZATION column of codes (1, 2, 5)
+    or an OpenAlex host_organization URL is not an organization name (metacrafter-rules #60).
+    """
+    if not isinstance(value, str):
+        return False
+    text = value.strip()
+    if not any(ch.isalpha() for ch in text) or _URL.match(text) or "@" in text:
+        return False
+    return True
+
+
+def validate_place_name(value):
+    """A place name: a name (validate_name_text) of at most 60 characters with at most one
+    comma, not a two-letter code.
+
+    Numeric city ids (335), province codes (ON, BC) and free-text localities ("Gia Dinh Park,
+    Hoang Minh Giam Steet, ..., Ho Chi Minh City") are not names of a city or province
+    (metacrafter-rules #60).
+    """
+    if not validate_name_text(value):
+        return False
+    text = value.strip()
+    if len(text) > 60 or text.count(",") > 1:
+        return False
+    return not (len(text) <= 2 and text.isupper())
+
+
+_BARE_YEAR = re.compile(r"^[\[(]?\d{4}[\])]?\??$")
+
+
+def validate_not_bare_year(value):
+    """A date field value that is not only a year (2024, [2024]): those fields hold years."""
+    return isinstance(value, str) and bool(value.strip()) and not _BARE_YEAR.match(value.strip())
+
+
+# Creative Commons licenses and marks, by short id (cc-by, CC_BY_4_0, CC0-1.0) or deed URL.
+_CONTENT_LICENSE = re.compile(
+    r"^(?:cc[-_ ]?(?:by(?:[-_ ](?:sa|nc|nd|nc[-_ ]sa|nc[-_ ]nd))?|0|zero|pdm)(?:[-_ ]?\d[._]\d(?:[-_ ][a-z]{2,5})?)?"
+    r"|https?://(?:www\.)?creativecommons\.org/(?:licenses|publicdomain)/[a-z0-9./-]+)$",
+    re.IGNORECASE,
+)
+
+
+def validate_content_license(value):
+    """A Creative Commons license or mark by short id or deed URL (content_license)."""
+    return isinstance(value, str) and bool(_CONTENT_LICENSE.match(value.strip()))
+
+
+def validate_software_license_text(value):
+    """A value of a license field that may be a software license: not a Creative Commons
+    license (a data or content license) and not a URL of one (metacrafter-rules #60)."""
+    if not isinstance(value, str) or not value.strip():
+        return False
+    return not validate_content_license(value)
+
+
+def validate_vehicle_number_text(value):
+    """A vehicle registration number: 2-15 characters with a digit, not a URL. A license
+    field that holds cc-by or a license URL is not a number plate (metacrafter-rules #60)."""
+    if not isinstance(value, str):
+        return False
+    text = value.strip()
+    return 2 <= len(text) <= 15 and any(ch.isdigit() for ch in text) and "://" not in text
+
+
+_EV_CONNECTOR = re.compile(
+    r"^(?:(?:type|typ) ?[123]|ccs ?[12]?|ccs combo ?[12]|combo ?[12]|chademo|tesla|nacs|gb/t|schuko)$",
+    re.IGNORECASE,
+)
+
+
+def validate_ev_connectors(value):
+    """EV charging connector standards, one or more joined with semicolons (Typ 2;CCS2;CHAdeMO);
+    empty parts are allowed (CCS2;;), at least one part must name a connector."""
+    if not isinstance(value, str):
+        return False
+    parts = [p.strip() for p in value.split(";")]
+    named = [p for p in parts if p]
+    return bool(named) and all(_EV_CONNECTOR.match(p) for p in named)

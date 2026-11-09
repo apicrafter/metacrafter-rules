@@ -1,0 +1,15 @@
+name: se-culture
+description: Swedish library catalogue identifiers
+context: common
+lang: sv
+country_code: se
+rules:
+  selibrisidvalue:
+    key: libris_id
+    name: LIBRIS record URI (http://libris.kb.se/bib/...)
+    rule: https?://libris\.kb\.se/(?:bib|resource)/[0-9a-z]+
+    type: data
+    match: regex
+    minlen: 25
+    maxlen: 80
+    priority: 1

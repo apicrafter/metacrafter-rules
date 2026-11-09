@@ -1,0 +1,37 @@
+name: ro-common
+description: Romanian monument and school codes
+context: common
+lang: ro
+country_code: ro
+rules:
+  rolmicodevalue:
+    key: ro_lmi_code
+    name: Romanian historic monument code (IS-II-m-A-03957.01)
+    rule: '[A-Z]{1,2}-(?:I|II|III|IV)-[ams]-[AB]-\d{5}(?:\.\d{2,3})?'
+    type: data
+    match: regex
+    minlen: 13
+    maxlen: 22
+    priority: 1
+  rosiiircodevalue:
+    key: ro_siiir_code
+    name: Romanian SIIIR school code by field name and value
+    rule: \d{10}
+    type: data
+    match: regex
+    minlen: 10
+    maxlen: 10
+    fieldrule: cod siiir unitate,cod siiir pj,cod siiir,cod_siiir,siiir,cod_siiir_unitate,cod_siiir_pj,codsiiir
+    fieldrulematch: text
+    priority: 1
+  rosiruescodevalue:
+    key: ro_sirues_code
+    name: Romanian SIRUES school code by field name and value
+    rule: \d{6,7}
+    type: data
+    match: regex
+    minlen: 6
+    maxlen: 7
+    fieldrule: cod sirues,cod_sirues,sirues,codsirues
+    fieldrulematch: text
+    priority: 1

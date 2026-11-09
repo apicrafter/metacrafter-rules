@@ -1,0 +1,17 @@
+name: ua-finances
+description: Ukrainian bank codes
+context: finances
+lang: uk
+country_code: ua
+rules:
+  uamfovalue:
+    key: ua_mfo
+    name: Ukrainian bank MFO code by field name and value
+    rule: 3\d{5}
+    type: data
+    match: regex
+    minlen: 6
+    maxlen: 6
+    fieldrule: glmfo,mfo,мфо,код мфо,mfo_code,bank_mfo,kod_mfo,мфо банку
+    fieldrulematch: text
+    priority: 1

@@ -1,0 +1,19 @@
+name: se-geo
+description: Swedish administrative codes
+context: geo
+lang: sv
+country_code: se
+rules:
+  selanskodvalue:
+    key: se_lanskod
+    name: Swedish county code (länskod) by field name and value
+    # A bare region_code is any country's region code (Russian, Swedish): it is not
+    # enough to tell a länskod (#61, #63).
+    rule: 0[13-9]|1[02-47-9]|2[0-5]
+    type: data
+    match: regex
+    minlen: 2
+    maxlen: 2
+    fieldrule: länskod,lanskod,läns_kod,lans_kod,län_kod,lan_kod,länkod,lankod,län,lan,länsnummer,lansnummer,lan_code
+    fieldrulematch: text
+    priority: 1

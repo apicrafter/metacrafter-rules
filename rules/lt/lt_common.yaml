@@ -1,0 +1,39 @@
+name: lt-common
+description: Lithuanian register, municipality and activity codes
+context: common
+lang: lt
+country_code: lt
+rules:
+  ltkvrcodevalue:
+    key: lt_kvr_code
+    name: Lithuanian Register of Cultural Property code by field name and value
+    rule: \d{1,6}
+    type: data
+    match: regex
+    minlen: 1
+    maxlen: 6
+    fieldrule: unikalus_kodas,unikalus kodas,kvr_kodas,kvr kodas,kvr_unikalus_kodas,kvr unikalus kodas
+    fieldrulematch: text
+    priority: 1
+  ltmunicipalityvalue:
+    key: lt_municipality_code
+    name: Lithuanian municipality code by field name and value
+    rule: \d{2}
+    type: data
+    match: regex
+    minlen: 2
+    maxlen: 2
+    fieldrule: sav_kodas,savivaldybes_kodas,savivaldybės kodas,savivaldybes kodas,savivaldybės_kodas,sav_kod,savkodas
+    fieldrulematch: text
+    priority: 1
+  ltevrkvalue:
+    key: lt_evrk
+    name: Lithuanian EVRK 2 activity code (949900) by field name and value
+    rule: \d{6}
+    type: data
+    match: regex
+    minlen: 6
+    maxlen: 6
+    fieldrule: evrk_subclass_code,evrk_kodas,evrk kodas,evrk2_kodas,evrk,evrk_code,evrk2,veiklos_kodas
+    fieldrulematch: text
+    priority: 1

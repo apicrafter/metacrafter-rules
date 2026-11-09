@@ -1,0 +1,40 @@
+name: hu-common
+description: Hungarian bank, health care and district codes
+context: common
+lang: hu
+country_code: hu
+rules:
+  hugirocodevalue:
+    key: hu_giro_code
+    name: Hungarian bank branch routing code by field name and value
+    rule: \d{8}
+    type: data
+    match: regex
+    minlen: 8
+    maxlen: 8
+    validator: metacrafterext.rules.common.identifiers.validate_hu_giro
+    fieldrule: branch office code,pénzforgalmi jelzőszám,penzforgalmi jelzoszam,penzforgalmi_jelzoszam,giro code,giro_code,giro,bankfiók kód,bankfiok_kod
+    fieldrulematch: text
+    priority: 1
+  huneakcodevalue:
+    key: hu_neak_code
+    name: Hungarian NEAK health care institution code by field name and value
+    rule: '[A-Z0-9]\d{3}'
+    type: data
+    match: regex
+    minlen: 4
+    maxlen: 4
+    fieldrule: neak kód,neak_kod,neak kod,neak_code,neak code,oep kód,oep_kod
+    fieldrulematch: text
+    priority: 1
+  hujarascodevalue:
+    key: hu_jaras_code
+    name: Hungarian district (járás) code (085 0) by field name and value
+    rule: \d{3} \d
+    type: data
+    match: regex
+    minlen: 5
+    maxlen: 5
+    fieldrule: járás kódja,jaras kodja,jaras_kodja,járás kód,jaras_kod,járáskód,jaraskod
+    fieldrulematch: text
+    priority: 1

@@ -1,0 +1,17 @@
+name: cz-common
+description: Czech register identifiers
+context: common
+lang: cs
+country_code: cz
+rules:
+  czlibraryregnumvalue:
+    key: cz_library_registration_number
+    name: Czech library registration number by field name and value
+    rule: \d{1,4}
+    type: data
+    match: regex
+    minlen: 1
+    maxlen: 4
+    fieldrule: evidenční_číslo_knihovny,evidencni_cislo_knihovny,evidenční číslo knihovny,evidencni cislo knihovny,ev_cislo_knihovny,ev. číslo knihovny
+    fieldrulematch: text
+    priority: 1
