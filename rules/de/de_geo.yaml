@@ -72,3 +72,12 @@ rules:
     type: field
     match: text
     priority: 1
+  debundestagwahlkreisbyfield:
+    key: de_bundestag_wahlkreis
+    name: German Bundestag constituency (5 - Kiel) by field name
+    # Number with an optional name; constituencies of state elections have numbers of their own
+    rule: (?i)(?:bundestags?[ _-]?)?wahlkreis(?:[ _-]?(?:nr\.?|nummer))?|wkr(?:[ _-]?(?:nr\.?|nummer))?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.generic.validate_bundestag_wahlkreis
+    priority: 1

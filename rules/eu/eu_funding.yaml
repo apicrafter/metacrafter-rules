@@ -26,3 +26,12 @@ rules:
     fieldrule: projectid,grant_agreement_number,grant agreement number,grantagreementnumber,grant_agreement_id,ga_number,cordis_project_id
     fieldrulematch: text
     priority: 1
+  euorganisationactivitytypevalue:
+    key: eu_organisation_activity_type
+    name: EU framework programme participant type (HES, REC, PRC, PUB, OTH) by field name and value
+    rule: HES,REC,PRC,PUB,OTH
+    type: data
+    match: text
+    fieldrule: activitytype,activity_type,activity type,organisation_activity_type,organization_activity_type,participant_type
+    fieldrulematch: text
+    priority: 1

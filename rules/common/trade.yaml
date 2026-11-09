@@ -79,11 +79,12 @@ rules:
   unitofmeasurebyfield:
     key: unit_of_measure
     name: Unit of measure by field name
+    # also 単位 (Kyoto statistics: 人), Единица (Belarus air quality: мкг/м3), Einheit (#66)
     type: field
     match: regex
     priority: 1
     rule: >-
-      (?i)(?:unit[ _.-]?of[ _.-]?measure(?:ment)?|uom|measure(?:ment)?[ _.-]?unit|(?:quantity|qty)[ _.-]?unit)(?:[ _.-]?(?:code|name|cd))?
+      (?i)(?:unit[ _.-]?of[ _.-]?measure(?:ment)?|uom|measure(?:ment)?[ _.-]?unit|(?:quantity|qty)[ _.-]?unit|単位|单位|單位|ma(?:ß|ss)einheit|einheit|unit[ée] de mesure|unidad de medida|unit[àa] di misura|m[ée]rt[ée]kegys[ée]g|единица(?: измерения)?|одиниця(?: виміру)?|jednostka(?: miary)?|m[ěe]rn[áa] jednotka)(?:[ _.-]?(?:code|name|cd))?
   unitcodebyvalue:
     key: unece_rec20_unit_code
     name: UN/ECE Recommendation 20 unit code by value in a unit field

@@ -436,3 +436,29 @@ rules:
     fieldrule: stringid,contenttypeid,content_type_id,contenttype_id,ctid,content type id,contenttypeidstring
     fieldrulematch: text
     priority: 1
+  fileformatbyfield:
+    key: file_format
+    name: File format names (CSV, XLS, HTML,CSV,XLS,XML) by multilingual field name
+    rule: (?i)(?:.*\.)?(?:file[ _-]?formats?|formats?|data[ _-]?formats?|resource[ _-]?formats?|distribution[ _-]?formats?|dateiformat|formato|форматы?|формат[ _]данных|формат[ _]файла)
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.formats.validate_file_formats
+    priority: 1
+  jsontextbyvalue:
+    key: json_text
+    name: JSON object or array written as text
+    rule: metacrafterext.rules.common.formats.validate_json_text
+    type: data
+    match: func
+    minlen: 7
+    maxlen: 100000
+    priority: 2
+  xmltextbyvalue:
+    key: xml_text
+    name: XML element written as text (not HTML)
+    rule: metacrafterext.rules.common.formats.validate_xml_text
+    type: data
+    match: func
+    minlen: 4
+    maxlen: 100000
+    priority: 2

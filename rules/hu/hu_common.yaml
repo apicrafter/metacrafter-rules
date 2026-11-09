@@ -38,3 +38,20 @@ rules:
     fieldrule: járás kódja,jaras kodja,jaras_kodja,járás kód,jaras_kod,járáskód,jaraskod
     fieldrulematch: text
     priority: 1
+  hucountycodebyfield:
+    key: hu_county_code
+    name: Hungarian county number (01-20) by field name
+    # Megye of the NEAK lists holds the number; Megye megnevezése the name (hu_county)
+    rule: (?i)megye(?:[ _]?k[oó]d(?:ja)?)?|megyek[oó]d|megye[ _]sz[aá]m(?:a)?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.identifiers.validate_hu_county_code
+    priority: 1
+  huneakspecialtybyfield:
+    key: hu_neak_specialty_code
+    name: Hungarian NEAK specialty code (szakmakód) by field name
+    rule: (?i)szakmak[oó]d|szakma[ _]?k[oó]d(?:ja)?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.identifiers.validate_hu_neak_specialty
+    priority: 1

@@ -47,3 +47,11 @@ rules:
     fieldrule: adresnibod,adresni_bod,adresní bod,kod_adm,kód_adm,kód adresního místa,kod adresniho mista,kod_adresniho_mista,adresni_misto_kod,ruian_adm,kod_adresniho_bodu
     fieldrulematch: text
     priority: 1
+  czruiancastobcebyfield:
+    key: cz_ruian_cast_obce_code
+    name: Czech RÚIAN code of a part of a municipality by field name
+    rule: (?i)k[oó]d[ _]?[čc][aá]st(?:i)?[ _]?obce|[čc][aá]st[ _]?obce[ _]?k[oó]d|kod_cobce|cobce_kod
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.identifiers.validate_cz_cast_obce
+    priority: 1

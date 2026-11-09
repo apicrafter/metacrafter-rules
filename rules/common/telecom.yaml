@@ -94,3 +94,12 @@ rules:
     priority: 1
     validator: metacrafterext.rules.common.identifiers.validate_iccid
 
+  phoneareacodebyfield:
+    key: phone_area_code
+    name: Telephone area code by multilingual field name
+    # Telefonvorwahl (NRW school directory), area code, prefisso, indicatif, prefijo (#66)
+    rule: (?i)(?:telefon|telephone|phone|tel)?[ _-]?(?:vorwahl|area[ _-]?code|dial(?:l)?ing[ _-]?code|prefisso|indicatif|prefijo)|ortsvorwahl|vorwahl
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.generic.validate_phone_area_code
+    priority: 1

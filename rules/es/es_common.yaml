@@ -12,3 +12,12 @@ rules:
     type: field
     priority: 1
     match: text
+  esaplicacionpresupuestariabyfield:
+    key: es_aplicacion_presupuestaria
+    name: Spanish budget line (aplicación presupuestaria) by field name
+    # Madrid contract registers: one line per budget year, 2026 001130 - 33210 - 62999 (#66)
+    rule: (?i)aplicaci[oó]n(?:es)?[ _]presupuestarias?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.identifiers.validate_es_aplicacion_presupuestaria
+    priority: 1

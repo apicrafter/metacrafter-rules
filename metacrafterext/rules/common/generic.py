@@ -237,3 +237,89 @@ def validate_ev_connectors(value):
     parts = [p.strip() for p in value.split(";")]
     named = [p for p in parts if p]
     return bool(named) and all(_EV_CONNECTOR.match(p) for p in named)
+
+
+_ELF_LIKE = re.compile(r"^(?=.*\d)[A-Z0-9]{4}$")
+
+
+def validate_legal_form_text(value):
+    """A legal form written as a name or an abbreviation (SpA, Uždaroji akcinė bendrovė, ΝΠΔΔ,
+    Mutual Fund): text with letters, not a number, a four-character ISO 20275 code (K09K) or a URL.
+    A code with its name (310 - Uždaroji akcinė bendrovė) passes."""
+    text = str(value).strip()
+    if not 2 <= len(text) <= 100 or "://" in text or _ELF_LIKE.match(text):
+        return False
+    return any(ch.isalpha() for ch in text)
+
+
+_TAXON = re.compile(r"^[A-Z][a-zë]{2,39}$")
+# Endings of the names of classes and orders (Insecta, Mammalia, Aves, Magnoliopsida,
+# Hymenoptera, Passeriformes, Asparagales, Primates): a column named class or order that holds
+# school classes or sort orders (Economy, Standard, First) has other endings.
+_CLASS_ORDER = re.compile(r"(?:a|ae|es|ia|ida|ptera|formes|ales|opsida|phyceae|mycetes|ata|oda|ina|ea)$")
+
+
+def validate_taxon_name(value):
+    """The scientific name of a taxon above the species rank: one capitalized Latin word
+    (Animalia, Formicidae, Tetramorium). A binomial (Solenopsis geminata) is a species."""
+    return bool(_TAXON.match(str(value).strip()))
+
+
+def validate_class_or_order_name(value):
+    """The name of a class or an order: a taxon name with a Latin ending of these ranks."""
+    text = str(value).strip()
+    return bool(_TAXON.match(text) and _CLASS_ORDER.search(text))
+
+
+_INSTITUTION_CODE = re.compile(r"^(?=.*[A-Z])[A-Za-z][A-Za-z0-9&.\-]{0,15}$")
+
+
+def validate_institution_code(value):
+    """The acronym of an institution that holds collections (APQA, MVZ, NHMUK), not a number."""
+    return bool(_INSTITUTION_CODE.match(str(value).strip()))
+
+
+_OA_STATUS = frozenset(("gold", "diamond", "green", "hybrid", "bronze", "closed"))
+
+
+def validate_oa_status(value):
+    """An open access status of Unpaywall and OpenAlex (gold, green, hybrid, bronze, diamond, closed)."""
+    return str(value).strip().lower() in _OA_STATUS
+
+
+def validate_wifi_ssid(value):
+    """A Wi-Fi network name: 1 to 32 bytes of printable text, not a URL."""
+    text = str(value)
+    return 0 < len(text.encode("utf-8")) <= 32 and text.isprintable() and "://" not in text
+
+
+_SCHOOL_YEAR = re.compile(r"^((?:19|20)\d{2})(?:[/-]?(\d{2})|[/-]((?:19|20)\d{2}))$")
+
+
+def validate_school_year(value):
+    """A school or academic year of two consecutive years: 2025/26, 2025-2026, 202526."""
+    m = _SCHOOL_YEAR.match(str(value).strip())
+    if not m:
+        return False
+    start = int(m.group(1))
+    if m.group(3):
+        return int(m.group(3)) == start + 1
+    return int(m.group(2)) == (start + 1) % 100
+
+
+_AREA_CODE = re.compile(r"^(?:0[1-9]\d{1,4}|[2-9]\d{2})$")
+
+
+def validate_phone_area_code(value):
+    """A telephone area code without the subscriber number: 0 and two to five digits in national
+    formats (0221, 02151), three digits without a leading zero in North America (212)."""
+    return bool(_AREA_CODE.match(str(value).strip()))
+
+
+_WAHLKREIS = re.compile(r"^(\d{1,3})(?:\s*-\s*\S.*)?$")
+
+
+def validate_bundestag_wahlkreis(value):
+    """A Bundestag constituency number from 1 to 299, optionally with its name (5 - Kiel)."""
+    m = _WAHLKREIS.match(str(value).strip())
+    return bool(m) and 1 <= int(m.group(1)) <= 299

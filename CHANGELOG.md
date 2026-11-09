@@ -7,6 +7,38 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- **Rules for the datatypes of metacrafter-registry #171-#174** (#66), from the third
+  metacrafter-testdata pass:
+  - organisations: legal forms by multilingual field name (`Rechtsform`, `forma jurídica`,
+    `νομική μορφή`, `form_pavadinimas`, Chilean `Codigo de sociedad`, GLEIF `legalForm.other`;
+    the validator rejects ISO 20275 codes and digits), Lithuanian legal form codes, GLEIF entity
+    categories, the IRS EO BMF `SUBSECTION`, `FOUNDATION`, `GROUP` and `ACTIVITY` codes, CRA
+    charity categories, CORDIS participant types and Spanish budget lines (`APLICACION
+    PRESUPUESTARIA`, several lines with amounts);
+  - administrative codes: ISTAT province codes, Hungarian county numbers (`Megye`), Romanian
+    SIRUTA county numbers (`JUD`), RÚIAN codes of parts of municipalities, Bundestag
+    constituencies (`5 - Kiel`) and telephone area codes (`Telefonvorwahl`);
+  - health, science and transport: NEAK specialty codes, open access status, higher taxon names
+    by the Darwin Core rank terms (`class` and `order` need Latin rank endings), Darwin Core
+    `occurrenceID`, `catalogNumber` and `institutionCode`, GTFS `stop_id`, `parent_station` and
+    `zone_id`;
+  - formats and values: school years (`annoscolas` 202526, 2025/26), Wi-Fi SSIDs, file format
+    lists (`Форматы`: HTML,CSV,XLS,XML), and value rules for JSON and XML documents in a text
+    field (not GeoJSON geometries or HTML fragments) and WKB geometries (GeoParquet bytes or
+    hexadecimal, EWKB); `gml:pos` / `gml:posList` coordinates by element name. New module
+    `metacrafterext/rules/common/formats.py`.
+- **Unit of measure by more field names**: `単位`, `Единица`, `Einheit`, `unidad de medida`,
+  `mértékegység`, `jednostka miary`; the Russian unit list adds `мкг/м3` and `мг/м3`.
+
+### Changed
+
+- NTEE codes of an `NTEE_CD` column also have the shape of ICD-10 codes. The NTEE rule runs on
+  the field names it guards, and metacrafter after apicrafter/metacrafter#108 drops the
+  unnamed ICD-10 match when the named rule matched at least as many values; older metacrafter
+  reports both.
+
 ## [0.0.12] - 2026-11-09
 
 ### Added

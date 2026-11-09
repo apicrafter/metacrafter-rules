@@ -2241,3 +2241,55 @@ def validate_gr_gemi(value):
     if text.endswith(".0"):
         text = text[:-2]
     return 9 <= len(text) <= 12 and text.isdigit()
+
+
+def _code_text(value):
+    text = str(value).strip()
+    return text[:-2] if text.endswith(".0") else text
+
+
+def validate_it_istat_province(value):
+    """An Italian ISTAT province code: three digits, 001 to 299 (historical and statistical
+    codes included). The two-letter sigla (TO) is another type."""
+    text = _code_text(value)
+    return len(text) == 3 and text.isdigit() and 1 <= int(text) <= 299
+
+
+def validate_hu_county_code(value):
+    """A Hungarian county number of two digits, 01 to 20."""
+    text = _code_text(value)
+    return len(text) == 2 and text.isdigit() and 1 <= int(text) <= 20
+
+
+def validate_ro_county_code(value):
+    """A Romanian SIRUTA county number: 1 to 40, 51 or 52."""
+    text = _code_text(value)
+    if not text.isdigit() or len(text) > 2:
+        return False
+    number = int(text)
+    return 1 <= number <= 40 or number in (51, 52)
+
+
+def validate_cz_cast_obce(value):
+    """A Czech RÚIAN code of a part of a municipality: five or six digits."""
+    text = _code_text(value)
+    return text.isdigit() and 5 <= len(text) <= 6
+
+
+_NEAK_SPECIALTY = re.compile(r"^\d{3}[0-9A-Z]$")
+
+
+def validate_hu_neak_specialty(value):
+    """A Hungarian NEAK specialty code: three digits and a digit or a letter (2200, 010C)."""
+    return bool(_NEAK_SPECIALTY.match(str(value).strip()))
+
+
+_BUDGET_LINE = re.compile(r"^(?:19|20)\d{2} \d{3,6} -\s*(?:\d{5})?\s*-\s*(?:\d{5})?(?:\s.*)?$")
+
+
+def validate_es_aplicacion_presupuestaria(value):
+    """Spanish budget lines (aplicación presupuestaria), one per line: the year, the organic, the
+    programme and the economic code (2026 001130 - 33210 - 62999), maybe followed by an amount;
+    the programme and economic codes may be empty."""
+    lines = [line.strip() for line in str(value).splitlines() if line.strip()]
+    return bool(lines) and all(_BUDGET_LINE.match(line) for line in lines)

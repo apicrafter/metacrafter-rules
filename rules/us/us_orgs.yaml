@@ -26,3 +26,48 @@ rules:
     fieldrule: ntee_cd,ntee_code,ntee,nteecode,ntee code,ntee_classification
     fieldrulematch: text
     priority: 1
+  usirssubsectionvalue:
+    key: us_irs_subsection_code
+    name: IRS EO BMF subsection code (03 = 501(c)(3)) by field name and value
+    rule: '\d{2}'
+    type: data
+    match: regex
+    minlen: 2
+    maxlen: 2
+    fieldrule: subsection,subsection_code,subsection_cd,subsec_cd,subseccd,irs_subsection
+    fieldrulematch: text
+    priority: 1
+  usirsfoundationvalue:
+    key: us_irs_foundation_code
+    name: IRS EO BMF foundation code by field name and value
+    rule: '0[02349]|1[0-8]|2[1-4]'
+    type: data
+    match: regex
+    minlen: 2
+    maxlen: 2
+    fieldrule: foundation,foundation_code,foundation_cd,foundationcd
+    fieldrulematch: text
+    priority: 1
+  usirsgroupexemptionvalue:
+    key: us_irs_group_exemption_number
+    name: IRS group exemption number (GEN) by field name and value
+    # GROUP of the EO BMF: four digits, 0000 when the organization is not in a group ruling
+    rule: '\d{4}'
+    type: data
+    match: regex
+    minlen: 4
+    maxlen: 4
+    fieldrule: group,group_exemption_number,group_exemption,group_exemption_num,gen,gen_number
+    fieldrulematch: text
+    priority: 1
+  usirsactivityvalue:
+    key: us_irs_activity_code
+    name: IRS EO BMF activity codes (three 3-digit codes) by field name and value
+    rule: '\d{9}'
+    type: data
+    match: regex
+    minlen: 9
+    maxlen: 9
+    fieldrule: activity,activity_code,activity_codes,activity_cd,activitycd
+    fieldrulematch: text
+    priority: 1
