@@ -204,6 +204,18 @@ rules:
     match: text
     validator: metacrafterext.rules.common.generic.validate_taxon_name
     priority: 1
+  highertaxonnamevalue:
+    key: taxon_name
+    name: Higher taxon name by value (Animalia, Arthropoda, Insecta, Formicidae, Hymenoptera)
+    # Domains, kingdoms, phyla and classes by name, the other ranks by the endings the codes of
+    # nomenclature fix (-idae, -aceae, -inae, -oidea, -ales, -ptera, -formes, -opsida). The
+    # name of a GBIF classification step (classifications.*.classification.name) holds them (#69).
+    match: func
+    type: data
+    rule: metacrafterext.rules.common.taxa.validate_higher_taxon_name
+    minlen: 4
+    maxlen: 40
+    priority: 1
   taxonclassorderbyfield:
     key: taxon_name
     name: Class or order of a taxon by Darwin Core term

@@ -27,9 +27,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Rules for the registry datatypes `unixtime_ms` and `ietf_rfc`** (metacrafter-registry#182):
   milliseconds from 1900 to 2100 in timestamp fields (the field guard of `unixtimevalue`);
   RFC references ([RFC 1918], [RFC 791, Section 3.2]) by value and in fields named `RFC` or
-  `reference`. Milliseconds in date fields of other names (ArcGIS `TicketReportedOnDate`)
-  are not matched: by value alone they are not told apart from hierarchical codes with
-  trailing zeros (Regionalschlüssel 130030000000) and 13-digit register numbers (OGRN).
+  `reference`. Milliseconds in date fields (`unixtimemsdatefieldvalue`): ArcGIS
+  `TicketReportedOnDate`, `feature_Age`, Polish `Data założenia`, SMHI `from` / `to` /
+  `updated`, `created_at`, `updatedAt`. By value alone milliseconds are not told apart from
+  codes of 12 and 13 digits (Regionalschlüssel 130030000000, OGRN, KLADR, GEMI, Thai company
+  numbers), so the field name must name a date as a word of its own and no code. The rule uses
+  the new optional `fieldregex` guard of metacrafter (a regular expression searched in the
+  field name); metacrafter versions without it ignore the attribute and use the rule's
+  `fieldrule` list of date names (date, datum, from, to, updated, created_at, ...).
+- **Higher taxon names by value** (`taxon_name`, new module `metacrafterext/rules/common/taxa.py`):
+  domains, kingdoms, phyla, classes and orders without a standard ending by name (Eukaryota,
+  Animalia, Arthropoda, Insecta, Primates), the other ranks by the endings the codes of
+  nomenclature fix (Formicidae, Rosaceae, Myrmicinae, Formicoidea, Hymenoptera, Passeriformes,
+  Magnoliopsida). The name of a GBIF classification step holds them, and metacrafter drops the
+  generic `name` match there when this value rule matched as well (#69). Genera, tribes (-ini,
+  also Italian surnames) and orders in -ales (also Spanish plurals: Municipales) are left out.
+- US county names (`uscounty`) in fields named for counties (`COUNTY`, `County Name`,
+  `County/Parish`, `CTYNAME`): the Census Bureau list of counties and county equivalents with or
+  without the kind of area (KENT, Orleans Parish, Doña Ana County, St. Louis city; new module
+  `metacrafterext/rules/us/counties.py`). Kent, Providence and Washington are US cities too: in
+  a county field this guarded rule outweighs the city list (#69). Kenyan county names are not in
+  the list, and English county fields (`County (name)`) are not guarded.
 - Norwegian organisation numbers (`no_orgnr`, new `rules/no/no_orgs.yaml`) by field name and
   modulo 11 check digit; country names and ISO alpha-2 codes in fields named country (code)
   in other languages (`pays`, `país`, `страна`, `landkode`, `code_pays`); Polish districts
@@ -68,6 +86,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     no file name.
   - RIPEMD-160, BLAKE2b and Keccak value rules need their field names: their digests have the
     length of SHA-1, SHA-256 and SHA-512 digests (an iCalendar UID of 40 hexadecimal digits).
+- **Wrong labels of the earlier testdata baseline** (#69):
+  - `us_census_region` and `us_census_division` need the Census Bureau names `REGION` and
+    `DIVISION` (in capitals) or `census_region` / `census_division`: a lowercase `region` of
+    Armenian marz numbers (1-11; the first rows hold 1 and 2) is no census region;
+  - Thai province names by value run on province fields only (`province`, `PROVINCE_NAME`,
+    `changwat`, `จังหวัด`): most provinces are named after their capital, and Bangkok in a
+    `city` field is a city. Pattaya, Hat Yai, Hua Hin and Cha-am, which are towns, leave the
+    province list;
+  - Russian positions by value run on Russian position fields only (`Должность`, `dolzhnost`):
+    Директор and Ректор are Ukrainian titles too (`university_director_post`);
+  - `idbyfield` needs identifier values, with a digit or a code of Latin letters (a `site_id`
+    of district names, 新北市板橋區, is no id), and skips the CKAN row number `_id` when it is
+    nested too (`properties._id`). Texts for a missing value (Non renseigné, n/a) pass this
+    check (`is_missing_text`);
+  - the French name field rule (`nom`, `titre`) needs values that are not streets or crossings
+    of streets: the `Nom` of the Paris video camera list holds Bd Raspail / Varenne, Quai Branly.
 
 ## [0.0.13] - 2026-11-09
 

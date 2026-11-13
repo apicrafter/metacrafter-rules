@@ -4,6 +4,8 @@ field-name rules (names, place names, licenses, vehicle numbers, dates that are 
 import datetime
 import re
 
+from metacrafterext.rules.common.placeholders import is_missing_text
+
 # Legal forms that mark a value as an organization name. Forms that are also ordinary words
 # or units (AS, AB, AG, KG, SIA, SAS, ME) count only in upper case; the others in any case.
 # CJK, Cyrillic and Arabic forms may stand anywhere in the value.
@@ -188,6 +190,50 @@ def validate_place_name(value):
     if len(text) > 60 or text.count(",") > 1:
         return False
     return not (len(text) <= 2 and text.isupper())
+
+
+# An identifier without a digit: a code or a slug of Latin letters (GB, abc-def, user_name).
+_ID_TOKEN = re.compile(r"^[A-Za-z_.:/#-]+$")
+
+
+def validate_id_value(value):
+    """An identifier: a value with a digit, or one token of Latin letters and code punctuation
+    (GB, abc-def). A name in words or in another script without a digit is no identifier: the
+    site_id of a Taiwanese table holds district names (新北市板橋區) (#69). A placeholder for a
+    missing value (Non renseigné) passes: it says nothing against the field name."""
+    if not isinstance(value, str):
+        return False
+    text = value.strip()
+    if not text:
+        return False
+    return any(ch.isdigit() for ch in text) or bool(_ID_TOKEN.match(text)) or is_missing_text(text)
+
+
+# A French street, with or without a house number: Place de l'Alma, Quai Branly, 19, Bd
+# Poissonnière, 49 Av Montaigne (the street types of FANTOIR and their usual abbreviations).
+_FR_STREET = re.compile(
+    r"^(?:\d+\s*(?:bis|ter)?\s*,?\s*)?(?:rue|avenue|av|boulevard|bd|bld|place|pl|quai|allée|allee|"
+    r"impasse|imp|chemin|ch|route|rte|cours|crs|passage|square|sq|villa|cité|cite|parvis|esplanade|"
+    r"carrefour|voie|sentier|faubourg|fg|chaussée|promenade|ruelle|galerie|hameau|montée|"
+    r"rond-point|pont|port|porte)\.?\s+\w",
+    re.IGNORECASE,
+)
+# A crossing of streets: two or more places joined by a slash with a space beside it
+# (Saxe / Breteuil, Place du Panthéon/ Clotaire); not AC/DC or km/h.
+_CROSSING = re.compile(r"\w[^/]*(?:\s/|/\s)\s*\w")
+
+
+def validate_name_not_street(value):
+    """A name (validate_name_text) that is not a French street or a crossing of streets.
+
+    The value check of the French name field rule (nom, titre): the Nom of the Paris video
+    camera list holds the streets and crossings the cameras watch (Bd Raspail / Varenne, Quai
+    Branly), which are streets, not names of items (#69).
+    """
+    if not validate_name_text(value):
+        return False
+    text = value.strip()
+    return not (_FR_STREET.match(text) or _CROSSING.search(text))
 
 
 _BARE_YEAR = re.compile(r"^[\[(]?\d{4}[\])]?\??$")

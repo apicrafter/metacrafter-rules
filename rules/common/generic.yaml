@@ -65,8 +65,11 @@ rules:
     key: id
     name: Identifier by multilingual field name (*_id, nummer, номер, 番号, 번호)
     # An XML attribute of an id element (ID.@schemeName: organization, notice-id) names the id
-    # scheme; the element text (ID.#text) is the id (#69).
-    rule: (?i)(?!_id$)(?!.*\.@)(?:.*[ _.-])?(?:id|nummer|номер|番号|번호|編號|identifiant|identificador|tunnus)(?:[ _.-].*)?
+    # scheme; the element text (ID.#text) is the id (#69). The CKAN row number _id is no id,
+    # nested (properties._id) or not; nor is a name without a digit (a site_id of district
+    # names, 新北市板橋區).
+    rule: (?i)(?!(?:.*\.)?_id$)(?!.*\.@)(?:.*[ _.-])?(?:id|nummer|номер|番号|번호|編號|identifiant|identificador|tunnus)(?:[ _.-].*)?
     type: field
     match: regex
+    validator: metacrafterext.rules.common.generic.validate_id_value
     priority: 1

@@ -11,6 +11,8 @@ rules:
     type: field
     priority: 1
     match: text
+    # A nom of streets and crossings (Bd Raspail / Varenne) holds streets, not names (#69).
+    validator: metacrafterext.rules.common.generic.validate_name_not_street
   frcommentknown:
     key: comment
     name: French comment/note by known

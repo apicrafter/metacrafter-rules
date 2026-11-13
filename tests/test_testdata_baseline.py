@@ -3,7 +3,8 @@
 Rules are matched as metacrafter matches them: text rules by lower-cased membership, regex
 rules with ``fullmatch`` on the name and the lower-cased name; a value matches a regex rule
 with ``fullmatch`` within minlen/maxlen, and its validator must accept it. A field guard
-(``fieldrule``, text) lists the lower-cased names a value rule applies to.
+(``fieldrule``, text) lists the lower-cased names a value rule applies to; a PyParsing guard
+(ppr) must match the whole last part of the name.
 """
 import importlib
 import pathlib
@@ -38,9 +39,27 @@ def field_matches(path, rule_id, name):
     return bool(pattern.fullmatch(name) or pattern.fullmatch(name.lower()))
 
 
+def _ppr(rule):
+    namespace = {name: getattr(pyparsing, name) for name in (
+        "Word", "Literal", "CaselessLiteral", "Optional", "ZeroOrMore", "oneOf", "nums", "alphas",
+        "alphanums", "hexnums", "printables")}
+    return pyparsing.lineStart + eval(rule, {"__builtins__": {}}, namespace) + pyparsing.lineEnd
+
+
+def _parses(parser, text):
+    try:
+        parser.parse_string(text)
+        return True
+    except pyparsing.ParseException:
+        return False
+
+
 def guarded_by(path, rule_id, name):
     spec = load(path, rule_id)
-    assert spec["type"] == "data" and spec["fieldrulematch"] == "text"
+    assert spec["type"] == "data"
+    if spec["fieldrulematch"] == "ppr":
+        return _parses(_ppr(spec["fieldrule"]), name.rsplit(".", 1)[-1].strip())
+    assert spec["fieldrulematch"] == "text"
     return name.lower() in {k.strip().lower() for k in spec["fieldrule"].split(",")}
 
 
@@ -54,15 +73,7 @@ def value_matches(path, rule_id, value):
     elif spec["match"] == "text":
         ok = value.lower() in {k.strip().lower() for k in spec["rule"].split(",")}
     elif spec["match"] == "ppr":
-        namespace = {name: getattr(pyparsing, name) for name in (
-            "Word", "Literal", "CaselessLiteral", "Optional", "ZeroOrMore", "oneOf", "nums", "alphas",
-            "alphanums", "hexnums", "printables")}
-        parser = pyparsing.lineStart + eval(spec["rule"], {"__builtins__": {}}, namespace) + pyparsing.lineEnd
-        try:
-            parser.parse_string(value)
-            ok = True
-        except pyparsing.ParseException:
-            ok = False
+        ok = _parses(_ppr(spec["rule"]), value)
     elif spec["match"] == "func":
         module, name = spec["rule"].rsplit(".", 1)
         ok = bool(getattr(importlib.import_module(module), name)(value))
@@ -108,8 +119,8 @@ NEW_TYPES = [
     ("pt/pt_geo.yaml", "ptinegeocodevalue", "pt_ine_geocode", ["1D11108"], ["1108"], "geocod"),
     ("gb/gb_education.yaml", "gbdfelacodevalue", "gb_dfe_la_code", ["202", "208"], ["E09000007"], "la (code)"),
     ("us/us_geo.yaml", "uscensussumlevvalue", "us_census_sumlev", ["040", "050"], ["40"], "sumlev"),
-    ("us/us_geo.yaml", "uscensusregionvalue", "us_census_region", ["1", "4"], ["5"], "region"),
-    ("us/us_geo.yaml", "uscensusdivisionvalue", "us_census_division", ["1", "9"], ["10"], "division"),
+    ("us/us_geo.yaml", "uscensusregionvalue", "us_census_region", ["1", "4"], ["5"], "REGION"),
+    ("us/us_geo.yaml", "uscensusdivisionvalue", "us_census_division", ["1", "9"], ["10"], "DIVISION"),
     ("us/us_geo.yaml", "uscensuslsadvalue", "us_census_lsad", ["06", "25"], ["6"], "lsad"),
     ("us/us_geo.yaml", "usnycbblvalue", "us_nyc_bbl", ["1000010010", "3001280001.00000000000"], ["0.00000000000", "6000010010"], "bbl"),
     ("us/us_geo.yaml", "usnycbinvalue", "us_nyc_bin", ["1086341", "4268835.00000000000"], ["6086341"], "bin"),

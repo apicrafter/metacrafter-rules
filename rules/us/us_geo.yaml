@@ -51,6 +51,21 @@ rules:
     type: field
     validator: metacrafterext.rules.us.validators.validate_us_county_fips
     priority: 1
+  uscountynamevalue:
+    key: uscounty
+    name: US county name in a county field (KENT, Orleans Parish, Doña Ana County)
+    # Many county names are city names too (Kent, Providence, Washington): in a field named
+    # for counties this guarded rule outweighs the US city list (#69). Kenyan and Liberian
+    # county names are not in the list; of the English counties only those that US counties
+    # are named after are (Kent, Essex), not the -shire names or Sussex.
+    match: func
+    type: data
+    rule: metacrafterext.rules.us.validators.validate_us_county_name
+    minlen: 3
+    maxlen: 60
+    fieldrule: county,county name,county_name,countyname,county/parish,county_parish,ctyname,cnty_name,cntyname,county_nm,countynm
+    fieldrulematch: text
+    priority: 1
   uscitybyvalue:
     key: uscity
     name: US city name by value
@@ -83,24 +98,29 @@ rules:
   uscensusregionvalue:
     key: us_census_region
     name: US Census region code (1-4) by field name and value
+    # The Census Bureau files name the column REGION, in capitals. A lowercase region of 1 to 4
+    # is a region number of another country: Armenian marz numbers run from 1 to 11, and a
+    # sample of the first rows holds only 1 and 2 (#69).
     rule: '[1-4]'
     type: data
     match: regex
     minlen: 1
     maxlen: 1
-    fieldrule: region,census_region,regioncode,region_code
-    fieldrulematch: text
+    fieldrule: Literal('REGION') ^ CaselessLiteral('census_region') ^ CaselessLiteral('censusregion') ^ CaselessLiteral('census region') ^ CaselessLiteral('census_region_code')
+    fieldrulematch: ppr
     priority: 1
   uscensusdivisionvalue:
     key: us_census_division
     name: US Census division code (1-9) by field name and value
+    # DIVISION in capitals, as the Census Bureau files name it: a lowercase division of one
+    # digit is any other division number (see uscensusregionvalue).
     rule: '[0-9]'
     type: data
     match: regex
     minlen: 1
     maxlen: 1
-    fieldrule: division,census_division,divisioncode,division_code
-    fieldrulematch: text
+    fieldrule: Literal('DIVISION') ^ CaselessLiteral('census_division') ^ CaselessLiteral('censusdivision') ^ CaselessLiteral('census division') ^ CaselessLiteral('census_division_code')
+    fieldrulematch: ppr
     priority: 1
   uscensuslsadvalue:
     key: us_census_lsad

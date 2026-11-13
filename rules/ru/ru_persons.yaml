@@ -89,9 +89,15 @@ rules:
       наук
   ruspersonworkpositions:
     key: rusworkposition
-    name: Russian names of common positions
+    name: Russian names of common positions in a position field
+    # Директор, Ректор, Президент are Ukrainian, Bulgarian and Serbian titles too: a Ukrainian
+    # university_director_post column is no Russian position column (#69). The rule runs on
+    # the Russian position field names of ruspersonworkpositionsfield.
     match: text
     type: data
+    fieldrule: должность,должность руководителя,наименование должности,должность руководителя учреждения,дожность,должность и фио руководителя,занимаемая должность,должность сотрудника,dolzhnost,chiefposition,chief_position,head_position
+    fieldrulematch: text
+    priority: 1
     rule: генеральный директор,директор,заместитель директора,главный бухгалтер,главный
       конструктор,и.о. директора,председатель,председатель совета,технический директор,исполняющий
       обязанности директора,ректор,глава администрации,глава управы,проректор,зам.

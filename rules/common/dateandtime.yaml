@@ -153,6 +153,25 @@ rules:
       ^ ((Word(alphanums) + Optional(oneOf('_ -'))) * 2 + CaselessLiteral('timestamp'))
       ^ ((Word(alphanums) + Optional(oneOf('_ -'))) * 3 + CaselessLiteral('timestamp'))
     fieldrulematch: ppr
+  unixtimemsdatefieldvalue:
+    key: unixtime_ms
+    name: Unix time in milliseconds in a date field
+    priority: 1
+    minlen: 11
+    maxlen: 16
+    match: regex
+    type: data
+    # ArcGIS REST, GeoJSON and JSON exports write dates as milliseconds in fields named for
+    # dates: TicketReportedOnDate, Data założenia, from / to / updated, created_at. By value
+    # alone milliseconds are not told from codes of 12 and 13 digits (Regionalschlüssel
+    # 130030000000, OGRN, KLADR, GEMI, Thai company numbers in GLEIF validatedAs), so the field
+    # name must name a date as a word of its own (not validatedAs) and no code. The
+    # fieldregex guard needs metacrafter with fieldregex; older versions use the fieldrule list.
+    rule: '-?\d{11,13}(?:\.0+)?'
+    validator: metacrafterext.rules.common.dateandtime.validate_unixtime_ms
+    fieldrule: date,datum,fecha,dato,дата,from,to,until,updated,created,modified,start_date,end_date,created_at,updated_at,modified_at,deleted_at,date_created,date_modified,date_updated,last_updated,last_modified,valid_from,valid_to,start_time,end_time
+    fieldrulematch: text
+    fieldregex: '^(?!.*(?:(?:^|[ _.-])(?:id|ids|code|codes|kod|kód|key|nr|no|num|number|nummer|numer|номер|код)(?:$|[ _.-])|[a-z]id$|schl(?:ü|ue)ssel|ogrn|огрн|kladr|кладр|gemi|γεμη|okato|oktmo|okpo|inn$)).*(?:(?:^|[ _.-])(?:date|datum|fecha|tarih)|(?:date|datum|fecha|tarih)s?$|дата|日期|日付|날짜|^(?:data|dato)[ _]\w|(?:^|[ _])(?:from|to|until|since|expires|age)$|(?:updated|created|modified|changed|deleted|issued|published)(?:_?(?:at|on))?$|_(?:at|on)$|time$|zeit$)'
   timezoneknown:
     key: timezone
     name: Timezone by known name

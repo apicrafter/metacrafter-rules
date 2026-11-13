@@ -1,10 +1,13 @@
 """Wrong labels (#69) and missed types (#70) of the fully annotated metacrafter-testdata, and the
-rules for the registry datatypes unixtime_ms and ietf_rfc (metacrafter-registry#182).
+rules for the registry datatypes unixtime_ms and ietf_rfc (metacrafter-registry#182). The second
+pass of #69: US county names, and the wrong labels of the earlier baseline. The third pass:
+Unix milliseconds in date fields (the ``fieldregex`` guard) and higher taxa by value.
 
 Matched as tests/test_testdata_baseline.py matches them. A field rule's ``validator`` checks the
 values of the field: metacrafter keeps the name match when at least half of them pass.
 """
 import importlib
+import re
 
 import pytest
 
@@ -17,7 +20,9 @@ from metacrafterext.rules.common.generic import (
     validate_gss_code,
     validate_iata_airline_code,
     validate_icao_airline_code,
+    validate_id_value,
     validate_lonlat_number,
+    validate_name_not_street,
     validate_name_text,
     validate_oid,
     validate_person_name_part,
@@ -32,8 +37,10 @@ from metacrafterext.rules.common.internet import (
     validate_ipv6_subnet,
     validate_mac_digits,
 )
+from metacrafterext.rules.common.placeholders import is_missing_text
+from metacrafterext.rules.common.taxa import validate_higher_taxon_name
 from metacrafterext.rules.mx.validators import validate_mx_rfc
-from metacrafterext.rules.us.validators import validate_us_county_fips
+from metacrafterext.rules.us.validators import validate_us_county_fips, validate_us_county_name
 from tests.test_testdata_baseline import field_matches, guarded_by, load, value_matches
 
 
@@ -291,3 +298,128 @@ def test_digests_of_sha_lengths_need_their_names(rule_id, name):
     assert guarded_by("basic/crypto.yaml", rule_id, name)
     assert not guarded_by("basic/crypto.yaml", rule_id, "uid")
     assert "fieldrule" not in load("basic/crypto.yaml", "sha1hash")
+
+
+# --- #69, second pass: US counties and the older wrong labels -------------------------------
+@pytest.mark.parametrize("func,good,bad", [
+    (validate_us_county_name,
+     ["KENT", "PROVIDENCE", "Washington", "Kent County", "Orleans Parish", "Doña Ana County", "DONA ANA",
+      "ST. LOUIS CITY", "Saint Louis", "Prince George's County", "DE KALB", "MIAMI-DADE", "Nome Census Area",
+      "Juneau City and Borough", "Mayagüez Municipio", "Kent County, RI", "NEW HAVEN"],
+     ["Nairobi", "Kiambu", "Zhambyl District", "West Sussex", "Buckinghamshire", "THE DISTRICT", "County",
+      "123", ""]),
+    (validate_id_value, ["123", "muoh02ndax", "GB", "abc-def", "58c84c461752ab5b2544a566", "А-1", "Non renseigné"],
+     ["新北市板橋區", "新北市三重區", "Central Park", "б/н", ""]),
+    (validate_name_not_street, ["Dupont", "Musée du Louvre", "Tour Eiffel - Pilier Est", "AC/DC", "Pont-Aven"],
+     ["Bd Raspail / Varenne", "Saxe / Breteuil", "Place du Panthéon/ Clotaire", "Quai Branly", "19, Bd Poissonnière",
+      "49 Av Montaigne", "Rue de Rivoli", "1"]),
+    (is_missing_text, ["Non renseigné", "NON  RENSEIGNÉ", "n/a", "нет данных", "-"], ["Nairobi", "0", "", None]),
+], ids=["validate_us_county_name", "validate_id_value", "validate_name_not_street", "is_missing_text"])
+def test_validators_of_the_second_pass(func, good, bad):
+    assert [v for v in good if not func(v)] == []
+    assert [v for v in bad if func(v)] == []
+
+
+def test_us_county_names_outweigh_the_city_list_in_county_fields():
+    # KENT, PROVIDENCE and WASHINGTON of an EPA TRI 7. COUNTY column are counties, and also US
+    # cities: the guarded county rule matches as many values, so metacrafter drops uscity
+    path = "us/us_geo.yaml"
+    assert load(path, "uscountynamevalue")["key"] == "uscounty"
+    for name in ("7\\. COUNTY", "County Name", "County/Parish", "CTYNAME", "county_name"):
+        assert guarded_by(path, "uscountynamevalue", name.rsplit(".", 1)[-1].strip()), name
+    # GIAS County (name) holds English counties, Kenyan lists have Sub county: not guarded
+    for name in ("County (name)", "Sub county", "NAME", "city"):
+        assert not guarded_by(path, "uscountynamevalue", name), name
+    for value in ("KENT", "PROVIDENCE", "WASHINGTON", "BRISTOL", "NEWPORT", "Autauga County"):
+        assert value_matches(path, "uscountynamevalue", value), value
+    for value in ("Nairobi", "Kiambu", "Homa Bay", "West Sussex"):
+        assert not value_matches(path, "uscountynamevalue", value), value
+
+
+@pytest.mark.parametrize("rule_id,names,other", [
+    ("uscensusregionvalue", ["REGION", "census_region", "Census Region"], ["region", "Region", "region_code"]),
+    ("uscensusdivisionvalue", ["DIVISION", "census_division"], ["division", "Division"]),
+])
+def test_census_region_and_division_need_census_field_names(rule_id, names, other):
+    # an Armenian region of marz numbers (1-11, the first rows 1 and 2) is no census region
+    for name in names:
+        assert guarded_by("us/us_geo.yaml", rule_id, name), name
+    for name in other:
+        assert not guarded_by("us/us_geo.yaml", rule_id, name), name
+
+
+def test_thai_provinces_by_value_need_a_province_field():
+    path = "th/th_geo.yaml"
+    for name in ("province", "PROVINCE_NAME", "changwat", "จังหวัด"):
+        assert guarded_by(path, "thprovincevalue", name), name
+    assert not guarded_by(path, "thprovincevalue", "city")
+    assert value_matches(path, "thprovincevalue", "Bangkok")
+    for town in ("Pattaya", "Hat Yai", "Hua Hin", "Cha-am"):
+        assert not value_matches(path, "thprovincevalue", town), town
+
+
+def test_russian_positions_by_value_need_a_russian_position_field():
+    # Директор and Ректор are Ukrainian titles too (university_director_post)
+    path = "ru/ru_persons.yaml"
+    assert value_matches(path, "ruspersonworkpositions", "Директор")
+    for name in ("Должность", "должность руководителя", "dolzhnost"):
+        assert guarded_by(path, "ruspersonworkpositions", name), name
+    for name in ("university_director_post", "position", "посада"):
+        assert not guarded_by(path, "ruspersonworkpositions", name), name
+
+
+def test_id_field_names_and_values():
+    path = "common/generic.yaml"
+    # the CKAN row number _id, nested or not, is no id
+    for name in ("_id", "properties._id"):
+        assert not field_matches(path, "idbyfield", name), name
+    assert field_matches(path, "idbyfield", "site_id")
+    check = validator_of(path, "idbyfield")
+    assert check("FRS56PLMBT3H1YW1BIVW") and check("Non renseigné")
+    assert not check("新北市板橋區")
+
+
+def test_french_name_field_values_are_not_streets():
+    check = validator_of("fr/fr_common.yaml", "frtitleknown")
+    assert check("Musée du Louvre")
+    assert not check("Bd Raspail / Varenne")
+
+
+# --- third pass: milliseconds in date fields, higher taxa by value --------------------------
+def _fieldregex(path, rule_id):
+    return re.compile(load(path, rule_id)["fieldregex"], re.IGNORECASE)
+
+
+def test_milliseconds_in_date_fields_are_unixtime_ms():
+    path, rule_id = "common/dateandtime.yaml", "unixtimemsdatefieldvalue"
+    spec = load(path, rule_id)
+    assert spec["key"] == "unixtime_ms" and spec["type"] == "data"
+    names = _fieldregex(path, rule_id)
+    for name in ("TicketReportedOnDate", "Data założenia", "Data rozpoczęcia działalności", "feature_Age", "from",
+                 "to", "updated", "created_at", "updatedAt", "DateCreated", "Datum der Benennung", "Дата регистрации"):
+        assert names.search(name), name
+    # codes of 12 and 13 digits in fields that name a code, and date inside another word
+    for name in ("Regionalschlüssel", "OGRN", "ОГРН", "KLADR", "gemi_number", "date_id", "DateID", "data",
+                 "validatedAs", "Kod daty", "update_date_code", "Origen"):
+        assert not names.search(name), name
+    # metacrafter versions without fieldregex use the fieldrule list as the guard
+    assert guarded_by(path, rule_id, "from") and guarded_by(path, rule_id, "updated")
+    assert not guarded_by(path, rule_id, "Regionalschlüssel")
+    for value in ("1689019752000", "921452400000", "-578624400000", "1794571598835"):
+        assert value_matches(path, rule_id, value), value
+    for value in ("1689019752", "4102444800000", "16890197520000"):
+        assert not value_matches(path, rule_id, value), value
+
+
+def test_higher_taxon_names_by_value():
+    for value in ("Eukaryota", "Animalia", "Arthropoda", "Hexapoda", "Insecta", "Hymenoptera", "Formicoidea",
+                  "Formicidae", "Myrmicinae", "Poaceae", "Magnoliopsida", "Ascomycota", "Tracheophyta",
+                  "Passeriformes", "Primates"):
+        assert validate_higher_taxon_name(value), value
+    for value in ("Tetramorium", "Solenopsis geminata", "Crematogastrini", "Municipales", "Rosales", "Wales",
+                  "Informes", "Uniformes", "FORMICIDAE", "Eukaryota 2", None):
+        assert not validate_higher_taxon_name(value), value
+    path = "common/science.yaml"
+    assert load(path, "highertaxonnamevalue")["key"] == "taxon_name"
+    assert "fieldrule" not in load(path, "highertaxonnamevalue")
+    assert value_matches(path, "highertaxonnamevalue", "Arthropoda")
