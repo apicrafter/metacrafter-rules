@@ -10,6 +10,8 @@ rules:
     rule: technique,techniques,art_medium,artmedium,artwork_medium,technique_material,material_technique,техника,техника исполнения,материал и техника,материал_и_техника
     type: field
     match: text
+    # Media are words (oil on canvas), not numbers (#69).
+    validator: metacrafterext.rules.common.generic.has_letters
     priority: 1
   objectdimensionsfield:
     key: object_dimensions

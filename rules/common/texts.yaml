@@ -108,6 +108,9 @@ rules:
     rule: description,desc,article_description,content_description,text_description,summary,abstract
     type: field
     match: text
+    # A description is a text: an OpenAlex abstract_inverted_index.summary holds word
+    # positions (89) (#69).
+    validator: metacrafterext.rules.common.generic.has_letters
     priority: 1
 
   # Comment ID Detection

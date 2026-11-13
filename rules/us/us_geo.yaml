@@ -40,6 +40,17 @@ rules:
     match: text
     type: field
     priority: 1
+  usfips64byname:
+    key: fips64
+    is_pii: False
+    name: US county FIPS code (36001) by field name and value
+    # Five digits, a state code from 01 to 78 and the county code: County FIPS, fips, fips_code.
+    # A bare fips of two digits is a state code (#70).
+    rule: county fips,county fips code,fips,fips_code,fipscode,fips code,stcofips,geoid_county,county_geoid
+    match: text
+    type: field
+    validator: metacrafterext.rules.us.validators.validate_us_county_fips
+    priority: 1
   uscitybyvalue:
     key: uscity
     name: US city name by value
@@ -51,7 +62,9 @@ rules:
   usstatebyvalue:
     key: usstate
     name: US State name by value
-    rule: Alabama,Alaska,Arizona,Arkansas,California,Colorado,Connecticut,Delaware,District of Columbia,Florida,Georgia,Hawaii,Idaho,Illinois,Indiana,Iowa,Kansas,Kentucky,Louisiana,Maine,Maryland,Massachusetts,Michigan,Minnesota,Mississippi,Missouri,Montana,Nebraska,Nevada,New Hampshire,New Jersey,New Mexico,New York,North Carolina,North Dakota,Ohio,Oklahoma,Oregon,Pennsylvania,Rhode Island,South Carolina,South Dakota,Tennessee,Texas,Utah,Vermont,Virginia,Washington,West Virginia,Wisconsin,Wyoming,Puerto Rico
+    # New York and Washington are also city names (uscitybyvalue): a city column of New York,
+    # Brooklyn and Queens is not a state column (#69).
+    rule: Alabama,Alaska,Arizona,Arkansas,California,Colorado,Connecticut,Delaware,District of Columbia,Florida,Georgia,Hawaii,Idaho,Illinois,Indiana,Iowa,Kansas,Kentucky,Louisiana,Maine,Maryland,Massachusetts,Michigan,Minnesota,Mississippi,Missouri,Montana,Nebraska,Nevada,New Hampshire,New Jersey,New Mexico,North Carolina,North Dakota,Ohio,Oklahoma,Oregon,Pennsylvania,Rhode Island,South Carolina,South Dakota,Tennessee,Texas,Utah,Vermont,Virginia,West Virginia,Wisconsin,Wyoming,Puerto Rico
     maxlen: 20
     minlen: 4
     type: data

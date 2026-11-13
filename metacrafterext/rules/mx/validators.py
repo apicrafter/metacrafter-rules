@@ -1,6 +1,7 @@
 """
 Validation functions for Mexican-specific identifiers.
 """
+import re
 
 from metacrafterext.rules.common.placeholders import rejects_repeated_digits
 
@@ -53,3 +54,29 @@ def validate_clabe(value):
     
     return calculated_check == check_digit
 
+
+
+_MX_RFC = re.compile(r"^([A-ZÑ&]{3,4})[ -]?(\d{2})(\d{2})(\d{2})[ -]?([A-Z0-9]{2}[0-9A])$")
+
+
+def validate_mx_rfc(value):
+    """
+    Validates the shape of a Mexican RFC (Registro Federal de Contribuyentes).
+
+    Four letters for persons (three for companies), the date of birth or incorporation
+    (YYMMDD) and a three-character homoclave: GODE561231GR8, ABC010203XY1. An IETF RFC
+    reference ([RFC 1918]) in a column named RFC is not one (metacrafter-rules #69).
+
+    Args:
+        value: RFC string, optionally with a space or dash before the date and the homoclave
+
+    Returns:
+        bool: True if the value has the shape of an RFC with a real month and day
+    """
+    if not isinstance(value, str):
+        return False
+    match = _MX_RFC.match(value.strip().upper())
+    if not match:
+        return False
+    month, day = int(match.group(3)), int(match.group(4))
+    return 1 <= month <= 12 and 1 <= day <= 31

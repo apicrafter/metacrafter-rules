@@ -7,6 +7,68 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- **Rules for the missed types of the fully annotated metacrafter-testdata** (#70):
+  - `ipv4subnet` and `ipv6subnet` by value (100.64.0.0/10, 2001:200::/23), MAC addresses of
+    12 hexadecimal digits in fields named for MAC addresses or BSSIDs, EAN-13 in barcode
+    columns (`barcode`, `Barkod proizvoda`, `código de barras`, `штрихкод`; the guarded rule is
+    no longer imprecise), German long dates (`date_german`: 18. November 1827), US county FIPS
+    codes by field name (`County FIPS`, `fips`: five digits with a state code), ICAO and IATA
+    airline designators in columns named `ICAO` / `IATA` (three letters / two characters);
+  - field names: `date_du_deces`, `date de décès` (deathday), `Geburtsdatum`, `Sterbedatum`,
+    `Todestag`; years as `tahun`, `shnat_yitzur`, `rok`, `vuosi`, `år`, `metai`, `yıl`;
+    Russian `Фамилия`, `Имя`, `Отчество` as `russurname`, `rusfirstname`, `rusmidname` when the
+    values are words of a name (the dictionaries miss Caucasian and Central Asian names);
+  - a fuller list of English demonyms (`ennationality`); species with their authorship
+    (`species`: Paratrechina longicornis (Latreille, 1802), Quercus robur L.);
+  - German IBANs with no-break spaces (`de_iban`), so that one such value no longer leaves
+    `de_iban` to the universal IBAN rules.
+- **Rules for the registry datatypes `unixtime_ms` and `ietf_rfc`** (metacrafter-registry#182):
+  milliseconds from 1900 to 2100 in timestamp fields (the field guard of `unixtimevalue`);
+  RFC references ([RFC 1918], [RFC 791, Section 3.2]) by value and in fields named `RFC` or
+  `reference`. Milliseconds in date fields of other names (ArcGIS `TicketReportedOnDate`)
+  are not matched: by value alone they are not told apart from hierarchical codes with
+  trailing zeros (Regionalschlüssel 130030000000) and 13-digit register numbers (OGRN).
+- Norwegian organisation numbers (`no_orgnr`, new `rules/no/no_orgs.yaml`) by field name and
+  modulo 11 check digit; country names and ISO alpha-2 codes in fields named country (code)
+  in other languages (`pays`, `país`, `страна`, `landkode`, `code_pays`); Polish districts
+  (`powiat`) and OKOGU names in their fields. These guarded rules outweigh the city, country
+  and organization name lists and the boolean `no` on those fields.
+
+### Changed
+
+- `unixtimevalue` matches seconds only; milliseconds are `unixtime_ms`, and a `timestamp` field
+  of milliseconds is no longer `unixtime` by its name.
+- The Chilean RUT value rule needs dots, a dash or the check character K; nine plain digits
+  pass the same modulo 11 check as Norwegian organisation numbers and need a RUT field name
+  (`clrutdigitsvalue`).
+
+### Fixed
+
+- **Wrong labels of the fully annotated metacrafter-testdata** (#69): field-name rules check
+  their values, and value rules that matched other codes are guarded:
+  - `coordinates` is a `geopoint` only for numbers from -180 to 180, not projected metres;
+  - the keys of an OpenAlex `abstract_inverted_index` (word positions 58, 226) are no
+    `year`, `country`, `date`, `datetime`, `address`, `art_medium` or `description`
+    (years from 1000 to 2999, dates that are not numbers of up to four digits, texts with
+    letters); `version` needs a digit and a dot or letter (not publishedVersion, not a record
+    revision 1, 2); `languagetag` field names need language tags (not 1, 2, 3); `author`,
+    organization names and other names are not numbers or hexadecimal ids (MongoDB ObjectIds,
+    UUIDs); `oid` needs dotted arcs; the GSS code field rule needs GSS codes (not GIAS GOR H);
+    the Mexican `rfc` field rule needs the shape of an RFC;
+  - `category` field names (type, status) do not label booleans, dates, URLs, currencies
+    (`Tipo de moneda`) or exchange rates; an XML attribute of an id element
+    (`ID.@schemeName`) is no `id`;
+  - `gridnode` values need a grid field name (eForms ORG-0001 has the shape); the ArcGIS
+    object id needs ArcGIS column names (not `object_id`); the Bank of Russia registration
+    number needs a Bank of Russia field name (not any `Регистрационный номер`); `user_id` is no
+    `username`; New York and Washington are left to the city list, not the state list;
+  - e-mail values exclude URLs with an `@` (Google Maps links); a text with a link to a PDF is
+    no file name.
+  - RIPEMD-160, BLAKE2b and Keccak value rules need their field names: their digests have the
+    length of SHA-1, SHA-256 and SHA-512 digests (an iCalendar UID of 40 hexadecimal digits).
+
 ## [0.0.13] - 2026-11-09
 
 ### Added

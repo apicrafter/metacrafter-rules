@@ -22,8 +22,8 @@ def validate_iban(value):
     if not isinstance(value, str):
         return False
     
-    # Remove spaces and dashes, convert to uppercase
-    iban = value.replace(' ', '').replace('-', '').upper()
+    # Remove spaces (also no-break spaces of office exports) and dashes, convert to uppercase
+    iban = value.replace(' ', '').replace('\u00a0', '').replace('\u202f', '').replace('-', '').upper()
     
     # Basic format check
     if len(iban) < 15 or len(iban) > 34:
@@ -2293,3 +2293,30 @@ def validate_es_aplicacion_presupuestaria(value):
     the programme and economic codes may be empty."""
     lines = [line.strip() for line in str(value).splitlines() if line.strip()]
     return bool(lines) and all(_BUDGET_LINE.match(line) for line in lines)
+
+
+_NO_ORGNR_WEIGHTS = (3, 2, 7, 6, 5, 4, 3, 2)
+
+
+@rejects_repeated_digits
+def validate_no_orgnr(value):
+    """Validates a Norwegian organisation number (organisasjonsnummer) of the Brønnøysund
+    Register Centre: nine digits starting with 8 or 9 (922727457, 974 760 673, NO 974760673 MVA).
+
+    The first eight digits are weighted 3, 2, 7, 6, 5, 4, 3, 2; 11 minus the sum modulo 11 is
+    the check digit, 11 written 0; a remainder of 1 (check digit 10) is not issued. Chilean
+    RUTs without dots and dash use the same weights, so a plain nine-digit number is not
+    told apart by its value: the field name decides (metacrafter-rules #69).
+    """
+    if not isinstance(value, str):
+        return False
+    text = re.sub(r"[\s.]", "", value.strip().upper())
+    text = re.sub(r"^NO", "", text)
+    text = re.sub(r"MVA$", "", text)
+    if not re.fullmatch(r"[89]\d{8}", text):
+        return False
+    total = sum(int(d) * w for d, w in zip(text[:8], _NO_ORGNR_WEIGHTS))
+    check = 11 - total % 11
+    if check == 10:
+        return False
+    return int(text[8]) == (0 if check == 11 else check)

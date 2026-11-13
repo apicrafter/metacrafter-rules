@@ -8,7 +8,16 @@ rules:
     key: birthday
     is_pii: True
     name: French birthday by known field names
-    rule: date_de_naissance,date_naissance
+    rule: date_de_naissance,date_naissance,date de naissance,datenaissance
+    type: field
+    priority: 1
+    match: text
+  frdeathdayknown:
+    key: deathday
+    is_pii: True
+    name: French date of death by known field names
+    # Registers of the war dead (date_du_deces) and civil registers (#70).
+    rule: date_du_deces,date_de_deces,date_deces,date du décès,date de décès,date_du_décès,date_de_décès,date_décès,datedeces
     type: field
     priority: 1
     match: text

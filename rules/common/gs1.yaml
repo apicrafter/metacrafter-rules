@@ -99,7 +99,7 @@ rules:
     priority: 1
   ean13value:
     key: ean
-    name: EAN-13 by value pattern
+    name: EAN-13 by field name and GS1 check digit
     match: ppr
     type: data
     rule: Word(nums, exact=13)
@@ -107,8 +107,9 @@ rules:
     minlen: 13
     priority: 1
     validator: metacrafterext.rules.common.identifiers.validate_gtin
-    imprecise: 1
-    fieldrule: ean,ean_code,ean_number,european_article_number,product_ean,barcode_ean,ean_13,ean13
+    # The field guard and the check digit make it precise: thirteen digits of a barcode column
+    # (Barkod proizvoda: 4056489789246) (#70).
+    fieldrule: ean,ean_code,ean_number,european_article_number,product_ean,barcode_ean,ean_13,ean13,ean-13,barcode,bar_code,bar code,product_barcode,barkod,bar kod,barkod proizvoda,bar-kod,codigo de barras,código de barras,codigo_barras,codigo_de_barras,code_barre,code barre,code-barres,code_ean,strichcode,kod kreskowy,kod_kreskowy,čárový kód,штрихкод,штрих-код,штрих код,штрихкод товара,바코드,条形码,条码,バーコード
     fieldrulematch: text
   ean8value:
     key: ean

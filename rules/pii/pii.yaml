@@ -83,7 +83,8 @@ rules:
     key: username
     is_pii: True
     name: User name by known name
-    rule: username,userid,login,user_name,user_id,user_nm,login_username,usernamefield
+    # A user_id or userid holds an id (userid), not the login name (#69).
+    rule: username,login,user_name,user_nm,login_username,usernamefield
     type: field
     match: text
     priority: 1
@@ -98,9 +99,10 @@ rules:
   ennationalitybyvalue:
     key: ennationality
     name: Nationality in English by value
-    rule: Belarusian,Russian,Italian,Israeli,Nigerian,French,British,English,Armenian,Moldovan,Kittitian,Ukrainian,Latvian,Indian,Serbian,Azerbaijani,Turkish,Canadian,Croatian,Chinese,Pakistani,Vietnamese,Syrian,Danish,Lithuanian,Bulgarian
-    maxlen: 11
-    minlen: 6
+    # Demonyms of the countries of the world (#70).
+    rule: Afghan,Albanian,Algerian,American,Andorran,Angolan,Argentine,Argentinian,Armenian,Australian,Austrian,Azerbaijani,Bahamian,Bahraini,Bangladeshi,Barbadian,Batswana,Belarusian,Belgian,Belizean,Beninese,Bhutanese,Bolivian,Bosnian,Brazilian,British,Bruneian,Bulgarian,Burkinabe,Burmese,Burundian,Cambodian,Cameroonian,Canadian,Chadian,Chilean,Chinese,Colombian,Comoran,Congolese,Costa Rican,Croatian,Cuban,Cypriot,Czech,Danish,Djiboutian,Dominican,Dutch,Ecuadorian,Egyptian,Emirati,English,Equatorial Guinean,Eritrean,Estonian,Ethiopian,Fijian,Filipino,Finnish,French,Gabonese,Gambian,Georgian,German,Ghanaian,Greek,Grenadian,Guatemalan,Guinean,Guyanese,Haitian,Honduran,Hungarian,Icelandic,Indian,Indonesian,Iranian,Iraqi,Irish,Israeli,Italian,Ivorian,Jamaican,Japanese,Jordanian,Kazakh,Kazakhstani,Kenyan,Kittitian,Korean,Kosovan,Kuwaiti,Kyrgyz,Lao,Latvian,Lebanese,Liberian,Libyan,Liechtensteiner,Lithuanian,Luxembourger,Luxembourgish,Macedonian,Malagasy,Malawian,Malaysian,Maldivian,Malian,Maltese,Mauritanian,Mauritian,Mexican,Moldovan,Monegasque,Mongolian,Montenegrin,Moroccan,Mozambican,Namibian,Nepalese,Nepali,New Zealander,Nicaraguan,Nigerian,Nigerien,North Korean,Norwegian,Omani,Pakistani,Palestinian,Panamanian,Paraguayan,Peruvian,Polish,Portuguese,Qatari,Romanian,Russian,Rwandan,Salvadoran,Samoan,Saudi,Scottish,Senegalese,Serbian,Sierra Leonean,Singaporean,Slovak,Slovakian,Slovenian,Somali,South African,South Korean,South Sudanese,Spanish,Sri Lankan,Sudanese,Surinamese,Swazi,Swedish,Swiss,Syrian,Taiwanese,Tajik,Tanzanian,Thai,Togolese,Tongan,Trinidadian,Tunisian,Turk,Turkish,Turkmen,Ugandan,Ukrainian,Uruguayan,Uzbek,Venezuelan,Vietnamese,Welsh,Yemeni,Zambian,Zimbabwean
+    maxlen: 18
+    minlen: 3
     type: data
     match: text
     priority: 2

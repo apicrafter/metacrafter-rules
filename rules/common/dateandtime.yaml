@@ -10,13 +10,17 @@ rules:
     rule: created_at,updated_at,created,updated,createdAt,updatedAt,creat_dt,deleted_at,datetime
     type: field
     match: text
+    # Timestamps are not numbers of up to four digits: an OpenAlex abstract_inverted_index.created
+    # holds the word positions of "created" (8) (#69).
+    validator: metacrafterext.rules.common.generic.validate_date_value
     priority: 1
   dateknown:
     key: date
     name: Date by known name
     rule: date,created_date,creation_date,end_date,responsedate,createddate,completiondatem,start_date,end_date,report_date,actiondate,issue_date,closed_date,due_date,date_of_last_change,claimdate
-    # A date field of years (LIBRIS date: 2024, [2024]) holds years (#60).
-    validator: metacrafterext.rules.common.generic.validate_not_bare_year
+    # A date field of years (LIBRIS date: 2024, [2024]) holds years (#60), one of small numbers
+    # counts or word positions (#69).
+    validator: metacrafterext.rules.common.generic.validate_date_value
     type: field
     match: text
     priority: 1
@@ -57,6 +61,21 @@ rules:
     rule: year,yearnum
     type: field
     match: text
+    # Years from 1000 to 2999 (2024, 2019/20) or of another calendar (平成4年); not the word
+    # positions of an OpenAlex abstract_inverted_index.year (58, 21) (#69).
+    validator: metacrafterext.rules.common.generic.validate_year_value
+    priority: 1
+  yearbylocalname:
+    key: year
+    name: Year by field name in other languages (tahun, shnat_yitzur, rok, vuosi, yıl)
+    # Malay and Indonesian tahun, Hebrew shnat / shana (in Latin letters and in Hebrew), Polish
+    # and Czech rok, Finnish vuosi, Swedish år, Estonian aasta, Lithuanian metai, Hungarian év,
+    # Turkish yıl, Vietnamese năm, Korean 연도. The values must be years: the same files hold
+    # engine capacities and weights in the year range under other names (#70).
+    rule: tahun,tahun_terbit,tahun_anggaran,tahun_pembuatan,tahun_produksi,shnat,shnat_yitzur,shnat_ytzur,shana,שנה,שנת ייצור,שנת_ייצור,rok,rok_produkcji,rok produkcji,vuosi,vuosiluku,år,årtal,aasta,metai,év,yıl,yil,năm,연도,년도
+    type: field
+    match: text
+    validator: metacrafterext.rules.common.generic.validate_year_value
     priority: 1
   yearknownpat:
     key: year
@@ -77,6 +96,8 @@ rules:
     rule: timestamp
     type: field
     match: text
+    # A timestamp of milliseconds (1793960864568) is unixtime_ms (unixtimemsvalue, #70).
+    validator: metacrafterext.rules.common.dateandtime.validate_not_unixtime_ms
     priority: 1
   timestampknownpat:
     key: unixtime
@@ -95,19 +116,39 @@ rules:
     priority: 2
   unixtimevalue:
     key: unixtime
-    name: Unix time in seconds or milliseconds in a timestamp field
+    name: Unix time in seconds in a timestamp field
     priority: 1
     minlen: 9
-    maxlen: 20
+    maxlen: 17
     match: regex
     type: data
-    # Seconds from 630000000 to 2209999999 (about 1990 to 2040), or the same in milliseconds,
-    # with an optional fraction. Bare 10-digit numbers are also INNs and phone numbers, so the
-    # field name must name a timestamp: timestamp, created_timestamp, created_ts, epoch.
-    rule: '(?:6[3-9]\d{7}|[7-9]\d{8}|1\d{9}|2[01]\d{8}|220\d{7})(?:\d{3})?(?:\.\d{1,6})?'
+    # Seconds from 630000000 to 2209999999 (about 1990 to 2040), with an optional fraction.
+    # Bare 10-digit numbers are also INNs and phone numbers, so the field name must name a
+    # timestamp: timestamp, created_timestamp, created_ts, epoch. Milliseconds are
+    # unixtime_ms (unixtimemsvalue, #70).
+    rule: '(?:6[3-9]\d{7}|[7-9]\d{8}|1\d{9}|2[01]\d{8}|220\d{7})(?:\.\d{1,6})?'
     fieldrule: >-
       CaselessLiteral('timestamp')
       ^ oneOf('unixtime unix_time unix_timestamp epoch epoch_time ts', caseless=True)
+      ^ ((Word(alphanums) + Optional(oneOf('_ -'))) * 1 + (CaselessLiteral('timestamp') | CaselessLiteral('ts')))
+      ^ ((Word(alphanums) + Optional(oneOf('_ -'))) * 2 + CaselessLiteral('timestamp'))
+      ^ ((Word(alphanums) + Optional(oneOf('_ -'))) * 3 + CaselessLiteral('timestamp'))
+    fieldrulematch: ppr
+  unixtimemsvalue:
+    key: unixtime_ms
+    name: Unix time in milliseconds in a timestamp field
+    priority: 1
+    minlen: 11
+    maxlen: 16
+    match: regex
+    type: data
+    # 11 to 13 digits from 1900 to 2100 in milliseconds (1793960864568), the same field names
+    # as unixtimevalue (#70).
+    rule: '-?\d{11,13}(?:\.0+)?'
+    validator: metacrafterext.rules.common.dateandtime.validate_unixtime_ms
+    fieldrule: >-
+      CaselessLiteral('timestamp')
+      ^ oneOf('unixtime unix_time unix_timestamp epoch epoch_time ts epoch_ms timestamp_ms', caseless=True)
       ^ ((Word(alphanums) + Optional(oneOf('_ -'))) * 1 + (CaselessLiteral('timestamp') | CaselessLiteral('ts')))
       ^ ((Word(alphanums) + Optional(oneOf('_ -'))) * 2 + CaselessLiteral('timestamp'))
       ^ ((Word(alphanums) + Optional(oneOf('_ -'))) * 3 + CaselessLiteral('timestamp'))
@@ -191,6 +232,7 @@ rules:
     match: text
     type: field
     rule: modified,lastmodifieddate
+    validator: metacrafterext.rules.common.generic.validate_date_value
     priority: 1
   updateddatebyknown:
     key: datetime

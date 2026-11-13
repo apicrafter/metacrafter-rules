@@ -18,3 +18,14 @@ rules:
     type: field
     priority: 3
     rule: datum,ereignisdatum
+  delongdatevalue:
+    key: date_german
+    name: Date with a German month name (18. November 1827, 7. März 1833)
+    # Day, a dot, the month name and the year, as German texts write dates (#70).
+    rule: '(?:[1-9]|[012]\d|3[01])\.\s?(?:Januar|Jänner|Februar|Feber|März|April|Mai|Juni|Juli|August|September|Oktober|November|Dezember)\s\d{4}'
+    match: regex
+    type: data
+    minlen: 10
+    maxlen: 20
+    validator: metacrafterext.rules.common.generic.validate_german_long_date
+    priority: 1

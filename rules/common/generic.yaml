@@ -11,9 +11,13 @@ rules:
     # MIME and content types have their own datatypes; a bare or nested type key (GeoJSON
     # geometry.type) is a structural key. The word is in the last part of a flattened name:
     # external_ids.type.grid.all holds GRID ids, links.type.website URLs (#60).
-    rule: (?i)(?!(?:.*\.)?type$)(?!.*(?:mime|content|media)[ _.-]?type)(?:.*\.)?(?:[^.]*[ _-])?(?:type|status|kind|category|categorie|categoría|categoria|kategorie|kategori|tipo|tipologia|typ|soort|veids|statuss|statut|вид|тип|статус|състояние|статут|είδος|種別|区分|分類|유형|구분|종류|类别|類別|類型|ownership|auspice)(?:[ _-][^.]*)?
+    rule: (?i)(?!(?:.*\.)?type$)(?!.*(?:mime|content|media)[ _.-]?type)(?!.*(?:moneda|currency|divisa|cambio|exchange[ _.-]?rate))(?:.*\.)?(?:[^.]*[ _-])?(?:type|status|kind|category|categorie|categoría|categoria|kategorie|kategori|tipo|tipologia|typ|soort|veids|statuss|statut|вид|тип|статус|състояние|статут|είδος|種別|区分|分類|유형|구분|종류|类别|類別|類型|ownership|auspice)(?:[ _-][^.]*)?
     type: field
     match: regex
+    # Flags (prise_type_2: true / false), dates (company_status_date) and links (category_url)
+    # are not categories, nor are a currency (Tipo de moneda: Pesos) and an exchange rate
+    # (Tipo de cambio) (#69).
+    validator: metacrafterext.rules.common.generic.validate_category_value
     priority: 1
   citybyfield:
     key: city
@@ -60,7 +64,9 @@ rules:
   idbyfield:
     key: id
     name: Identifier by multilingual field name (*_id, nummer, номер, 番号, 번호)
-    rule: (?i)(?!_id$)(?:.*[ _.-])?(?:id|nummer|номер|番号|번호|編號|identifiant|identificador|tunnus)(?:[ _.-].*)?
+    # An XML attribute of an id element (ID.@schemeName: organization, notice-id) names the id
+    # scheme; the element text (ID.#text) is the id (#69).
+    rule: (?i)(?!_id$)(?!.*\.@)(?:.*[ _.-])?(?:id|nummer|номер|番号|번호|編號|identifiant|identificador|tunnus)(?:[ _.-].*)?
     type: field
     match: regex
     priority: 1

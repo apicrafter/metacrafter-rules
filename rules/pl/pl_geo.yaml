@@ -19,6 +19,27 @@ rules:
     rule: Word(nums, exact=2) + Literal('-') + Word(nums, exact=3)
     maxlen: 6
     minlen: 6
+  plpowiatbyfield:
+    key: district
+    name: Polish district (powiat) by field name
+    rule: powiat,powiat siedziby,nazwa powiatu,nazwa_powiatu,powiat_nazwa,powiat_siedziby,powiat nazwa
+    type: field
+    priority: 1
+    match: text
+    validator: metacrafterext.rules.common.generic.validate_place_name
+  plpowiatvalue:
+    key: district
+    name: Polish district (powiat) name in a powiat field
+    # City counties (Katowice, Warszawa) share their names with cities: in a powiat column
+    # they are districts, and this guarded rule outweighs the city name list (#69).
+    match: func
+    type: data
+    rule: metacrafterext.rules.common.generic.validate_place_name
+    minlen: 2
+    maxlen: 60
+    fieldrule: powiat,powiat siedziby,nazwa powiatu,nazwa_powiatu,powiat_nazwa,powiat_siedziby,powiat nazwa
+    fieldrulematch: text
+    priority: 1
   plcityfield:
     key: plcity
     name: Polish city name by field name

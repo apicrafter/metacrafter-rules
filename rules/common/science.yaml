@@ -184,6 +184,18 @@ rules:
     match: regex
     validator: metacrafterext.rules.common.generic.validate_oa_status
     priority: 1
+  speciesnamewithauthorshipvalue:
+    key: species
+    name: Scientific name of a species with its authorship (Paratrechina longicornis (Latreille, 1802))
+    # Genus, epithet, optional infraspecific epithet and the authorship: an author and a year,
+    # or an abbreviated author (Quercus robur L.). GBIF usage.name and Darwin Core
+    # scientificName write species this way (#69).
+    match: func
+    type: data
+    rule: metacrafterext.rules.common.generic.validate_species_name
+    minlen: 10
+    maxlen: 120
+    priority: 1
   taxonnamebyfield:
     key: taxon_name
     name: Higher taxon name by Darwin Core rank term (kingdom, family, genus)

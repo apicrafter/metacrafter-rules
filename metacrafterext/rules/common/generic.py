@@ -153,20 +153,25 @@ def validate_dmy_date(value):
 
 
 _URL = re.compile(r"^(?:https?://|www\.)", re.IGNORECASE)
+# Identifiers of hexadecimal digits with letters and digits: MongoDB ObjectIds
+# (58c84c461752ab5b2544a566), UUIDs and hashes.
+_HEX_ID = re.compile(r"^(?=[0-9a-f-]*\d)(?=[0-9a-f-]*[a-f])(?:[0-9a-f]{16,}|[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12})$", re.IGNORECASE)
 
 
 def validate_name_text(value):
     """A name: a text with letters that is not a URL or an e-mail address.
 
     The value check of field-name rules for names: an ORGANIZATION column of codes (1, 2, 5)
-    or an OpenAlex host_organization URL is not an organization name (metacrafter-rules #60).
+    or an OpenAlex host_organization URL is not an organization name (metacrafter-rules #60),
+    nor is an identifier of hexadecimal digits (a MongoDB ObjectId 58c84c461752ab5b2544a566,
+    a UUID) (#69).
     """
     if not isinstance(value, str):
         return False
     text = value.strip()
     if not any(ch.isalpha() for ch in text) or _URL.match(text) or "@" in text:
         return False
-    return True
+    return not _HEX_ID.match(text)
 
 
 def validate_place_name(value):
@@ -323,3 +328,178 @@ def validate_bundestag_wahlkreis(value):
     """A Bundestag constituency number from 1 to 299, optionally with its name (5 - Kiel)."""
     m = _WAHLKREIS.match(str(value).strip())
     return bool(m) and 1 <= int(m.group(1)) <= 299
+
+
+# --- value checks of field-name rules from metacrafter-rules #69 ----------------------------
+
+
+def _number(value):
+    """The value as a float, or None when it is not a plain decimal number."""
+    text = str(value).strip()
+    if not text or len(text) > 32:
+        return None
+    try:
+        number = float(text)
+    except ValueError:
+        return None
+    return number if number == number and abs(number) != float("inf") else None
+
+
+def validate_lonlat_number(value):
+    """A number of a longitude / latitude position: -180 to 180.
+
+    A GeoJSON, GML or KML ``coordinates`` field holds the numbers of its positions. Projected
+    coordinates in metres (570181.18, 6592327.82; EPSG:3857 1680154.07) are eastings and
+    northings, not a geopoint (metacrafter-rules #69). An altitude after the longitude and
+    latitude (0.0) is in the range too.
+    """
+    number = _number(value)
+    return number is not None and -180.0 <= number <= 180.0
+
+
+_YEAR_IN_TEXT = re.compile(r"(?<!\d)(?:1[0-9]|2[0-9])\d{2}(?!\d)")
+
+
+def validate_year_value(value):
+    """A value of a year field: a year from 1000 to 2999 (2024, 2024.0, 2019/20, FY2020), or a
+    year of another calendar with letters (平成4年, 1446 هـ).
+
+    Small numbers are not years: an OpenAlex ``abstract_inverted_index.year`` holds the word
+    positions of "year" in an abstract (58, 21) (metacrafter-rules #69).
+    """
+    text = str(value).strip()
+    if not text:
+        return False
+    number = _number(text)
+    if number is not None:
+        return number == int(number) and 1000 <= number <= 2999
+    return bool(_YEAR_IN_TEXT.search(text)) or any(ch.isalpha() for ch in text)
+
+
+_SHORT_NUMBER = re.compile(r"^[-+]?\d{1,4}(?:\.0+)?$")
+
+
+def validate_date_value(value):
+    """A value of a date or time field that is not a number of up to four digits.
+
+    Dates and timestamps are written with separators (2024-01-05, 05.01.2024), as words or as
+    long numbers (20240105, Unix time, Excel serial dates of five digits). Numbers of up to four
+    digits are counts, word positions (OpenAlex ``abstract_inverted_index.created`` 8) or bare
+    years ([2024], see validate_not_bare_year) (metacrafter-rules #69).
+    """
+    text = str(value).strip()
+    return bool(text) and not _SHORT_NUMBER.match(text) and validate_not_bare_year(text)
+
+
+_ISO_DATE = re.compile(r"^\d{4}-\d{2}-\d{2}(?:[T ]\d{2}:\d{2}(?::\d{2}(?:\.\d+)?)?(?:Z|[+-]\d{2}:?\d{2})?)?$")
+_BOOLEAN_WORDS = frozenset(("true", "false"))
+
+
+def validate_category_value(value):
+    """A value of a category field (type, status, kind): not a boolean (true, false), not a
+    date (2019-11-27) and not a URL or a path (http://..., /l/ru/category/...).
+
+    Field names with type or status also name flags (prise_type_2: true / false), dates
+    (company_status_date) and links (category_url) (metacrafter-rules #69).
+    """
+    text = str(value).strip()
+    if not text:
+        return False
+    if text.lower() in _BOOLEAN_WORDS or _ISO_DATE.match(text):
+        return False
+    return not (_URL.match(text) or "://" in text or (text.startswith("/") and "/" in text[1:]))
+
+
+def validate_version_value(value):
+    """A software version has a digit and a dot or a letter (1.2.3, v2, 2024.01, 3b): OpenAlex
+    ``version`` holds the words publishedVersion and acceptedVersion, and a bare integer counts
+    the revisions of a record (YTJ names.version 1, 2) (metacrafter-rules #69)."""
+    text = str(value).strip()
+    if not any(ch.isdigit() for ch in text):
+        return False
+    return not text.isdigit()
+
+
+_PERSON_NAME_PART = re.compile(r"^[^\W\d_]+(?:['’.\- ][^\W\d_]+){0,2}\.?$")
+
+
+def validate_person_name_part(value):
+    """A surname, first name or patronymic: one to three words of letters, joined by spaces,
+    hyphens or apostrophes (Абабкова, Магомет-Башировна, Ахмед оглы), at most 40 characters."""
+    text = str(value).strip()
+    return 0 < len(text) <= 40 and bool(_PERSON_NAME_PART.match(text))
+
+
+_OID = re.compile(r"^(?:urn:oid:)?[0-2](?:\.(?:0|[1-9]\d*))+$", re.IGNORECASE)
+
+
+def validate_oid(value):
+    """An ITU-T / ISO object identifier: arcs of digits joined by dots, starting with 0, 1 or 2
+    (1.2.840.113549, urn:oid:2.5.4.3). A record number of an object_id column (353432) is not
+    one (metacrafter-rules #69)."""
+    return bool(_OID.match(str(value).strip()))
+
+
+_GSS_CODE = re.compile(r"^[EJKLMNSW]\d{8}$")
+
+
+def validate_gss_code(value):
+    """A GSS code of the ONS (a country letter and eight digits: E09000001, W05000001).
+    GIAS GOR (code) holds the letters of the former regions (H, J) (metacrafter-rules #69)."""
+    return bool(_GSS_CODE.match(str(value).strip()))
+
+
+_IATA_AIRLINE = re.compile(r"^(?=.*[A-Z])[A-Z0-9]{2}\*?$")
+_ICAO_AIRLINE = re.compile(r"^[A-Z]{3}$")
+
+
+def validate_iata_airline_code(value):
+    """An IATA airline designator: two letters or digits with at least one letter (EB, 6V, U2)."""
+    return bool(_IATA_AIRLINE.match(str(value).strip()))
+
+
+def validate_icao_airline_code(value):
+    """An ICAO airline designator: three upper-case letters (PLM, AXY). Airport codes have four."""
+    return bool(_ICAO_AIRLINE.match(str(value).strip()))
+
+
+_GERMAN_MONTHS = {"januar": 1, "jänner": 1, "februar": 2, "feber": 2, "märz": 3, "april": 4, "mai": 5,
+                  "juni": 6, "juli": 7, "august": 8, "september": 9, "oktober": 10, "november": 11,
+                  "dezember": 12}
+_GERMAN_LONG_DATE = re.compile(r"^(\d{1,2})\.\s?([^\W\d_]+)\s(\d{4})$")
+
+
+def validate_german_long_date(value):
+    """A real calendar date written with a German month name: 18. November 1827, 7. März 1833."""
+    m = _GERMAN_LONG_DATE.match(str(value).strip())
+    if not m or m.group(2).lower() not in _GERMAN_MONTHS:
+        return False
+    try:
+        datetime.date(int(m.group(3)), _GERMAN_MONTHS[m.group(2).lower()], int(m.group(1)))
+    except ValueError:
+        return False
+    return True
+
+
+_SPECIES_NAME = re.compile(
+    r"^(?P<genus>[A-Z][a-zë]+)(?: \([A-Z][a-zë]+\))? [a-zë]+(?:-[a-zë]+)?"
+    r"(?: (?:(?:subsp|ssp|var|f|forma)\. )?[a-zë]+(?:-[a-zë]+)?)?"
+    r" (?P<authorship>\(?[A-Z][^()]*?\)?(?: [A-Z][^()]*?)?)$"
+)
+_AUTHOR_YEAR = re.compile(r"(?:^|[ (])[A-Z][\w'’.\- &]*?,? ?\d{4}\)?$")
+_AUTHOR_ABBREVIATION = re.compile(r"^\(?[A-Z][\w'’\-]*\.(?:\)? ?(?:ex |& )?[A-Z][\w'’\-]*\.?)*\)?$")
+
+
+def validate_species_name(value):
+    """The scientific name of a species with its authorship, as GBIF and Darwin Core
+    scientificName write it: Paratrechina longicornis (Latreille, 1802), Monomorium chinense
+    Santschi, 1925, Quercus robur L. The authorship (an author and a year, or an abbreviated
+    author name) tells a binomial apart from two other words (metacrafter-rules #69)."""
+    text = str(value).strip()
+    if len(text) > 120:
+        return False
+    m = _SPECIES_NAME.match(text)
+    if not m:
+        return False
+    authorship = m.group("authorship")
+    return bool(_AUTHOR_YEAR.search(authorship) or _AUTHOR_ABBREVIATION.match(authorship))

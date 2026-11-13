@@ -39,6 +39,19 @@ rules:
       ^ ((Word(alphanums) + Optional(oneOf('_ -'))) * 2 + CaselessLiteral('country') + ZeroOrMore(Word(printables)))
       ^ ((Word(alphanums) + Optional(oneOf('_ -'))) * 3 + CaselessLiteral('country') + ZeroOrMore(Word(printables)))
     fieldrulematch: ppr
+  iso3166alpha2bylocalname:
+    key: countrycode_alpha2
+    name: ISO 3166 country code alpha 2 in a field named country code in another language
+    # Norwegian landkode (NO), Swedish landskod, Dutch landcode, French code_pays. A column of NO
+    # is a country code here, not the boolean no (#69).
+    rule: ad,ae,af,ag,ai,al,am,ao,aq,ar,as,at,au,aw,ax,az,ba,bb,bd,be,bf,bg,bh,bi,bj,bl,bm,bn,bo,bq,br,bs,bt,bv,bw,by,bz,ca,cc,cd,cf,cg,ch,ci,ck,cl,cm,cn,co,cr,cu,cv,cw,cx,cy,cz,de,dj,dk,dm,do,dz,ec,ee,eg,eh,er,es,et,fi,fj,fk,fm,fo,fr,ga,gb,gd,ge,gf,gg,gh,gi,gl,gm,gn,gp,gq,gr,gs,gt,gu,gw,gy,hk,hm,hn,hr,ht,hu,id,ie,il,im,in,io,iq,ir,is,it,je,jm,jo,jp,ke,kg,kh,ki,km,kn,kp,kr,kw,ky,kz,la,lb,lc,li,lk,lr,ls,lt,lu,lv,ly,ma,mc,md,me,mf,mg,mh,mk,ml,mm,mn,mo,mp,mq,mr,ms,mt,mu,mv,mw,mx,my,mz,na,nc,ne,nf,ng,ni,nl,no,np,nr,nu,nz,om,pa,pe,pf,pg,ph,pk,pl,pm,pn,pr,ps,pt,pw,py,qa,re,ro,rs,ru,rw,sa,sb,sc,sd,se,sg,sh,si,sj,sk,sl,sm,sn,so,sr,ss,st,sv,sx,sy,sz,tc,td,tf,tg,th,tj,tk,tl,tm,tn,to,tr,tt,tv,tw,tz,ua,ug,um,us,uy,uz,va,vc,ve,vg,vi,vn,vu,wf,ws,xk,ye,yt,za,zm,zw
+    maxlen: 2
+    minlen: 2
+    priority: 1
+    match: text
+    type: data
+    fieldrule: landkode,landskode,landskod,landkod,landcode,landecode,ländercode,laendercode,länderkennung,code_pays,codepays,code pays,code_du_pays,pays_code,codigo_pais,código país,código de país,cod_pais,codice_paese,codice paese,kod_kraju,kod kraju,kód země,kod_zeme,maakood,maatunnus,valsts_kods,valsts kods,šalies kodas,salies_kodas,országkód,код страны,код_страны,код країни,ülke kodu,ulke_kodu,国家代码,국가코드
+    fieldrulematch: text
 # This rule generates a lot of False positives because 2-character codes match many common abbreviations and codes
 # Without a fieldrule constraint, this matches any 2-character string that happens to be a valid country code
 # It is marked as imprecise and could be filtered if it's set
@@ -88,6 +101,8 @@ rules:
     rule: lang,lang_code,langcode,language_code,languagecode,language_tag,languagetag,locale,locales
     type: field
     match: text
+    # Language tags have letters (fi, sv-FI); the YTJ languageCode holds numbers (1, 2, 3) (#69).
+    validator: metacrafterext.rules.common.identifiers.validate_language_tag
     priority: 1
   languagetag:
     key: languagetag

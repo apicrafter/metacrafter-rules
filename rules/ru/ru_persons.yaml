@@ -114,6 +114,36 @@ rules:
     type: field
     priority: 3
     match: text
+  russurnamebycyrillicfield:
+    key: russurname
+    is_pii: true
+    name: Russian surname by the Russian field name Фамилия
+    # The Russian words name only these parts of a person's name; their dictionaries of common
+    # names miss Caucasian and Central Asian names (Абадиева), so the field name decides when
+    # the values are words of a name (#70). The English names stay name evidence only.
+    rule: фамилия,фамилия гражданина,фамилия сотрудника,фамилия руководителя
+    type: field
+    match: text
+    validator: metacrafterext.rules.common.generic.validate_person_name_part
+    priority: 1
+  rusfirstnamebycyrillicfield:
+    key: rusfirstname
+    is_pii: true
+    name: Russian first name by the Russian field name Имя
+    rule: имя,имя гражданина,имя сотрудника,имя руководителя
+    type: field
+    match: text
+    validator: metacrafterext.rules.common.generic.validate_person_name_part
+    priority: 1
+  rusmidnamebycyrillicfield:
+    key: rusmidname
+    is_pii: true
+    name: Russian patronymic by the Russian field name Отчество
+    rule: отчество,отчество гражданина,отчество сотрудника,отчество руководителя
+    type: field
+    match: text
+    validator: metacrafterext.rules.common.generic.validate_person_name_part
+    priority: 1
   russurnamefieldext:
     key: russurname
     is_pii: true

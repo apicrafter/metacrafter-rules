@@ -1,10 +1,12 @@
 """Data rules against the positive and negative examples of their metacrafter-registry datatype.
 
-The rules are compiled the way metacrafter compiles them: the pyparsing expression must match
-the whole value, the value length must be within minlen/maxlen, and the validator must accept it.
+The rules are compiled the way metacrafter compiles them: the pyparsing expression (or the
+regular expression) must match the whole value, the value length must be within minlen/maxlen,
+and the validator must accept it.
 """
 import importlib
 import pathlib
+import re
 import warnings
 
 import pyparsing
@@ -34,13 +36,17 @@ NAMESPACE = {
 def load_rule(relpath, rule_id):
     data = yaml.safe_load((RULES / relpath).read_text(encoding="utf-8"))
     rule = data["rules"][rule_id]
-    assert rule["match"] == "ppr" and rule["type"] == "data"
+    assert rule["match"] in ("ppr", "regex") and rule["type"] == "data"
     assert int(rule.get("minlen", 0)) <= int(rule.get("maxlen", 10**6))
-    with warnings.catch_warnings():
-        # Rule files use the camelCase pyparsing names that metacrafter provides (oneOf).
-        warnings.simplefilter("ignore", DeprecationWarning)
-        expression = eval(rule["rule"], NAMESPACE)
-    parser = pyparsing.lineStart + expression + pyparsing.lineEnd
+    if rule["match"] == "regex":
+        pattern = re.compile(rule["rule"])
+        parser = None
+    else:
+        with warnings.catch_warnings():
+            # Rule files use the camelCase pyparsing names that metacrafter provides (oneOf).
+            warnings.simplefilter("ignore", DeprecationWarning)
+            expression = eval(rule["rule"], NAMESPACE)
+        parser = pyparsing.lineStart + expression + pyparsing.lineEnd
     validator = None
     if "validator" in rule:
         module, name = rule["validator"].rsplit(".", 1)
@@ -49,10 +55,14 @@ def load_rule(relpath, rule_id):
     def accepts(value):
         if not int(rule.get("minlen", 0)) <= len(value) <= int(rule.get("maxlen", 10**6)):
             return False
-        try:
-            parser.parse_string(value)
-        except pyparsing.ParseException:
-            return False
+        if parser is None:
+            if pattern.fullmatch(value) is None:
+                return False
+        else:
+            try:
+                parser.parse_string(value)
+            except pyparsing.ParseException:
+                return False
         return validator is None or bool(validator(value))
 
     return accepts
@@ -92,7 +102,7 @@ CASES = [
      ["GB82WEST12345698765432", "GB82 WEST 1234 5698 7654 32", "DE89370400440532013000"],
      ["GB82WEST12345698765433"]),
     ("pii/de/de_pii.yaml", "de_pii_ibanvalue",
-     ["DE89370400440532013000", "DE89 3704 0044 0532 0130 00"],
+     ["DE89370400440532013000", "DE89 3704 0044 0532 0130 00", "DE18\u00a07500\u00a00000\u00a00075\u00a00010\u00a021"],
      ["DE89370400440532013001", "DE8937040044053201300"]),
     ("common/objects.yaml", "isbn13valuewithdashes",
      ["978-0-521-29366-2", "978-0-521-22151-1", "978-1107075412", "978-94-6298-380-9"],

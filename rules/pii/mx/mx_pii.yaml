@@ -19,6 +19,8 @@ rules:
     rule: rfc,rfc_number,numero_rfc
     type: field
     match: text
+    # An IETF RFC reference ([RFC 1918]) in a column named RFC is ietf_rfc (#69).
+    validator: metacrafterext.rules.mx.validators.validate_mx_rfc
     priority: 1
   mxphoneknown:
     key: phone

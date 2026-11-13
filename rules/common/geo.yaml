@@ -34,6 +34,8 @@ rules:
       address,post address,location_address,location_1_address,address_1
     type: field
     match: text
+    # Addresses have letters, word positions of an inverted index (168, 120) do not (#69).
+    validator: metacrafterext.rules.common.generic.has_letters
     priority: 1
   latitude:
     key: latitude
@@ -150,6 +152,9 @@ rules:
     rule: country,countryname,country_name
     match: text
     type: field
+    # Names and codes have letters; an OpenAlex abstract_inverted_index.country holds the word
+    # positions of "country" (226) (#69).
+    validator: metacrafterext.rules.common.generic.has_letters
     priority: 1
   wbregionbyvalue:
     key: wbregion
@@ -209,6 +214,19 @@ rules:
     type: field
     rule: address2,address_line_2
     priority: 1
+  countrybylocalnamevalue:
+    key: country
+    name: Country name in a field named country in another language (pays, país, страна)
+    # The values are in the language of the field name: French Belgique and Espagne, and France,
+    # which the English country name list also has. The guarded rule outweighs that list (#69).
+    match: func
+    type: data
+    rule: metacrafterext.rules.common.generic.validate_place_name
+    minlen: 2
+    maxlen: 60
+    fieldrule: pays,pays_de_deces,pays_deces,pays de décès,pays_de_naissance,pays_naissance,pays de naissance,pays_residence,pays de résidence,nom_pays,nom du pays,país,pais,pais_origen,país de origen,pais_nacimiento,país de nacimiento,paese,paese_nascita,nazione,kraj_urodzenia,państwo,страна,страна рождения,наименование страны,країна,ülke,valsts,šalis,ország,χώρα,國家,国家,국가,država,země
+    fieldrulematch: text
+    priority: 1
   countrygeobyknown:
     key: country
     name: Country by field name
@@ -243,6 +261,9 @@ rules:
     match: text
     type: field
     rule: coordinates
+    # The numbers of a geometry in longitude and latitude (-180 to 180). Projected coordinates in
+    # metres (570181.18, 6592327.82) are eastings and northings (#69).
+    validator: metacrafterext.rules.common.generic.validate_lonlat_number
     priority: 1
   continentgeobyknown:
     key: continent

@@ -17,8 +17,19 @@ def _decode_char_reference(match):
     return "&"
 
 
+# An address: a local part, @ and a domain with a dot, without URL characters.
+_EMAIL_ADDRESS = re.compile(r"^[^@\s/?#]+@[^@\s/?#:]+\.[^@\s/?#:]+$")
+
+
 def _validate_email(s):
-    return '@' in parseaddr(s)[1]
+    """An e-mail address, alone or with a display name (Anna <anna@example.org>).
+
+    A URL that holds an @ (https://www.google.com/maps/@?api=1&map_action=pano) is not one
+    (metacrafter-rules #69).
+    """
+    if not isinstance(s, str) or "://" in s:
+        return False
+    return bool(_EMAIL_ADDRESS.match(parseaddr(s)[1]))
 
 def _validate_url(s):
     """Web URL checked with validators.url.
@@ -60,6 +71,8 @@ def _validate_filename(s):
     # If url than no, it's not filename
     if s[:6] == 'http:/': return False
     if s[:7] == 'https:/': return False
+    # A text with a link to a file is not a file name (metacrafter-rules #69).
+    if '://' in s: return False
     parts = s.rsplit('.', 1)
     if len(parts) != 2: return False
     if parts[1] in COMMON_FILE_EXTENSIONS:

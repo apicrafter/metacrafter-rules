@@ -170,6 +170,8 @@ rules:
     rule: oid,object_id,object_identifier,oid_number,asn1_oid
     match: text
     type: field
+    # Dotted arcs (1.2.840.113549); object_id and ArcGIS OID columns hold record numbers (#69).
+    validator: metacrafterext.rules.common.generic.validate_oid
     priority: 1
   oidvalue:
     key: oid

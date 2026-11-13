@@ -55,5 +55,9 @@ rules:
     rule: Word('ABCDEFGHIJKLMNOPQRSTUVWXYZ', exact=3) + Literal('-').suppress() + Word(nums, min=2, max=4)
     maxlen: 8
     minlen: 6
+    # Three letters, a hyphen and digits is the shape of many codes (eForms ORG-0001, LOT-0001);
+    # grid operators have no common format (#69).
+    fieldrule: grid_node,gridnode,grid_node_id,gridnode_id,interconnect_node,balancing_authority,node_id,pnode,pnode_id,pricing_node,settlement_point
+    fieldrulematch: text
     priority: 2
 

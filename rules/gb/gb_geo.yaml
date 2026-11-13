@@ -120,6 +120,9 @@ rules:
     rule: (?i)(?:lsoa|msoa|oa|lad|lau1|wd|ward|pcon|cty|rgn|ctry|ccg|icb|utla|ltla)\d{0,2}cd|(?:lsoa|msoa|gss|gssla|districtadministrative|administrativeward|parliamentaryconstituency|gor|lad|ward)[ _.-]?(?:\(code\)|code|cd)
     type: field
     match: regex
+    # GSS codes are a letter and eight digits (E09000001); the GIAS GOR (code) holds the letters
+    # of the former Government Office Regions (H, J) (#69).
+    validator: metacrafterext.rules.common.generic.validate_gss_code
     priority: 1
   ukdistrictcodegenericfield:
     key: ukdistrictcode

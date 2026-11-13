@@ -1,3 +1,4 @@
+import re
 from ipaddress import IPv4Address, IPv6Address, AddressValueError
 from validators import domain, mac_address
 
@@ -165,3 +166,48 @@ def is_fqdn(value):
     except Exception:  # noqa: BLE001 - a validator error means no match
         return False
     return is_known_tld(text.rstrip(".").rsplit(".", 1)[-1])
+
+
+def validate_ipv4_subnet(value):
+    """An IPv4 network in CIDR notation: an address, a slash and a prefix length of 0 to 32
+    (100.64.0.0/10, 192.0.0.8/32)."""
+    text = str(value).strip()
+    address, sep, prefix = text.partition("/")
+    if not sep or not prefix.isdigit() or not 0 <= int(prefix) <= 32:
+        return False
+    return validate_ipv4(address)
+
+
+def validate_ipv6_subnet(value):
+    """An IPv6 network in CIDR notation: an address, a slash and a prefix length of 0 to 128
+    (2001:200::/23, 2002::/16)."""
+    text = str(value).strip()
+    address, sep, prefix = text.partition("/")
+    if not sep or not prefix.isdigit() or not 0 <= int(prefix) <= 128 or ":" not in address:
+        return False
+    return validate_ipv6(address)
+
+
+_MAC12 = re.compile(r"^[0-9A-Fa-f]{12}$")
+
+
+def validate_mac_digits(value):
+    """A MAC address written as 12 hexadecimal digits without separators (00405abf7503), not a
+    multicast group (an odd first octet) and not all zeros or all ones."""
+    text = str(value).strip()
+    if not _MAC12.match(text) or text.lower() in ("000000000000", "ffffffffffff"):
+        return False
+    return int(text[:2], 16) % 2 == 0
+
+
+_IETF_RFC_REF = r"\[?RFC ?\d{1,5}(?:, [Ss]ection [\d.]*\d)?\]?"
+_IETF_RFC = re.compile(r"^" + _IETF_RFC_REF + r"(?:[;,] ?" + _IETF_RFC_REF + r")*$")
+
+
+def validate_ietf_rfc(value):
+    """A reference to IETF RFCs: RFC 1918, [RFC 791, Section 3.2], several separated by ; or ,
+    ([RFC 8190]; [RFC 919, Section 7]). RFC numbers start at 1."""
+    text = str(value).strip()
+    if not _IETF_RFC.match(text):
+        return False
+    return all(int(n) > 0 for n in re.findall(r"RFC ?(\d+)", text))

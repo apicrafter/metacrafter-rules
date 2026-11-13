@@ -13,6 +13,7 @@ from metacrafterext.rules.common.generic import (
     validate_content_license,
     validate_ev_connectors,
     validate_name_text,
+    validate_date_value,
     validate_not_bare_year,
     validate_place_name,
     validate_software_license_text,
@@ -225,7 +226,9 @@ def _rules(path):
 def test_dates_by_name_are_not_years():
     assert not validate_not_bare_year("2024") and not validate_not_bare_year("[2024]")
     assert validate_not_bare_year("2024-05-01") and validate_not_bare_year("36872")
-    assert load("common/dateandtime.yaml", "dateknown")["validator"].endswith("validate_not_bare_year")
+    # validate_date_value (#69) also rejects bare years, and other numbers of up to four digits
+    assert load("common/dateandtime.yaml", "dateknown")["validator"].endswith("validate_date_value")
+    assert not validate_date_value("2024") and not validate_date_value("[2024]") and validate_date_value("36872")
 
 
 def test_licenses_of_works_are_no_software_licenses_or_plates():
