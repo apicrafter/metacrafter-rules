@@ -59,7 +59,7 @@ rules:
     match: regex
     priority: 1
     rule: >-
-      (?i)(?:(?:invoice|trade|transaction|price|payment|settlement|contract|declared|iso)[ _.-]?)?(?:currency|ccy)(?:[ _.-]?(?:code|cd|iso|id|alpha3?))?
+      (?i)(?:(?:invoice|trade|transaction|price|payment|settlement|contract|declared|iso)[ _.-]?)?(?:currency|ccy)(?:[ _.-]?(?:code|cd|iso|id|alpha3?))?|(?:tipo[ _]de[ _])?moneda|tipo[ _]moneda|divisa|devise|w[äa]hrung|валюта|waluta
   currencycodebyvalue:
     key: iso4217curcode
     name: ISO 4217 currency code by value in a currency field

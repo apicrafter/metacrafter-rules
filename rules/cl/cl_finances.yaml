@@ -22,10 +22,25 @@ rules:
   clrutvalue:
     key: cl_rut
     name: Chilean RUT by pattern and check digit (12.345.678-5, 76123456-K, 95566826K)
-    rule: (?i)\d{1,2}\.?\d{3}\.?\d{3}-?[0-9k]
+    # With dots, a dash or the check character K. Plain digits (922727457) pass the same
+    # modulo 11 check as Norwegian organisation numbers, whose weights are the same (#69):
+    # clrutdigitsvalue needs a RUT field name for them.
+    rule: (?i)\d{1,2}(?:\.\d{3}\.\d{3}-?[0-9k]|\d{6}-[0-9k]|\d{6}k)
     type: data
     match: regex
     minlen: 9
     maxlen: 12
     validator: metacrafterext.rules.common.identifiers.validate_cl_rut
+    priority: 1
+  clrutdigitsvalue:
+    key: cl_rut
+    name: Chilean RUT of digits only (783255766) by field name and check digit
+    rule: \d{8,9}
+    type: data
+    match: regex
+    minlen: 8
+    maxlen: 9
+    validator: metacrafterext.rules.common.identifiers.validate_cl_rut
+    fieldrule: rut,run,rut_empresa,rut_contribuyente,rut_proveedor,rut_sociedad,rut_cliente,rut_beneficiario,rut_institucion,rut_entidad,numero_rut,nro_rut,rut sin dv
+    fieldrulematch: text
     priority: 1

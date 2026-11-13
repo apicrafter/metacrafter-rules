@@ -254,6 +254,8 @@ rules:
     rule: version,ver,app_version,software_version,product_version,version_number,app_ver,sw_version,pkg_version
     type: field
     match: text
+    # Versions have digits: OpenAlex version holds publishedVersion / acceptedVersion (#69).
+    validator: metacrafterext.rules.common.generic.validate_version_value
     priority: 1
   semverbyvalue:
     key: semver

@@ -24,6 +24,7 @@ rules:
     rule: description
     type: field
     match: text
+    validator: metacrafterext.rules.common.generic.has_letters
     priority: 1
   endescriptiondetails:
     key: description

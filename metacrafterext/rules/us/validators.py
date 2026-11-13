@@ -2,7 +2,11 @@
 Validation functions for US-specific identifiers.
 """
 
+import re
+import unicodedata
+
 from metacrafterext.rules.common.placeholders import rejects_repeated_digits
+from metacrafterext.rules.us.counties import US_COUNTY_NAMES
 
 
 def validate_us_driver_license(value):
@@ -370,3 +374,74 @@ def validate_us_passport(value):
     
     return True
 
+
+
+# State FIPS 5-2 codes of the states, DC and the territories (American Samoa, Guam, Northern
+# Mariana Islands, Puerto Rico, U.S. Virgin Islands).
+_US_STATE_FIPS = frozenset(
+    "01 02 04 05 06 08 09 10 11 12 13 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 "
+    "34 35 36 37 38 39 40 41 42 44 45 46 47 48 49 50 51 53 54 55 56 60 66 69 72 78".split()
+)
+
+
+def validate_us_county_fips(value):
+    """
+    Validates a US county FIPS code (FIPS 6-4): five digits, a state code and a county code
+    from 001 (36001 Albany County, NY).
+
+    Args:
+        value: FIPS code string
+
+    Returns:
+        bool: True if the state part is a state FIPS code and the county part is not 000
+    """
+    if not isinstance(value, str):
+        return False
+    text = value.strip()
+    return len(text) == 5 and text.isdigit() and text[:2] in _US_STATE_FIPS and text[2:] != "000"
+
+
+# The kind of area after a county name: Kent County, Orleans Parish, Juneau City and Borough,
+# Nome Census Area, Richmond city (an independent city of Virginia), Mayagüez Municipio.
+_US_COUNTY_KINDS = re.compile(
+    r"\s+(?:county|parish|city and borough|borough|census area|planning region|municipality|"
+    r"municipio|city)$"
+)
+
+
+def _us_county_key(text):
+    """Comparison key of a county name: no case, accents, dots, apostrophes, hyphens or spaces,
+    and Saint / Sainte as St / Ste (St. Louis, Saint Louis; Prince George's; DeKalb, De Kalb)."""
+    text = unicodedata.normalize("NFKD", text)
+    text = "".join(ch for ch in text if not unicodedata.combining(ch)).casefold()
+    text = re.sub(r"\bsainte\b", "ste", text)
+    text = re.sub(r"\bsaint\b", "st", text)
+    return re.sub(r"[^a-z0-9]", "", text)
+
+
+_US_COUNTY_KEYS = frozenset(_us_county_key(name) for name in US_COUNTY_NAMES)
+
+
+def validate_us_county_name(value):
+    """
+    Validates the name of a US county or county equivalent, with or without the kind of area and
+    a state code: KENT, Providence, Kent County, Orleans Parish, Doña Ana County, ST. LOUIS CITY,
+    Kent County, RI. Used in county fields only: many county names are also city names (Kent,
+    Providence, Washington), and some English and Irish counties share them (Kent, Essex).
+
+    Args:
+        value: County name string
+
+    Returns:
+        bool: True if the name, without the kind of area, is a county name of the US Census Bureau list
+    """
+    if not isinstance(value, str):
+        return False
+    text = " ".join(value.split()).casefold()
+    if not text or len(text) > 60 or not any(ch.isalpha() for ch in text):
+        return False
+    text = re.sub(r",\s*[a-z]{2}$", "", text)
+    if _us_county_key(text) in _US_COUNTY_KEYS:
+        return True
+    base = _US_COUNTY_KINDS.sub("", text)
+    return base != text and _us_county_key(base) in _US_COUNTY_KEYS

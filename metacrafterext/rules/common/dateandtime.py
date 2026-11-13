@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import datetime
+import re
 
 def is_valid_time(s):
     if not s: return False
@@ -41,3 +42,24 @@ def is_iso_date(s):
     except ValueError:
         return False
     return True
+
+
+# Milliseconds from 1900-01-01 to 2100-01-01 (UTC).
+_MS_MIN, _MS_MAX = -2208988800000, 4102444800000
+_UNIXTIME_MS = re.compile(r"^-?\d{11,13}(?:\.0+)?$")
+
+
+def validate_unixtime_ms(value):
+    """Unix time in milliseconds: an integer of 11 to 13 digits (negative before 1970) from
+    1900 to 2100 (1689019752000, -1019869200000). ArcGIS REST and GeoJSON exports and
+    JavaScript-backed APIs write dates this way (metacrafter-rules #70)."""
+    text = str(value).strip()
+    if not _UNIXTIME_MS.match(text):
+        return False
+    return _MS_MIN <= int(float(text)) < _MS_MAX
+
+
+def validate_not_unixtime_ms(value):
+    """A value of a timestamp field that is not Unix time in milliseconds (unixtime_ms): seconds
+    (1471181882) or a written date and time (2024-01-05T10:00:00)."""
+    return bool(str(value).strip()) and not validate_unixtime_ms(value)

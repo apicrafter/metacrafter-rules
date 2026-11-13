@@ -23,6 +23,23 @@ rules:
     maxlen: 11
     minlen: 11
     priority: 1
+  de_pii_birthdayfield:
+    key: birthday
+    is_pii: True
+    name: Date of birth by German field name
+    # Geburtsdatum of persons, also with a German long date (7. März 1833) (#70).
+    rule: geburtsdatum,geburtstag,geb_datum,geb.datum,geb. datum,geburts_datum
+    type: field
+    priority: 1
+    match: text
+  de_pii_deathdayfield:
+    key: deathday
+    is_pii: True
+    name: Date of death by German field name
+    rule: sterbedatum,todestag,todesdatum,sterbetag,sterbe_datum
+    type: field
+    priority: 1
+    match: text
   de_pii_ibanfield:
     key: de_iban
     is_pii: True
@@ -35,9 +52,12 @@ rules:
     key: de_iban
     is_pii: True
     name: German IBAN by pattern
-    match: ppr
+    # DE, two check digits and 18 digits, in groups of four separated by spaces or by the
+    # no-break spaces of word processors and spreadsheets (DE18 7500 0000 0075 0010 21). With
+    # one such value fewer than the universal IBAN rules, de_iban was dropped (#70).
+    match: regex
     type: data
-    rule: Literal('DE') + Word(nums, exact=2) + Word(nums, exact=4) + Word(nums, exact=4) + Word(nums, exact=4) + Word(nums, exact=4) + Word(nums, exact=2)
+    rule: 'DE\d{2}(?:[ \u00a0\u202f]?\d{4}){4}[ \u00a0\u202f]?\d{2}'
     maxlen: 27
     minlen: 22
     validator: metacrafterext.rules.common.identifiers.validate_iban

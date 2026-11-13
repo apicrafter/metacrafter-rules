@@ -10,6 +10,9 @@ rules:
     rule: data,data_criacao,data_atualizacao,data_registro
     type: field
     match: text
+    # Portuguese data is also the English word data, a key of an OpenAlex abstract_inverted_index
+    # with word positions (26, 63) (#69).
+    validator: metacrafterext.rules.common.generic.validate_date_value
     priority: 1
   ptyearknown:
     key: year

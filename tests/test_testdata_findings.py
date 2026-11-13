@@ -122,13 +122,14 @@ def text_guard(path, rule_id):
     return lambda name: name.lower() in names
 
 
-@pytest.mark.parametrize("value", ["1471181882", "1652190194", "631152000", "2208988799", "1471181882123",
-                                   "1652190195.25"])
+@pytest.mark.parametrize("value", ["1471181882", "1652190194", "631152000", "2208988799", "1652190195.25"])
 def test_unixtime_value_accepts_timestamps(value):
     assert regex_values("common/dateandtime.yaml", "unixtimevalue")(value)
 
 
-@pytest.mark.parametrize("value", ["0", "12345", "123456789", "3000000000", "99999999999999", "2021-09-17"])
+# Milliseconds (1471181882123) are unixtime_ms (unixtimemsvalue, #70).
+@pytest.mark.parametrize("value", ["0", "12345", "123456789", "3000000000", "99999999999999", "2021-09-17",
+                                   "1471181882123"])
 def test_unixtime_value_rejects_other_numbers(value):
     assert not regex_values("common/dateandtime.yaml", "unixtimevalue")(value)
 

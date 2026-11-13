@@ -58,7 +58,8 @@ rules:
     type: data
     minlen: 1
     maxlen: 18
-    fieldrule: objectid,object_id,objectid_1,fid,oid,esri_oid
+    # ArcGIS names the column OBJECTID, OBJECTID_1, FID or OID; object_id is any object's id (#69).
+    fieldrule: objectid,objectid_1,fid,oid,esri_oid
     fieldrulematch: text
     priority: 1
   mongodbidvalue:

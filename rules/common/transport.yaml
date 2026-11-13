@@ -11,6 +11,16 @@ rules:
     type: field
     match: text
     priority: 1
+  iataairlinecodebyname:
+    key: iataairlinecode
+    name: IATA airline code by the field name IATA and a two-character value
+    # IATA codes of airlines have two characters (EB, 6V), those of airports three: a column
+    # IATA or código IATA of a register of airlines (#70).
+    rule: iata,codigo iata,código iata,codigo_iata,iata_designator,iata designator
+    type: field
+    match: text
+    validator: metacrafterext.rules.common.generic.validate_iata_airline_code
+    priority: 1
 # Disabled: matches any 2-character alphanumeric value (country/state/currency
 # codes, abbreviations, any 2-char code), causing too many false positives. An
 # IATA airline code cannot be distinguished from a generic 2-char code by value
@@ -30,6 +40,15 @@ rules:
     rule: icao_airline_code,icao_code,airline_icao,airline_code_icao
     type: field
     match: text
+    priority: 1
+  icaoairlinecodebyname:
+    key: icaoairlinecode
+    name: ICAO airline code by the field name ICAO and a three-letter value
+    # ICAO designators of airlines have three letters (PLM, AXY), those of airports four (#70).
+    rule: icao,codigo icao,código icao,codigo_icao,icao_designator,icao designator
+    type: field
+    match: text
+    validator: metacrafterext.rules.common.generic.validate_icao_airline_code
     priority: 1
 # Disabled: matches any 3-character alphanumeric value (currency codes, country
 # codes, generic 3-char codes/abbreviations), causing too many false positives.

@@ -1,0 +1,30 @@
+name: no-orgs
+description: Norwegian organisation identifiers (Brønnøysund Register Centre)
+context: companies
+lang: nb
+country_code: 'no'
+rules:
+  noorgnrbyfield:
+    key: no_orgnr
+    name: Norwegian organisation number (organisasjonsnummer) by field name
+    # Enhetsregisteret (data.brreg.no): organisasjonsnummer and the number of the parent unit
+    # (overordnetEnhet). The values must pass the modulo 11 check (#69).
+    rule: organisasjonsnummer,organisasjonsnr,orgnr,org_nr,org.nr.,orgnummer,org_nummer,overordnetenhet,overordnet_enhet,foretaksnummer,norwegian_org_number
+    type: field
+    match: text
+    validator: metacrafterext.rules.common.identifiers.validate_no_orgnr
+    priority: 1
+  noorgnrvalue:
+    key: no_orgnr
+    name: Norwegian organisation number by field name and check digit (922727457, NO 974760673 MVA)
+    # Nine digits with the modulo 11 check digit of a Chilean RUT without dots and dash, so the
+    # field name must name an organisation number.
+    rule: '(?:NO ?)?[89]\d{2}[ .]?\d{3}[ .]?\d{3}(?: ?MVA)?'
+    type: data
+    match: regex
+    minlen: 9
+    maxlen: 17
+    validator: metacrafterext.rules.common.identifiers.validate_no_orgnr
+    fieldrule: organisasjonsnummer,organisasjonsnr,orgnr,org_nr,org.nr.,orgnummer,org_nummer,overordnetenhet,overordnet_enhet,foretaksnummer,norwegian_org_number,mva_nummer,mvanummer
+    fieldrulematch: text
+    priority: 1

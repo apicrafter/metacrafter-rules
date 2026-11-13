@@ -29,6 +29,8 @@ rules:
     rule: author,author_name,authorname,автор,автор произведения
     type: field
     match: text
+    # A name, not the user id of a WordPress author (1, 2) (#69).
+    validator: metacrafterext.rules.common.generic.validate_name_text
     priority: 1
 
   # Dublin Core Subject

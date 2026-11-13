@@ -31,10 +31,16 @@ rules:
     match: text
   thprovincevalue:
     key: thprovince
-    name: Thai province name by value
-    rule: Bangkok,Chiang Mai,Phuket,Pattaya,Hat Yai,Nakhon Ratchasima,Udon Thani,Khon Kaen,Surat Thani,Chonburi,Nonthaburi,Nakhon Si Thammarat,Phitsanulok,Chiang Rai,Lampang,Songkhla,Kanchanaburi,Ayutthaya,Rayong,Trat,Chanthaburi,Prachuap Khiri Khan,Hua Hin,Cha-am,Phetchaburi,Ratchaburi,Samut Sakhon,Samut Prakan,Pathum Thani,Nakhon Pathom,Saraburi,Lopburi,Suphan Buri,Kamphaeng Phet,Tak,Sukhothai,Phrae,Nan,Phayao,Mae Hong Son
+    name: Thai province name by value in a province field
+    # Most provinces are named after their capital (Bangkok, Saraburi, Chiang Mai): in a city
+    # field these are cities (#69), so the rule runs on province fields only. Pattaya, Hat Yai,
+    # Hua Hin and Cha-am are towns, not provinces.
+    rule: Bangkok,Chiang Mai,Phuket,Nakhon Ratchasima,Udon Thani,Khon Kaen,Surat Thani,Chonburi,Nonthaburi,Nakhon Si Thammarat,Phitsanulok,Chiang Rai,Lampang,Songkhla,Kanchanaburi,Ayutthaya,Rayong,Trat,Chanthaburi,Prachuap Khiri Khan,Phetchaburi,Ratchaburi,Samut Sakhon,Samut Prakan,Pathum Thani,Nakhon Pathom,Saraburi,Lopburi,Suphan Buri,Kamphaeng Phet,Tak,Sukhothai,Phrae,Nan,Phayao,Mae Hong Son
     maxlen: 25
     minlen: 4
     type: data
     match: text
+    fieldrule: province,provinces,province_name,provincename,province name,province_en,province_eng,prov_name,prov_nam_e,changwat,changwat_name,thai_province,จังหวัด,ชื่อจังหวัด
+    fieldrulematch: text
+    priority: 1
 

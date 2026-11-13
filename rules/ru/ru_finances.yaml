@@ -93,6 +93,9 @@ rules:
     match: regex
     minlen: 1
     maxlen: 10
-    fieldrule: regn,@regn,regnum,reg_num,regnumber,рег. номер,рег.номер,рег_номер,регистрационный номер,регистрационный_номер,регномер,рег. №,регистрационный номер кредитной организации
+    # Names of the Bank of Russia registers. A bare registration number (Регистрационный номер,
+    # рег. номер) is the number of any register: a register of IT companies numbers its rows
+    # 1, 2, 3 (#69).
+    fieldrule: regn,@regn,regnum,cbr_regnum,regnum_cbr,регистрационный номер кредитной организации,рег. номер кредитной организации,регистрационный номер банка,рег. номер банка,рег. номер ко,регномер ко
     fieldrulematch: text
     priority: 1

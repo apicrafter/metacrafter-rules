@@ -89,6 +89,20 @@ rules:
     match: regex
     type: field
     rule: '(?i)okogu[ _.-]?name|name[ _.-]?okogu|наименование[ _](?:по[ _])?окогу|окогу[ _]наименование'
+  ruokogunamebyfieldvalue:
+    key: okoguname
+    name: Russian OKOGU name in an OKOGU name field
+    # Federal bodies of the classifier (Федеральная налоговая служба) are also organization
+    # names; in a field named for OKOGU names this guarded rule outweighs the organization name
+    # rule (#69).
+    match: func
+    type: data
+    rule: metacrafterext.rules.common.generic.validate_name_text
+    minlen: 3
+    maxlen: 300
+    fieldrule: okoguname,okogu_name,okogu name,nameokogu,name_okogu,наименование окогу,наименование по окогу,наименование_окогу,окогу наименование
+    fieldrulematch: text
+    priority: 1
   ruokoguname:
     key: okoguname
     name: Russian OKOGU category name of regional and local bodies
