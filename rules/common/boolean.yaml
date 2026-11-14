@@ -18,6 +18,13 @@ rules:
     match: text
     type: data
     priority: 2
+  booleanjanein:
+    key: boolean
+    name: Boolean value ja/nein (German)
+    rule: ja,nein
+    match: text
+    type: data
+    priority: 2
   participleprefixrule:
     key: boolean
     name: Boolean with number of common prefixes and integer

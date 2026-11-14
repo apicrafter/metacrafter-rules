@@ -9,6 +9,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Rules for the BEV files of metacrafter-testdata** (a 2024 Dateno crawl of data.bev.gv.at,
+  the catalogue of the Austrian Federal Office of Metrology and Surveying: geodetic control
+  points, height benchmarks, orthophoto flight dates, cadastre quality lists, geographic names):
+  - Austrian cadastre and survey codes, new in the registry, by field name with their values
+    checked (`metacrafterext.rules.at.survey`): cadastral municipality numbers (`at_kg_number`:
+    `KG_NUMMER`, `KG-NR`, `KGEZ`, and `KG` only with five digits, since kg is also a weight),
+    parcel numbers (`at_grundstuecksnummer`: `GST`, 551/1, .129/3), land register entry numbers
+    (`at_einlagezahl`: `EZ`), ÖK 50 map sheets (`at_oek50_sheet`: `OeK50_BMN_NR`, 1-213) and
+    Gauss-Krüger meridian zones (`at_gk_meridian`: `MERIDIAN`, M28 / M31 / M34); BEV control
+    point designations by value (`at_festpunkt_id`: TP47-38T1, EP01404-3545E1, also followed
+    by the point name as in the `ANSCHLUSS` fields), with the sheet and the KG number checked;
+  - INSPIRE identifiers (`inspire_id`, new: AT.BEV.DOP.MD.20220128.49921) in `inspireId`
+    fields; geocentric coordinates (`geocentric_coordinate`, new) in `ECEF_X`-like fields;
+  - `wkt` by value (POINT (15.41 47.93), MULTIPOLYGON up to 100 000 characters): `wkt` had no
+    rules; `epsg_code` by value with its authority (EPSG:25832, urn:ogc:def:crs:EPSG::4326) and,
+    in fields named after EPSG (`EPSG_XYZ`, `epsg_origine`, `srid`), as a bare code: `epsg_code`
+    had no rules;
+  - German names of existing types: `Breite` / `Länge` (`BREITE`, `LAENGE`) for latitude and
+    longitude with at least four decimals, since the words also mean width and length;
+    `Höhe` (`HOEHE`) for elevation when given to the centimetre, `HOEHE_BODEN`, `Seehöhe`;
+    `RW` / `HW` for eastings and northings of at least 10 km; `GEODATUM` for the geodetic
+    datum, which also takes MGI, DHDN, CH1903 and ETRS89 realizations (ETRS89/AUSTRIA 2002);
+  - the German boolean ja / nein.
+
 - **Rules for the AIMS files of metacrafter-testdata** (registry datatypes added from a 2024
   snapshot of the AIMS GeoNetwork, Australian Institute of Marine Science):
   - Great Barrier Reef feature identifiers of GBRMPA (`au_gbr_reef_id`: 11-049, 19-051a) in
@@ -72,6 +96,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   microplastics file of metacrafter-testdata) or a weight with a unit (`final_weight_kg`,
   `design_weight_g`): a sample weight is also the mass of a lab sample. `sampling_weight`,
   `samp_weight` and the other qualified weights stay.
+- The Swiss AHV number by value is `756.dddd.dddd.dd` with its EAN-13 check digit, in both rule
+  files (`ch/ch_persons.yaml`, `pii/ch/ch_pii.yaml`): the rule took any four groups of three
+  digits, so coordinates written with thousands separators (486.105.253.092 in the BEV
+  Austria-wide file) were labelled as AHV numbers, which are PII.
+- A field named `Kennzeichen` is a German vehicle plate only when its values are plates: the
+  monumentation marks of Austrian control points (A1, T1) were labelled `de_vehicle_plate`.
 
 - Gender by field name takes `Geschlecht`, `sexe`, `sexo`, `sesso`, Estonian `sugu`, a survey
   year (`SEX_2016`) and a bracketed note (`Sexo (catálogo)`), and checks the values: words,

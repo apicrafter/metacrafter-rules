@@ -142,13 +142,16 @@ def validate_utm_zone_with_band(value):
 
 _GEODETIC_DATUM = re.compile(
     r"^(?:WGS ?-?(?:84|1984|72)|GDA ?(?:94|2020)|AGD ?(?:66|84)|NAD ?(?:27|83)(?: ?\(?(?:CSRS|HARN|2011)\)?)?"
-    r"|ETRS ?89|ED ?50|OSGB ?36|JGD ?20(?:00|11)|CGCS ?2000|SIRGAS ?2000|NZGD ?(?:49|2000)|Pulkovo ?1942|SK-?42)$",
+    r"|ETR[SF] ?89(?:/[A-Z][A-Z ]*\d{4})?|ED ?50|OSGB ?36|JGD ?20(?:00|11)|CGCS ?2000|SIRGAS ?2000|NZGD ?(?:49|2000)"
+    r"|Pulkovo ?1942|SK-?42|MGI|DHDN|CH1903\+?)$",
     re.I,
 )
 
 
 def validate_geodetic_datum(value):
-    """The name of a geodetic datum: WGS 84, GDA94, GDA2020, AGD66, NAD83, ETRS89."""
+    """The name of a geodetic datum: WGS 84, GDA94, GDA2020, AGD66, NAD83, ETRS89; the national
+    datums MGI (Austria), DHDN (Germany) and CH1903; a national realization of ETRS89 after a
+    slash, as the Austrian BEV writes it (ETRS89/AUSTRIA 2002)."""
     return bool(_GEODETIC_DATUM.match(str(value).strip()))
 
 
@@ -163,6 +166,71 @@ def validate_elevation_value(value):
         return False
     number = float(text.rstrip("m ").replace(",", "."))
     return -430.0 <= number <= 8849.0
+
+
+def validate_survey_height(value):
+    """A surveyed height in metres with centimetres or millimetres (508.26, 211.153, -3.07): the
+    check of a field named only Höhe (HOEHE), which may also be the height of a tree or a building
+    given in whole or tenth metres."""
+    text = str(value).strip()
+    if not re.fullmatch(r"-?\d{1,4}[.,]\d{2,4}", text):
+        return False
+    return validate_elevation_value(text)
+
+
+def _degrees(value, limit):
+    """The value as decimal degrees with at least four decimals within +-limit, or None."""
+    text = str(value).strip().replace(",", ".")
+    if not re.fullmatch(r"-?\d{1,3}\.\d{4,}", text):
+        return None
+    number = float(text)
+    return number if -limit <= number <= limit else None
+
+
+def validate_latitude_degrees(value):
+    """A latitude in decimal degrees with at least four decimals (48.2570995188): the check of a
+    field named Breite, which is also a width."""
+    return _degrees(value, 90.0) is not None
+
+
+def validate_longitude_degrees(value):
+    """A longitude in decimal degrees with at least four decimals (16.2204101175): the check of a
+    field named Länge, which is also a length."""
+    return _degrees(value, 180.0) is not None
+
+
+def validate_projected_coordinate(value):
+    """A projected easting or northing in metres, 10 km to 10 000 km from the false origin
+    (590583.09, 5345596.28, -98295.75): the check of the short names RW and HW (Rechtswert,
+    Hochwert)."""
+    text = str(value).strip()
+    if not re.fullmatch(r"-?\d{5,8}(?:\.\d{1,4})?", text):
+        return False
+    return 10000.0 <= abs(float(text)) <= 10000000.0
+
+
+def validate_geocentric_coordinate(value):
+    """One axis of an Earth-centred Cartesian position in metres, at most 6 400 km from the
+    centre (4085432.877)."""
+    text = str(value).strip()
+    if not re.fullmatch(r"-?\d{1,7}(?:\.\d{1,4})?", text):
+        return False
+    return abs(float(text)) <= 6400000.0
+
+
+_EPSG_PREFIXED = re.compile(r"^(?:EPSG:|urn:ogc:def:crs:EPSG::|https?://www\.opengis\.net/def/crs/EPSG/0/)[1-9]\d{3,4}$")
+
+
+def validate_epsg_code(value):
+    """An EPSG coordinate reference system code with its authority (EPSG:25832,
+    urn:ogc:def:crs:EPSG::4326) or, in a field named after EPSG, the bare code of 4 or 5 digits
+    from 1024 to 32767 (4936, 25833)."""
+    text = str(value).strip()
+    if _EPSG_PREFIXED.match(text):
+        return True
+    if text.endswith(".0"):
+        text = text[:-2]
+    return text.isdigit() and not text.startswith("0") and 1024 <= int(text) <= 32767
 
 
 def validate_week_of_year(value):

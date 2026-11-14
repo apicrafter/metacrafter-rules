@@ -15,12 +15,15 @@ rules:
   ch_pii_chahvvalue:
     key: chahv
     is_pii: True
-    name: Swiss AHV number by pattern
-    match: ppr
+    name: Swiss AHV number by pattern (756.9217.0769.85) with its EAN-13 check digit
+    # Not any four groups of three digits: numbers with thousands separators
+    # (486.105.253.092) have that shape.
+    match: regex
     type: data
-    rule: Word(nums, exact=3) + Literal('.') + Word(nums, exact=3) + Literal('.') + Word(nums, exact=3) + Literal('.') + Word(nums, exact=3)
-    maxlen: 15
-    minlen: 15
+    rule: 756\.\d{4}\.\d{4}\.\d{2}
+    maxlen: 16
+    minlen: 16
+    validator: metacrafterext.rules.ch.persons.validate_ch_ahv
   ch_pii_chpassportfield:
     key: chpassport
     is_pii: True

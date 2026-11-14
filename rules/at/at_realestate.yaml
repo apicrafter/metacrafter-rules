@@ -1,0 +1,25 @@
+name: at-realestate
+description: Austrian cadastre and land register identifiers
+context: realestate
+lang: de
+country_code: at
+rules:
+  atgrundstuecksnummerbyname:
+    key: at_grundstuecksnummer
+    name: Austrian parcel number (Grundstücksnummer) by field name (GST, GST-NR)
+    # 2799, 551/1, .129/3 (a leading dot for building plots).
+    rule: (?i)gst(?:[ _-]?(?:nr|nummer|no))?|grundst(?:ue|ü)cks?[ _-]?(?:nummer|nr)
+    type: field
+    match: regex
+    validator: metacrafterext.rules.at.survey.validate_at_grundstuecksnummer
+    needs_values: true
+    priority: 1
+  ateinlagezahlbyname:
+    key: at_einlagezahl
+    name: Austrian land register entry number (Einlagezahl) by field name (EZ)
+    rule: (?i)ez(?:[ _-]?(?:nr|nummer))?|einlagezahl|einlage[ _-]?(?:nr|nummer)|grundbuchs?einlage
+    type: field
+    match: regex
+    validator: metacrafterext.rules.at.survey.validate_at_einlagezahl
+    needs_values: true
+    priority: 1
