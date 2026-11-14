@@ -2320,3 +2320,31 @@ def validate_no_orgnr(value):
     if check == 10:
         return False
     return int(text[8]) == (0 if check == 11 else check)
+
+
+# The three-digit DAC sectors of the OECD Creditor Reporting System; a purpose code starts with one.
+_DAC_SECTORS = frozenset("""
+111 112 113 114 121 122 123 130 140 151 152 160 210 220 230 231 232 233 234 235 236 240 250
+311 312 313 321 322 323 331 332 410 430 510 520 530 600 720 730 740 910 930 998
+""".split())
+
+
+def validate_crs_purpose_code(value):
+    """An OECD DAC CRS purpose code: five digits that start with a DAC sector (41030, 31210)."""
+    text = str(value).strip()
+    return len(text) == 5 and text.isdigit() and text[:3] in _DAC_SECTORS
+
+
+def validate_mcc(value):
+    """A merchant category code (ISO 18245): four digits (5411, 0742)."""
+    text = str(value).strip()
+    return len(text) == 4 and text.isdigit()
+
+
+_IATI_ORG_REF = re.compile(r"^[A-Z]{2}(?:-[A-Z0-9]+){1,3}$")
+
+
+def validate_iati_org_ref(value):
+    """An IATI organisation identifier: a country or list code and parts joined by hyphens
+    (GB-7, GB-GOV-1, XM-DAC-41114)."""
+    return bool(_IATI_ORG_REF.match(str(value).strip()))

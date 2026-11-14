@@ -23,4 +23,11 @@ rules:
     # is highly ambiguous. Marked imprecise so it is ignored unless
     # --include-imprecise.
     imprecise: 1
-
+  gbvatfield:
+    key: gb_vat
+    name: UK VAT registration number by field name
+    rule: (?i)(?:supplier[ _]?)?vat[ _]?(?:registration[ _]?|reg[ _]?)?(?:number|num|no\.?|nr)|vat[ _]?reg(?:istration)?|vat[ _]?id
+    type: field
+    match: regex
+    validator: metacrafterext.rules.gb.codes.validate_gb_vat
+    priority: 1

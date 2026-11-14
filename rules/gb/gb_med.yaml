@@ -34,3 +34,60 @@ rules:
 
 
   
+  gbccgcodevalue:
+    key: gb_ccg_code
+    name: Clinical commissioning group GSS code by value (E38)
+    rule: 'E38\d{6}'
+    type: data
+    match: regex
+    minlen: 9
+    maxlen: 9
+    priority: 1
+  gbstpcodevalue:
+    key: gb_stp_code
+    name: Sustainability and transformation partnership GSS code by value (E54)
+    rule: 'E54\d{6}'
+    type: data
+    match: regex
+    minlen: 9
+    maxlen: 9
+    priority: 1
+  gbcanceralliancecodevalue:
+    key: gb_cancer_alliance_code
+    name: Cancer alliance GSS code by value (E56, E57)
+    rule: 'E5[67]\d{6}'
+    type: data
+    match: regex
+    minlen: 9
+    maxlen: 9
+    priority: 1
+  gbccgodscodefield:
+    key: gb_ccg_ods_code
+    name: CCG ODS code by field name (CCG20CDH)
+    # ONS writes the ODS code of a CCG as CCGyyCDH next to the GSS code CCGyyCD.
+    rule: (?i)ccg\d{2}cdh|ccg[ _]?ods[ _]?code|ods[ _]?ccg[ _]?code|ccg[ _]?code
+    type: field
+    match: regex
+    validator: metacrafterext.rules.gb.codes.validate_ccg_ods_code
+    priority: 1
+  gbnhsodscodefield:
+    key: gb_nhs_ods_code
+    name: NHS ODS code by field name (STP20CDH, NHSER18CDH, ODS code)
+    rule: (?i)(?:stp|icb|nhser|nhsrlo|nhsrg|ccg|sicbl|lhb)\d{2}cdh|ods[ _]?code|ods[ _]?org(?:anisation)?[ _]?code|trust[ _]?code|practice[ _]?code|gp[ _]?practice[ _]?code
+    type: field
+    match: regex
+    validator: metacrafterext.rules.gb.codes.validate_nhs_ods_code
+    priority: 1
+  gbgppracticecodevalue:
+    key: gb_nhs_ods_code
+    name: GP practice ODS code in an organisation code field (A81001)
+    # A letter and five digits: the ODS code of a GP practice. ORG_CODE alone is any
+    # organisation code, so the values decide; the OpenAlex rule no longer takes them (#69).
+    rule: '[A-HJ-NP-Y]\d{5}'
+    type: data
+    match: regex
+    minlen: 6
+    maxlen: 6
+    fieldrule: org_code,org code,organisation code,organisation_code,practice_code,practice code,ods_code,ods code,gp_code,gp code,prac_code
+    fieldrulematch: text
+    priority: 1

@@ -91,8 +91,10 @@ rules:
     name: OpenAlex ID by value pattern
     match: ppr
     type: data
-    rule: Word('ACIVW', exact=1) + Word('123456789', exact=1) + Word(nums, min=3, max=9)
-    minlen: 5
+    # OpenAlex ids have at least six digits (W2741809807, I136199984); a letter and five
+    # digits is a GP practice code (A81001).
+    rule: Word('ACIVW', exact=1) + Word('123456789', exact=1) + Word(nums, min=5, max=10)
+    minlen: 7
     maxlen: 11
     priority: 1
     validator: metacrafterext.rules.common.identifiers.validate_openalex_id

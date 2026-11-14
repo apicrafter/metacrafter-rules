@@ -115,3 +115,21 @@ rules:
     validator: metacrafterext.rules.common.identifiers.validate_language_tag
     fieldrule: lang,lang_code,langcode,language_code,languagecode,language_tag,languagetag,languages,locale,locales,inlanguage,in_language
     fieldrulematch: text
+  oecdcrspurposecodefield:
+    key: oecd_crs_purpose_code
+    name: OECD DAC CRS purpose code by field name (Sector code)
+    # IATI and ODA spending data name the CRS purpose code a sector code; the code must start
+    # with a DAC sector (41030 starts with 410).
+    rule: (?i)(?:dac[ _]?|crs[ _]?|oecd[ _]?|iati[ _]?)?(?:sector|purpose)[ _]?code|crs[ _]?purpose|dac[ _]?5[ _]?code|sector[ _]?\(dac\)
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.identifiers.validate_crs_purpose_code
+    priority: 1
+  iatiorganisationreffield:
+    key: iati_organisation_ref
+    name: IATI organisation identifier by field name (IATI Identifier, reporting-org ref)
+    rule: (?i)iati[ _]?(?:identifi?er|org(?:anisation)?[ _]?(?:id|ref|identifier))|reporting[ _-]?org(?:anisation)?[ _.-]?ref
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.identifiers.validate_iati_org_ref
+    priority: 1

@@ -33,3 +33,23 @@ rules:
     fieldrule: atcocode,atco_code,atco code,naptan_code,naptancode,stop_code,stoppointref
     fieldrulematch: text
     priority: 1
+  gbnptglocalitycodevalue:
+    key: gb_nptg_locality_code
+    name: NPTG locality code in a locality code field (E0029368)
+    rule: '[EN][0S]\d{6}'
+    type: data
+    match: regex
+    minlen: 8
+    maxlen: 8
+    fieldregex: '(?i)^(?:nptg)?[ _]?locality[ _]?code$|^nptg[ _]?(?:locality[ _]?)?(?:code|ref)$|^nptglocalityref$'
+    fieldrule: nptglocalitycode,nptg_locality_code,nptg locality code,localitycode,locality_code,nptglocalityref
+    fieldrulematch: text
+    priority: 1
+  gbnaptancodefield:
+    key: gb_naptan_code
+    name: NaPTAN SMS code by field name (NaptanCode)
+    rule: naptancode,naptan_code,naptan code,sms_code,smscode,sms code,naptan sms code
+    type: field
+    match: text
+    validator: metacrafterext.rules.gb.codes.validate_naptan_code
+    priority: 1

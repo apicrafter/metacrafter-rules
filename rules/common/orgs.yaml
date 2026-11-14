@@ -15,7 +15,7 @@ rules:
   dunsfield:
     key: duns
     name: Data Universal Numbering System (DUNS) by field name
-    rule: duns,duns_number,duns_num,d_u_n_s,dun_number
+    rule: duns,duns_number,duns_num,d_u_n_s,dun_number,d-u-n-s number,d-u-n-s,duns number,d-u-n-s no,dun & bradstreet number
     type: field
     match: text
     priority: 1

@@ -35,4 +35,38 @@ rules:
     rule: Word(alphas, min=1, max=2) + Word(nums, min=1, max=2) + Optional(Word(nums, exact=1)) + Optional(Literal(' ')) + Word(nums, exact=1) + Word(alphas, exact=2)
     maxlen: 8
     minlen: 5
-
+  gbepcrrnvalue:
+    key: gb_epc_rrn
+    name: Energy performance certificate report reference number by value (0991-0918-6260-8900-9092)
+    rule: '\d{4}-\d{4}-\d{4}-\d{4}-\d{4}'
+    type: data
+    match: regex
+    minlen: 24
+    maxlen: 24
+    priority: 1
+  gbepcratingfield:
+    key: gb_epc_rating
+    name: EPC or DEC energy rating band by field name (CURRENT_ENERGY_RATING, ENERGY_RATING_BAND)
+    # The numeric ENERGY_RATING (112) is the score of the band: the values must be letters.
+    rule: (?i)(?:current|potential)[ _]?energy[ _]?rating|energy[ _]?(?:efficiency[ _]?)?rating[ _]?band|(?:epc|dec)[ _]?(?:rating|band)|(?:operational|asset)[ _]?rating[ _]?band|display energy certificates? rating|energy[ _]?efficiency[ _]?(?:rating|band)
+    type: field
+    match: regex
+    validator: metacrafterext.rules.gb.codes.validate_epc_rating
+    priority: 1
+  gbplanningapplicationrefvalue:
+    key: gb_planning_application_ref
+    name: Planning application reference by value (14/01103/FUL, 2019/1602/P)
+    rule: '(?:\d{2}|\d{4})/\d{3,6}/[A-Z]{1,8}'
+    type: data
+    match: regex
+    minlen: 8
+    maxlen: 20
+    priority: 1
+  gbvoadescriptioncodefield:
+    key: gb_voa_description_code
+    name: VOA primary description code by field name (VOA Code)
+    rule: voa code,voa_code,voacode,voa description code,primary description code,primary_description_code,pdesc code
+    type: field
+    match: text
+    validator: metacrafterext.rules.gb.codes.validate_voa_description_code
+    priority: 1

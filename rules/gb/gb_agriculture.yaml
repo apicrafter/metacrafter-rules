@@ -1,0 +1,24 @@
+name: gb-agriculture
+description: Agriculture codes of the United Kingdom
+context: agriculture
+lang: en
+country_code: gb
+rules:
+  gbcattlebreedcodefield:
+    key: gb_cattle_breed_code
+    name: GB cattle breed code (BCMS) by field name
+    # Breed codes of the Cattle Tracing System (AA, AAX); a breed field with names is no code.
+    rule: (?i)(?:dam[ _]|sire[ _]|cattle[ _])?breed[ _]?code
+    type: field
+    match: regex
+    validator: metacrafterext.rules.gb.codes.validate_cattle_breed_code
+    priority: 1
+  animalbreedfield:
+    key: animal_breed
+    name: Animal breed name by field name (Breed Description, DAM BREED)
+    # A breed field with names; breed codes (Breed Code, DAM BREED CODE) are gb_cattle_breed_code.
+    rule: (?i)(?!.*code)(?:dam[ _]|sire[ _]|cattle[ _]|animal[ _]|dog[ _])?breed(?:[ _](?:description|name))?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.generic.has_letters
+    priority: 1

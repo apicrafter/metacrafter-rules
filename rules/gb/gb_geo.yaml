@@ -24,6 +24,9 @@ rules:
     # A bare Ward is any country's ward (Kenyan wards, #61); ONS names it WDyyNM.
     fieldrule: ward name,ward_name,wardname,wd21nm,wd22nm,wd23nm,wd24nm,wd25nm
     fieldrulematch: text
+    # ONS ward and electoral division names of any year (WD20NM, WD23NMW, CMWD11NM, CED19NM)
+    # and Ward Description; a bare Ward stays out.
+    fieldregex: '(?i)^(?:wd|cmwd|ced)\d{2}nmw?$|^ward[ _]?(?:description|desc)$'
   ukpostcodefield:
     key: ukpostalcode
     name: UK postal code by field name
@@ -132,3 +135,207 @@ rules:
     type: field
     match: text
     priority: 3
+
+  ukgsscodebyonsfield:
+    key: ukgsscode
+    name: GSS code in an ONS code column (CAUTH19CD, EER18CD, CMWD11CD)
+    # ONS names a code column by the geography, the year and CD (CAUTH19CD, CTYUA16CD); the
+    # values must be GSS codes. CDH columns hold ODS codes, CDO older ONS codes.
+    rule: (?i)[a-z]{2,8}\d{2}cd
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.generic.validate_gss_code
+    priority: 1
+  ukoutputareacodevalue:
+    key: uk_output_area_code
+    name: Census output area GSS code by value ([EWSN]00)
+    rule: '[EWSN]00\d{6}'
+    type: data
+    match: regex
+    minlen: 9
+    maxlen: 9
+    priority: 1
+  gbregioncodevalue:
+    key: gb_region_code
+    name: Region of England GSS code by value (E12)
+    rule: 'E12\d{6}'
+    type: data
+    match: regex
+    minlen: 9
+    maxlen: 9
+    priority: 1
+  ukcountrygsscodevalue:
+    key: uk_country_gss_code
+    name: UK country GSS code by value ([EWSN]92, K0[2-4])
+    rule: '(?:[EWSN]92|K0[2-4])\d{6}'
+    type: data
+    match: regex
+    minlen: 9
+    maxlen: 9
+    priority: 1
+  gbcountycodevalue:
+    key: gb_county_code
+    name: County of England GSS code by value (E1[01])
+    rule: 'E1[01]\d{6}'
+    type: data
+    match: regex
+    minlen: 9
+    maxlen: 9
+    priority: 1
+  gbcombinedauthoritycodevalue:
+    key: gb_combined_authority_code
+    name: Combined authority GSS code by value (E47)
+    rule: 'E47\d{6}'
+    type: data
+    match: regex
+    minlen: 9
+    maxlen: 9
+    priority: 1
+  ukeuropeanelectoralregioncodevalue:
+    key: uk_european_electoral_region_code
+    name: European electoral region GSS code by value (E15, W08, S15, N07)
+    rule: '(?:E15|W08|S15|N07)\d{6}'
+    type: data
+    match: regex
+    minlen: 9
+    maxlen: 9
+    priority: 1
+  gbcensusmergedwardcodevalue:
+    key: gb_census_merged_ward_code
+    name: Census merged ward GSS code by value (E36, W39)
+    rule: '(?:E36|W39)\d{6}'
+    type: data
+    match: regex
+    minlen: 9
+    maxlen: 9
+    priority: 1
+  gbcensusmergedladcodevalue:
+    key: gb_census_merged_lad_code
+    name: Census merged local authority district GSS code by value (E41, W40)
+    rule: '(?:E41|W40)\d{6}'
+    type: data
+    match: regex
+    minlen: 9
+    maxlen: 9
+    priority: 1
+  gbbuacodevalue:
+    key: gb_bua_code
+    name: Built-up area GSS code by value (E34, W37, K05)
+    rule: '(?:E34|W37|K05)\d{6}'
+    type: data
+    match: regex
+    minlen: 9
+    maxlen: 9
+    priority: 1
+  gbbuasdcodevalue:
+    key: gb_buasd_code
+    name: Built-up area sub-division GSS code by value (E35, W38, K06)
+    rule: '(?:E35|W38|K06)\d{6}'
+    type: data
+    match: regex
+    minlen: 9
+    maxlen: 9
+    priority: 1
+  gbcountyelectoraldivisioncodevalue:
+    key: gb_county_electoral_division_code
+    name: County electoral division GSS code by value (E58)
+    rule: 'E58\d{6}'
+    type: data
+    match: regex
+    minlen: 9
+    maxlen: 9
+    priority: 1
+  gbcommunitysafetypartnershipcodevalue:
+    key: gb_community_safety_partnership_code
+    name: Community safety partnership GSS code by value (E22, W14)
+    rule: '(?:E22|W14)\d{6}'
+    type: data
+    match: regex
+    minlen: 9
+    maxlen: 9
+    priority: 1
+  gbnideacodevalue:
+    key: gb_ni_dea_code
+    name: Northern Ireland district electoral area GSS code by value (N10)
+    rule: 'N10\d{6}'
+    type: data
+    match: regex
+    minlen: 9
+    maxlen: 9
+    priority: 1
+  gbscotlanddatazonecodevalue:
+    key: gb_scotland_data_zone_code
+    name: Scottish data zone GSS code by value (S01)
+    rule: 'S01\d{6}'
+    type: data
+    match: regex
+    minlen: 9
+    maxlen: 9
+    priority: 1
+  gbosgridreferencevalue:
+    key: gb_os_grid_reference
+    name: Ordnance Survey National Grid reference with spaces (SD 97624 17311)
+    # Written with spaces the reference is not taken for a Scottish company number or an
+    # Ofsted URN (SC086146, SC068179); without spaces it needs a grid field name.
+    rule: '[A-Z]{2} \d{1,5}(?: \d{1,5})?'
+    type: data
+    match: regex
+    minlen: 5
+    maxlen: 14
+    validator: metacrafterext.rules.gb.codes.validate_os_grid_reference_spaced
+    priority: 1
+  gbosgridreferencefieldvalue:
+    key: gb_os_grid_reference
+    name: Ordnance Survey National Grid reference in a grid reference field (TL97441340)
+    rule: '[A-Z]{2} ?\d{2,10}(?: \d{1,5})?'
+    type: data
+    match: regex
+    minlen: 4
+    maxlen: 14
+    validator: metacrafterext.rules.gb.codes.validate_os_grid_reference
+    fieldregex: '(?i)^(?:.*[ _.-])?(?:grid[ _]?ref(?:erence)?|ngr|os[ _]?grid[ _]?ref(?:erence)?|osgr|gridref|national[ _]?grid[ _]?reference|os[ _]?ref)(?:[ _.-].*)?$'
+    fieldrule: gridreference,grid reference,grid_reference,grid ref,grid_ref,gridref,ngr,os grid reference,os_grid_reference,osgr,os grid ref
+    fieldrulematch: text
+    priority: 1
+  gbpostcodedistrictfield:
+    key: gb_postcode_district
+    name: UK postcode district (outward code) by field name
+    rule: (?i)post ?code[ _]?district|postcode[ _]?(?:area|outward)|outward[ _]?code|pcd[ _]?district|postal[ _]?district
+    type: field
+    match: regex
+    validator: metacrafterext.rules.gb.codes.validate_gb_postcode_district
+    priority: 1
+  gbpostcodesectorfield:
+    key: gb_postcode_sector
+    name: UK postcode sector by field name
+    rule: (?i)post ?code[ _]?sector|postal[ _]?sector|pcd[ _]?sector
+    type: field
+    match: regex
+    validator: metacrafterext.rules.gb.codes.validate_gb_postcode_sector
+    priority: 1
+  gbgeoxlongitudefield:
+    key: longitude
+    name: Longitude in a GeoX field (brownfield land register)
+    # The brownfield land register standard gives GeoX / GeoY in ETRS89 or WGS84 degrees;
+    # registers in OSGB36 metres are eastings and northings, which the validator rejects.
+    rule: (?i)geo[ _]?x
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.generic.validate_lonlat_number
+    priority: 1
+  gbgeoylatitudefield:
+    key: latitude
+    name: Latitude in a GeoY field (brownfield land register)
+    rule: (?i)geo[ _]?y
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.generic.validate_lonlat_number
+    priority: 1
+  gbcountynamebyonsfield:
+    key: gb_county
+    name: County of England by ONS name column (CTY19NM)
+    rule: (?i)cty\d{2}nmw?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.generic.has_letters
+    priority: 1
