@@ -156,9 +156,10 @@ _ELEVATION = re.compile(r"^-?\d{1,4}(?:[.,]\d+)?(?: ?m)?$")
 
 
 def validate_elevation_value(value):
-    """An elevation in metres between the Dead Sea shore and Everest: 535, 402.5, 1205 m, -28."""
+    """An elevation in metres between the Dead Sea shore and Everest: 535, 402.5, 1205 m, -28. A
+    whole number of one digit is not one: altitude band codes are 1 to 8 (EKATTE)."""
     text = str(value).strip()
-    if not _ELEVATION.match(text):
+    if not _ELEVATION.match(text) or re.fullmatch(r"\d", text.rstrip("m ")):
         return False
     number = float(text.rstrip("m ").replace(",", "."))
     return -430.0 <= number <= 8849.0

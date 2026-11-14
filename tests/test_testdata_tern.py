@@ -52,7 +52,7 @@ VALIDATORS = [
     (fieldwork.validate_utm_zone_with_band, ["50 J", "55H", "33U"], ["56", "3", "A"]),
     (fieldwork.validate_geodetic_datum, ["WGS 84", "WGS84", "GDA94", "GDA2020", "NAD83", "AGD66", "ETRS89"],
      ["EPSG:4326", "WGS", "4326", "GDA"]),
-    (fieldwork.validate_elevation_value, ["535", "402.5", "1205 m", "-28"], ["9000", "abc", "12345"]),
+    (fieldwork.validate_elevation_value, ["535", "402.5", "1205 m", "-28", "3.5", "12"], ["9000", "abc", "12345", "3", "8"]),
     (fieldwork.validate_week_of_year, ["35", "53", "35.0", "1"], ["54", "0", "x"]),
     (validate_mx_postcode, ["06500", "6500.0", "99999"], ["0.0024", "00000", "1234", "123456"]),
 ]
