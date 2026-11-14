@@ -59,3 +59,122 @@ rules:
     validator: metacrafterext.rules.au.codes.validate_au_aims_ltmp_sector
     needs_values: true
     priority: 1
+
+  # ------------------------------------------------------------ data.gov.au (the national portal)
+  austatecodebyname:
+    key: au_state_code
+    name: Australian state or territory abbreviation by field name (State/Territory, Jurisdiction, AFS_LIC_ADD_STATE, StateOrTerritory, state_abb)
+    # Registers and statistics name the state of an address or of a row State, State/Territory,
+    # Jurisdiction or <prefix>_STATE; the values must be the abbreviations (NSW, Vic, QLD), which
+    # other countries' state codes (CA, NY) and full names fail.
+    rule: (?i)(?:[a-z]+[ _/])*(?:state|territory|jurisdiction)(?:[ _/]?(?:or[ _]?)?(?:territory|state))?(?:[ _]?(?:code|abb|abbr|abbreviation|id))?(?:[ _](?:of[ _][a-z ]+))?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.au.codes.validate_au_state_code
+    needs_values: true
+    priority: 1
+  aupostcodebyname:
+    key: au_postcode
+    name: Australian postcode by field name (Post Code, AFS_LIC_ADD_PCODE, CRED_REP_PCODE, Postal_Code) with four-digit codes
+    # ASIC registers abbreviate postcode to PCODE; ORIC writes NT postcodes as numbers (871).
+    rule: (?i)(?:[a-z]+[ _])*(?:p[ _]?code|post[ _]?code|postal[ _]?code)
+    type: field
+    match: regex
+    validator: metacrafterext.rules.au.codes.validate_au_postcode
+    needs_values: true
+    priority: 1
+  ausuburbbyname:
+    key: au_suburb
+    name: Australian suburb or locality by field name (Suburb, Suburb/Town, B_Suburb, supplier_suburb, AFS_LIC_ADD_LOCAL)
+    # The place before the state and postcode of an Australian address; council and register
+    # files call it suburb, suburb/town, town/city or locality (ASIC: _ADD_LOCAL, _LOCALITY).
+    rule: (?i)(?:[a-z]+[ _])*(?:suburb(?:[ _/]?(?:town|name|locality))?|suburbs?[ _]name|town[ _/]?(?:city|suburb)|[a-z]+_add_local)
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.generic.validate_place_name
+    needs_values: true
+    priority: 1
+  ausa2codebyname:
+    key: au_sa2_code
+    name: ABS Statistical Area Level 2 code by field name (sa2_code, sa2_main11, SA2_5digitcode_2011)
+    rule: (?i)(?:[a-z]+[ _])*sa2(?:[ _]?(?:main|code|5digitcode|maincode|main_code|id))+(?:[ _]?(?:20)?\d{2})?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.au.codes.validate_au_sa2_code
+    needs_values: true
+    priority: 1
+  aulgacodebyname:
+    key: au_lga_code
+    name: ABS local government area code by field name (lga_code, LGA_Code_2020, PR_LGAC) with five-digit codes
+    # Victorian council numbers in an lga_code field (301 to 381) fail the five-digit check.
+    rule: (?i)(?:[a-z]+[ _])*(?:lga[ _]?code|lgac|lga[ _]?id)(?:[ _]?(?:20)?\d{2})?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.au.codes.validate_au_lga_code
+    needs_values: true
+    priority: 1
+  aulganamebyname:
+    key: au_lga_name
+    name: ABS local government area name by field name (lga_name, LGA_NAME_2020, lga11_name, National LGA Name 2021, LGA)
+    rule: (?i)(?:[a-z]+[ _])*lga(?:\d{2})?(?:[ _]?name)?(?:[ _]?(?:20)?\d{2})?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.au.codes.validate_au_lga_name_plain
+    needs_values: true
+    priority: 1
+  aulganamevalue:
+    key: au_lga_name
+    name: ABS local government area name with the council status by value (Albury (C), Towong (S), Kangaroo Island (DC))
+    rule: metacrafterext.rules.au.codes.validate_au_lga_name
+    type: data
+    match: func
+    minlen: 5
+    maxlen: 60
+    priority: 1
+  augccsacodebyname:
+    key: au_gccsa_code
+    name: ABS Greater Capital City Statistical Area code by field name (gcc_code11, GCCSA Code of Debtor)
+    rule: (?i)(?:[a-z]+[ _])*gcc(?:sa)?[ _]?code(?:[ _]?(?:20)?\d{2})?(?:[ _]of[ _][a-z]+)?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.au.codes.validate_au_gccsa_code
+    needs_values: true
+    priority: 1
+  augccsacodevalue:
+    key: au_gccsa_code
+    name: ABS Greater Capital City Statistical Area code by value (1GSYD, 2RVIC, 8ACTE)
+    rule: metacrafterext.rules.au.codes.validate_au_gccsa_code
+    type: data
+    match: func
+    minlen: 5
+    maxlen: 5
+    priority: 1
+  auremotenessbyname:
+    key: au_remoteness_area
+    name: ABS Remoteness Area by field name (Remoteness area, National Remoteness Areas, regional_area)
+    rule: (?i)(?:[a-z]+[ _])*(?:remoteness(?:[ _](?:area|areas|class|category))?|regional[ _]area|ra[ _]name)
+    type: field
+    match: regex
+    validator: metacrafterext.rules.au.codes.validate_au_remoteness_area
+    needs_values: true
+    priority: 1
+  auremotenessvalue:
+    key: au_remoteness_area
+    name: ABS Remoteness Area by value (Major Cities of Australia, Inner Regional Australia, Very Remote)
+    rule: metacrafterext.rules.au.codes.validate_au_remoteness_area
+    type: data
+    match: func
+    minlen: 6
+    maxlen: 30
+    priority: 1
+  aufederalelectoraldivisionbyname:
+    key: au_federal_electoral_division
+    name: Australian federal electoral division by field name (elect_div, ced_name_2013, Commonwealth electoral division)
+    # Queensland councils number their divisions (Division 1): the names must be divisions of the
+    # House of Representatives.
+    rule: (?i)(?:[a-z]+[ _])*(?:elect(?:oral)?[ _]?div(?:ision)?s?|ced(?:[ _]?name)?|commonwealth[ _]electoral[ _]divisio[a-z0-9_]*|federal[ _]electorate|electorate)(?:[ _]?(?:name|20\d{2}))*
+    type: field
+    match: regex
+    validator: metacrafterext.rules.au.codes.validate_au_federal_electoral_division
+    needs_values: true
+    priority: 1

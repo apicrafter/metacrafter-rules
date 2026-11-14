@@ -248,6 +248,8 @@ rules:
       ^ ((Word(alphanums) + Optional(oneOf('_ -'))) * 3 + CaselessLiteral('month'))
     type: field
     match: ppr
+    # A month field of months with their year (Jul-19, 2019-07) holds yearmonth values (data.gov.au).
+    validator: metacrafterext.rules.common.periods.validate_not_yearmonth
     priority: 2
   monthknown:
     key: month
@@ -255,6 +257,7 @@ rules:
     rule: month,monthnum
     type: field
     match: text
+    validator: metacrafterext.rules.common.periods.validate_not_yearmonth
     priority: 1
   yearbydataimprecise:
     key: year

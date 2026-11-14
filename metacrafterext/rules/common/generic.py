@@ -856,11 +856,3 @@ def validate_icd10_with_label(value):
     """An ICD-10 code or range with its title, as cancer registries group the sites
     (C18-C21 Colorectal, C23, C24 Gallbladder, C50 Breast)."""
     return bool(_ICD10_LABEL.match(" ".join(str(value).split())))
-
-
-_SIZE = re.compile(r"^\d+(?:[.,]\d+)?\s*(?:[kmgtpezy]i?b|b|bytes?|kb|mb|gb|tb)?$", re.IGNORECASE)
-
-
-def validate_size_value(value):
-    """A size of data: a number of bytes (2048) or a number with a unit (5.2 GB, 100 KiB)."""
-    return bool(_SIZE.match(str(value).strip()))

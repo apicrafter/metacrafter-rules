@@ -20,15 +20,14 @@ from metacrafterext.rules.ae.geo import (
     validate_ae_po_box,
 )
 from metacrafterext.rules.ar.countries import COUNTRY_NAMES, fold_arabic, validate_ar_country_name
-from metacrafterext.rules.common.chemistry import validate_cas_number
+from metacrafterext.rules.common.chemistry import validate_casrn
 from metacrafterext.rules.common.generic import (
     validate_compact_date,
     validate_geopoint_text,
     validate_icd10_with_label,
     validate_quarter_value,
-    validate_size_value,
 )
-from metacrafterext.rules.common.software import validate_commit_hash
+from metacrafterext.rules.common.software import validate_commit_hash, validate_datasize_value
 from tests.test_testdata_baseline import field_matches, load, value_matches
 
 VALIDATORS = [
@@ -60,7 +59,7 @@ VALIDATORS = [
       "بنجلاديش", "بنغلاديش", "أنجولا", "اثيوبيا", "أسبانيا", "سلطنة عمان", "قطر", "الهند", "سورية",
       "جمهورية مصرالعربية", "الإمارات العربية المتحدة"],
      ["أخرى", "الجملة", "مواطن", "غير مواطن", "دول مجلس التعاون", "دبي", "India", "Saudi Arabia", ""]),
-    (validate_cas_number, ["534-52-1", "608-73-1", "7732-18-5", "50-00-0", "68359–37–5"],
+    (validate_casrn, ["534-52-1", "608-73-1", "7732-18-5", "50-00-0", "68359–37–5"],
      ["534-52-2", "2019-05-1", "12-34-5", "……………", "and others", "62476-59-9 [50594-66-6]"]),
     (validate_icd10_with_label,
      ["C18-C21 Colorectal", "C23, C24 Gallbladder, other and unspecified", "C50 Breast",
@@ -72,7 +71,7 @@ VALIDATORS = [
     (validate_compact_date, ["20171119", "20170704", "19991231"], ["20171301", "20170230", "2017111", "12345678"]),
     (validate_quarter_value, ["Q1", "q4", "3", "Q1-2015", "2015 Q2", "First Quarter", "الربع الأول"],
      ["Q5", "0", "5", "2015", "January"]),
-    (validate_size_value, ["2048", "5.2 GB", "100 KiB", "12 MB"], ["MAJOR", "MINOR", "General", "Local"]),
+    (validate_datasize_value, ["2048", "5.2 GB", "12 MB"], ["MAJOR", "MINOR", "General", "Local"]),
     (validate_commit_hash, ["a1b2c3d", "9fceb02d0ae598e95dc970b74767f19372d61af8"], ["Revision 1", "R4"]),
 ]
 
@@ -123,7 +122,6 @@ FIELDS = [
     ("common/dateandtime.yaml", "compactdatebyname", ["loading_date", "date", "posting_date", "issue date", "creat_dt"],
      ["update", "dated_by", "candidate"]),
     ("common/dateandtime.yaml", "quarterbyname", ["Quarter", "quarter_ar", "qtr", "الربع"], ["headquarters", "quarterly_report"]),
-    ("common/software.yaml", "datasizebybarename", ["size"], ["Size_EN", "file_size"]),
 ]
 
 

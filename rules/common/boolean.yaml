@@ -25,6 +25,16 @@ rules:
     match: text
     type: data
     priority: 2
+  booleansino:
+    key: boolean
+    name: Boolean value sí/no (Spanish)
+    # Sí, Si, SI and No of the Argentine cultural directories and surveys (espacio_incaa,
+    # hay_libros_en_tu_casa, noti1). Without it a yes/no column passed only when No was the
+    # commoner answer, through the English no.
+    rule: si,sí,no
+    match: text
+    type: data
+    priority: 2
   participleprefixrule:
     key: boolean
     name: Boolean with number of common prefixes and integer

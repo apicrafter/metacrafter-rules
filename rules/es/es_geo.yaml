@@ -82,3 +82,30 @@ rules:
     maxlen: 23
     validator: metacrafterext.rules.es.validators.validate_es_referencia_catastral
     priority: 1
+  # Found in the cultural directories of the Argentine culture ministry (datos.cultura.gob.ar,
+  # metacrafter-testdata).
+  esstreetaddressbyname:
+    key: street_address
+    is_pii: True
+    name: Spanish street address by field name (direccion, Dirección, domicilio, direccion_descripcion)
+    # Sarmiento 450, Av. Corrientes 1543, Rivadavia S/N. A wind direction (NE) and the name of a
+    # directorate (Dirección Nacional de Vialidad), the other meanings of dirección, fail.
+    rule: '(?i)direcci[oó]n(?:[ _](?:descripci[oó]n|completa|postal|f[ií]sica|calle|sede|legal|de[ _]la[ _]sede))?|domicilio(?:[ _](?:legal|real|fiscal|postal|de[ _]planta|sede|calle|completo))?|direcci[oó]n[ _]y[ _]n[uú]mero'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.directories.validate_street_address
+    needs_values: true
+    priority: 1
+  esfloorbyname:
+    key: address_line2
+    is_pii: True
+    name: Floor or unit of an address by Spanish field name (piso, piso_dpto)
+    # 1°, 2º B, P.B., Planta Alta, Subsuelo, Loc. 1. Departamento, and DEPTO / DPTO alone, are an
+    # administrative division in Argentina (the department codes of the Córdoba census tables,
+    # 098) and are left out.
+    rule: '(?i)piso(?:[ _](?:y[ _])?(?:dpto|depto|oficina|local))?'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.directories.validate_floor
+    needs_values: true
+    priority: 1

@@ -45,6 +45,81 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `point_x` / `point_y` and the misspelt `stop_location_longitiude` / `stop_location_latitiude` as
   longitude and latitude (decimal degrees only).
 - The Arabic month name list has ديسيمبر.
+- **Rules for the data.gov.au files of metacrafter-testdata** (a snapshot of the Australian national
+  open data portal, Dateno source cdi00000098; validators in `metacrafterext.rules.au.codes` and
+  `metacrafterext.rules.common.periods`):
+  - IP Australia numbers of the IPGOD tables: patent application numbers (`au_patent_application_number`:
+    2005249605, 59801/80, 1997PP7450) in `australian_appl_no`, `application_number`,
+    `conv_to_appl_number`, `old_patent_appl_no` and the PBS `earliest_patent` / `latest_patent`; plant
+    breeder's rights application numbers (`au_pbr_application_number`: 1998/163); trade mark numbers
+    (`au_trademark_number`) in `tm_number`; IPC symbols (`ipc_code`: A47G  23/02, A47G23/02) by field
+    name (`ipc_mark_value`, `primary_ipc_mark`) and by value down to the group;
+  - ANZSIC industry codes (`au_anzsic_code`) in ANZSIC fields and the ATO `Broad / Fine / Finer
+    industry` fields, also written with their titles (011 Nursery and Floriculture Production);
+    ANZSCO occupation codes with titles (`au_anzsco_code`: 1111 Chief Executives and Managing
+    Directors) in occupation fields; Standards Australia / New Zealand designations
+    (`au_standard_designation`: AS/NZS 4847.1:2010, NZS 4606.1-1989) by name (`N-Standard`) and value;
+  - ABS geography: SA2 codes (`au_sa2_code`: `sa2_main11`, `sa2_code`), LGA codes (`au_lga_code`, five
+    digits; Victorian council numbers fail) and names (`au_lga_name`: Albury (C) by value, plain ASGS
+    2021 names in LGA name fields), Greater Capital City Statistical Area codes (`au_gccsa_code`: 1GSYD,
+    the 16 codes), Remoteness Areas (`au_remoteness_area`) by name and value, federal electoral
+    divisions (`au_federal_electoral_division`: the 2013 divisions and later names; Queensland council
+    divisions fail);
+  - ORIC Indigenous Corporation Numbers (`au_icn`: ICN), ASIC AFS and credit licence numbers
+    (`au_asic_licence_number`: `AFS_LIC_NUM`, `CRED_LIC_NUM`), PBS item codes (`au_pbs_item_code`:
+    01002R, 48M; MBS item numbers fail);
+  - financial years (`fiscal_year`: 2014-15, 2010–11, FY201213 by value; 2014-2015 and 2010/2011 in
+    financial, income, water or report year fields), months with an English month name and a year
+    (`yearmonth_english`: Sep-17, Aug-2011), quarters with their year (`year_quarter`: 2021Q04);
+    money ranges (`money_range`: $100K - $5m, b. $18,201 to $37,000, Loss/nil) in income, assets,
+    turnover and tax range fields;
+  - registry types that had no rules: Australian state abbreviations (`au_state_code`) in State,
+    State/Territory, Jurisdiction and `<prefix>_STATE` fields; suburbs (`au_suburb`) in Suburb,
+    Suburb/Town and ASIC `_ADD_LOCAL` fields; postcodes (`au_postcode`) in `Post Code` and `_PCODE`
+    fields (NT postcodes without the leading zero, 871); ACNs (`auacn`) by check digit in `acn` fields
+    that lost the leading zeros (2399653); ABNs by check digit in `ABN_ACN` and `Supplier ABN` fields;
+    CAS Registry Numbers (`casrn`) by check digit in CAS fields; PCT application numbers and WO
+    publication numbers by value; UPOV codes (`upov_code`) in `upov_code` fields;
+  - common: suburbs as `location` (Suburb, SUBURB, suburb_name) and town or city fields as `city`
+    (TOWN/CITY, Suburb/Town): without a scan country this universal match covers `au_suburb`, so a
+    South African SUBURB is no Australian suburb.
+
+- **Rules for the datos.cultura.gob.ar files of metacrafter-testdata** (an April 2024 Dateno
+  snapshot of the open data portal of the Argentine culture ministry: the cultural directories of
+  the Mapa Cultural and the national survey of cultural consumption, ENCC). A new rule file,
+  `rules/common/directories.yaml`, with validators in `metacrafterext.rules.common.directories`
+  that compare the words of a value with a small vocabulary after case and accents are folded:
+  - broadcast frequencies (`radio_frequency`: `frecuencia`, 88.3, FM 104.1, 1410KHZ; by value
+    with the band or the unit); geocoding precision (`geocoding_precision`:
+    `tipo_latitud_longitud`, `TipoLatitudLongitud`, `detalle_georreferencia`, `location_type`;
+    by value when it says precise, approximate or centroid, as the `Nota` field of the festivals
+    does); public or private management (`ownership_type`: `tipo_gestion`, `tipo de gestión`,
+    `jurisdiccion`, `statut_public_prive`: Público, Privado, Mixto, Estatal, Municipal, Privé);
+    attendance mode (`attendance_mode`: `Modalidad`: Presencial, Virtual, Bimodal, A distancia);
+    periodicity (`periodicity`: `Periodicidad`: Anual, Bianual, Mensual, ANNUAL); levels of
+    education (`education_level`: `Nivel`, `nivel_educativo`: Grado, Pregrado, Posgrado,
+    Secundarios completos); socioeconomic levels (`socioeconomic_level`: `NSE_3`, `NSEcat1`,
+    `niv_socioe`: ABC1, C2+C3, D2E, C+); the type and the number of a legal act
+    (`legislationtype`: `decreto_o_ley`: Decreto, Ley, Resolución SC; `legislation_number`:
+    `numero_de_decreto_o_ley`: 325, 24.262, 1172/2003); degree titles (`academicdegree`:
+    `Título`: Licenciado en Comunicación Social, Profesor de Música);
+  - Argentine regions (`ar_region`: `region`, `REGION`: NOA, NEA, CUYO, CENTRO, PATAGONIA, GBA,
+    and the electricity market regions COMAHUE, GRAN BS.AS.), national heritage categories by
+    value (`ar_heritage_category`: Monumento Histórico, Lugar Histórico, Sepulcro, Bien de Interés
+    Histórico y Artístico) and CONABIP popular library numbers (`ar_conabip_number`:
+    `nro_conabip`);
+  - Spanish names of existing types: years in any field named with año, anio or ano
+    (`año_inauguracion`, `Año de inicio`, `último año de actividad`, `declaracion_año`) and
+    `inicio_actividad`; Spanish month names (`es_month`: Octubre, FEBRERO); phones named
+    `Teléfono`, `Telefóno`, `tel`, `celular` with 5 to 15 digits; street addresses named
+    `direccion`, `Dirección`, `domicilio`, `direccion_descripcion` with a number or a street word
+    (a wind direction and a directorate fail); floors named `piso` (`address_line2`: P.B., 2º B,
+    Planta Alta; not `DEPTO`, a department); gender identity named `identidad_de_genero` with gender words
+    (Varón trans, Otras identidades); age bands named `franja_etaria` and written `18 A 29 ANIOS`,
+    `65 ANIOS Y MAS`; survey weights named `ponderador`, `pondera_dem`, `expansor`; years of birth
+    named `anio_nacimiento`, `año_de_nacimiento` (`birth_year`, `esbirthyearknown`).
+- `booleansino`: Sí, Si, SI and No are boolean. A yes/no column passed only when No was the
+  commoner answer, through the English no.
 - **Rules for the ARSAT files of metacrafter-testdata** (an April 2024 Dateno snapshot of the open
   data portal of ARSAT, the Argentine state satellite and telecommunications company):
   - KML coordinates written as text in a cell (`kml_coordinates`: lon,lat,alt tuples separated by
@@ -259,8 +334,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - A bare `serial_number` field is no VIN and no ISSN (smart meter serials 1000247T, 12H0500467).
 - `revision`, `rev` and the other commit hash field names need hexadecimal hashes (Revision 1, R4 of
   building permits are no commit hashes).
-- A bare `size` field is a data size only when its values are numbers of bytes or numbers with a unit
-  (MAJOR, MINOR and General of surgery tables are not).
+- A `month` field of months with their year (Jul-19, 2019-07) is no longer `month`: its values are
+  `yearmonth_english` or `yearmonth` (data.gov.au). A `size` field of size classes (Large, Medium,
+  Small: the ORIC register) is no longer `datasize`.
 - `pii/es/es_pii.yaml` gave the Spanish birthday rule the key of the gender rule
   (`esgenderknown`), so PyYAML kept only the birthday rule and Spanish gender values were never
   matched; the birthday rule is `esbirthdayknown` now.
