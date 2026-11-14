@@ -15,3 +15,24 @@ rules:
     rule: metacrafterext.rules.en.orgs.is_uk_orgname
 
   
+  gbcivilservicegradevalue:
+    key: gb_civil_service_grade
+    name: UK civil service grade in a grade field (G7, HEO, SCS2)
+    match: func
+    type: data
+    rule: metacrafterext.rules.gb.codes.validate_civil_service_grade
+    minlen: 2
+    maxlen: 30
+    fieldregex: '(?i)^(?:civil[ _]?service[ _]?)?grade(?:[ _]?\(or equivalent\)|[ _]?code|[ _]?level)?$|^pay[ _]?(?:grade|band)$|^scs[ _]?(?:level|pay[ _]?band)$'
+    fieldrule: grade,grade (or equivalent),civil service grade,pay grade,pay band,grade code,scs level
+    fieldrulematch: text
+    priority: 1
+  gbcompanieshousenumberfield:
+    key: companyhouseid
+    name: Companies House company number by field name
+    # Spreadsheets drop the leading zeros of numeric company numbers (4832101 for 04832101).
+    rule: (?i)(?:supplier[ _]?)?(?:registered[ _]?)?compan(?:y|ies)[ _]?(?:house[ _]?)?(?:registration[ _]?|reg[ _]?)?(?:number|no\.?|num|id)|companies[ _]?house[ _]?(?:number|no|id)|crn|supplierregisteredcompanynumber|company_registration_number
+    type: field
+    match: regex
+    validator: metacrafterext.rules.gb.codes.validate_companies_house_number
+    priority: 1

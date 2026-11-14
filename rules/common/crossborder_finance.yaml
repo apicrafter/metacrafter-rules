@@ -103,3 +103,12 @@ rules:
     type: field
     rule: account_balance,total_balance,master_account_balance
     priority: 1
+  mccfield:
+    key: merchant_category_code
+    name: Merchant category code (MCC, ISO 18245) by field name
+    # MCC is also the three-digit mobile country code: the values must have four digits.
+    rule: (?i)mcc|mcc[ _]?code|merchant[ _]?category[ _]?code|merchant[ _]?cat[ _]?code|mcc[ _]?no
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.identifiers.validate_mcc
+    priority: 1

@@ -276,15 +276,16 @@ rules:
     key: easting
     name: Easting (projected x coordinate) by field name
     # UTM and national grids: Easting, UTM_Easting, UTMRechtswert, Rechtswert, X-UTM32N,
-    # UTM32_X, coordx_origine, Souradnice Y (S-JTSK Y grows westwards, like an easting).
-    rule: (?i)(?:utm[ _.-]?\d{0,2}[ns]?[ _.-]?)?(?:easting|rechtswert)|x[ _.-]?utm[ _.-]?\d{0,2}[ns]?|utm[ _.-]?\d{0,2}[ns]?[ _.-]?x|coordx(?:[ _.-]\w+)?|sou[rř]adnice[ _.-]?y
+    # UTM32_X, coordx_origine, Souradnice Y (S-JTSK Y grows westwards, like an easting),
+    # BNG_E of ONS boundary attributes.
+    rule: (?i)(?:utm[ _.-]?\d{0,2}[ns]?[ _.-]?)?(?:easting|rechtswert)|x[ _.-]?utm[ _.-]?\d{0,2}[ns]?|utm[ _.-]?\d{0,2}[ns]?[ _.-]?x|coordx(?:[ _.-]\w+)?|sou[rř]adnice[ _.-]?y|bng[ _.-]?e(?:asting)?
     type: field
     match: regex
     priority: 1
   northingbyfield:
     key: northing
     name: Northing (projected y coordinate) by field name
-    rule: (?i)(?:utm[ _.-]?\d{0,2}[ns]?[ _.-]?)?(?:northing|hochwert)|y[ _.-]?utm[ _.-]?\d{0,2}[ns]?|utm[ _.-]?\d{0,2}[ns]?[ _.-]?y|coordy(?:[ _.-]\w+)?|sou[rř]adnice[ _.-]?x
+    rule: (?i)(?:utm[ _.-]?\d{0,2}[ns]?[ _.-]?)?(?:northing|hochwert)|y[ _.-]?utm[ _.-]?\d{0,2}[ns]?|utm[ _.-]?\d{0,2}[ns]?[ _.-]?y|coordy(?:[ _.-]\w+)?|sou[rř]adnice[ _.-]?x|bng[ _.-]?n(?:orthing)?
     type: field
     match: regex
     priority: 1

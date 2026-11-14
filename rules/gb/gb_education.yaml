@@ -64,3 +64,16 @@ rules:
     fieldrule: la (code),la_code,lacode,la code,local authority code,local_authority_code,lea_code,lea code,la_number,la number
     fieldrulematch: text
     priority: 1
+  gbofstedurnvalue:
+    key: gb_ofsted_urn
+    name: Ofsted URN of an early years or social care provider in a URN field (EY498378, SC068179)
+    # SC and six digits is also a Scottish company number: the field must name a URN.
+    rule: '(?:EY|SC)\d{6}'
+    type: data
+    match: regex
+    minlen: 8
+    maxlen: 8
+    fieldregex: '(?i)^(?:.*[ _.-])?(?:urn|ofsted[ _]?urn|provider[ _]?urn|unique[ _]?reference[ _]?number)$'
+    fieldrule: urn,ofsted urn,ofsted_urn,provider urn,provider_urn,unique reference number
+    fieldrulematch: text
+    priority: 1

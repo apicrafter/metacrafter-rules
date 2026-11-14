@@ -20,6 +20,9 @@ rules:
     maxlen: 7
     minlen: 3
     priority: 2
+    # A letter and two digits is also a DAC aid type (C01), a notice type (E12) or a camera
+    # id (W2): the field must name a diagnosis or a disease classification.
+    fieldregex: '(?i)(?:^|[ _.-])(?:icd|cim|cie|mkb)(?:$|[ _.-]|\d)|мкб|diag|disease|krankheit|maladie|enfermedad|cause|morbid|patholog'
   enatcfield:
     key: atccode
     name: ATC drug code by field name

@@ -9,6 +9,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Rules for the data.gov.uk types of metacrafter-testdata** (registry datatypes added from a
+  January 2022 snapshot of data.gov.uk):
+  - ONS geography codes by value: output areas (`uk_output_area_code`), regions, countries,
+    counties, combined authorities, European electoral regions, census merged wards and
+    districts, built-up areas and their sub-divisions, county electoral divisions, community
+    safety partnerships, Northern Ireland district electoral areas, Scottish data zones, CCGs,
+    STPs and cancer alliances (`E00`, `E12`, `E92`, `E10`, `E47`, `E15`, `E36`, `E41`, `E34`,
+    `E35`, `E58`, `E22`, `N10`, `S01`, `E38`, `E54`, `E56`); `ukgsscode` for any ONS code column
+    (`CAUTH19CD`, `CTYUA16CD`) whose values are GSS codes;
+  - NHS ODS codes: CCG codes in `CCGyyCDH` (`gb_ccg_ods_code`: 02T), STP and region codes
+    (`STP20CDH`: QWO), GP practice codes in organisation code fields (A81001);
+  - Ordnance Survey grid references (`gb_os_grid_reference`) with spaces by value and without
+    spaces in grid reference fields (TL97441340; SC + 6 digits is also a Scottish company
+    number); postcode districts and sectors by field name;
+  - NPTG locality codes and NaPTAN SMS codes of bus stops, EPC / DEC report reference numbers
+    and rating bands, planning application references (14/01103/FUL, 2019/1602/P), Ofsted URNs
+    of early years and social care providers (EY / SC + 6 digits), civil service grades
+    (G7, HEO, SCS2), BCMS cattle breed codes and breed names, VOA primary description codes;
+  - field-name rules for existing registry types without rules: UK VAT registration numbers
+    (`gb_vat`), Companies House numbers (`companyhouseid`, leading zeros lost included), merchant
+    category codes (`merchant_category_code`), OECD CRS purpose codes (`oecd_crs_purpose_code`),
+    IATI organisation identifiers, `D-U-N-S Number` as `duns`; `bng_e` / `bng_n` as easting and
+    northing, `GeoX` / `GeoY` of the brownfield land register as longitude and latitude, ONS
+    ward and county names (`WD20NM`, `CED19NM`, `CTY19NM`, `Ward Description`).
+
 - **Rules for the missed types of the fully annotated metacrafter-testdata** (#70):
   - `ipv4subnet` and `ipv6subnet` by value (100.64.0.0/10, 2001:200::/23), MAC addresses of
     12 hexadecimal digits in fields named for MAC addresses or BSSIDs, EAN-13 in barcode
@@ -63,6 +88,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   (`clrutdigitsvalue`).
 
 ### Fixed
+
+- Wrong labels on the data.gov.uk files: `thpassport` on NPTG locality codes and job numbers
+  (a letter and seven digits) needs a passport field; the ICD-10 value rules (de, en, es, fr) on
+  DAC aid types (C01), notice type codes (E12) and camera ids need a diagnosis or disease field;
+  `openalexid` on GP practice codes (A81001) needs six digits or more.
 
 - **Wrong labels of the fully annotated metacrafter-testdata** (#69): field-name rules check
   their values, and value rules that matched other codes are guarded:

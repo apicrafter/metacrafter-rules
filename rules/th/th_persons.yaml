@@ -40,6 +40,11 @@ rules:
     rule: Word(alphas, exact=1) + Word(nums, exact=7)
     maxlen: 8
     minlen: 8
+    # A letter and seven digits is also an NPTG locality code (E0029368) or a job number
+    # (T1036257): the field must name a passport.
+    fieldregex: '(?i)passport|หนังสือเดินทาง'
+    fieldrule: passport,passport_no,passport_number,passport no,thai_passport,passport_thai,หนังสือเดินทาง,เลขหนังสือเดินทาง
+    fieldrulematch: text
   th_persons_thdriverlicfield:
     key: thdriverlic
     is_pii: True

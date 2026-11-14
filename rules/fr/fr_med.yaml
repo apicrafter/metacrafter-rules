@@ -19,6 +19,9 @@ rules:
     rule: Word('ABCDEFGHIJKLMNOPQRSTUVWXYZ', exact=1) + Word(nums, exact=2) + Optional(Literal('.').suppress() + Word(nums, min=1, max=2))
     maxlen: 7
     minlen: 3
+    # A letter and two digits is also a DAC aid type (C01), a notice type (E12) or a camera
+    # id (W2): the field must name a diagnosis or a disease classification.
+    fieldregex: '(?i)(?:^|[ _.-])(?:icd|cim|cie|mkb)(?:$|[ _.-]|\d)|мкб|diag|disease|krankheit|maladie|enfermedad|cause|morbid|patholog'
   fratcfield:
     key: atccode
     name: Code ATC selon le nom du champ
