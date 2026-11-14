@@ -57,6 +57,9 @@ FIELDS = [
      ["vessels", "ship_date", "ship_mode", "rvalue"]),
     ("common/environment.yaml", "polymertypebyfield", ["Polymer", "polymer_type", "plastic_type", "FTIR_polymer", "resin_type"],
      ["polymerase", "plastic", "material"]),
+    # Sample Weight of the AIMS seafood microplastics file is grams of tissue, not a survey weight.
+    ("common/survey.yaml", "surveyweightbyname", ["sampling_weight", "samp_weight", "design_weight", "weight_final"],
+     ["Sample Weight", "sample_weight", "final_weight_kg", "design_weight_g", "base weight mg"]),
     ("common/common.yaml", "colourbyfield", ["colour", "Color", "colours", "vehicle_colour", "colour_name", "hair color"],
      ["colourful", "discolouration", "color_temperature"]),
 ]

@@ -68,6 +68,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- `survey_weight` no longer takes `Sample Weight` (grams of fish tissue in the AIMS seafood
+  microplastics file of metacrafter-testdata) or a weight with a unit (`final_weight_kg`,
+  `design_weight_g`): a sample weight is also the mass of a lab sample. `sampling_weight`,
+  `samp_weight` and the other qualified weights stay.
+
 - Gender by field name takes `Geschlecht`, `sexe`, `sexo`, `sesso`, Estonian `sugu`, a survey
   year (`SEX_2016`) and a bracketed note (`Sexo (catálogo)`), and checks the values: words,
   letters or small codes. The V-Dem index `v2x_gender` (0.912) is no sex column.
