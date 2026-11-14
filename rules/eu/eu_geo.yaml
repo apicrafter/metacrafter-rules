@@ -46,3 +46,16 @@ rules:
     validator: metacrafterext.rules.common.survey.validate_degurba
     needs_values: true
     priority: 1
+  inspireidvalue:
+    key: inspire_id
+    name: INSPIRE identifier (namespace and local id, AT.BEV.DOP.MD.20220128.49921) by field name and value
+    # The namespace starts with the country code; a dotted string alone is also a package name or
+    # a version, so only in fields named for INSPIRE.
+    rule: '[A-Z]{2}\.[A-Za-z0-9_-]+(?:\.[A-Za-z0-9_-]+)+'
+    type: data
+    match: regex
+    minlen: 5
+    maxlen: 200
+    fieldrule: inspireid,inspire_id,inspire id,inspire-id,id_inspire,inspire_identifier,inspireidentifier
+    fieldrulematch: text
+    priority: 1

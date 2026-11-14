@@ -10,6 +10,8 @@ rules:
     rule: kennzeichen,nummernschild,fahrzeugkennzeichen,license_plate,registration_plate,de_plate
     type: field
     match: text
+    # Kennzeichen is any mark: the monumentation marks of the Austrian control points (A1, T1).
+    validator: metacrafterext.rules.de.transport.validate_de_vehicle_plate
     priority: 1
   devehicleplatevalue:
     # Short codes such as PWRK1 or GXRM1 have the shape of a plate: names only.
