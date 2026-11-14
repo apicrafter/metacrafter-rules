@@ -145,6 +145,9 @@ def is_known_tld(label):
     return label in TLDS
 
 
+_HASC_LIKE = re.compile(r"^[A-Z]{2}(?:\.[A-Z0-9]{2}){1,3}$")
+
+
 def is_fqdn(value):
     """Fully qualified domain name, checked with validators.domain and the IANA TLD list.
 
@@ -160,6 +163,8 @@ def is_fqdn(value):
     text = value.strip()
     if "." not in text or any(dot in text for dot in _IDNA_DOTS):
         return False
+    if _HASC_LIKE.match(text):
+        return False  # HASC subdivision codes of GADM (TZ.AS.AS, ZM.CE.CB), not host names
     try:
         if not domain(text):
             return False

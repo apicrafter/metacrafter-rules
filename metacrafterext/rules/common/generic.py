@@ -505,6 +505,28 @@ def validate_iata_airline_code(value):
     return bool(_IATA_AIRLINE.match(str(value).strip()))
 
 
+_IATA_AIRPORT = re.compile(r"^[A-Z]{3}$")
+_ICAO_AIRPORT = re.compile(r"^[A-Z]{4}$")
+_AIRPORT_TYPES = frozenset(("small_airport", "medium_airport", "large_airport", "heliport", "seaplane_base",
+                            "balloonport"))
+
+
+def validate_iata_airport_code(value):
+    """An IATA airport code: three upper-case letters (FNA, JMY). Airline codes have two."""
+    return bool(_IATA_AIRPORT.match(str(value).strip()))
+
+
+def validate_icao_airport_code(value):
+    """An ICAO aerodrome designator: four upper-case letters (GFLL, EDDF). Airline codes have three."""
+    return bool(_ICAO_AIRPORT.match(str(value).strip()))
+
+
+def validate_airport_type(value):
+    """An OurAirports aerodrome type other than closed: small_airport, heliport (closed alone is a
+    status word, so a column of closed only is no airport type)."""
+    return str(value).strip() in _AIRPORT_TYPES
+
+
 def validate_icao_airline_code(value):
     """An ICAO airline designator: three upper-case letters (PLM, AXY). Airport codes have four."""
     return bool(_ICAO_AIRLINE.match(str(value).strip()))

@@ -1,0 +1,28 @@
+name: common-development-finance
+description: Identifiers of development finance (World Bank projects and trust funds)
+context: finances
+lang: common
+country_code: xx
+# Found in the openAFRICA snapshot of metacrafter-testdata: the trust fund grants committed and
+# disbursed for Sierra Leone (Project ID P099939, Trustee Fund Number TF053509).
+rules:
+  wbprojectidvalue:
+    key: wb_project_id
+    name: World Bank project ID by value (P099939) in a field that names a project
+    rule: P\d{6}
+    type: data
+    match: regex
+    minlen: 7
+    maxlen: 7
+    fieldregex: (?i)proj
+    priority: 1
+  wbtrustfundnumbervalue:
+    key: wb_trust_fund_number
+    name: World Bank trust fund number by value (TF053509) in a field that names a fund or a TF
+    rule: TF[0-9A-Z]\d{5}
+    type: data
+    match: regex
+    minlen: 8
+    maxlen: 8
+    fieldregex: (?i)fund|tf
+    priority: 1

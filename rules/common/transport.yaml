@@ -7,7 +7,7 @@ rules:
   iataairlinecodefield:
     key: iataairlinecode
     name: IATA airline code by field name
-    rule: iata_airline_code,iata_code,airline_code,airline_iata,airline_code_iata
+    rule: iata_airline_code,airline_code,airline_iata,airline_code_iata
     type: field
     match: text
     priority: 1
@@ -16,7 +16,7 @@ rules:
     name: IATA airline code by the field name IATA and a two-character value
     # IATA codes of airlines have two characters (EB, 6V), those of airports three: a column
     # IATA or código IATA of a register of airlines (#70).
-    rule: iata,codigo iata,código iata,codigo_iata,iata_designator,iata designator
+    rule: iata,iata_code,iata code,codigo iata,código iata,codigo_iata,iata_designator,iata designator
     type: field
     match: text
     validator: metacrafterext.rules.common.generic.validate_iata_airline_code
@@ -37,7 +37,7 @@ rules:
   icaoairlinecodefield:
     key: icaoairlinecode
     name: ICAO airline code by field name
-    rule: icao_airline_code,icao_code,airline_icao,airline_code_icao
+    rule: icao_airline_code,airline_icao,airline_code_icao
     type: field
     match: text
     priority: 1
@@ -45,7 +45,7 @@ rules:
     key: icaoairlinecode
     name: ICAO airline code by the field name ICAO and a three-letter value
     # ICAO designators of airlines have three letters (PLM, AXY), those of airports four (#70).
-    rule: icao,codigo icao,código icao,codigo_icao,icao_designator,icao designator
+    rule: icao,icao_code,icao code,codigo icao,código icao,codigo_icao,icao_designator,icao designator
     type: field
     match: text
     validator: metacrafterext.rules.common.generic.validate_icao_airline_code
@@ -89,6 +89,40 @@ rules:
     rule: icao_airport_code,airport_icao,airport_code_icao
     type: field
     match: text
+    priority: 1
+  icaoairportcodebycode:
+    key: icaoairportcode
+    name: ICAO airport code by the field names of OurAirports and ICAO with four-letter values (gps_code, ident, icao_code)
+    # ICAO designators of aerodromes have four letters (GFLL), those of airlines three (#70).
+    # OurAirports writes the ICAO code in gps_code and ident; ident holds a local id (SL-0001) where
+    # an aerodrome has none, so the validator takes a column whose values are mostly four letters.
+    rule: gps_code,gps code,ident,icao,icao_code,icao code,codigo icao,código icao,codigo_icao
+    type: field
+    match: text
+    validator: metacrafterext.rules.common.generic.validate_icao_airport_code
+    needs_values: true
+    priority: 1
+  iataairportcodebycode:
+    key: iataairportcode
+    name: IATA airport code by the field names IATA and iata_code with three-letter values
+    # IATA codes of airports have three letters (FNA, JMY), those of airlines two: the iata_code of
+    # OurAirports is an airport code, that of an airline register an airline code.
+    rule: iata,iata_code,iata code,codigo iata,código iata,codigo_iata
+    type: field
+    match: text
+    validator: metacrafterext.rules.common.generic.validate_iata_airport_code
+    needs_values: true
+    priority: 1
+  airporttypevalue:
+    key: airport_type
+    name: OurAirports aerodrome type by value (small_airport, medium_airport, heliport)
+    rule: (?:small_airport|medium_airport|large_airport|heliport|seaplane_base|balloonport|closed)
+    type: data
+    match: regex
+    minlen: 6
+    maxlen: 14
+    # closed alone is a status word: the column must hold the airport types.
+    validator: metacrafterext.rules.common.generic.validate_airport_type
     priority: 1
   icaoairportcodevalue:
     key: icaoairportcode

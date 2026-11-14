@@ -3,6 +3,8 @@ Great Barrier Reef feature identifiers of GBRMPA and the sectors of the AIMS Lon
 Program."""
 import re
 
+from metacrafterext.rules.ng.geo import validate_ng_lga
+
 # GBR_ID: whole degrees of south latitude (9 in the Torres Strait to 24 at the southern end of the
 # Marine Park), a hyphen and three digits; LABEL_ID adds a lowercase letter for a part of a feature.
 _GBR_REEF_ID = re.compile(r"^(?:09|1\d|2[0-4])-\d{3}[a-z]?$")
@@ -104,9 +106,13 @@ def validate_au_sa2_code(value):
 
 
 def validate_au_lga_code(value):
-    """An ABS LGA code: five digits that start with the state digit (10050, 24600; not 357 or 01005)."""
+    """An ABS LGA code: five digits that start with the state digit and end in 0 (10050, 24600), or
+    an unincorporated, no usual address or migratory code of a state (19399, 19499, 89399); not 357,
+    01005 or the GRID3 LGA codes of Nigeria (19001, Birnin Gwari)."""
     text = str(value).strip()
-    return len(text) == 5 and text.isdigit() and text[0] != "0"
+    if len(text) != 5 or not text.isdigit() or text[0] == "0":
+        return False
+    return text.endswith("0") or text[2:] in ("399", "499", "799")
 
 
 _LGA_STATUS = r"(?:A|AC|B|C|CGC|DC|IS|M|R|RC|RegC|RDC|S|SC|T|TC)"
@@ -123,9 +129,13 @@ def validate_au_lga_name(value):
 
 def validate_au_lga_name_plain(value):
     """An LGA name in an LGA name field: ABS names with the council status (Albury (C)) and the plain
-    names of the ASGS 2021 (Gympie, Norwood Payneham St Peters), not codes (10050) or council wards."""
+    names of the ASGS 2021 (Gympie, Norwood Payneham St Peters), not codes (10050), council wards or
+    the local government areas of Nigeria, the other country of LGAs (Birnin Gwari, Chikun)."""
     text = str(value).strip()
-    return bool(_AU_LGA_NAME.match(text) or (_PLACE_NAME.match(text) and not text.lower().startswith(("division", "ward"))))
+    if _AU_LGA_NAME.match(text):
+        return True
+    return bool(_PLACE_NAME.match(text) and not text.lower().startswith(("division", "ward"))
+                and not validate_ng_lga(text))
 
 
 AU_GCCSA_CODES = frozenset("1GSYD 1RNSW 2GMEL 2RVIC 3GBRI 3RQLD 4GADE 4RSAU 5GPER 5RWAU 6GHOB 6RTAS 7GDAR 7RNTE "

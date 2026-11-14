@@ -140,8 +140,10 @@ rules:
     rule: timestamp
     type: field
     match: text
-    # A timestamp of milliseconds (1793960864568) is unixtime_ms (unixtimemsvalue, #70).
-    validator: metacrafterext.rules.common.dateandtime.validate_not_unixtime_ms
+    # A timestamp of milliseconds (1793960864568) is unixtime_ms (unixtimemsvalue, #70), and a
+    # written date and time (2021-12-01T00:01:53.614385+00:00 of the sensors.AFRICA archives) is a
+    # datetime: only seconds.
+    validator: metacrafterext.rules.common.dateandtime.validate_unixtime_seconds
     priority: 1
   timestampknownpat:
     key: unixtime
