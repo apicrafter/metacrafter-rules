@@ -65,6 +65,17 @@ def validate_not_unixtime_ms(value):
     return bool(str(value).strip()) and not validate_unixtime_ms(value)
 
 
+_SECONDS = re.compile(r"^-?\d{1,11}(?:\.\d+)?$")
+
+
+def validate_unixtime_seconds(value):
+    """A value of a field named timestamp that is Unix time in seconds (1471181882, 1471181882.5):
+    not milliseconds (unixtime_ms) and not a written date and time (2021-12-01T00:01:53+00:00 of the
+    Sensor.Community archives, a datetime)."""
+    text = str(value).strip()
+    return bool(_SECONDS.match(text)) and not validate_unixtime_ms(text)
+
+
 _DECIMAL_YEAR = re.compile(r"^(?:1[5-9]|2[01])\d{2}(?:\.\d{1,6})?$")
 
 

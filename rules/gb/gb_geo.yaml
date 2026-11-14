@@ -11,6 +11,9 @@ rules:
     type: field
     priority: 1
     rule: ward code,ward_code
+    # GSS codes only (E05000026): the ward codes of Nigerian settlement data (KD0101) are ng_ward_code.
+    validator: metacrafterext.rules.common.generic.validate_gss_code
+    needs_values: true
   ukwardnamebyknown:
     key: ukwardname
     name: UK ward name by known name
@@ -107,6 +110,10 @@ rules:
     type: field
     priority: 1
     rule: parish code,parish_code,parish_ward,parish
+    # GSS codes only (E04000001): a bare parish holds parish names in Uganda (Kasese wildlife
+    # conflict records: Busunga, Kyondo, Railway ward).
+    validator: metacrafterext.rules.common.generic.validate_gss_code
+    needs_values: true
   ukdistrictcodefield:
     key: ukdistrictcode
     name: UK district code by field name

@@ -1,0 +1,79 @@
+name: ng-geo
+description: Nigerian states, local government areas and the LGA and ward codes of GRID3 / eHealth Africa
+context: geo
+lang: en
+country_code: ng
+# Found in the openAFRICA snapshot of metacrafter-testdata: the Kaduna Electric service area
+# settlements (State Code KD, Lga Code 19001, Lga Birnin Gwari, Ward Code KD0101), the eHealth
+# Africa population table (State and LGA names), the GADM 2 poverty map (NAME_1, NAME_2) and the
+# NMIS facility lists. The Australian LGA rules of au_geo.yaml see the same field names; their
+# validators refuse Nigerian codes and names.
+rules:
+  ngstatebyname:
+    key: ng_state
+    name: Nigerian state by field name (State, state_name, Location by state, NAME_1) with Nigerian state names
+    rule: (?i)(?:location[ _]by[ _]|name[ _]of[ _](?:the[ _])?|ng[ _])?state(?:[ _]?(?:name|nm))?|statename|name_1|adm1_(?:name|en|nam)|admin1_?name(?:_en)?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.ng.geo.validate_ng_state
+    needs_values: true
+    priority: 1
+  ngstatevalue:
+    key: ng_state
+    name: Nigerian state by value (Kaduna, Akwa Ibom, Federal Capital Territory, Nassarawa)
+    rule: metacrafterext.rules.ng.geo.validate_ng_state
+    type: data
+    match: func
+    minlen: 3
+    maxlen: 40
+    # Not on fields of towns, addresses or lower divisions, which repeat the names of the
+    # larger division (a city column of Nairobi, a district column of Kibera).
+    fieldregex: ^(?!.*(?:city|town|place|locality|municip|addr|street|district|division|location|village|settlement|community|ward|station|site|name_[2-5]|adm[2-5])).
+    priority: 1
+  ngstatecodebyname:
+    key: iso3166code_part
+    name: Nigerian state code by field name (State Code, statecode) with ISO 3166-2:NG codes (KD, FC)
+    rule: (?i)state[ _]?(?:code|abbr|abbreviation)|statecode
+    type: field
+    match: regex
+    validator: metacrafterext.rules.ng.geo.validate_ng_state_code
+    needs_values: true
+    priority: 1
+  nglgabyname:
+    key: ng_lga
+    name: Nigerian local government area by field name (Lga, lga_name, Local Government Area, NAME_2)
+    rule: (?i)(?:[a-z]+[ _])?lga(?:[ _]?name)?|lganame|local[ _]government(?:[ _]area)?(?:[ _]?name)?|name_2|adm2_(?:name|en|nam)|admin2_?name(?:_en)?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.ng.geo.validate_ng_lga
+    needs_values: true
+    priority: 1
+  nglgavalue:
+    key: ng_lga
+    name: Nigerian local government area by value (Birnin Gwari, Aba North, Isiala-Ngwa South)
+    rule: metacrafterext.rules.ng.geo.validate_ng_lga
+    type: data
+    match: func
+    minlen: 2
+    maxlen: 50
+    # Not on fields of towns, villages or wards: many LGAs are named after their main town.
+    fieldregex: ^(?!.*(?:city|town|place|locality|addr|street|village|settlement|community|ward|station|site|name_[3-5]|adm[3-5])).
+    priority: 1
+  nglgacodebyname:
+    key: ng_lga_code
+    name: Nigerian LGA code of GRID3 by field name (Lga Code, lgacode) with five-digit codes (19001)
+    rule: (?i)lga[ _]?(?:code|id)|lgacode
+    type: field
+    match: regex
+    validator: metacrafterext.rules.ng.geo.validate_ng_lga_code
+    needs_values: true
+    priority: 1
+  ngwardcodebyname:
+    key: ng_ward_code
+    name: Nigerian ward code by field name (Ward Code, wardcode) with state, LGA and ward numbers (KD0101)
+    rule: (?i)ward[ _]?(?:code|id)|wardcode
+    type: field
+    match: regex
+    validator: metacrafterext.rules.ng.geo.validate_ng_ward_code
+    needs_values: true
+    priority: 1
