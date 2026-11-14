@@ -15,3 +15,22 @@ rules:
     fieldrule: lau,lau_code,lau_id,lau code,gisco_id,lau_cod
     fieldrulematch: text
     priority: 1
+  eueicvalue:
+    key: eu_eic
+    name: ENTSO-E Energy Identification Code (EIC) by value with its check character (17W000000038874F, 10YFR-RTE------C)
+    rule: '\d{2}[A-Z][0-9A-Z-]{12}[0-9A-Z]'
+    type: data
+    match: regex
+    minlen: 16
+    maxlen: 16
+    validator: metacrafterext.rules.common.identifiers.validate_eu_eic
+    priority: 1
+  eueicbyname:
+    key: eu_eic
+    name: Energy Identification Code by field name (eic, codeEICResourceObject, grd_elec_eic)
+    rule: (?i)(?:code_?)?eic(?:_?code)?|.*_eic|eic_.*|codeeic\w*|code_eic_\w+
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.identifiers.validate_eu_eic
+    needs_values: true
+    priority: 1

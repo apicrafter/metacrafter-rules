@@ -98,6 +98,11 @@ rules:
     maxlen: 11
     priority: 1
     validator: metacrafterext.rules.common.identifiers.validate_openalex_id
+    # W and nine digits is also the RNA number of a French association (W443005153 in the
+    # Sirene field identifiantAssociationUniteLegale), I and nine digits a sports facility
+    # number (I050960036): bare ids need an id or OpenAlex field (the guard sees the last part
+    # of a nested name).
+    fieldregex: (?i)^(?:.*openalex.*|id|ids|.*_ids?|referenced_works|related_works|lineage|work|works|author|authors|institution|institutions|source|sources|concept|concepts|host_organization)$
   roridbyfieldname:
     key: rorid
     name: Research Organization Registry ID (ROR ID) by field name

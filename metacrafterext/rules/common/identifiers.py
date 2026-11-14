@@ -2348,3 +2348,43 @@ def validate_iati_org_ref(value):
     """An IATI organisation identifier: a country or list code and parts joined by hyphens
     (GB-7, GB-GOV-1, XM-DAC-41114)."""
     return bool(_IATI_ORG_REF.match(str(value).strip()))
+
+
+_EIC = re.compile(r"^\d{2}[A-Z][0-9A-Z-]{12}[0-9A-Z]$")
+_EIC_ALPHABET = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ-"
+
+
+def validate_eu_eic(value):
+    """An ENTSO-E Energy Identification Code (EIC): 16 characters, the issuing office (two
+    digits), the object type letter, twelve letters, digits or hyphens and a check character.
+    The check character is 36 - ((sum - 1) mod 37) of the first 15 characters weighted 16 down
+    to 2 (digits 0-9, letters 10-35, hyphen 36): 10YFR-RTE------C, 17X100A100A0001A."""
+    text = str(value).strip().upper()
+    if not _EIC.match(text):
+        return False
+    total = sum(_EIC_ALPHABET.index(ch) * (16 - i) for i, ch in enumerate(text[:15]))
+    check = 36 - ((total - 1) % 37)
+    return check < 36 and _EIC_ALPHABET[check] == text[15]
+
+
+_UIC_STATION = re.compile(r"^(?:10|2\d|3[0-3]|4[01249]|5\d|6[0125678]|7\d|8[0-8]|9\d)\d{5,6}$")
+
+
+def validate_uic_station_code(value):
+    """A UIC station code: the two-digit UIC country code (85 Switzerland, 87 France, 88
+    Belgium) and the five-digit station number, with or without a check digit (8508003,
+    87391003)."""
+    text = str(value).strip()
+    if text.endswith(".0"):
+        text = text[:-2]
+    return bool(_UIC_STATION.match(text))
+
+
+_IT_CIG = re.compile(r"^(?:\d{7}[0-9A-F]{3}|[XYZ][0-9A-F]{9})$")
+
+
+def validate_it_cig(value):
+    """An Italian tender identification code (CIG): ten characters, seven digits and three
+    hexadecimal ones, or a SmartCIG starting with X, Y or Z and nine hexadecimal characters
+    (Z8012569E5)."""
+    return bool(_IT_CIG.match(str(value).strip().upper()))

@@ -1,6 +1,7 @@
 """
 Validation functions for Canadian-specific identifiers.
 """
+import re
 
 
 def validate_ca_sin(value):
@@ -40,3 +41,12 @@ def validate_ca_sin(value):
         total += digit
 
     return total % 10 == 0
+
+
+_CA_FSA = re.compile(r"^[ABCEGHJ-NPRSTVXY]\d[ABCEGHJ-NPRSTV-Z]$")
+
+
+def validate_ca_fsa(value):
+    """A Canadian forward sortation area: the first three characters of a postal code, a
+    letter of a province or territory, a digit and a letter (K7P, T2P, X0A)."""
+    return bool(_CA_FSA.match(str(value).strip().upper()))

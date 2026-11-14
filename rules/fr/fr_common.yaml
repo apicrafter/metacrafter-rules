@@ -74,3 +74,40 @@ rules:
     fieldrule: num_pdl,pdl,prm,numero_pdl,num_prm,numero_prm,point_de_livraison,n_pdl,pdl_prm,id_pdl,ref_pdl
     fieldrulematch: text
     priority: 1
+  frresinstallationvalue:
+    key: fr_res_installation_id
+    name: Installation number of the sports facilities census (RES), I and 9 characters (I050960036)
+    rule: 'I(?:\d{2}|2[AB])\d{7}'
+    type: data
+    match: regex
+    minlen: 10
+    maxlen: 10
+    fieldregex: (?i)(?:install|equip|ins_?num|insnum)
+    priority: 1
+  frresinstallationbyname:
+    key: fr_res_installation_id
+    name: Installation number of the sports facilities census by field name (insnumeroinstall, numinstallation)
+    rule: (?i)insnumeroinstall(?:ation)?|numinstallation|num(?:ero)?_?installation|ins_?numero_?install|id_?installation|installation_?(?:numero|id|num)|inst_?numero
+    type: field
+    match: regex
+    validator: metacrafterext.rules.fr.codes.validate_fr_res_installation_id
+    needs_values: true
+    priority: 1
+  frresequipementvalue:
+    key: fr_res_equipement_id
+    name: Equipment number of the sports facilities census (RES), E, 3 digits and the installation number (E001I050960036)
+    rule: 'E\d{3}I(?:\d{2}|2[AB])\d{7}'
+    type: data
+    match: regex
+    minlen: 14
+    maxlen: 14
+    priority: 1
+  frresequipementbyname:
+    key: fr_res_equipement_id
+    name: Equipment number of the sports facilities census by field name (equipementid, numequipement)
+    rule: (?i)equipementid|equipement_?id|numequipement|num(?:ero)?_?equipement|id_?equipement|equ_?numero|equnumero
+    type: field
+    match: regex
+    validator: metacrafterext.rules.fr.codes.validate_fr_res_equipement_id
+    needs_values: true
+    priority: 1

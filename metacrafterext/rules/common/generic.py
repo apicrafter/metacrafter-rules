@@ -549,3 +549,49 @@ def validate_species_name(value):
         return False
     authorship = m.group("authorship")
     return bool(_AUTHOR_YEAR.search(authorship) or _AUTHOR_ABBREVIATION.match(authorship))
+
+
+def _coordinate(value, limit):
+    """The value as a decimal degree within +-limit, or None. Whole numbers are not taken:
+    a lat or lon field of integers holds ids or grid cells, not positions."""
+    text = str(value).strip().replace(",", ".")
+    if "." not in text or text.endswith(".0") and text[:-2].lstrip("-").isdigit():
+        return None
+    number = _number(text)
+    if number is None or not -limit <= number <= limit:
+        return None
+    return number
+
+
+def validate_latitude_value(value):
+    """A latitude in decimal degrees: -90 to 90 with decimals (47.956011633, -33.86)."""
+    return _coordinate(value, 90.0) is not None
+
+
+def validate_longitude_value(value):
+    """A longitude in decimal degrees: -180 to 180 with decimals (1.921255698, -121.67)."""
+    return _coordinate(value, 180.0) is not None
+
+
+_GEOJSON_GEOMETRY_TYPES = frozenset(
+    ("Point", "MultiPoint", "LineString", "MultiLineString", "Polygon", "MultiPolygon", "GeometryCollection")
+)
+
+
+def validate_geojson_geometry_type(value):
+    """A GeoJSON geometry type, written as RFC 7946 writes it: Point, LineString, Polygon, their
+    Multi forms or GeometryCollection (Feature, the type of a feature, is not one)."""
+    return str(value).strip() in _GEOJSON_GEOMETRY_TYPES
+
+
+_LATLON_PAIR = re.compile(r"^\s*\[?\s*(-?\d{1,2}(?:\.\d+)?)\s*[,;]\s*(-?\d{1,3}(?:\.\d+)?)\s*\]?\s*$")
+
+
+def validate_latlon_pair(value):
+    """A point written as latitude and longitude separated by a comma, as Opendatasoft exports a
+    geo_point_2d to CSV (48.8566, 2.3522; [46.51, 6.63])."""
+    m = _LATLON_PAIR.match(str(value))
+    if not m:
+        return False
+    lat, lon = float(m.group(1)), float(m.group(2))
+    return -90.0 <= lat <= 90.0 and -180.0 <= lon <= 180.0

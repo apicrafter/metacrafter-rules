@@ -9,6 +9,37 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Rules for the Opendatasoft files of metacrafter-testdata** (registry datatypes and records
+  without rules found in a 2022 snapshot of data.opendatasoft.com, mostly French public bodies):
+  - the INSEE geography that Opendatasoft adds to French records and that Sirene and statistics
+    files carry, by field name with the values checked: commune codes (`com_code`,
+    `codeCommuneEtablissement`), department and region codes and names (`dep_code`, `reg_name`;
+    region codes of before 2016 included), commune names (`com_name`, `LIBGEO`), EPCI SIRENs,
+    arrondissement, canton, IRIS, employment zone, living area, urban unit and AAV codes;
+    `insee_reg` / `insee_dep` are region and department codes now, not `inseecode`, and EPCI
+    names (`nom_epci`) are no EPCI codes;
+  - Sirene fields: SIREN / SIRET / NIC names, NAF codes (with the dot by value: 62.01Z), NAFA codes
+    (`fr_nafa`), legal categories, company size categories (`fr_categorie_entreprise`), RNA numbers
+    of associations, postal codes; commercial court registry codes (`fr_greffe_code`);
+  - UAI school numbers by value with their check letter, académie codes, FINESS numbers in FINESS
+    fields (Luhn check);
+  - fibre building identifiers in the IMB form (`fr_fibre_building_id`), ARCEP operator
+    identifiers (`fr_arcep_operator_code`), DPE numbers (`fr_dpe_number`), political nuance codes
+    (`fr_election_nuance`), ACTES subject codes of the SCDL deliberations (`fr_actes_matiere_code`),
+    priority neighbourhood codes (`fr_qpv_code`, 2015 and 2024 lists), sports facility installation
+    and equipment numbers (`fr_res_installation_id`, `fr_res_equipement_id`), Sandre hydrometric
+    station, hydrographic entity and zone codes, GASPAR risk procedure identifiers;
+  - coordinates read as numbers: `lat`, `lon`, `lng` and the nested `geo_point_2d.lat` /
+    `geo_point_2d.lon` of Opendatasoft JSON exports by field name with decimal degrees in range
+    (value rules do not run on float columns); `geojson_geometry_type` on `type` fields holding
+    geometry types (`geo_shape.geometry.type`); `geo_point_2d` on the Opendatasoft field of that
+    name when it holds a latitude, longitude pair;
+  - ENTSO-E EIC codes by value with their check character (`eu_eic`), UIC station codes in UIC
+    and DiDok fields (`uiccode`), Spanish cadastral references by value with their check letters,
+    Italian CIG, Canadian FSA, more Swiss BFS municipality number field names.
+  - these field-name rules check their values and need values (`needs_values: true`): an empty
+    `type`, `lat` or `region` column gets no label from its name alone.
+
 - **Rules for the data.gov.uk types of metacrafter-testdata** (registry datatypes added from a
   January 2022 snapshot of data.gov.uk):
   - ONS geography codes by value: output areas (`uk_output_area_code`), regions, countries,
@@ -89,6 +120,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- `openalexid` by value needs an id or OpenAlex field: W and nine digits is also the RNA number of
+  a French association (Sirene `identifiantAssociationUniteLegale`), I and nine digits a sports
+  facility installation number.
 - Wrong labels on the data.gov.uk files: `thpassport` on NPTG locality codes and job numbers
   (a letter and seven digits) needs a passport field; the ICD-10 value rules (de, en, es, fr) on
   DAC aid types (C01), notice type codes (E12) and camera ids need a diagnosis or disease field;

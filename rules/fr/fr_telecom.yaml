@@ -1,0 +1,36 @@
+name: fr-telecom
+description: French telecom identifiers (ARCEP fibre deployment data)
+context: telecom
+lang: fr
+country_code: fr
+rules:
+  frfibrebuildingvalue:
+    key: fr_fibre_building_id
+    name: Building identifier of a fibre infrastructure operator in the IMB form (IMB/91228/C/00KV)
+    rule: 'IMB/(?:\d{2}|2[AB])\d{3}/[A-Z]/[A-Z0-9]{4,}'
+    type: data
+    match: regex
+    minlen: 16
+    maxlen: 24
+    priority: 1
+  frfibrebuildingbyname:
+    key: fr_fibre_building_id
+    name: Fibre building identifier in the IMB form by field name (imb_id, imb_code, identifiant_immeuble)
+    # ARCEP's own imb_id is an internal number: the values must have the IMB form.
+    rule: (?i)imb_?id|id_?imb|identifiant_?immeuble|code_?imb|imb_?code|imb
+    type: field
+    match: regex
+    validator: metacrafterext.rules.fr.codes.validate_fr_fibre_building_id
+    needs_values: true
+    priority: 1
+  frarcepoperatorbyname:
+    key: fr_arcep_operator_code
+    name: ARCEP operator identifier (code L33-1) by field name (code_l331, op_code, code_oi)
+    # The mobile site files name the MCC-MNC of an operator op_code too (20801): the values
+    # must have a letter.
+    rule: (?i)code_?l33_?1|l33_?1(?:_?code)?|code_?operateur(?:_l331)?|op_?code|code_?oi|oi_?code|code_?oc|operateur_code
+    type: field
+    match: regex
+    validator: metacrafterext.rules.fr.codes.validate_fr_arcep_operator_code
+    needs_values: true
+    priority: 1

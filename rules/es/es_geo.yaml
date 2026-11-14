@@ -72,3 +72,13 @@ rules:
     type: field
     match: text
     priority: 1
+  esreferenciacatastralvalue:
+    key: es_referenciacatastral
+    name: Spanish cadastral reference by value with its check letters (05002A004010550000IA)
+    rule: '[0-9A-ZÑ]{7} ?[0-9A-ZÑ]{7} ?[0-9A-ZÑ]{4} ?[A-Z]{2}'
+    type: data
+    match: regex
+    minlen: 20
+    maxlen: 23
+    validator: metacrafterext.rules.es.validators.validate_es_referencia_catastral
+    priority: 1

@@ -1,0 +1,60 @@
+name: fr-environment
+description: French water and risk codes (Sandre, Vigicrues, GASPAR)
+context: environment
+lang: fr
+country_code: fr
+rules:
+  frhydrostationbyname:
+    key: fr_hydro_station_code
+    name: Sandre hydrometric station code by field name (CdStationHydro, CdStationHydroAncienRef of Vigicrues)
+    rule: (?i)cd_?station_?hydro(?:_?ancien_?ref)?|code_?station_?hydro(?:metrique)?|cdstationhydroancienref|id_?station_?hydro|station_hydro(?:_code)?|code_station_vigicrues
+    type: field
+    match: regex
+    validator: metacrafterext.rules.fr.codes.validate_fr_hydro_station_code
+    needs_values: true
+    priority: 1
+  frsandrecourseauvalue:
+    key: fr_sandre_cours_eau_code
+    name: Sandre hydrographic entity code padded with hyphens (K---0090, Y34-0400) by value
+    rule: '(?:[A-Z](?:\d{2}-|\d--|---)|----)\d{3}[0-9A-Z]'
+    type: data
+    match: regex
+    minlen: 8
+    maxlen: 8
+    priority: 1
+  frsandrecourseaubyname:
+    key: fr_sandre_cours_eau_code
+    name: Sandre river code by field name (CdEntiteHydrographique, code_cours_eau)
+    rule: (?i)cd_?entite_?hydrographique|code_?entite_?hydrographique|code_?cours_?d?_?eau|cd_?cours_?d?_?eau|cdcoursdeau|code_hydro_cours_eau
+    type: field
+    match: regex
+    validator: metacrafterext.rules.fr.codes.validate_fr_sandre_cours_eau_code
+    needs_values: true
+    priority: 1
+  frsandrezonehydrobyname:
+    key: fr_sandre_zone_hydro_code
+    name: Sandre hydrographic zone code by field name (CdZoneHydro)
+    rule: (?i)cd_?zone_?hydro(?:graphique)?|code_?zone_?hydro(?:graphique)?|zone_hydro(?:_code)?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.fr.codes.validate_fr_sandre_zone_hydro_code
+    needs_values: true
+    priority: 1
+  frgasparvalue:
+    key: fr_gaspar_id
+    name: GASPAR risk procedure identifier (2BDREAL20170001) by value
+    rule: '(?:\d{2}|2[AB]|97\d)(?:DDT|DDTM|DREAL|DRIEE|DRIEAT|DEAL|PREF|DDE|DDAF|DDEA|DRIRE|SPC|RTM|ONF|IGC)\d{8}|PP[RM][A-Z]*(?:-[A-Z]+)?_\d{4}_\d{4}'
+    type: data
+    match: regex
+    minlen: 11
+    maxlen: 20
+    priority: 1
+  frgasparbyname:
+    key: fr_gaspar_id
+    name: GASPAR risk procedure identifier by field name (id_gaspar, code_gaspar)
+    rule: (?i)(?:id|code|cod|num)_?gaspar|gaspar(?:_id|_code)?|id_?procedure_?gaspar|cod_nat_ppr
+    type: field
+    match: regex
+    validator: metacrafterext.rules.fr.codes.validate_fr_gaspar_id
+    needs_values: true
+    priority: 1

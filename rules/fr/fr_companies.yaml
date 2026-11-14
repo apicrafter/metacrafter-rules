@@ -22,3 +22,115 @@ rules:
     maxlen: 9
     minlen: 9
 
+  # Fields of the Sirene register (API Sirene v3 names, which Opendatasoft keeps in lower case:
+  # activitePrincipaleEtablissement -> activiteprincipaleetablissement) and of company lists.
+  frsirenebysirenename:
+    key: siren
+    name: SIREN by Sirene field name (sirenEtablissement, siren_epci excluded)
+    rule: (?i)siren(?:etablissement|unitelegale|acheteur|declarant|couvert|_?titulaire|_?beneficiaire|_?attributaire|_?structure|_?collectivite|_?organisme)|(?:structure|fab|mnt|expt|coll|bgt|titulaire|beneficiaire|acheteur)_siren|n(?:um(?:ero)?|deg)_?siren|code_siren
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.identifiers.validate_fr_siren
+    needs_values: true
+    priority: 1
+  frsiretbysirenename:
+    key: siret
+    name: SIRET by Sirene field name (siretSiegeUniteLegale, idBeneficiaire)
+    rule: (?i)siret(?:siegeunitelegale|etablissement|_?siege|_?titulaire|_?beneficiaire|_?attributaire|_?acheteur|_?organisme|_?structure)|(?:coll|bgt|titulaire|beneficiaire|acheteur)_siret|n(?:um(?:ero)?|deg)_?siret|siren_siret|code_siren_siret|idbeneficiaire|idattribuant|identifiant_attribuant|id_beneficiaire|id_attribuant
+    type: field
+    match: regex
+    validator: metacrafterext.rules.fr.validators.validate_fr_siret
+    needs_values: true
+    priority: 1
+  frnicbyname:
+    key: fr_nic
+    name: NIC of an establishment by field name (nic, nicSiegeUniteLegale)
+    rule: (?i)nic|nic_?siege|nicsiegeunitelegale|nicetablissement|code_nic|numero_nic
+    type: field
+    match: regex
+    validator: metacrafterext.rules.fr.codes.validate_fr_nic
+    needs_values: true
+    priority: 1
+  frnafdottedvalue:
+    key: fr_naf
+    name: NAF rév. 2 subclass with its dot (62.01Z), as Sirene writes it
+    rule: '\d{2}\.\d{2}[A-Z]'
+    type: data
+    match: regex
+    minlen: 6
+    maxlen: 6
+    priority: 1
+  frnafbyname:
+    key: fr_naf
+    name: NAF / APE code by field name (code_ape, activitePrincipaleEtablissement, APET700)
+    rule: (?i)(?:code_?|c_|cd_)?(?:ape|naf|naf_?rev2|naf2008|ape_?code|naf_?code)(?:_?(?:code|rev2|700|etablissement|entreprise))?|activiteprincipale(?:unitelegale|etablissement)|apet700|apen700|codeape|codenaf|codenaffix|codetypeetablissement|activite_principale(?:_entreprise|_etablissement)?|code_activite_principale
+    type: field
+    match: regex
+    validator: metacrafterext.rules.fr.codes.validate_fr_naf
+    needs_values: true
+    priority: 1
+  frnafabyname:
+    key: fr_nafa
+    name: NAFA code of the crafts register by field name (activitePrincipaleRegistreMetiersEtablissement)
+    rule: (?i)activiteprincipaleregistremetiers(?:etablissement)?|code_?nafa|nafa(?:_code)?|activite_principale_registre_metiers
+    type: field
+    match: regex
+    validator: metacrafterext.rules.fr.codes.validate_fr_nafa
+    needs_values: true
+    priority: 1
+  frcategoriejuridiquebyname:
+    key: fr_categorie_juridique
+    name: Sirene legal category code by field name (categorieJuridiqueUniteLegale)
+    rule: (?i)categoriejuridique(?:unitelegale)?|categorie_juridique(?:_code)?|code_categorie_juridique|cat_?jur(?:idique)?|cj|code_cj|forme_juridique_code|code_forme_juridique|naturejuridiqueunitelegale
+    type: field
+    match: regex
+    validator: metacrafterext.rules.fr.codes.validate_fr_categorie_juridique
+    needs_values: true
+    priority: 1
+  frcategorieentreprisebyname:
+    key: fr_categorie_entreprise
+    name: Sirene company size category (PME, ETI, GE) by field name
+    rule: (?i)categorieentreprise|categorie_entreprise|categorie_d_entreprise|cat_entreprise
+    type: field
+    match: regex
+    validator: metacrafterext.rules.fr.codes.validate_fr_categorie_entreprise
+    needs_values: true
+    priority: 1
+  frrnavalue:
+    key: fr_rna
+    name: RNA number of an association (W443005153) by value and field name
+    rule: 'W(?:\d{2}|2[AB]|9[GMCTRN])\d{7}'
+    type: data
+    match: regex
+    minlen: 10
+    maxlen: 10
+    fieldregex: (?i)(?:rna|association|assoc|asso(?:$|[_ .])|w_?num)
+    priority: 1
+  frrnabyname:
+    key: fr_rna
+    name: RNA number of an association by field name (identifiantAssociationUniteLegale)
+    rule: (?i)identifiantassociation(?:unitelegale)?|(?:numero|num|n|code|id)_?rna|rna(?:_?(?:id|number|numero|code))?|id_?assoc(?:iation)?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.fr.codes.validate_fr_rna
+    needs_values: true
+    priority: 1
+  frgreffebyname:
+    key: fr_greffe_code
+    name: Commercial court registry (greffe) code by field name (code_greffe)
+    rule: (?i)code_?greffe|greffe_?code|cd_greffe|num_greffe
+    type: field
+    match: regex
+    validator: metacrafterext.rules.fr.codes.validate_fr_greffe_code
+    needs_values: true
+    priority: 1
+  frpostcodebysirenename:
+    key: postindex
+    is_pii: true
+    name: French postal code by Sirene field name (codePostalEtablissement)
+    rule: (?i)codepostal2?etablissement|codepostalacheteur|code_postal_etab|code_postal_uai|adresse_codepostal|adr_codepostal|adrs_codepostal|addr_postcode|location_postalcode|inscodepostal|code_postal_etablissement
+    type: field
+    match: regex
+    validator: metacrafterext.rules.fr.codes.validate_fr_postcode
+    needs_values: true
+    priority: 1

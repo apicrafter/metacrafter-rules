@@ -222,3 +222,13 @@ rules:
     type: field
     match: text
     priority: 1
+  uicstationbyname:
+    key: uiccode
+    name: UIC station code by field name (code_uic, bpuic, didok_nr, uic)
+    # Seven or eight digits after a UIC country code: only fields named for UIC or DiDok codes.
+    rule: (?i)(?:code_?)?uic(?:_?(?:code|gare|station|ref|number|nummer))?|bp_?uic|uic_?ref|didok(?:_?(?:nr|nummer|code|id))?|code_uic_gare|uic8|uic7|stop_uic
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.identifiers.validate_uic_station_code
+    needs_values: true
+    priority: 1

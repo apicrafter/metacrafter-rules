@@ -44,3 +44,13 @@ rules:
     rule: Word('ABCDEFGHIJKLMNOPQRSTUVWXYZ', exact=1) + Word(nums, exact=2) + Word('ABCDEFGHIJKLMNOPQRSTUVWXYZ', exact=1)
     maxlen: 4
     minlen: 4
+  frfinessbyname:
+    key: fr_finess
+    name: FINESS number by field name (finess, finess_et, numero_finess)
+    # Nine digits with a Luhn digit are also a SIREN: only fields named for FINESS.
+    rule: (?i)(?:num(?:ero)?_|n_|code_|no_|id_)?finess(?:_?(?:et|ej|geographique|juridique|etablissement|site|number|code))?|nofinesset|nofinessej|finessgeo|finessjur
+    type: field
+    match: regex
+    validator: metacrafterext.rules.fr.codes.validate_fr_finess
+    needs_values: true
+    priority: 1

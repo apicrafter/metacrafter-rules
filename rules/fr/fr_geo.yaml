@@ -17,7 +17,9 @@ rules:
     is_pii: False
     name: French INSEE code
     match: text
-    rule: code_insee,insee,insee_com,code_insee_region,code_insee_commune,codeinsee,com_insee,insee_reg,insee_dep,code_insee_etab,code_insee_into,code_commune_insee,commune_insee,code_insee_ancienne_commune,insee_commune,city_insee_code,code_insee_departement,region_insee_code,department_insee_code,num_insee,code_insee_de_la_commune,codinsee
+    # Region and department INSEE codes (insee_reg, code_insee_departement) are fr_region_code and
+    # fr_department_code below.
+    rule: code_insee,insee,insee_com,code_insee_commune,codeinsee,com_insee,code_insee_etab,code_insee_into,code_commune_insee,commune_insee,code_insee_ancienne_commune,insee_commune,city_insee_code,num_insee,code_insee_de_la_commune,codinsee
     type: field
     priority: 1
   frepcicodebyknown:
@@ -25,7 +27,8 @@ rules:
     is_pii: False
     name: French EPCI code
     match: text
-    rule: code_epci_metropole,code_epci,nom_epci,epci_code,epci_metropole,epci_current_code,epci_area_code,nom_officiel_epci,code_insee_epci,code_officiel_epci,epci_nom,codeepci
+    # Names of EPCI (nom_epci, epci_nom) are organisation names, not codes.
+    rule: code_epci_metropole,code_epci,epci_code,epci_metropole,epci_current_code,epci_area_code,code_insee_epci,code_officiel_epci,codeepci
     type: field
     priority: 1
   frsiretcodeknown:
@@ -56,4 +59,154 @@ rules:
     rule: codgeo,code_commune,code_commune_insee,code commune,depcom,insee_code,codecommune
     type: field
     match: text
+    priority: 1
+  # INSEE geography of the commune that Opendatasoft portals add to French records (com_code,
+  # dep_code, reg_code ... often one-element arrays), the Sirene register (codeCommuneEtablissement)
+  # and statistics files (CODGEO, DEP, REG). The values must be codes of the type.
+  frcommunecodebyname:
+    key: inseecode
+    name: INSEE commune code by field name (com_code, com_arm_code, codeCommuneEtablissement)
+    rule: (?i)(?:com|com_arm|com_current|commune|code_de_la_commune|code_commune_insee|commune_code|code_insee_commune|codecommune2?etablissement|codecommuneacheteur|code_insee_commune_corrige|codeinseecommune|insee_com|com_insee_code|inter_codegeo1|geo_code_commune)_?(?:code)?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.fr.codes.validate_fr_commune_code
+    needs_values: true
+    priority: 1
+  frdepartmentcodebyname:
+    key: fr_department_code
+    name: French department code by field name (dep_code, code_departement, insee_dep, DEP)
+    # English dept and department hold department numbers of any organisation: only French names.
+    rule: (?i)(?:code_?(?:du_|de_|officiel_|insee_)?|num_?|numero_?|cod_?|insee_?|c_|cd_|no_)?(?:dep|dpt|departement)(?:_?(?:code|num|insee|current_code|code_insee|insee_code))?(?:_?(?:19|20)\d\d)?|code_?dept|num_?dept|codedepartement(?:etablissement|execution|acheteur)?|depcode|coddpt|codedpt|dep_insee_code|departement_code|department_insee_code|code_insee_departement|etablissement_code_departement|implantation_code_departement
+    type: field
+    match: regex
+    validator: metacrafterext.rules.fr.codes.validate_fr_department_code
+    needs_values: true
+    priority: 1
+  frregioncodebyname:
+    key: fr_region_code
+    name: French region code by field name (reg_code, code_region, insee_reg, REG)
+    rule: (?i)(?:code_?(?:du_|de_la_|officiel_|insee_)?|num_?|cod_?|insee_?|c_|cd_)?(?:reg|region)(?:_?(?:code|num|insee|current_code|code_insee|insee_code))?(?:_?(?:19|20)\d\d)?|coderegion(?:etablissement|execution|acheteur)?|region_insee_code|code_insee_region|etablissement_code_region|implantation_code_region
+    type: field
+    match: regex
+    validator: metacrafterext.rules.fr.codes.validate_fr_region_code
+    needs_values: true
+    priority: 1
+  frdepartmentnamebyname:
+    key: fr_department
+    name: French department name by field name (dep_name, nom_departement, libelle_departement)
+    rule: (?i)(?:nom_?|libelle_?|lib_?|lb_|ncc_|l_)?(?:du_|de_)?(?:dep|dept|dpt|departement|departements)(?:_?(?:name|nom|libelle|lib|name_upper|name_lower))?|departementetablissement|libelle_du_departement|nom_du_departement|etablissement_departement|implantation_departement
+    type: field
+    match: regex
+    validator: metacrafterext.rules.fr.codes.validate_fr_department_name
+    needs_values: true
+    priority: 1
+  frregionnamebyname:
+    key: fr_region
+    name: French region name by field name (reg_name, nom_region, libelle_region)
+    rule: (?i)(?:nom_?|libelle_?|lib_?|lb_|ncc_|l_)?(?:de_la_)?(?:reg|region|regions)(?:_?(?:name|nom|libelle|lib|name_upper|name_lower))?(?:_?(?:19|20)\d\d)?|regionetablissement|libelle_de_la_region|nom_de_la_region|etablissement_region|implantation_region
+    type: field
+    match: regex
+    validator: metacrafterext.rules.fr.codes.validate_fr_region_name
+    needs_values: true
+    priority: 1
+  frcommunenamebyname:
+    key: fr_commune
+    name: French commune name by field name (com_name, nom_commune, libelle_commune, LIBGEO)
+    # A bare commune is also a Belgian or Luxembourg commune: only the names of French files.
+    rule: (?i)(?:com|com_arm|com_current)_name(?:_upper|_lower)?|nom_?(?:de_la_)?(?:com|comm|commune)|libelle_?(?:de_la_)?commune|lib_?com|libcom|libgeo|commune_nom|com_nom|libellecommune2?etablissement|nomcommune|nom_commune_postal|libelle_commune_insee
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.generic.has_letters
+    needs_values: true
+    priority: 1
+  frepcicodebysiren:
+    key: epcicode
+    name: SIREN of an EPCI by field name (codeEpciEtablissement, siren_epci)
+    rule: (?i)codeepcietablissement|siren_?epci|epci_?siren|code_siren_epci|epci|epci_code_siren|codeepci
+    type: field
+    match: regex
+    validator: metacrafterext.rules.fr.codes.validate_fr_epci_siren
+    needs_values: true
+    priority: 1
+  frarrondissementcodebyname:
+    key: fr_arrondissement_code
+    name: French departmental arrondissement code by field name (arrdep_code, code_arrondissement)
+    rule: (?i)arrdep_?code|code_?arr(?:ondissement)?(?:_departemental)?|arr_?code|codearrondissementetablissement|code_arrondissement_departemental
+    type: field
+    match: regex
+    validator: metacrafterext.rules.fr.codes.validate_fr_arrondissement_code
+    needs_values: true
+    priority: 1
+  frcantoncodebyname:
+    key: fr_canton_code
+    name: French canton code by field name (can_code, code_canton, com_cv_code)
+    rule: (?i)can_?code|code_?(?:du_)?canton|canton_?code|(?:com_)?cv_?code|code_cv
+    type: field
+    match: regex
+    validator: metacrafterext.rules.fr.codes.validate_fr_canton_code
+    needs_values: true
+    priority: 1
+  fririsbyname:
+    key: fr_iris_code
+    name: French IRIS code by field name (iris_code, code_iris, DCOMIRIS)
+    rule: (?i)(?:c_)?(?:code_?iris|iris_?code|codeiris|iris|dcomiris|codeiriscommuneimplantation|code_iris_de_[a-z_]+)
+    type: field
+    match: regex
+    validator: metacrafterext.rules.fr.codes.validate_fr_iris_code
+    needs_values: true
+    priority: 1
+  frzoneemploibyname:
+    key: fr_zone_emploi_code
+    name: French employment zone code by field name (ze2020_code, ZE2010)
+    rule: (?i)(?:com_)?ze_?(?:19|20)\d\d(?:_?code)?|code_ze(?:_?(?:19|20)\d\d)?|zone_emploi(?:_code)?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.fr.codes.validate_fr_zone_emploi_code
+    needs_values: true
+    priority: 1
+  frbassinviebyname:
+    key: fr_bassin_vie_code
+    name: French living area code by field name (bv2012_code, bv2022_code, BV2012)
+    rule: (?i)(?:com_)?bv_?(?:19|20)\d\d(?:_?code)?|code_bv(?:_?(?:19|20)\d\d)?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.fr.codes.validate_fr_bassin_vie_code
+    needs_values: true
+    priority: 1
+  frunitebyname:
+    key: fr_unite_urbaine_code
+    name: French urban unit code by field name (com_uu2020_code, UU2010)
+    rule: (?i)(?:com_)?uu_?(?:19|20)\d\d(?:_?code)?|code_uu(?:_?(?:19|20)\d\d)?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.fr.codes.validate_fr_unite_urbaine_code
+    needs_values: true
+    priority: 1
+  fraavbyname:
+    key: fr_aire_attraction_villes_code
+    name: French functional urban area code by field name (com_aav2020_code, AAV2020)
+    rule: (?i)(?:com_)?aav_?20\d\d(?:_?code)?|code_aav(?:_?20\d\d)?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.fr.codes.validate_fr_aire_code
+    needs_values: true
+    priority: 1
+  frqpvvalue:
+    key: fr_qpv_code
+    name: Priority neighbourhood code of the politique de la ville (QP049001; QN97663C since 2024)
+    rule: 'QP(?:0\d{2}|02[AB]|97\d)\d{3}|QN(?:0\d{2}|02[AB]|97\d)\d{2}[NMIC]'
+    type: data
+    match: regex
+    minlen: 8
+    maxlen: 8
+    validator: metacrafterext.rules.fr.codes.validate_fr_qpv_code
+    priority: 1
+  frqpvbyname:
+    key: fr_qpv_code
+    name: Priority neighbourhood code by field name (code_qp, code_qpv)
+    rule: (?i)code_?qpv?|qpv?_?code|id_?qpv?|num_?qpv?|qp|qpv
+    type: field
+    match: regex
+    validator: metacrafterext.rules.fr.codes.validate_fr_qpv_code
+    needs_values: true
     priority: 1
