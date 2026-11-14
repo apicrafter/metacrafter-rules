@@ -26,6 +26,8 @@ rules:
     rule: estado,estado_mexicano
     type: field
     match: text
+    validator: metacrafterext.rules.common.generic.validate_state_not_status
+    needs_values: true
     priority: 1
   mxinegimunicipalityvalue:
     key: mx_inegi_municipality_code

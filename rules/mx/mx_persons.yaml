@@ -11,6 +11,10 @@ rules:
     rule: nombre_completo,nombre_persona,nombre_cliente
     type: field
     match: text
+    # nombre_completo of the georef service of datos.gob.ar holds the full names of Argentine
+    # provinces and departments (Provincia del Neuquén, Partido de Adolfo Gonzales Chaves).
+    validator: metacrafterext.rules.common.generic.validate_person_fullname_not_place
+    needs_values: true
     priority: 1
   mxcurpknown:
     key: curp

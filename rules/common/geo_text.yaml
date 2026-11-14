@@ -1,0 +1,25 @@
+name: common-geo-text
+description: Geometries and subdivision codes written as text in table cells
+context: geo
+lang: common
+country_code: xx
+rules:
+  geojsongeometrytext:
+    key: geojson
+    name: GeoJSON geometry written as text in a table cell ({"type":"Point","coordinates":[-58.66,-34.48]})
+    # Energy data of datos.gob.ar (Argentina) keep a geojson column next to the WKB geometry (geom).
+    rule: metacrafterext.rules.common.generic.validate_geojson_geometry_text
+    type: data
+    match: func
+    minlen: 30
+    maxlen: 100000
+    priority: 1
+  iso3166subdivisionbyname:
+    key: iso3166code
+    name: ISO 3166-2 subdivision code by field name (iso_id, iso_3166_2) with the country code (AR-C, DE-BY)
+    rule: (?i)iso[ _-]?(?:3166[ _-]?2|id|subdivision(?:[ _-]?code)?)(?:[ _-]?code)?|subdivision[ _-]?code
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.generic.validate_iso3166_2_code
+    needs_values: true
+    priority: 1

@@ -1,0 +1,125 @@
+name: ar-geo
+description: Argentine geographic codes (INDEC, georef, ANAC, postal and telephone codes)
+context: geo
+lang: es
+country_code: ar
+# Field names of datos.gob.ar: the interoperability guide of the portal names the INDEC codes
+# provincia_id, departamento_id, municipio_id and localidad_id; other publishers write id_provincia,
+# cod_prov, IdDepartamento, in_departamentos, Cod_Loc. The codes are numbers whose first two digits
+# are a province code, and the validators pad codes that lost the leading zero (6014): other
+# countries' codes of the same names (Italian and Spanish province numbers, Colombian DIVIPOLA,
+# Mexican INEGI keys) mostly fail the province prefix or the length.
+rules:
+  arindecprovincecodebyname:
+    key: ar_indec_province_code
+    name: Argentine INDEC province code by field name (provincia_id, id_provincia_indec, cod_prov)
+    # jurisdiccion_id is left out: budget data number their jurisdictions (Poder Legislativo 1,
+    # Ministerio del Interior 30) with numbers that are partly province codes.
+    rule: (?i)(?:[a-z]+_)*(?:provincia|prov)(?:_(?:indec|residencia|nacimiento|inscripcion))?_?id|(?:id|cod|codigo)_?(?:provincia|prov)(?:_(?:indec|residencia|nacimiento))?|jurisdicci[oó]n_(?:de_)?residencia_id
+    type: field
+    match: regex
+    validator: metacrafterext.rules.ar_country.codes.validate_ar_indec_province_code
+    needs_values: true
+    priority: 1
+  arindecdepartmentcodebyname:
+    key: ar_indec_department_code
+    name: Argentine INDEC department code by field name (departamento_id, iddepartamento, in_departamentos)
+    rule: (?i)(?:[a-z]+_)*(?:departamento|depto|depar|dpto|dep)(?:_indec)?_?id|(?:id|cod|codigo|in)_?(?:departamentos?|depto|depar|dpto|dep)(?:_indec)?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.ar_country.codes.validate_ar_indec_department_code
+    needs_values: true
+    priority: 1
+  arindeclocalgovernmentcodebyname:
+    key: ar_indec_local_government_code
+    name: Argentine INDEC local government code by field name (municipio_id, id_municipio)
+    rule: (?i)(?:[a-z]+_)*(?:municipio|gobierno_local)_?id|(?:id|cod|codigo)_?(?:municipio|gobierno_local)
+    type: field
+    match: regex
+    validator: metacrafterext.rules.ar_country.codes.validate_ar_indec_local_government_code
+    needs_values: true
+    priority: 1
+  arindeclocalitycodebyname:
+    key: ar_indec_locality_code
+    name: Argentine INDEC census locality or BAHRA code by field name (localidad_censal_id, cod_loc, localidad_id)
+    rule: (?i)(?:[a-z]+_)*(?:localidad(?:_censal)?|asentamiento)_?id|(?:id|cod|codigo)_?(?:loc|localidad|asentamiento)(?:_censal)?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.ar_country.codes.validate_ar_indec_locality_code
+    needs_values: true
+    priority: 1
+  arindecstreetcodebyname:
+    key: ar_indec_street_code
+    name: Argentine INDEC street code by field name (calle_id, calle_a_id)
+    rule: (?i)(?:[a-z]+_)*calle(?:_[ab])?_id|(?:id|cod|codigo)_calle
+    type: field
+    match: regex
+    validator: metacrafterext.rules.ar_country.codes.validate_ar_indec_street_code
+    needs_values: true
+    priority: 1
+  arcentroidlatitudebyname:
+    key: latitude
+    name: Latitude of a centroid by Spanish field name (centroide_lat, centroide_latitud)
+    rule: (?i)centroide[ _-]?lat(?:itud)?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.generic.validate_latitude_value
+    needs_values: true
+    priority: 1
+  arcentroidlongitudebyname:
+    key: longitude
+    name: Longitude of a centroid by Spanish field name (centroide_lon, centroide_longitud)
+    rule: (?i)centroide[ _-]?lon(?:gitud)?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.generic.validate_longitude_value
+    needs_values: true
+    priority: 1
+  arprovinceletterbyname:
+    key: iso3166code_part
+    name: Argentine province letter of ISO 3166-2:AR by field name (letra_provincia, B, K, X)
+    rule: (?i)(?:[a-z]+_)*letra_provincia(?:_[a-z]+)*|provincia_letra
+    type: field
+    match: regex
+    validator: metacrafterext.rules.ar_country.codes.validate_ar_province_letter
+    needs_values: true
+    priority: 1
+  aranacairportbyname:
+    key: ar_anac_airport_code
+    name: Argentine ANAC aerodrome designator by field name (Aeropuerto, Origen / Destino)
+    # ANAC movement data name the airport by its local designator (AER, CBA, DOZ) and foreign
+    # airports by ICAO code (SULS, LEMD): the validator takes the 693 designators of the ANAC list.
+    rule: (?i)(?:cod(?:igo)?_?)?(?:aeropuerto|aer[oó]dromo)(?:[ _](?:local|origen|destino|codigo|cod))?|origen ?/ ?destino|origen_destino|(?:aeropuerto|aer[oó]dromo)_(?:origen|destino)
+    type: field
+    match: regex
+    validator: metacrafterext.rules.ar_country.codes.validate_ar_anac_airport_code
+    needs_values: true
+    priority: 1
+  arphoneareacodebyname:
+    key: phone_area_code
+    name: Argentine telephone area code by field name (cod_tel, codigo_indicativo_telefono, característica)
+    rule: (?i)cod(?:igo)?_?(?:tel|telefono|area|area_tel|indicativo(?:_telefono)?)|codigo_indicativo_telefono|caracter[ií]stica(?:_telef[oó]nica)?|indicativo_telefonico
+    type: field
+    match: regex
+    validator: metacrafterext.rules.ar_country.codes.validate_ar_phone_area_code
+    needs_values: true
+    priority: 1
+  arpostcodebyname:
+    key: ar_postcode
+    name: Argentine postal code by field name (cp, codigo_postal) with CPA or four-digit values
+    rule: (?i)cp|cpa|cod(?:igo)?_?postal|codigopostal|(?:[a-z]+_)+(?:cp|codigo_postal)
+    type: field
+    match: regex
+    validator: metacrafterext.rules.ar_country.codes.validate_ar_postcode
+    needs_values: true
+    priority: 1
+  arcpavalue:
+    key: ar_postcode
+    name: Código Postal Argentino (CPA) by value in a postal code field (C1038AAK)
+    rule: metacrafterext.rules.ar_country.codes.validate_ar_cpa
+    type: data
+    match: func
+    minlen: 8
+    maxlen: 8
+    fieldregex: '(?i)postal|^cpa?$|_cpa?$|^cp_|zip'
+    priority: 1

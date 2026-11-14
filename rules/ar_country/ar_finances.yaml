@@ -19,3 +19,62 @@ rules:
     match: text
     priority: 1
 
+  arcuitbyfieldname:
+    key: cuit
+    name: Argentine CUIT / CUIL by field name with a check digit (Cuit Vendedor, contratista_cuit, cuit_cuil)
+    # The guide of datos.gob.ar suffixes the CUIT of a party with _cuit (exportador_cuit); GLP
+    # sales data write "Cuit Comprador". Pseudonymised CUITs (84X20AZ402006P) fail the check digit.
+    rule: (?i)(?:[a-z]+[ _])*(?:cuit|cuil)(?:[ _/](?:cuil|cuit|[a-z]+))*
+    type: field
+    match: regex
+    validator: metacrafterext.rules.ar_country.codes.validate_ar_cuit
+    needs_values: true
+    priority: 1
+  arcuitdashedvalue:
+    key: cuit
+    name: Argentine CUIT / CUIL by value with hyphens and a valid check digit (30-50014329-7)
+    rule: metacrafterext.rules.ar_country.codes.validate_ar_cuit
+    type: data
+    match: func
+    minlen: 13
+    maxlen: 13
+    priority: 1
+  arclaebyname:
+    key: ar_clae
+    name: Argentine CLAE activity code (AFIP form 883) by field name (clae6, clae, codigo_actividad_afip)
+    # clae2 (the two-digit division) and letra (the section) are not CLAE codes.
+    rule: (?i)(?:[a-z]+_)*clae(?:_?6|_?6d)?(?:_(?:id|cod|codigo))?|(?:cod|codigo|id)_clae(?:_?6)?|cod(?:igo)?_actividad_(?:afip|clae)
+    type: field
+    match: regex
+    validator: metacrafterext.rules.ar_country.codes.validate_ar_clae
+    needs_values: true
+    priority: 1
+  arsafbyname:
+    key: ar_saf_code
+    name: Argentine budget SAF code by field name (organismo_codigo_saf, codigo_saf)
+    rule: (?i)(?:[a-z]+_)*(?:codigo|cod|id)_?saf|saf(?:_(?:id|codigo|cod))?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.ar_country.codes.validate_ar_saf_code
+    needs_values: true
+    priority: 1
+  arbapinbyname:
+    key: ar_bapin_code
+    name: Argentine BAPIN public investment project code by field name (codigo_bapin_id, bapin)
+    rule: (?i)(?:cod(?:igo)?_|id_)?bapin(?:_(?:id|codigo|cod))?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.ar_country.codes.validate_ar_bapin_code
+    needs_values: true
+    priority: 1
+  arncmbyname:
+    key: hs_code
+    name: Mercosur Common Nomenclature (NCM) code by field name (cod_ncm_6d, ncm, posicion_arancelaria)
+    # NCM codes are HS codes with two more digits; cod_ncm_6d holds the six-digit HS subheading.
+    # ncm_6d of the same files holds the product name: the values must be codes.
+    rule: (?i)(?:cod(?:igo)?_)?ncm(?:_?(?:6d|8d|6|8|code|codigo|cod))?|posici[oó]n_arancelaria(?:_ncm)?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.ar_country.codes.validate_ar_ncm_code
+    needs_values: true
+    priority: 1

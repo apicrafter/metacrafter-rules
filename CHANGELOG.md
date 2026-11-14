@@ -9,6 +9,41 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Rules for the datos.gob.ar files of metacrafter-testdata** (an April 2024 Dateno snapshot of
+  the Argentine national open data portal; validators in `metacrafterext.rules.ar_country.codes`):
+  - INDEC geographic codes of the georef service and national data, by field name with the
+    province prefix checked and the leading zero restored (6014 for 06014): province codes
+    (`ar_indec_province_code`: `provincia_id`, `id_provincia_indec`, `cod_prov`), department
+    codes (`ar_indec_department_code`: `departamento_id`, `in_departamentos`), local government
+    codes (`ar_indec_local_government_code`: `municipio_id`), census locality and BAHRA
+    settlement codes (`ar_indec_locality_code`: `localidad_censal_id`, `cod_loc`, ten digits for
+    an entity), street codes (`ar_indec_street_code`: `calle_id`); `jurisdiccion_id` is left out
+    (budget jurisdictions); `centroide_lat` / `centroide_lon` as latitude and longitude;
+  - CUIT / CUIL by check digit in any field named after them (`Cuit Vendedor`, `contratista_cuit`,
+    `cuit_cuil`) and by value with hyphens (30-50014329-7); pseudonymised CUITs fail;
+  - CLAE activity codes of AFIP (`ar_clae`: `clae6`), SAF budget service codes (`ar_saf_code`:
+    `organismo_codigo_saf`), BAPIN investment project codes (`ar_bapin_code`), NCM codes as
+    `hs_code` (`cod_ncm_6d`, with digits: `ncm_6d` holds the product name);
+  - GDE document numbers (`ar_gde_number`: IF-2019-68464597-APN-DNCOPRCYFC#JGM, with an empty
+    part `EX-2017-28471953-   -APN-DC#ME`) by field name (`..._numero_gedo`, `expediente`) and by
+    value in any field for the APN, ANSES, GDEBA and GCABA ecosystems; COMPR.AR / CONTRAT.AR / BAC
+    process numbers (`ar_compras_procedure_number`: 452-0001-LPU17, 81-0009-OBR18,
+    10179-0125-LPU22) by name and value;
+  - oil and gas well designations (`ar_hydrocarbon_well_code`: YPF.Nq.LLL-1218(d)) in `sigla`
+    fields, sedimentary basins (`ar_sedimentary_basin`: NEUQUINA, GOLFO SAN JORGE, NEU) in
+    `cuenca` fields; CAMMESA agent, power plant and generating unit codes
+    (`ar_cammesa_agent_code`: EPECORDG; `ar_cammesa_power_plant_code`: COST;
+    `ar_cammesa_generating_unit_code`: COSTTG08, also by value in `maquina` fields, where it
+    outweighs the BIC detector);
+  - ANAC aerodrome designators (`ar_anac_airport_code`: AER, CBA, the 693 of the ANAC list) in
+    `Aeropuerto` and `Origen / Destino`; Argentine telephone area codes without the trunk zero
+    (`codigo_indicativo_telefono`, `cod_tel`: 351, 2942); postal codes (`ar_postcode`) in `cp`
+    and `codigo_postal` fields (CPA C1038AAK or four digits) and the CPA by value; ISO 3166-2:AR
+    province letters (`letra_provincia_...`: B, X) as `iso3166code_part`;
+  - common: GeoJSON geometries written as text in a cell (`geojson`:
+    `{"type":"Point","coordinates":[...]}`), which had no rules; ISO 3166-2 codes with the
+    country (`iso3166code`: AR-C) in `iso_id` / `iso_3166_2` fields, which had no rules.
+
 - **Rules for the RDA-UNR files of metacrafter-testdata** (registry datatypes added from an April
   2024 snapshot of the Repositorio de Datos Académicos of the Universidad Nacional de Rosario,
   Argentina, a Dataverse):
@@ -147,6 +182,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- `nombre_completo` is a person's full name only when its values are (Argentine and Mexican
+  rules): the georef service of datos.gob.ar writes the full names of provinces and
+  departments there (Provincia del Neuquén, Partido de Adolfo Gonzales Chaves).
+- `estado` / `uf` is a state only when its values are no statuses (Portuguese, Brazilian and
+  Mexican rules): in Spanish data `estado` is the status of a record (Finalizada, En proceso,
+  Exploración Avanzada), labelled `state` in 7 files of the datos.gob.ar snapshot.
 - `height` by field name needs lengths (175, 3.2 m, 1080 px): the `height` column of the
   grazing records of dairy cows (RDA-UNR) holds the sward height class, tall or short.
 

@@ -24,6 +24,8 @@ rules:
     rule: estado,uf,estado_uf
     type: field
     match: text
+    validator: metacrafterext.rules.common.generic.validate_state_not_status
+    needs_values: true
     priority: 1
   braddressknown:
     key: address

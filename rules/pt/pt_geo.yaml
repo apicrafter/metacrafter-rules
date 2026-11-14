@@ -17,6 +17,9 @@ rules:
     rule: estado,uf,estado_uf
     type: field
     match: text
+    # Spanish estado is usually a status (Finalizada, En proceso, Producción).
+    validator: metacrafterext.rules.common.generic.validate_state_not_status
+    needs_values: true
     priority: 1
   ptaddressknown:
     key: address

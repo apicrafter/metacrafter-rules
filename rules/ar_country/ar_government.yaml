@@ -1,0 +1,43 @@
+name: ar-government
+description: Argentine administrative document and procurement numbers (GDE, COMPR.AR, CONTRAT.AR)
+context: government
+lang: es
+country_code: ar
+rules:
+  argdenumberbyname:
+    key: ar_gde_number
+    name: Argentine GDE document number by field name (pliego_condiciones_generales_numero_gedo, expediente_numero)
+    rule: (?i)(?:[a-z]+_)*(?:numero_)?(?:gedo|gde)(?:_[a-z]+)*|(?:[a-z]+_)*(?:expediente|documento|resolucion)(?:_[a-z]+)*_(?:numero|nro)|(?:numero|nro)_(?:expediente|documento|resolucion)(?:_[a-z]+)*|(?:[a-z]+_)*expediente
+    type: field
+    match: regex
+    validator: metacrafterext.rules.ar_country.codes.validate_ar_gde_number
+    needs_values: true
+    priority: 1
+  argdenumbervalue:
+    key: ar_gde_number
+    name: Argentine GDE document number by value (IF-2019-68464597-APN-DNCOPRCYFC#JGM)
+    # Any field: the national (APN, ANSES) and the Buenos Aires (GDEBA, GCABA) ecosystems only.
+    rule: metacrafterext.rules.ar_country.codes.validate_ar_gde_number_known_ecosystem
+    type: data
+    match: func
+    minlen: 16
+    maxlen: 64
+    priority: 1
+  arcomprasnumberbyname:
+    key: ar_compras_procedure_number
+    name: Argentine COMPR.AR / CONTRAT.AR / BAC number by field name (procedimiento_numero, numero_obra, contrato_numero)
+    rule: (?i)(?:[a-z]+_)*(?:procedimiento|proceso|contrato|obra|solicitud_de_contratacion)_(?:numero|nro)|(?:numero|nro)_?(?:obra|procedimiento|proceso|contrato)
+    type: field
+    match: regex
+    validator: metacrafterext.rules.ar_country.codes.validate_ar_compras_procedure_number
+    needs_values: true
+    priority: 1
+  arcomprasnumbervalue:
+    key: ar_compras_procedure_number
+    name: Argentine COMPR.AR / CONTRAT.AR number by value (452-0001-LPU17, 81-0009-OBR18)
+    rule: metacrafterext.rules.ar_country.codes.validate_ar_compras_procedure_number
+    type: data
+    match: func
+    minlen: 9
+    maxlen: 16
+    priority: 1
