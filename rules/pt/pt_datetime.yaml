@@ -32,9 +32,12 @@ rules:
     key: time
     name: Portuguese time name
     # horario (Spanish and Portuguese) is opening hours as often as a time: the Spanish rules
-    # of rules/es look at the values.
+    # of rules/es look at the values. A hora of hour numbers (9, 17) or of datetimes is no time
+    # of day either.
     rule: hora,horas
     type: field
     match: text
+    validator: metacrafterext.rules.es.periods.validate_time_of_day
+    needs_values: true
     priority: 1
 

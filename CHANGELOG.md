@@ -45,6 +45,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     field named `long` (decimal degrees of four or more decimals), street names in `calle2`,
     `calle_cruce`, `cruce`, `calles` and `nomoficial`, surnames in `apellido` and full names in
     `apellido_y_nombre` and `ayn`, nationalities in `nacionalidad`, YouTube video ids in `id_youtube`.
+    Argentine postal codes in `codpost`, street addresses in `direccion_normalizada`, `dom_norma`,
+    `dom_geo`, `dom_edific` and `dom_establ`.
 
 - **Rules for the data.gov.au files of metacrafter-testdata** (a snapshot of the Australian national
   open data portal, Dateno source cdi00000098; validators in `metacrafterext.rules.au.codes` and
@@ -339,6 +341,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `validate_state_not_status`; Baja California passes.
 - `horario` is no longer `time` by its name alone: opening hours (lunes a viernes de 8 a 20) are
   `opening_hours`, and a horario of times of day (10:42:00) is `time` by its values.
+- `hora` and `horas` are `time` by their values: a `HORA` of hour numbers (9, 17) or of datetimes
+  (31MAR2020:15:00:00) is no time of day.
 - A `dpto` column of apartment letters (A, B, C) is no longer `ar_department`: a lone initial is not
   an abbreviated department name.
 

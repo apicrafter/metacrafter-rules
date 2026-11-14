@@ -47,13 +47,17 @@ _INTERSECTION = re.compile(
     rf" ?({_STREET_PART})$", re.I)
 _HAS_LETTERS = re.compile(r"[^\W\d_]{2}")
 _EMAIL = re.compile(r"@[\w-]+\.[a-z]{2,}", re.I)
+# Rojas 1201 entre Antezana y Apolinario Figueroa: an address with its cross streets.
+_BETWEEN = re.compile(r"\b(?:entre|between|e/)\b", re.I)
+_HOUSE_NUMBER = re.compile(r"(?<![\w°º])\d{3,5}(?![\w°º])")
 
 
 def validate_street_intersection(value):
     """A crossing of two streets: DEHEZA@PINTO, CORDOBA AV. & JUNIN, Av. San Juan y Chacabuco, AV.
-    MEXICO-AV. 9 DE JULIO, Main St & 2nd Ave (not one street, an e-mail address or a number)."""
+    MEXICO-AV. 9 DE JULIO, Main St & 2nd Ave (not one street, an e-mail address, a number, or an
+    address with its cross streets: Rojas 1201 entre Antezana y Apolinario Figueroa)."""
     text = " ".join(str(value).split())
-    if not 5 <= len(text) <= 100 or _EMAIL.search(text):
+    if not 5 <= len(text) <= 100 or _EMAIL.search(text) or _BETWEEN.search(text) or _HOUSE_NUMBER.search(text):
         return False
     match = _INTERSECTION.match(text)
     return bool(match) and all(_HAS_LETTERS.search(part) for part in match.groups())

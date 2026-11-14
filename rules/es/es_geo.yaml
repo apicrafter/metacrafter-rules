@@ -87,10 +87,10 @@ rules:
   esstreetaddressbyname:
     key: street_address
     is_pii: True
-    name: Spanish street address by field name (direccion, Dirección, domicilio, direccion_descripcion)
+    name: Spanish street address by field name (direccion, Dirección, domicilio, direccion_descripcion, direccion_normalizada, dom_norma)
     # Sarmiento 450, Av. Corrientes 1543, Rivadavia S/N. A wind direction (NE) and the name of a
     # directorate (Dirección Nacional de Vialidad), the other meanings of dirección, fail.
-    rule: '(?i)direcci[oó]n(?:[ _](?:descripci[oó]n|completa|postal|f[ií]sica|calle|sede|legal|de[ _]la[ _]sede))?|domicilio(?:[ _](?:legal|real|fiscal|postal|de[ _]planta|sede|calle|completo))?|direcci[oó]n[ _]y[ _]n[uú]mero'
+    rule: '(?i)direcci[oó]n(?:[ _](?:descripci[oó]n|completa|postal|f[ií]sica|calle|sede|legal|de[ _]la[ _]sede))?|domicilio(?:[ _](?:legal|real|fiscal|postal|de[ _]planta|sede|calle|completo))?|direcci[oó]n[ _]y[ _]n[uú]mero|direcci[oó]n[ _]?norm(?:alizada)?|dom[ _](?:norma|geo|edific|establ|orig)[a-z]*'
     type: field
     match: regex
     validator: metacrafterext.rules.common.directories.validate_street_address

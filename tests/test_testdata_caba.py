@@ -112,7 +112,8 @@ VALIDATORS = [
     (validate_street_intersection, ["DEHEZA@PINTO", "CORDOBA AV. & JUNIN", "Av. San Juan y Chacabuco", "AV. MEXICO-AV. 9 DE JULIO",
                                     "Main St & 2nd Ave", "RUIZ HUIDOBRO@CRAMER", "paz, gral. av. & balbin, ricardo", "LIMA Y BRASIL",
                                     "Paraguay esq. Libertad"],
-     ["Av. Córdoba 374", "RIVADAVIA", "info@example.org", "1234", "A&B"]),
+     ["Av. Córdoba 374", "RIVADAVIA", "info@example.org", "1234", "A&B", "Rojas 1201 entre Antezana y Apolinario Figueroa.",
+      "Av. Brasil entre Lima y Salta", "CORRIENTES AV. 1234 y URUGUAY"]),
     (validate_street_name, ["RIVADAVIA AV.", "paz, gral. av.", "9 DE JULIO AV.", "JUSTO, JUAN B. AV.", "O'BRIEN"],
      ["DEHEZA@PINTO", "LIMA Y BRASIL", "CORDOBA AV. & JUNIN", "1234", "X"]),
     (validate_calendar_year, ["2016", "1991", "2016.0"], ["201601", "16", "2016-2017", "primer_trimestre_2019"]),
@@ -248,3 +249,16 @@ def test_horario_is_not_a_time_by_name_alone():
     # horario holds opening hours as often as a time: the Portuguese name list no longer has it.
     assert not field_matches("pt/pt_datetime.yaml", "pttimeknown", "horario")
     assert field_matches("pt/pt_datetime.yaml", "pttimeknown", "hora")
+    # hora of hour numbers (HORA: 9) or of datetimes (31MAR2020:15:00:00) is no time of day
+    spec = load("pt/pt_datetime.yaml", "pttimeknown")
+    assert spec["validator"].endswith("validate_time_of_day") and spec["needs_values"] is True
+    for value in ("9", "17", "31MAR2020:15:00:00"):
+        assert not validate_time_of_day(value), value
+
+
+def test_more_argentine_field_names():
+    assert field_matches("ar_country/ar_geo.yaml", "arpostcodebyname", "codpost")
+    assert field_matches("ar_country/ar_geo.yaml", "arpostcodebyname", "cod_postal")
+    for name in ("direccion_normalizada", "DIRECCION_NORMALIZADA", "dom_norma", "DOM_GEO", "dom_edific", "dom_establ", "direccion_norm"):
+        assert field_matches("es/es_geo.yaml", "esstreetaddressbyname", name), name
+    assert not field_matches("es/es_geo.yaml", "esstreetaddressbyname", "dominio")

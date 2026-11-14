@@ -127,8 +127,8 @@ rules:
     priority: 1
   arpostcodebyname:
     key: ar_postcode
-    name: Argentine postal code by field name (cp, codigo_postal) with CPA or four-digit values
-    rule: (?i)cp|cpa|cod(?:igo)?_?postal|codigopostal|(?:[a-z]+_)+(?:cp|codigo_postal)
+    name: Argentine postal code by field name (cp, codigo_postal, codpost) with CPA or four-digit values
+    rule: (?i)cp|cpa|cod(?:igo)?_?post(?:al)?|codigopostal|(?:[a-z]+_)+(?:cp|codigo_postal)
     type: field
     match: regex
     validator: metacrafterext.rules.ar_country.codes.validate_ar_postcode
