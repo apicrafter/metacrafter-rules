@@ -27,8 +27,9 @@ rules:
   atkgnumberbyname:
     key: at_kg_number
     name: Austrian cadastral municipality number (KG-Nummer) by field name
-    # KG_NUMMER of the control point files, KG-NR and KG-EZ of the cadastre files, kgnr.
-    rule: (?i)kg[ _-]?(?:nummer|nr|number|no|code|ez)|kgnummer|katastralgemeinde(?:n)?[ _-]?(?:nummer|nr|code)?
+    # KG_NUMMER of the control point files, KG-NR and KG-EZ of the cadastre files, kgnr, KatGem_Kennz.
+    # of the Upper Austrian address lists.
+    rule: (?i)kg[ _-]?(?:nummer|nr|number|no|code|ez)|kgnummer|katastralgemeinde(?:n)?[ _-]?(?:nummer|nr|code)?|kat_?gem_?(?:kennz(?:ahl|iffer)?|nr|nummer)\.?
     type: field
     match: regex
     validator: metacrafterext.rules.at.survey.validate_at_kg_number
@@ -72,4 +73,84 @@ rules:
     match: func
     minlen: 7
     maxlen: 80
+  atgkzbyname:
+    key: at_gkz
+    name: Austrian municipality code by field name with a check of the state and district digits (GKZ, LAU_CODE, Gemeindecode, DISTRICT_CODE of municipalities)
+    # Statistics Austria and the cities name the municipality code in many ways; DISTRICT_CODE holds
+    # municipality codes in the Vienna and Tyrol statistics (90001, 70101) and district codes in
+    # Styria (601): the validator tells them apart, and keeps 90100 and postcodes (1010) out.
+    rule: (?i)gkz|gemeinde_?kenn(?:ziffer|zahl)|gemeinde_?(?:code|nr|nummer|id|kz)|gemeindecode|gemeindenummer|gem_?(?:nr|code|kz)|gdnr|[pg]?gem_?gesnr|stataustria_gem_(?:code|kenn)|lau2?_?code|district_code|municipality_?(?:id|code)|commune_code
+    type: field
+    match: regex
+    validator: metacrafterext.rules.at.codes.validate_at_gkz
+    needs_values: true
+    priority: 1
+  atbezirkbyname:
+    key: at_bezirkskennziffer
+    name: Austrian political district code by field name with a check of the state and district digits (DISTRICT_CODE, BKZ, LAU_1)
+    rule: (?i)district_code|bezirks?_?kenn(?:ziffer|zahl)|bkz|bez_?code|bezirk_?(?:code|kz|nr|nummer|id)|bezirkscode|stataustria_bez_(?:code|kenn)|lau_?1|pbez_?code
+    type: field
+    match: regex
+    validator: metacrafterext.rules.at.codes.validate_at_bezirkskennziffer
+    needs_values: true
+    priority: 1
+  atbezirknamevalue:
+    key: district
+    name: Austrian political or city district name in a district field (DISTRICT_NAME, Bezirk, Statistischer Bezirk)
+    # Districts carry the names of their seats (Weiz, Leibnitz, Graz-Umgebung): in a district column
+    # they are districts, and this guarded rule outweighs the Austrian city name list.
+    match: func
+    type: data
+    rule: metacrafterext.rules.common.generic.validate_place_name
+    minlen: 2
+    maxlen: 60
+    fieldrule: district_name,bezirk,bezirksname,bezirk_name,politischer bezirk,politischer_bezirk,pbez_name,gbez_name,statistischer bezirk,stat_bezirk,bezirk_bez
+    fieldrulematch: text
+    priority: 1
+  atbundeslandbyname:
+    key: at_bundesland
+    name: Austrian state name by field name (Bundesland, Postadresse-Bundesland, FEDERAL_STATE, state_name)
+    # Wien, Salzburg and Tirol are also cities and a valley: by field name only.
+    rule: (?i)bundesland(?:_?(?:name|bez|bezeichnung|txt))?|(?:post|besuchs)adresse[-_ ]?bundesland|federal_?state(?:_?name)?|state_name|bl_name|land_name
+    type: field
+    match: regex
+    validator: metacrafterext.rules.at.codes.validate_at_bundesland
+    needs_values: true
+    priority: 1
+  atbundeslandcodebyname:
+    key: at_bundesland_code
+    name: Austrian state code 1-9 by field name (BundeslandID, BDL, STATAUSTRIA_LAND_KENN, code.bundesland)
+    rule: (?i)bundesland_?(?:id|code|kz|nr|nummer|kennziffer|kennzahl)|bl_?(?:id|code|kz|nr)|bdl|stataustria_land_(?:kenn|code)|code\.bundesland|land_?kz|landid
+    type: field
+    match: regex
+    validator: metacrafterext.rules.at.codes.validate_at_bundesland_code
+    needs_values: true
+    priority: 1
+  atadresscodebyname:
+    key: at_adresscode
+    name: Austrian address code of the BEV address register by field name (Adresscode, ADRCD, Postadresse-Adresscode)
+    rule: (?i)adress?code|adrcd|adr_?code|(?:post|besuchs)adresse[-_ ]?adresscode
+    type: field
+    match: regex
+    validator: metacrafterext.rules.at.codes.validate_at_adresscode
+    needs_values: true
+    priority: 1
+  atortschaftskennzifferbyname:
+    key: at_ortschaftskennziffer
+    name: Austrian locality code by field name (Okz, Ortschaftskennziffer) with five digits
+    # OKZ is also the e-government organisation code (at_okz): the validator keeps the digits.
+    rule: (?i)okz|ortschafts?_?(?:kennziffer|kennzahl|kz|code|nr)|ortsch_?kz
+    type: field
+    match: regex
+    validator: metacrafterext.rules.at.codes.validate_at_ortschaftskennziffer
+    needs_values: true
+    priority: 1
+  atstrassenkennzifferbyname:
+    key: at_strassenkennziffer
+    name: Austrian street code by field name (SKZ, Straßenkennziffer) with five or six digits
+    rule: (?i)skz|stra(?:ss|ß)en_?kennziffer|stra(?:ss|ß)en_?kz|str_?kz|strkz
+    type: field
+    match: regex
+    validator: metacrafterext.rules.at.codes.validate_at_strassenkennziffer
+    needs_values: true
     priority: 1

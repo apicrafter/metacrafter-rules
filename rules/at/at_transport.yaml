@@ -1,0 +1,25 @@
+name: at-transport
+description: Austrian transport codes (Wiener Linien stop numbers, road numbers)
+context: transport
+lang: de
+country_code: at
+rules:
+  atwienerliniendivabyname:
+    key: at_wienerlinien_diva
+    name: Wiener Linien stop number (DIVA) by field name
+    rule: (?i)diva(?:_?(?:nr|id|nummer))?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.at.codes.validate_at_wienerlinien_diva
+    needs_values: true
+    priority: 1
+  atroadnumberbyname:
+    key: at_road_number
+    name: Austrian road number by field name (str_nr, strkey, Straßennummer)
+    # A1 and L90 are also cell references and paper sizes: by field name only.
+    rule: (?i)str_?nr|strnr|stra(?:ss|ß)en_?(?:nr|nummer)|stra(?:ss|ß)ennummer|str_?key|strkey|road_?(?:number|nr|no|ref)
+    type: field
+    match: regex
+    validator: metacrafterext.rules.at.codes.validate_at_road_number
+    needs_values: true
+    priority: 1

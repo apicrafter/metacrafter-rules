@@ -44,6 +44,36 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     `{"type":"Point","coordinates":[...]}`), which had no rules; ISO 3166-2 codes with the
     country (`iso3166code`: AR-C) in `iso_id` / `iso_3166_2` fields, which had no rules.
 
+- **Rules for the data.gv.at files of metacrafter-testdata** (a 2024 Dateno snapshot of the
+  Austrian open government data portal: administration directories of the states, statistics by
+  municipality and district, the OeNB bank directory, AMS labour market data, Wiener Linien stops,
+  school statistics, street directories, road data and state and city budgets):
+  - Austrian codes, new in the registry, by field name with their values checked
+    (`metacrafterext.rules.at.codes`): e-government organisation codes (`at_okz`: `OKZ`, `OKZu`,
+    L5AL-20001, L7BH-IL-BH, GGA-10101 with its municipality code; also by value for the state and
+    municipal forms), ERsB numbers (`at_ersb`: GLNs starting with 9110 with their GS1 check digit,
+    also by value), BEV address codes (`at_adresscode`: `Adresscode`, `Postadresse-Adresscode`),
+    locality and street codes (`at_ortschaftskennziffer`: `Okz` of five digits;
+    `at_strassenkennziffer`: `Skz`), school codes (`at_schulkennzahl`: `Schulkennzahl`, `SKZ Exp`,
+    and `SKZ` when its first three digits are a political district code, since SKZ is also the
+    street code), AMS regional office codes (`at_ams_rgs`: `RGSCode`), state names and codes
+    (`at_bundesland`: `Bundesland`, `Postadresse-Bundesland`, `FEDERAL_STATE`;
+    `at_bundesland_code`: `BundeslandID`, `BDL`), bank codes (`at_blz`: `Bankleitzahl` of five
+    digits), Wiener Linien stop numbers (`at_wienerlinien_diva`: `DIVA`), road numbers
+    (`at_road_number`: `str_nr`, `strkey`: A14, B190, L202) and the VRV budget codes
+    (`at_vrv_ansatz`: `Ansatz`, `Teilabschnitt`, `haushaltskonto-ansatz`; `at_vrv_konto`:
+    `haushaltskonto-post`; `at_vrv_mvag`: `MvagCode`, `MVAG Ergebnishaushalt`);
+  - registry types without rules until now: municipality codes (`at_gkz`) in `DISTRICT_CODE`,
+    `LAU_CODE`, `LAU2_CODE`, `Gemeinde_Id`, `Gemeindecode`, `GDNR`, `COMMUNE_CODE` with a check
+    of the state and district digits, so that the Vienna district form 90100 and postcodes stay
+    out; political district codes (`at_bezirkskennziffer`) in `DISTRICT_CODE`, `Bezirk_Id`,
+    `LAU_1`; company register numbers (`at_firmenbuchnummer`: 32942w, and FN 32942w by value);
+    NACE and ÖNACE codes (`eu_nace`: `NACE_4` without the dot, `NACE_1`); `KatGem_Kennz.` for
+    `at_kg_number`;
+  - Austrian political and city district names in district fields (`DISTRICT_NAME`, `Bezirk`,
+    `Statistischer Bezirk`) are `district`: the guarded rule outweighs the Austrian city list,
+    which labelled Weiz, Leibnitz or Urfahr `atcity`.
+
 - **Rules for the BEV files of metacrafter-testdata** (a 2024 Dateno crawl of data.bev.gv.at,
   the catalogue of the Austrian Federal Office of Metrology and Surveying: geodetic control
   points, height benchmarks, orthophoto flight dates, cadastre quality lists, geographic names):
