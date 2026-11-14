@@ -1,0 +1,111 @@
+name: ar-census
+description: Argentine census geography (INDEC radius and fraction codes, radius types, code parts, department names)
+context: geo
+lang: es
+country_code: ar
+# Field names of the census tables and radius lists of the statistics office of Córdoba (DGEyC):
+# the INDEC codes come split into columns, PROV 14, CODDEPTO / DEPTO 098, FRAC / FRACCION 01,
+# RADIO 05, TIPO_RAD U, CODLOC 050, COD_MUNI 0196, with the nine-digit radius code in CODIGO or
+# LINK. The parts alone are short numbers, so the rules take them by field name and the validators
+# check them (a department part must be one of the georef departments; a nine-digit code must
+# start with a known department).
+rules:
+  arindeccensusradiuscodebyname:
+    key: ar_indec_census_radius_code
+    name: Argentine INDEC census radius code or radius number by field name (RADIO, RADIO2008, radio_censal, cod_radio)
+    # A radius column of a radius list holds the radius number alone (01 to 99). A bare radio is
+    # also a radius in metres or a radio station: the validator takes numbers of one or two digits
+    # or nine-digit codes of a known department only.
+    rule: (?i)radio(?:[ _]?censal)?(?:[ _]?(?:id|cod|codigo|link))?(?:[ _]?(?:19|20)\d{2})?|(?:id|cod|codigo)[ _]?radio(?:[ _]?censal)?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.ar_country.census.validate_ar_indec_census_radius_code
+    needs_values: true
+    priority: 1
+  arindeccensusradiuslinkbyname:
+    key: ar_indec_census_radius_code
+    name: Argentine INDEC nine-digit census radius code by a generic field name (CODIGO, LINK, Código)
+    # CODIGO of the DGEyC census tables and LINK of the INDEC census cartography: only nine-digit
+    # codes (140070101) whose first five digits are a known department pass.
+    rule: (?i)codigo|c[oó]digo|cod|link|link_radio|id_link
+    type: field
+    match: regex
+    validator: metacrafterext.rules.ar_country.census.validate_ar_indec_census_radius_link
+    needs_values: true
+    priority: 1
+  arindeccensusfractioncodebyname:
+    key: ar_indec_census_fraction_code
+    name: Argentine INDEC census fraction code or fraction number by field name (FRAC, FRACCION, FRAC2008)
+    rule: (?i)frac(?:c?i[oó]n)?(?:[ _]?censal)?(?:[ _]?(?:id|cod|codigo|link))?(?:[ _]?(?:19|20)\d{2})?|(?:id|cod|codigo)[ _]?frac(?:c?i[oó]n)?(?:[ _]?censal)?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.ar_country.census.validate_ar_indec_census_fraction_code
+    needs_values: true
+    priority: 1
+  arindeccensusradiustypebyname:
+    key: ar_indec_census_radius_type
+    name: Argentine INDEC census radius type by field name (TIPO_RAD, TIPO_RAD08, tipo_radio)
+    rule: (?i)tipo[ _]?rad(?:io)?(?:[ _]?(?:censal))?(?:\d{2}|\d{4})?|tipo[ _]de[ _]radio(?:[ _]censal)?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.ar_country.census.validate_ar_indec_census_radius_type
+    needs_values: true
+    priority: 1
+  arindecprovincecodebarename:
+    key: ar_indec_province_code
+    name: Argentine INDEC province code by the bare field name PROV of census tables
+    rule: (?i)prov(?:[ _]?(?:19|20)\d{2})?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.ar_country.codes.validate_ar_indec_province_code
+    needs_values: true
+    priority: 1
+  arindecdepartmentpartbyname:
+    key: ar_indec_department_code
+    name: Department part of an INDEC code by field name (CODDEPTO 098, DEPTO 7, Cod - D)
+    # The three-digit department part alone, next to a province column; the validator takes the
+    # parts of the georef departments (7, 14 ... 182 in Córdoba) and full department codes.
+    rule: (?i)(?:cod(?:igo)?[ _]?)?(?:depto|dpto)(?:[ _]?(?:19|20)\d{2})?|cod\s*-\s*d|cod(?:igo)?[ _]departamento
+    type: field
+    match: regex
+    validator: metacrafterext.rules.ar_country.census.validate_ar_indec_department_part
+    needs_values: true
+    priority: 1
+  arindeclocalitypartbyname:
+    key: ar_indec_locality_code
+    name: Locality part of an INDEC census locality code by field name (CODLOC 050)
+    rule: (?i)cod(?:igo)?[ _]?loc(?:alidad)?(?:[ _]?censal)?(?:[ _]?(?:19|20)\d{2})?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.ar_country.census.validate_ar_indec_locality_part
+    needs_values: true
+    priority: 1
+  arindeclocalgovernmentpartbyname:
+    key: ar_indec_local_government_code
+    name: Local government part of an INDEC code by field name (COD_MUNI 0196, Cod-M 7)
+    rule: (?i)cod(?:igo)?[ _]?muni(?:cipio)?\d?(?:[ _]?(?:19|20)\d{2})?|cod\s*-\s*m
+    type: field
+    match: regex
+    validator: metacrafterext.rules.ar_country.census.validate_ar_indec_local_government_part
+    needs_values: true
+    priority: 1
+  ardepartmentnamebyname:
+    key: ar_department
+    name: Argentine department name by field name (Departamento, NOMDEPTO, Dpto. Residencia, departamento_nombre)
+    # Department names of the georef list, written in capitals without accents (RIO CUARTO) or
+    # abbreviated (Gral. San Martín, Pte. Roque S. Peña). A Departamento column of a housing table
+    # counts apartments, and departments of Colombia or Uruguay are not on the list.
+    rule: (?i)(?:nom(?:bre)?[ _]?)?(?:departamentos?|depto|dpto\.?|partido)(?:[ _]?(?:nombre|nom|desc))?|(?:departamento|depto|dpto\.?)\s+(?:de\s+)?residencia(?:\s+de\s+la\s+madre)?|departamento_residencia
+    type: field
+    match: regex
+    validator: metacrafterext.rules.ar_country.census.validate_ar_department_name
+    needs_values: true
+    priority: 1
+  arlocalitynamebyname:
+    key: city
+    name: Argentine locality or local government name by the field names of census lists (NOMLOC, NOM_MUNI1)
+    rule: (?i)nom[ _]?loc(?:alidad)?|nom[ _]?muni(?:cipio)?\d?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.generic.validate_place_name
+    priority: 1
