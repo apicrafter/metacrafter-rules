@@ -30,6 +30,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     Comercial, Subgerencia de RRHH, Unidad de Auditoría Interna, Presidencia, Directorio) and
     fields named `gerencia`, `subgerencia`, `dependencia`, `unidad organizativa`, `org_unit`.
 
+- **Rules for the Córdoba files of metacrafter-testdata** (an April 2024 Dateno snapshot of the
+  open data portal of the statistics office of the province of Córdoba, Argentina, DGEyC;
+  validators in `metacrafterext.rules.ar_country.census`, rules in `rules/ar_country/ar_census.yaml`):
+  - INDEC census radius codes (`ar_indec_census_radius_code`): the nine-digit code by `CODIGO`,
+    `Código` or `LINK` when its first five digits are a known department (140070101), and the
+    radius number alone by `RADIO`, `RADIO2008`, `radio_censal`; census fraction codes
+    (`ar_indec_census_fraction_code`: `FRAC`, `FRACCION`, `FRAC2008`, seven digits or the number
+    alone, 001); radius types (`ar_indec_census_radius_type`: `TIPO_RAD`, `TIPO_RAD08`, U R M);
+  - the parts of the INDEC codes in columns of their own: the bare `PROV` 14 as
+    `ar_indec_province_code`, `CODDEPTO` / `DEPTO` / `Cod - D` 098 or 7 as
+    `ar_indec_department_code` (parts of the georef departments only), `CODLOC` 050 as
+    `ar_indec_locality_code`, `COD_MUNI` 0196 and `Cod-M` 7 as `ar_indec_local_government_code`;
+  - department names (`ar_department`: `Departamento`, `NOMDEPTO`, `Dpto. Residencia`,
+    `departamento_nombre`) against the 529 departments of georef, in capitals without accents and
+    abbreviated (Gral. San Martín, Pte. Roque S. Peña); `scripts/update_ar_departments.py`
+    refreshes the list; locality and local government names of the radius lists (`NOMLOC`,
+    `NOM_MUNI1`) as `city`.
 - **Rules for the datos.gob.ar files of metacrafter-testdata** (an April 2024 Dateno snapshot of
   the Argentine national open data portal; validators in `metacrafterext.rules.ar_country.codes`):
   - INDEC geographic codes of the georef service and national data, by field name with the
@@ -211,7 +228,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `bankaccount` on fields named `cuenta` (`ar/ar_finances.yaml`, `ar_country/ar_finances.yaml`)
   needs account numbers in the values: the budget execution tables of ARSAT name the line of the
   savings-investment-financing account `CUENTA` (Ingresos de Operación, Remuneraciones).
-
+- `semver` refuses numbers with dots as thousands separators (1.003.522 head of cattle, 3.413.530
+  people in Argentine tables).
 - `nombre_completo` is a person's full name only when its values are (Argentine and Mexican
   rules): the georef service of datos.gob.ar writes the full names of provinces and
   departments there (Provincia del Neuquén, Partido de Adolfo Gonzales Chaves).
