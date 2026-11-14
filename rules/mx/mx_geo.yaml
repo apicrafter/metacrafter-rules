@@ -10,6 +10,8 @@ rules:
     rule: codigo_postal,cp,postal_code,zip_code
     type: field
     match: text
+    # cp is also a C:P ratio of soil chemistry (0.0024): five digits only.
+    validator: metacrafterext.rules.mx.validators.validate_mx_postcode
     priority: 1
   mxcityknown:
     key: city

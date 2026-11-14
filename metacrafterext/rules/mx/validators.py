@@ -80,3 +80,15 @@ def validate_mx_rfc(value):
         return False
     month, day = int(match.group(3)), int(match.group(4))
     return 1 <= month <= 12 and 1 <= day <= 31
+
+
+_MX_POSTCODE = re.compile(r"^\d{5}$")
+
+
+def validate_mx_postcode(value):
+    """A Mexican código postal: five digits, 01000 to 99999 (a float of a whole number, 6500.0,
+    lost its leading zero). A ratio (0.0024) is not one."""
+    text = str(value).strip()
+    if re.fullmatch(r"\d{4}\.0", text):
+        text = "0" + text[:-2]
+    return bool(_MX_POSTCODE.match(text)) and text != "00000"

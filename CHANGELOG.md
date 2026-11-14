@@ -9,6 +9,35 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Rules for the TERN files of metacrafter-testdata** (registry datatypes added from a snapshot of
+  the TERN geonetwork catalogue, plot surveys of Australian ecosystems; validators in
+  `metacrafterext/rules/au/ecology.py` and `metacrafterext/rules/common/fieldwork.py`):
+  - AusPlots site location names by value and field name (`au_ausplots_site_id`: SAASTP0001,
+    NSFNNC001; the bioregion part checked against the 89 IBRA 7 codes), IBRA bioregion codes and
+    names by field name (`au_ibra_region_code`, `au_ibra_region`), Australian Soil Classification
+    orders by value and field name (`au_soil_order`: Tenosols, Brown Kurosol), NVIS growth forms,
+    strata and cover classes by field name (`au_nvis_growth_form`, `au_nvis_stratum`,
+    `au_nvis_cover_class`), Australian Faunal Directory taxon URLs and TERN vocabulary concept IRIs
+    by value (`au_afd_taxon_id`, `au_tern_cv_concept`);
+  - scientific names without authorship by Darwin Core and survey field names (`species`:
+    scientificName, verbatimIdentification, mostDominantSpecies, herbarium_determination), with
+    the values checked (Pardalotus striatus, Solenopsis sp. B); their authorship by field name
+    (`dwc_scientific_name_authorship`: Latreille, 1809; (Forel, 1901)); soil horizons by field
+    name (`soil_horizon`: A11, B21, Bt);
+  - registry types that had no rules: durations in words (`duration`: 3 hours, 20 minutes), compass
+    points (`compass_point`: aspect, slopeAspect_direction), elevations in metres (`elevation`),
+    week numbers (`week_of_year`); new `utm_zone` (50 J) and `geodetic_datum` (WGS 84, GDA94);
+    times with a one-digit hour (`time`: 7:02:00, 9:50:00 AM) by field name, and by value with
+    seconds or AM / PM;
+  - `featureLatitude`, `transectLatitude`, `decimalLatitude`, `latdecimal` and their longitudes.
+  - all these field-name rules check their values and need values (`needs_values: true`).
+
+### Fixed
+
+- `plantId` is no `powerplantid` by name: vegetation surveys number plant individuals so (39 TERN
+  files). `cp` is a Mexican postcode only with five digits (a C:P ratio of soil chemistry is
+  not). A taxon authorship ((Lea 1924), Mayr, 1870) is no `dc_creator` byline.
+
 - **Rules for the Opendatasoft files of metacrafter-testdata** (registry datatypes and records
   without rules found in a 2022 snapshot of data.opendatasoft.com, mostly French public bodies):
   - the INSEE geography that Opendatasoft adds to French records and that Sirene and statistics

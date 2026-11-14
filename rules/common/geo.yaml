@@ -359,7 +359,8 @@ rules:
   latitudebyshortname:
     key: latitude
     name: Latitude by short field name (lat, geo_point_2d.lat, lat_wgs84)
-    rule: (?i)(?:(?:gps|geo|y|wgs84|point|stop|start|end|centroid|center|centre)[ _-]?)?lat(?:itude)?(?:[ _-]?(?:wgs84|wgs|dd|deg|gps|y|dec|4326))?
+    # featureLatitude, transectLatitude, decimalLatitude of survey data; latdecimal (TERN).
+    rule: (?i)(?:(?:gps|geo|y|wgs84|point|stop|start|end|centroid|center|centre|feature|transect|decimal|sample|station)[ _-]?)?lat(?:itude)?(?:[ _-]?(?:wgs84|wgs|dd|deg|gps|y|dec|decimal|4326))?
     type: field
     match: regex
     validator: metacrafterext.rules.common.generic.validate_latitude_value
@@ -369,7 +370,7 @@ rules:
     key: longitude
     name: Longitude by short field name (lon, lng, geo_point_2d.lon, lon_wgs84)
     # long is also a length (longueur): it is left out.
-    rule: (?i)(?:(?:gps|geo|x|wgs84|point|stop|start|end|centroid|center|centre)[ _-]?)?(?:lon|lng|longitude)(?:[ _-]?(?:wgs84|wgs|dd|deg|gps|x|dec|4326))?
+    rule: (?i)(?:(?:gps|geo|x|wgs84|point|stop|start|end|centroid|center|centre|feature|transect|decimal|sample|station)[ _-]?)?(?:lon|lng|longitude)(?:[ _-]?(?:wgs84|wgs|dd|deg|gps|x|dec|decimal|4326))?|long[ _-]?decimal
     type: field
     match: regex
     validator: metacrafterext.rules.common.generic.validate_longitude_value
@@ -394,5 +395,60 @@ rules:
     type: field
     match: text
     validator: metacrafterext.rules.common.generic.validate_latlon_pair
+    needs_values: true
+    priority: 1
+  compasspointbyname:
+    key: compass_point
+    name: Compass point (16-wind) by field name (aspect, slopeAspect_direction, wind_direction)
+    rule: (?i)(?:slope_?|site_?)?aspect(?:_?(?:direction|orientation|text|compass))?|wind_?dir(?:ection)?(?:_?(?:text|compass))?|direction|orientation
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.fieldwork.validate_compass_point
+    needs_values: true
+    priority: 1
+  utmzonebyname:
+    key: utm_zone
+    name: UTM zone by field name (utm_zone, mga_zone)
+    rule: (?i)(?:utm|mga|grid)_?zone(?:_?(?:number|no|num|id))?|zone_?(?:utm|mga)
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.fieldwork.validate_utm_zone
+    needs_values: true
+    priority: 1
+  utmzonewithbandbyname:
+    key: utm_zone
+    name: UTM zone with its latitude band (50 J) in a field named zone
+    # Zones of fares, planning and time are numbers too: only with the band letter.
+    rule: zone
+    type: field
+    match: text
+    validator: metacrafterext.rules.common.fieldwork.validate_utm_zone_with_band
+    needs_values: true
+    priority: 1
+  geodeticdatumbyname:
+    key: geodetic_datum
+    name: Geodetic datum by field name (datum, geodeticDatum)
+    rule: (?i)(?:dwc:)?(?:geodetic_?|horizontal_?|map_?|gps_?|coordinate_?)?datum(?:_?name)?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.fieldwork.validate_geodetic_datum
+    needs_values: true
+    priority: 1
+  geodeticdatumvalue:
+    key: geodetic_datum
+    name: Geodetic datum (WGS 84, GDA94, GDA2020, NAD83) by value
+    rule: metacrafterext.rules.common.fieldwork.validate_geodetic_datum
+    type: data
+    match: func
+    minlen: 4
+    maxlen: 16
+    priority: 1
+  elevationbyname:
+    key: elevation
+    name: Elevation above sea level in metres by field name (elevation, elevation_metres, altitude)
+    rule: (?i)(?:site_?|ground_?|surface_?|plot_?|station_?)?(?:elevation|altitude|elev)(?:[ _]?(?:m|metres?|meters?|masl|amsl|asl|\[metre\]|\(m\)))?|height_?above_?sea_?level
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.fieldwork.validate_elevation_value
     needs_values: true
     priority: 1

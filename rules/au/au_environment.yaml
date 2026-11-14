@@ -1,0 +1,108 @@
+name: au-environment
+description: Australian ecology codes of TERN plot surveys (AusPlots, IBRA, ASC, NVIS, AFD, TERN vocabularies)
+context: environment
+lang: en
+country_code: au
+rules:
+  auausplotssiteidvalue:
+    key: au_ausplots_site_id
+    name: TERN AusPlots site location name (SAASTP0001, NSFNNC0001) by value
+    # State, plot type letter, IBRA 7 bioregion code (checked against the list), plot number.
+    rule: metacrafterext.rules.au.ecology.validate_au_ausplots_site_id
+    type: data
+    match: func
+    minlen: 8
+    maxlen: 12
+    priority: 1
+  auausplotssiteidbyname:
+    key: au_ausplots_site_id
+    name: TERN AusPlots site location name by field name (site_location_name, siteId, Ausplot_ID)
+    rule: (?i)site_?location_?name|ausplots?_?(?:site_?)?id|ausplots?_?site(?:_?(?:id|name))?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.au.ecology.validate_au_ausplots_site_id
+    needs_values: true
+    priority: 1
+  auibraregioncodebyname:
+    key: au_ibra_region_code
+    name: IBRA bioregion code by field name (bioregion, ibra_code, Bioregion_Name of codes)
+    rule: (?i)(?:ibra_?7?_?)?bioregion(?:_?(?:code|name|id|7))?|ibra_?7?(?:_?(?:region|reg))?(?:_?(?:code|id))?|reg_code_7
+    type: field
+    match: regex
+    validator: metacrafterext.rules.au.ecology.validate_au_ibra_region_code
+    needs_values: true
+    priority: 1
+  auibraregionbyname:
+    key: au_ibra_region
+    name: IBRA bioregion name by field name (Bioregion_Full_Name, ibra_name)
+    # Names of bioregions are also place and family names (King, Warren, Hampton): by field name only.
+    rule: (?i)(?:ibra_?7?_?)?bioregion(?:_?(?:full_?)?name)?|ibra_?7?(?:_?(?:region|reg))?_?name|reg_name_7
+    type: field
+    match: regex
+    validator: metacrafterext.rules.au.ecology.validate_au_ibra_region
+    needs_values: true
+    priority: 1
+  ausoilordervalue:
+    key: au_soil_order
+    name: Australian Soil Classification order (Tenosols, Brown Kurosol) by value
+    rule: metacrafterext.rules.au.ecology.validate_au_soil_order
+    type: data
+    match: func
+    minlen: 7
+    maxlen: 80
+    priority: 1
+  ausoilorderbyname:
+    key: au_soil_order
+    name: Australian Soil Classification order by field name (soilClassification, asc_order)
+    rule: (?i)(?:australian_?)?soil_?classification(?:_?asc)?|soil_?class|soil_?order|asc(?:_?(?:order|class|classification|code))?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.au.ecology.validate_au_soil_order
+    needs_values: true
+    priority: 1
+  aunvisgrowthformbyname:
+    key: au_nvis_growth_form
+    name: NVIS growth form by field name (growth_form, dominantGrowthForm)
+    # tree, shrub and forb are words of any text: by field name only. Life forms (phanerophyte) are other.
+    rule: (?i)(?:dominant_?|plant_?|nvis_?|species_?)?growth_?form(?:_?(?:code|name|type))?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.au.ecology.validate_au_nvis_growth_form_code
+    needs_values: true
+    priority: 1
+  aunvisstratumbyname:
+    key: au_nvis_stratum
+    name: NVIS stratum or substratum code by field name (stratumType, substratumType)
+    rule: (?i)(?:nvis_?|dominant_?)?(?:sub_?)?stratum(?:_?(?:type|code|id|layer))?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.au.ecology.validate_au_nvis_stratum
+    needs_values: true
+    priority: 1
+  aunviscoverclassbyname:
+    key: au_nvis_cover_class
+    name: NVIS cover class code by field name (coverclass, nvis_cover_code)
+    rule: (?i)(?:nvis_?|crown_?|foliage_?)?cover_?class(?:_?code)?|nvis_?cover(?:_?code)?|cover_?code
+    type: field
+    match: regex
+    validator: metacrafterext.rules.au.ecology.validate_au_nvis_cover_class
+    needs_values: true
+    priority: 1
+  auafdtaxonvalue:
+    key: au_afd_taxon_id
+    name: Australian Faunal Directory taxon URL with its UUID by value
+    rule: metacrafterext.rules.au.ecology.validate_au_afd_taxon_url
+    type: data
+    match: func
+    minlen: 70
+    maxlen: 90
+    priority: 1
+  auterncvconceptvalue:
+    key: au_tern_cv_concept
+    name: TERN controlled vocabulary concept IRI by value
+    rule: metacrafterext.rules.au.ecology.validate_au_tern_cv_concept
+    type: data
+    match: func
+    minlen: 70
+    maxlen: 80
+    priority: 1

@@ -24,7 +24,8 @@ rules:
   enenergypointfield:
     key: powerplantid
     name: Power plant identifier by field name
-    rule: power_plant_id,plantid,plant_identifier,eia_plant_id
+    # plantId is the plant individual of vegetation surveys (TERN): not a power plant by name alone.
+    rule: power_plant_id,plant_identifier,eia_plant_id
     type: field
     match: text
     priority: 1

@@ -30,7 +30,8 @@ rules:
     type: field
     match: text
     # A name, not the user id of a WordPress author (1, 2) (#69).
-    validator: metacrafterext.rules.common.generic.validate_name_text
+    # Nor the authorship of a taxon name ((Lea 1924), Mayr, 1870) (TERN beetle lists).
+    validator: metacrafterext.rules.common.fieldwork.validate_author_byline
     priority: 1
 
   # Dublin Core Subject
