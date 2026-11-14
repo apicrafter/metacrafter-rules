@@ -571,3 +571,35 @@ rules:
     validator: metacrafterext.rules.common.generic.validate_place_name
     needs_values: true
     priority: 1
+  # Found in the open data of the City of Buenos Aires (data.buenosaires.gob.ar, a 2024 snapshot;
+  # metacrafter-testdata).
+  longitudebylongname:
+    key: longitude
+    name: Longitude in a field named long (long, LONG, x_long) with decimal degrees of four or more decimals
+    # long is also a length (longueur, longitud of a pipe): lengths have fewer decimals.
+    rule: (?i)(?:[xy][ _])?long(?:[ _][xy])?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.urban.validate_longitude_decimal_degrees
+    needs_values: true
+    priority: 1
+  pluscodevalue:
+    key: plus_code
+    name: Plus Code (Open Location Code) by value (8FVC9G8F+6W, 48Q3CJ00+)
+    rule: metacrafterext.rules.common.urban.validate_plus_code
+    type: data
+    match: func
+    minlen: 9
+    maxlen: 16
+    priority: 1
+  streetintersectionbyname:
+    key: street_intersection
+    name: Street intersection by field name (cruce, interseccion, esquina, ubicacion, intersection, cross_streets) with two street names
+    # DEHEZA@PINTO, CORDOBA AV. & JUNIN, Av. San Juan y Chacabuco, Main St & 2nd Ave. A ubicacion of
+    # traffic lights or cameras is a list of corners (GRIVEO Y SAN MARTIN AV.).
+    rule: (?i)(?:[a-z]+[ _])?(?:cruces?|intersecci(?:[oó]n)?(?:es)?|esquinas?|intersections?|cross[ _]?streets?|crossings?)(?:[ _](?:calles|normalizada|nombre|name))?|ubicaci[oó]n
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.urban.validate_street_intersection
+    needs_values: true
+    priority: 1

@@ -64,3 +64,26 @@ rules:
     maxlen: 9
     minlen: 8
 
+
+  # Found in the open data of the City of Buenos Aires (data.buenosaires.gob.ar, a 2024 snapshot;
+  # metacrafter-testdata).
+  essurnamebyname:
+    key: person_surname
+    is_pii: True
+    name: Surname by Spanish field name (apellido, APELLIDOS, primer_apellido, funcionario_apellido)
+    rule: '(?i)(?!.*nombre)(?:[a-z]+[ _])*apellidos?(?:[ _](?:paterno|materno|1|2))?|(?:primer|segundo)[ _]apellido'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.generic.validate_person_name_part
+    needs_values: true
+    priority: 1
+  esfullnamebyname:
+    key: person_fullname
+    is_pii: True
+    name: Person full name by Spanish field name (apellido_y_nombre, nombre_y_apellido, Nombre y Apellido, ayn)
+    rule: '(?i)(?:[a-z]+[ _])*apellidos?[ _]?(?:y|e)?[ _]?nombres?|(?:[a-z]+[ _])*nombres?[ _](?:y[ _])?apellidos?|ayn|apeynom'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.generic.validate_person_fullname_not_place
+    needs_values: true
+    priority: 1

@@ -121,3 +121,13 @@ rules:
     maxlen: 13
     minlen: 8
 
+  youtubevideoidbyname:
+    key: youtubevideoid
+    name: YouTube video ID by field name (id_youtube, youtube_id, youtubeId) with eleven-character ids
+    # The festival programmes of the City of Buenos Aires (data.buenosaires.gob.ar, metacrafter-testdata).
+    rule: (?i)id[ _]?(?:video[ _]?)?youtube|youtube[ _]?(?:video[ _]?)?id
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.urban.validate_youtube_video_id
+    needs_values: true
+    priority: 1

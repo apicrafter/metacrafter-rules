@@ -177,9 +177,15 @@ def validate_name_text(value):
     return not _HEX_ID.match(text)
 
 
+# A numbered division: Comuna 14, COMUNA 04, Distrito 6, Zona 3, Sector 12, Ward 5, District 9.
+_NUMBERED_DIVISION = re.compile(
+    r"^(?:comuna|distrito|zona|sector|secci[oó]n|circuito|regi[oó]n|[aá]rea|ward|district|zone|division|precinct|bezirk)"
+    r"\.? ?(?:n[°ºro.]* ?)?\d{1,3}$", re.IGNORECASE)
+
+
 def validate_place_name(value):
     """A place name: a name (validate_name_text) of at most 60 characters with at most one
-    comma, not a two-letter code.
+    comma, not a two-letter code and not a numbered division (Comuna 14, Distrito 6, Ward 5).
 
     Numeric city ids (335), province codes (ON, BC) and free-text localities ("Gia Dinh Park,
     Hoang Minh Giam Steet, ..., Ho Chi Minh City") are not names of a city or province
@@ -189,6 +195,8 @@ def validate_place_name(value):
         return False
     text = value.strip()
     if len(text) > 60 or text.count(",") > 1:
+        return False
+    if _NUMBERED_DIVISION.match(text):
         return False
     return not (len(text) <= 2 and text.isupper())
 
@@ -640,7 +648,13 @@ _STATUS_FIRST_WORDS = frozenset((
     "evaluacion", "construccion", "adjudicado", "adjudicada", "desierto", "desierta", "publicado",
     "publicada", "abandonado", "abandonada", "baja", "alta", "terminado", "terminada", "concluido",
     "concluida", "ejecucion", "ejecutado", "ejecutada", "en", "em", "sin", "sem", "con", "no", "nao",
-    "si", "sim", "ok", "otro", "otros", "otra"))
+    "si", "sim", "ok", "otro", "otros", "otra",
+    # statuses of the open data of the City of Buenos Aires (data.buenosaires.gob.ar)
+    "normal", "vacante", "usado", "usada", "a", "disponible", "instalado", "instalada",
+    "clausurado", "clausurada", "clausura", "paralizado", "paralizada", "renovado", "renovada", "inscripcion",
+    "inscripto", "inscripta", "vencido", "vencida", "proyectado", "proyectada", "postulado", "postulada",
+    "postulados", "postuladas", "ratifico", "se", "ley", "nota", "catalogo", "mensaje", "habilitado",
+    "habilitada", "ocupado", "ocupada", "libre", "bueno", "buena", "regular", "malo", "mala", "covid"))
 
 
 def validate_state_not_status(value):
@@ -648,7 +662,13 @@ def validate_state_not_status(value):
     Finalizada, En proceso, Exploración Avanzada, ANULADA do not."""
     text = unicodedata.normalize("NFKD", str(value)).encode("ascii", "ignore").decode().strip().lower()
     words = text.replace("-", " ").split()
-    return bool(words) and words[0] not in _STATUS_FIRST_WORDS
+    # RENOVADO 2023 and the status codes 1, 2, 3 are no states either.
+    if not words or any(ch.isdigit() for ch in text):
+        return False
+    # Baja California (Sur): baja alone is the status of a cancelled record.
+    if words[:2] == ["baja", "california"]:
+        return True
+    return words[0] not in _STATUS_FIRST_WORDS
 
 
 _ISO3166_2 = re.compile(r"^[A-Z]{2}-[A-Z0-9]{1,3}$")

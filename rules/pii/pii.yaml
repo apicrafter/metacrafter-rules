@@ -165,3 +165,26 @@ rules:
     type: field
     match: text
     priority: 1
+  # Found in the open data of the City of Buenos Aires (data.buenosaires.gob.ar, a 2024 snapshot;
+  # metacrafter-testdata).
+  maritalstatusbyname:
+    key: marital_status
+    is_pii: True
+    name: Marital status by field name (estado_civil, estado_civil_1, marital_status, situacion_conyugal) with status words
+    # Soltero/a, Casado/a, Divorciado/a de matrimonio, Viudo/a; single, married, widowed.
+    rule: (?i)(?:[a-z]+[ _])*(?:estado[ _]?civil|est[ _]civil|situaci[oó]n[ _]conyugal|marital[ _]?status|civil[ _]status|[ée]tat[ _]civil|familienstand)(?:[ _][a-z0-9]+)?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.es.periods.validate_marital_status
+    needs_values: true
+    priority: 1
+  nationalitybyspanishname:
+    key: nationality
+    is_pii: True
+    name: Nationality by Spanish field name (nacionalidad, NACIONALIDAD, madre_nacionalidad)
+    rule: (?i)(?:[a-z]+[ _])*nacionalidad(?:[ _][a-z]+)*
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.generic.validate_name_text
+    needs_values: true
+    priority: 1

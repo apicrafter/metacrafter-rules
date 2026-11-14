@@ -384,3 +384,14 @@ rules:
     validator: metacrafterext.rules.common.dateandtime.validate_decimal_year
     needs_values: true
     priority: 1
+  # Found in the civil registry statistics of the City of Buenos Aires (data.buenosaires.gob.ar,
+  # metacrafter-testdata): tables exported from SAS keep its DATETIME format.
+  sasdatetimevalue:
+    key: datetime
+    name: Datetime in the SAS DATETIME format by value (09DEC2005:00:00:00, 28JUL2022:00:00:00.000000)
+    rule: metacrafterext.rules.common.urban.validate_sas_datetime
+    type: data
+    match: func
+    minlen: 18
+    maxlen: 26
+    priority: 1

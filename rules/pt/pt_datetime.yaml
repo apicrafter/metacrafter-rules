@@ -31,7 +31,9 @@ rules:
   pttimeknown:
     key: time
     name: Portuguese time name
-    rule: hora,horario,horas
+    # horario (Spanish and Portuguese) is opening hours as often as a time: the Spanish rules
+    # of rules/es look at the values.
+    rule: hora,horas
     type: field
     match: text
     priority: 1
