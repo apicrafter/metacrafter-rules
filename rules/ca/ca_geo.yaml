@@ -25,3 +25,11 @@ rules:
     fieldrule: province,prov,province_code,province/territory,province_territory,province_or_territory,prov_terr,provterr,province / territoire,province_territoire
     fieldrulematch: text
     priority: 1
+  cafsabyname:
+    key: ca_fsa
+    name: Canadian forward sortation area by field name (fsa, homefsa, postal_fsa)
+    rule: (?i)(?:home|work|school|postal|mailing|res)?_?fsa(?:_?code)?|forward_?sortation_?area|code_rta|rta
+    type: field
+    match: regex
+    validator: metacrafterext.rules.ca.validators.validate_ca_fsa
+    priority: 1

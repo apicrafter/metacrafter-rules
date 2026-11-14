@@ -19,3 +19,11 @@ rules:
     match: text
     priority: 1
 
+  itcigbyname:
+    key: it_cig
+    name: Italian tender identification code (CIG, SmartCIG) by field name
+    rule: (?i)(?:codice_?)?(?:cig|smart_?cig)(?:_?(?:code|codice))?|codice_identificativo_gara
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.identifiers.validate_it_cig
+    priority: 1

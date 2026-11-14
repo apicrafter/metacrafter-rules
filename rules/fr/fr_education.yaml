@@ -1,0 +1,34 @@
+name: fr-education
+description: French education identifiers (UAI, académies)
+context: education
+lang: fr
+country_code: fr
+rules:
+  fruaivalue:
+    key: fr_uai
+    name: UAI (RNE) school number by value with its check letter (0595621P)
+    # Seven digits and a letter: the letter is the remainder of the number by 23, so a reference
+    # of another kind passes once in 23.
+    rule: '\d{7}[A-HJ-NPR-Z]'
+    type: data
+    match: regex
+    minlen: 8
+    maxlen: 8
+    validator: metacrafterext.rules.fr.codes.validate_fr_uai
+    priority: 1
+  fruaibyname:
+    key: fr_uai
+    name: UAI (RNE) school number by field name (uai, code_rne, numero_uai)
+    rule: (?i)(?:code_|numero_|num_|n_|cd_|id_|identifiant_)?(?:uai|rne)(?:_?(?:code|source|etablissement|lycee|ecole))?|code_etablissement|identifiant_de_l_etablissement|etablissement_id_uai(?:_source)?|numero_lycee|numero_ecole|educ_num|pial|anciens_codes_uai
+    type: field
+    match: regex
+    validator: metacrafterext.rules.fr.codes.validate_fr_uai
+    priority: 1
+  fracademiecodebyname:
+    key: fr_academie_code
+    name: French académie code by field name (code_academie, academie_code)
+    rule: (?i)code_?(?:de_l_)?academie|academie_?code|aca_?code|code_aca|num_?academie
+    type: field
+    match: regex
+    validator: metacrafterext.rules.fr.codes.validate_fr_academie_code
+    priority: 1

@@ -7,7 +7,7 @@ rules:
   chbfsgemeindeknown:
     key: ch_bfs_gemeinde
     name: Swiss municipality number (BFS-Nr.) by known name
-    rule: bfsnr,bfs_nr,bfs-nr,bfs-nr.,bfs_nummer,bfs_gemeindenummer,gemeinde_bfs,gdenr,gde_nr
+    rule: bfsnr,bfs_nr,bfs-nr,bfs-nr.,bfs_nummer,bfs_gemeindenummer,gemeinde_bfs,gdenr,gde_nr,bfs_nr_gemeinde,gemeinde_bfs_nr,bfs_gemeinde,gemeindenummer_bfs,bfs_gde_nr,num_ofs,no_ofs,numero_ofs,ofs_nr
     type: field
     match: text
     priority: 1

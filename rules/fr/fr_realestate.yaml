@@ -37,3 +37,21 @@ rules:
     minlen: 8
     imprecise: 1
 
+  frdpenumbervalue:
+    key: fr_dpe_number
+    name: DPE number of the ADEME observatory (1682V1000961S, 2169E0123456A) by value and field name
+    rule: '\d{4}[A-Z]\d{7}[A-Z@]'
+    type: data
+    match: regex
+    minlen: 13
+    maxlen: 13
+    fieldregex: (?i)(?:dpe|diagnostic|ademe|numero)
+    priority: 1
+  frdpenumberbyname:
+    key: fr_dpe_number
+    name: DPE number by field name (numero_dpe, n_dpe)
+    rule: (?i)(?:numero|num|n|no|id|ref|reference)_?dpe|dpe_?(?:numero|num|id|ref)?|numero_dpe_remplace|numero_dpe_immeuble_associe
+    type: field
+    match: regex
+    validator: metacrafterext.rules.fr.codes.validate_fr_dpe_number
+    priority: 1

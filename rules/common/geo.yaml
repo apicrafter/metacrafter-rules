@@ -353,3 +353,42 @@ rules:
     match: regex
     validator: metacrafterext.rules.common.formats.validate_gml_poslist
     priority: 1
+  # Coordinates read as numbers (JSON floats, CSV decimals): value rules do not run on float
+  # columns, so short names (lat, lon, lng; geo_point_2d.lat, coordonnees.lon of Opendatasoft
+  # JSON exports) are field-name rules whose values must be decimal degrees in range.
+  latitudebyshortname:
+    key: latitude
+    name: Latitude by short field name (lat, geo_point_2d.lat, lat_wgs84)
+    rule: (?i)(?:(?:gps|geo|y|wgs84|point|stop|start|end|centroid|center|centre)[ _-]?)?lat(?:itude)?(?:[ _-]?(?:wgs84|wgs|dd|deg|gps|y|dec|4326))?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.generic.validate_latitude_value
+    priority: 1
+  longitudebyshortname:
+    key: longitude
+    name: Longitude by short field name (lon, lng, geo_point_2d.lon, lon_wgs84)
+    # long is also a length (longueur): it is left out.
+    rule: (?i)(?:(?:gps|geo|x|wgs84|point|stop|start|end|centroid|center|centre)[ _-]?)?(?:lon|lng|longitude)(?:[ _-]?(?:wgs84|wgs|dd|deg|gps|x|dec|4326))?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.generic.validate_longitude_value
+    priority: 1
+  geojsongeometrytypebyname:
+    key: geojson_geometry_type
+    name: GeoJSON geometry type by field name and values (geometry.type, geo_shape.geometry.type)
+    # Any field named type whose values are geometry types: Feature, the type of a feature, is not.
+    rule: (?i)type|geometry[ _-]?type|geom[ _-]?type|shape[ _-]?type|geotype|type[ _-]?geom(?:etry)?|shape
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.generic.validate_geojson_geometry_type
+    priority: 1
+  geopoint2dbyname:
+    key: geo_point_2d
+    name: Opendatasoft geo_point_2d by field name, as latitude and longitude text
+    # Other point fields of Opendatasoft (coordonnees, geolocalisation) share the name of
+    # geopoint fields of other sources: only the platform's own name.
+    rule: geo_point_2d
+    type: field
+    match: text
+    validator: metacrafterext.rules.common.generic.validate_latlon_pair
+    priority: 1

@@ -1,6 +1,7 @@
 """
 Validation functions for Spanish-specific identifiers.
 """
+import re
 
 
 def validate_es_passport(value):
@@ -280,3 +281,23 @@ def validate_es_cif(value):
     if cif[0] in "ABEH":
         return cif[8] == str(control)
     return cif[8] in (str(control), letter)
+
+
+_CATASTRAL_ALPHABET = "ABCDEFGHIJKLMNÑOPQRSTUVWXYZ0123456789"
+_CATASTRAL = re.compile(r"^[0-9A-ZÑ]{18}[A-Z]{2}$")
+
+
+def _catastral_check(part):
+    weights = (13, 15, 12, 5, 4, 17, 9, 21, 3, 7, 1)
+    total = sum(w * (int(ch) if ch.isdigit() else _CATASTRAL_ALPHABET.find(ch) + 1) for w, ch in zip(weights, part))
+    return "MQWERTYUIOPASDFGHJKLBZX"[total % 23]
+
+
+def validate_es_referencia_catastral(value):
+    """A Spanish cadastral reference of 20 characters (05002A004010550000IA, spaces allowed):
+    14 of the parcel, 4 of the property and two check letters, each computed on one half of the
+    parcel part with the property part (the algorithm of python-stdnum es.referenciacatastral)."""
+    text = re.sub(r"\s", "", str(value)).upper()
+    if not _CATASTRAL.match(text):
+        return False
+    return _catastral_check(text[0:7] + text[14:18]) + _catastral_check(text[7:14] + text[14:18]) == text[18:]

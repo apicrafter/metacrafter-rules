@@ -1,0 +1,22 @@
+name: fr-government
+description: French election, local government and public policy codes
+context: government
+lang: fr
+country_code: fr
+rules:
+  frelectionnuancebyname:
+    key: fr_election_nuance
+    name: Political nuance code of French election results by field name (nuance, code_nuance)
+    rule: (?i)(?:code[ _]?)?nuance(?:[ _]?(?:liste|candidat|binome|politique|code|liste_code|de_la_liste|du_candidat))?|nuance[ _]?du[ _]?(?:candidat|binome|liste)|code[ _]?nuance[ _]?liste|cod_?nua|nua
+    type: field
+    match: regex
+    validator: metacrafterext.rules.fr.codes.validate_fr_election_nuance
+    priority: 1
+  fractesmatierebyname:
+    key: fr_actes_matiere_code
+    name: Subject code of the ACTES nomenclature by field name (delib_matiere_code of the SCDL deliberations schema)
+    rule: (?i)(?:delib_|acte_|deliberation_)?matiere_?code|code_?matiere(?:_actes)?|matiere_actes|nomenclature_actes|code_nomenclature_actes|classification_actes
+    type: field
+    match: regex
+    validator: metacrafterext.rules.fr.codes.validate_fr_actes_matiere_code
+    priority: 1
