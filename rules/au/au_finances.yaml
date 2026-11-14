@@ -34,3 +34,45 @@ rules:
     match: text
     priority: 1
 
+
+  # ------------------------------------------------------------ data.gov.au (the national portal)
+  auacnbyname:
+    key: auacn
+    name: Australian Company Number by field name (acn, ABN_ACN, company_acn) with a valid check digit
+    # IPGOD and register files store the ACN as a number, so 002 399 653 is 2399653; the check
+    # digit is tested on the value padded to nine digits. An ABN_ACN field holds ABNs too.
+    rule: (?i)(?:[a-z]+_)*acn(?:[ _](?:number|no))?|australian[ _]company[ _]number
+    type: field
+    match: regex
+    validator: metacrafterext.rules.au.codes.validate_au_acn
+    needs_values: true
+    priority: 1
+  auabnacnbyname:
+    key: abn
+    name: Australian Business Number by field name with ABN in it (AFS_LIC_ABN_ACN, Supplier ABN, CRED_REP_ABN_ACN) and a valid check
+    # ASIC writes an ABN or, for a company without one, its ACN in <prefix>_ABN_ACN; AusTender
+    # and grant lists name it Supplier ABN.
+    rule: (?i)(?:[a-z]+[ _])*abn(?:[ _](?:acn|number|no))?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.au.codes.validate_au_abn_or_acn
+    needs_values: true
+    priority: 1
+  auasiclicencebyname:
+    key: au_asic_licence_number
+    name: ASIC AFS or credit licence number by field name (AFS_LIC_NUM, CRED_LIC_NUM, AFSL number)
+    rule: (?i)(?:afs|cred|credit|afsl|acl)[ _]?lic(?:ence|ense)?[ _]?(?:num(?:ber)?|no)|afsl(?:[ _]?(?:num(?:ber)?|no))?|(?:afs|australian[ _]credit)[ _]licen[cs]e[ _](?:num(?:ber)?|no)
+    type: field
+    match: regex
+    validator: metacrafterext.rules.au.codes.validate_au_asic_licence_number
+    needs_values: true
+    priority: 1
+  auicnbyname:
+    key: au_icn
+    name: ORIC Indigenous Corporation Number by field name (ICN)
+    rule: (?i)icn|indigenous[ _]corporation[ _](?:number|no)
+    type: field
+    match: regex
+    validator: metacrafterext.rules.au.codes.validate_au_icn
+    needs_values: true
+    priority: 1

@@ -1,0 +1,45 @@
+name: commonperiods
+description: Financial years, months with a year and quarters with a year (found in the data.gov.au files of metacrafter-testdata)
+context: datetime
+lang: common
+country_code: xx
+rules:
+  fiscalyearbyname:
+    key: fiscal_year
+    name: Financial or fiscal year by field name (Financial Year, Income year, Water Year, financial_year_start, FY)
+    # Australian, New Zealand, British and Indian tables name the year a financial, fiscal, income,
+    # tax, water or budget year; the values must be two consecutive years (2014-15, 2014-2015).
+    rule: (?i)(?:(?:financial|fiscal|income|tax|taxation|water|budget|reporting|report|first[ _]reporting|latest[ _]report|earliest[ _]report)[ _]?year\d*(?:[ _](?:start|end|ending))?|fy|f[ _]y|fin[ _]?yr)
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.periods.validate_fiscal_year
+    needs_values: true
+    priority: 1
+  fiscalyearvalue:
+    key: fiscal_year
+    name: Financial year with a two-digit second year or an FY prefix by value (2014-15, 2010–11, 1999-00, FY201213)
+    # Two four-digit years (2019-2020) are year_range by value; a field name tells a financial year.
+    rule: metacrafterext.rules.common.periods.validate_fiscal_year_short
+    type: data
+    match: func
+    minlen: 7
+    maxlen: 10
+    priority: 1
+  yearmonthenglishvalue:
+    key: yearmonth_english
+    name: Month and year with an English month name by value (Sep-17, Aug-2011, June 2014)
+    rule: metacrafterext.rules.common.periods.validate_yearmonth_english
+    type: data
+    match: func
+    minlen: 6
+    maxlen: 14
+    priority: 1
+  yearquartervalue:
+    key: year_quarter
+    name: Quarter with its year by value (2021Q04, 2022Q03, 2021 Q4, Q4 2021)
+    rule: metacrafterext.rules.common.periods.validate_year_quarter
+    type: data
+    match: func
+    minlen: 6
+    maxlen: 8
+    priority: 1

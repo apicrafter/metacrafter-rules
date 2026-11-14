@@ -1,0 +1,16 @@
+name: au-medical
+description: Australian health codes
+context: medical
+lang: en
+country_code: au
+rules:
+  aupbsitemcodebyname:
+    key: au_pbs_item_code
+    name: PBS item code by field name (item_code, Item_number, pbs_item) with digits and a letter
+    # Medicare (MBS) item numbers have no letter and fail the check.
+    rule: (?i)(?:pbs[ _])?item[ _]?(?:code|number|no|num)|pbs[ _]?(?:item|code)
+    type: field
+    match: regex
+    validator: metacrafterext.rules.au.codes.validate_au_pbs_item_code
+    needs_values: true
+    priority: 1

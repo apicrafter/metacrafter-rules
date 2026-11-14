@@ -1,0 +1,36 @@
+name: au-legal
+description: Australian intellectual property numbers of IP Australia (IPGOD)
+context: legal
+lang: en
+country_code: au
+rules:
+  aupatentapplicationbyname:
+    key: au_patent_application_number
+    name: Australian patent application number by field name (australian_appl_no, application_number, conv_to_appl_number, old_patent_appl_no)
+    # IPGOD names the patent application of every table australian_appl_no; PBR and design tables
+    # use application_number too, and their numbers (1998/163) fail the patent check. The PBS
+    # patent expiry data give the earliest and latest patent of a medicine (earliest_patent).
+    rule: (?i)(?:[a-z]+_)*(?:australian|patent|conv(?:_from|_to)?|old(?:_conv)?(?:_from|_to)?)_appl(?:ication)?_(?:no|num|number)|appl(?:ication)?_(?:no|num|number)|australian_appl_no|patent_publication_number|(?:earliest|latest|first|last)_patent(?:_(?:no|number))?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.au.codes.validate_au_patent_application_number
+    needs_values: true
+    priority: 1
+  aupbrapplicationbyname:
+    key: au_pbr_application_number
+    name: Australian plant breeder's rights application number by field name (application_number, appl_number, pbr_app)
+    rule: (?i)(?:pbr_)?appl(?:ication)?_(?:no|num|number)|pbr_app(?:l(?:ication)?)?(?:_(?:no|num|number))?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.au.codes.validate_au_pbr_application_number
+    needs_values: true
+    priority: 1
+  autrademarknumberbyname:
+    key: au_trademark_number
+    name: Australian trade mark number by field name (tm_number, trade_mark_number, TRADEMARK_APP)
+    rule: (?i)tm_(?:number|no|num)|trade_?mark(?:_app)?(?:_(?:number|no|num))?|trademark_app
+    type: field
+    match: regex
+    validator: metacrafterext.rules.au.codes.validate_au_trademark_number
+    needs_values: true
+    priority: 1

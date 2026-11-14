@@ -329,3 +329,12 @@ rules:
     validator: metacrafterext.rules.common.survey.validate_discipline_name
     needs_values: true
     priority: 1
+  upovcodebyname:
+    key: upov_code
+    name: UPOV code of a plant taxon by field name (upov_code, upov) with UPOV-shaped values
+    rule: (?i)(?:[a-z]+_)*upov(?:[ _]?code)?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.periods.validate_upov_code
+    needs_values: true
+    priority: 1
