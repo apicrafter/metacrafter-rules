@@ -261,3 +261,33 @@ def validate_polymer_name(value, codes=False):
 def validate_polymer_name_or_code(value):
     """A polymer by name or abbreviation (PET, HDPE, polypropylene): for polymer fields."""
     return validate_polymer_name(value, codes=True)
+
+
+# Lipid numbers of fatty acids: carbon atoms and double bonds (C18:1), the position of the
+# first double bond from the methyl end (n-9, ω-3, n3), positions and geometry in brackets
+# (18:2(9Z,12Z)), and prefixes of branched chains (iC15:0 iso, aC15:0 anteiso, nC16:0 normal)
+# or of the geometry (cis-9, t11). Gas chromatography (FAME) reports of the DesK pH sensor study
+# of the Universidad Nacional de Rosario list the membrane fatty acids of Bacillus subtilis
+# this way (metacrafter-testdata, 2026-11-14).
+_LIPID_NUMBER = re.compile(
+    r"(?:[ian]-?|iso-|anteiso-|(?:cis|trans)-\d{1,2} |[ct]\d{1,2}[- ])?(C)?(\d{1,2}):(\d)"
+    r"(?:\s?(?:n|ω|w)-?\d{1,2}|\s?\(\d{1,2}[ZE]?(?:,\d{1,2}[ZE]?)*\)|\s?(?:cis|trans)(?:-\d{1,2})?)*"
+)
+
+
+def validate_lipid_number(value, carbon=True):
+    """A fatty acid in C:D shorthand: C16:0, C18:1n-9, iC15:0, aC15:0, C20:5n3, 18:2(9Z,12Z).
+    With ``carbon`` (the default) the C before the carbon count is required, so that ratios and
+    match scores (3:1, 2:1) and times (16:0) do not pass; a column named for fatty acids takes
+    them without it. Chains have 4 to 36 carbons and fewer double bonds than half of them."""
+    text = str(value).strip()
+    match = _LIPID_NUMBER.fullmatch(text)
+    if not match or (carbon and not match.group(1)):
+        return False
+    carbons, bonds = int(match.group(2)), int(match.group(3))
+    return 4 <= carbons <= 36 and bonds * 2 <= carbons
+
+
+def validate_lipid_number_any(value):
+    """A fatty acid in C:D shorthand with or without the C (18:2 n-6) in a fatty acid column."""
+    return validate_lipid_number(value, carbon=False)

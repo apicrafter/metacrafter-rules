@@ -4,6 +4,7 @@ of codebooks. Found in the Dataverse exports of AUSSDA, the Austrian Social Scie
 (metacrafter-testdata, 2026-11-14): survey data hold codes (1, 2, 99), so the field name says
 what a column is and these checks keep the names honest."""
 import re
+import unicodedata
 
 _NUMBER = re.compile(r"[+-]?\d+(?:[.,]\d+)?(?:[eE][-+]?\d+)?")
 _FRACTION = re.compile(r"[+-]?\d+[.,]\d*[1-9]\d*")
@@ -35,9 +36,10 @@ def validate_age_value(value):
 
 _AGE_RANGE = re.compile(
     r"(?:\d{1,3}\s*(?:-|–|—|bis|to|a|à|до)\s*\d{1,3}|\d{1,3}\s*\+|[<>≤≥]=?\s*\d{1,3}|"
-    r"\d{1,3}\s*(?:und|and|et|y|e|и)\s*(?:älter|mehr|over|older|plus|más|plus|старше)|"
-    r"(?:unter|under|bis|up to|moins de|menos de|до)\s*\d{1,3}|\d{1,3}\s*(?:und|and)\s*(?:jünger|younger))"
-    r"(?:\s*(?:jahre?|years?|yrs|ans|años|anni|лет|j\.?))?",
+    r"\d{1,3}\s*(?:und|and|et|y|e|o|ou|or|и)\s*(?:älter|mehr|over|older|plus|más|mas|mais|plus|старше)|"
+    r"(?:unter|under|bis|up to|moins de|menos de|menor(?:es)? (?:a|de)|mayor(?:es)? (?:a|de)|más de|"
+    r"over|above|до)\s*\d{1,3}|\d{1,3}\s*(?:und|and)\s*(?:jünger|younger))"
+    r"(?:\s*(?:jahre?|years?|yrs|ans|años|anos|anni|лет|j\.?))?",
     re.IGNORECASE,
 )
 
@@ -50,6 +52,12 @@ def validate_age_range_value(value):
         return True
     number = _number(text)
     return number is not None and number == int(number) and 0 <= number <= 99
+
+
+def validate_age_band(value):
+    """An age band written out (45-54, 25 a 34, 65 o más, Menor a 25, 65+), not a code: an age
+    column of a survey holds either ages or the bands, and the bands are age_range."""
+    return bool(_AGE_RANGE.fullmatch(str(value).strip()))
 
 
 def validate_gender_code(value):
@@ -118,3 +126,84 @@ def validate_variable_name(value):
     without spaces that does not start with a digit (f1, SEX_2016, Q28_1, sugu#, v2x_polyarchy).
     A label (Wie zufrieden sind Sie?) and a number are not."""
     return bool(_VARIABLE_NAME.fullmatch(str(value).strip()))
+
+
+def _fold(text):
+    """Lowercase, without accents, with one space between words and no closing period."""
+    text = unicodedata.normalize("NFKD", str(text)).encode("ascii", "ignore").decode("ascii")
+    return " ".join(text.lower().replace("’", "'").split()).rstrip(".")
+
+
+# Answers of rating-scale (Likert) items in words, folded with _fold: agreement, likelihood,
+# frequency, importance, satisfaction and interest, in Spanish, English, Portuguese, French,
+# German and Italian, with the neutral and don't-know answers. Found in the survey of researchers
+# of the Universidad Nacional de Rosario on sharing research data (RDA-UNR, 2023;
+# metacrafter-testdata, 2026-11-14): "Totalmente de acuerdo" ... "Totalmente en desacuerdo",
+# "Extremadamente probable", "Nunca" ... "Siempre", "Sí, muy interesada/o".
+_DEGREES_ES = ("totalmente", "muy", "bastante", "moderadamente", "algo", "poco", "levemente", "ligeramente",
+               "completamente", "parcialmente", "extremadamente", "altamente", "fuertemente", "nada")
+_DEGREES_EN = ("strongly", "completely", "totally", "very", "somewhat", "slightly", "moderately", "mostly",
+               "extremely", "highly", "fairly", "quite", "mildly", "not at all", "not very")
+_DEGREES_PT = ("totalmente", "muito", "parcialmente", "pouco", "moderadamente", "extremamente")
+_DEGREES_FR = ("tout a fait", "plutot", "pas du tout", "tres", "assez", "peu", "moyennement")
+_DEGREES_DE = ("voll", "voll und ganz", "eher", "uberhaupt", "ganz", "sehr", "weitgehend", "teilweise", "gar")
+LIKERT_ANSWERS = frozenset(
+    [f"{d} de acuerdo" for d in _DEGREES_ES] + [f"{d} en desacuerdo" for d in _DEGREES_ES]
+    + [f"{d} probable" for d in _DEGREES_ES] + [f"{d} improbable" for d in _DEGREES_ES]
+    + [f"{d} importante" for d in _DEGREES_ES] + [f"{d} satisfecho" for d in _DEGREES_ES]
+    + [f"{d} satisfecha" for d in _DEGREES_ES] + [f"{d} satisfecho/a" for d in _DEGREES_ES]
+    + [f"{d} insatisfecho" for d in _DEGREES_ES] + [f"{d} interesado" for d in _DEGREES_ES]
+    + [f"{d} interesada" for d in _DEGREES_ES] + [f"{d} interesada/o" for d in _DEGREES_ES]
+    + [f"{d} interesado/a" for d in _DEGREES_ES] + [f"si, {d} interesada/o" for d in _DEGREES_ES]
+    + [f"si, {d} interesado/a" for d in _DEGREES_ES] + [f"si, {d} interesado" for d in _DEGREES_ES]
+    + [f"{d} agree" for d in _DEGREES_EN] + [f"{d} disagree" for d in _DEGREES_EN]
+    + [f"{d} likely" for d in _DEGREES_EN] + [f"{d} unlikely" for d in _DEGREES_EN]
+    + [f"{d} important" for d in _DEGREES_EN] + [f"{d} satisfied" for d in _DEGREES_EN]
+    + [f"{d} dissatisfied" for d in _DEGREES_EN] + [f"{d} interested" for d in _DEGREES_EN]
+    + [f"concordo {d}" for d in _DEGREES_PT] + [f"discordo {d}" for d in _DEGREES_PT]
+    + [f"{d} d'accord" for d in _DEGREES_FR] + [f"{d} pas d'accord" for d in _DEGREES_FR]
+    + [f"stimme {d} zu" for d in _DEGREES_DE] + [f"stimme {d} nicht zu" for d in _DEGREES_DE]
+    + [
+        "de acuerdo", "en desacuerdo", "ni de acuerdo ni en desacuerdo", "indiferente", "neutral", "neutro",
+        "probable", "improbable", "ni probable ni improbable", "importante", "sin importancia",
+        "satisfecho", "insatisfecho", "ni satisfecho ni insatisfecho",
+        "nunca", "casi nunca", "raramente", "rara vez", "pocas veces", "a veces", "algunas veces",
+        "frecuentemente", "a menudo", "muchas veces", "casi siempre", "siempre",
+        "me interesa poco", "no me interesa", "me interesa mucho", "me interesa",
+        "no se", "ns/nc", "no sabe", "no sabe/no contesta", "no contesta", "prefiero no responder",
+        "agree", "disagree", "neither agree nor disagree", "neither agree or disagree", "undecided",
+        "likely", "unlikely", "neither likely nor unlikely", "important", "not important",
+        "satisfied", "dissatisfied", "neither satisfied nor dissatisfied",
+        "never", "almost never", "rarely", "seldom", "sometimes", "occasionally", "often",
+        "frequently", "very often", "usually", "almost always", "always",
+        "interested", "not interested", "don't know", "dont know", "do not know", "prefer not to say",
+        "concordo", "discordo", "nem concordo nem discordo", "nao sei", "nunca", "as vezes", "sempre",
+        "d'accord", "pas d'accord", "ni d'accord ni pas d'accord", "ne sait pas", "jamais", "parfois",
+        "souvent", "toujours",
+        "stimme zu", "stimme nicht zu", "teils/teils", "teils, teils", "weiss nicht", "weiß nicht", "nie",
+        "selten", "manchmal", "oft", "immer",
+        "d'accordo", "in disaccordo", "molto d'accordo", "abbastanza d'accordo", "per niente d'accordo",
+        "non so", "mai", "a volte", "spesso", "sempre",
+    ]
+)
+
+
+def validate_likert_response(value):
+    """An answer of a rating-scale item in words: Totalmente de acuerdo, Algo en desacuerdo,
+    Extremadamente probable, A veces, Strongly disagree, Stimme eher zu, No sé. Coded answers
+    (1 to 5) and yes / no are not."""
+    text = _fold(value)
+    return bool(text) and len(text) <= 60 and text in LIKERT_ANSWERS
+
+
+_DISCIPLINE_WORD = re.compile(r"[^\W\d_]{3,}")
+
+
+def validate_discipline_name(value):
+    """The name of an academic discipline or field of research: words with letters, at most
+    120 characters (Biología, Ciencias de la Tierra, Veterinaria y Esp. Pecuarias), not a code
+    (0101, 3.1) or a yes / no answer."""
+    text = str(value).strip()
+    if not text or len(text) > 120 or not _DISCIPLINE_WORD.search(text):
+        return False
+    return text.lower() not in _FLAGS and text.lower() not in ("si", "sí", "otro", "otra", "other")

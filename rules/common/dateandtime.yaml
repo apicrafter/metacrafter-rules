@@ -294,6 +294,28 @@ rules:
     fieldrule: date,дата,data,fecha,datum,contract_date,date_contract,дата договора,дата_договора,дата контракта,күні
     fieldrulematch: text
     priority: 1
+  excelserialdatetimebyname:
+    key: excel_serial_datetime
+    name: Date and time as an Excel serial number (45175.42585648148) in a field named for a date or a time
+    # Days since 1899-12-30 with the time of day as the fraction. The values are floats, which
+    # value rules do not see, and by value alone any decimal with five digits before the point
+    # (a discharge, a coordinate in metres): the field name must name a date or a time
+    # (datecreated, datemodified, Fecha y Hora, created_at).
+    rule: '(?i)(?:[a-z0-9]+[ _.-]){0,3}(?:date|datum|fecha|data|hora|time|zeit|heure|timestamp)(?:[ _.-]?[a-z0-9]+){0,3}|(?:[a-z0-9]+[ _.-]?)?(?:created|modified|updated|changed|submitted|started|ended|completed)(?:[ _]?(?:at|on))?'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.dateandtime.validate_excel_serial_datetime
+    needs_values: true
+    priority: 1
+  daterangevalue:
+    key: date_range
+    name: Date range by value (5-4-02 al 27-5-02, 22-1-02/27-2-02, 2020-01-01/2020-03-31)
+    rule: metacrafterext.rules.common.dateandtime.validate_date_range
+    type: data
+    match: func
+    minlen: 11
+    maxlen: 40
+    priority: 1
   schoolyearbyfield:
     key: school_year
     name: School or academic year (2025/26, 202526) by multilingual field name

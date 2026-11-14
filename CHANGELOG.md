@@ -9,6 +9,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Rules for the RDA-UNR files of metacrafter-testdata** (registry datatypes added from an April
+  2024 snapshot of the Repositorio de Datos Académicos of the Universidad Nacional de Rosario,
+  Argentina, a Dataverse):
+  - part-of-speech tags (`pos_tag`) in `pos`, `upos`, `xpos`, `pos_tag` and Spanish `etiqueta`
+    fields (`ETIQUETA_1`, `ETIQUETA_CORRECTA`) whose values are tags of a known tag set:
+    Universal Dependencies, Penn Treebank, EAGLES / FreeLing, and short tagger tags (nom, det,
+    prep, cl, pun of the Smorph tagger of Spanish), new `metacrafterext.rules.common.linguistics`;
+  - answers of rating-scale items in words (`likert_response`) by value: agreement, likelihood,
+    frequency, importance, satisfaction and interest in Spanish, English, Portuguese, French,
+    German and Italian (Totalmente de acuerdo, Algo probable, A veces, Strongly disagree, Stimme
+    eher zu, No sé); survey item columns are named after their questions;
+  - academic disciplines (`academic_discipline`) in `disciplina`, `discipline`,
+    `field_of_research`, `research_area`, `área de conocimiento` fields;
+  - Excel serial numbers with a time of day (`excel_serial_datetime`: 45175.42585648148) in
+    fields named for a date or a time (`datecreated`, `Fecha y Hora`): the values are floats,
+    which value rules do not see;
+  - date ranges (`date_range`: 5-4-02 al 27-5-02, 22-1-02/27-2-02, 2020-01-01/2020-03-31) by
+    value, both dates valid and in order;
+  - fatty acid lipid numbers (`lipid_number`: C16:0, C18:1n-9, iC15:0, aC15:0) by value with
+    the C, and without it (18:2 n-6) in fatty acid and FAME fields;
+  - age bands in a column named for age (`age_range`: `edad` with 45-54, 25 a 34, 65 o más,
+    Menor a 25): the age rule refuses them, and the band pattern now reads Spanish `o más`,
+    `menor a`, `mayor de`, `más de`;
+  - these field-name rules check their values and need values (`needs_values: true`).
+
 - **Rules for the data.gv.at files of metacrafter-testdata** (a 2024 Dateno snapshot of the
   Austrian open government data portal: administration directories of the states, statistics by
   municipality and district, the OeNB bank directory, AMS labour market data, Wiener Linien stops,
@@ -121,6 +146,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - all these field-name rules check their values and need values (`needs_values: true`).
 
 ### Fixed
+
+- `height` by field name needs lengths (175, 3.2 m, 1080 px): the `height` column of the
+  grazing records of dairy cows (RDA-UNR) holds the sward height class, tall or short.
 
 - `survey_weight` no longer takes `Sample Weight` (grams of fish tissue in the AIMS seafood
   microplastics file of metacrafter-testdata) or a weight with a unit (`final_weight_kg`,
