@@ -709,3 +709,81 @@ def validate_vessel_name(value):
     if not _VESSEL_NAME.match(text):
         return False
     return sum(c.isdigit() for c in text) <= len(text) // 2
+
+
+# The text of a KML <coordinates> element: tuples of longitude,latitude[,altitude] separated by
+# whitespace, as KML-to-table exports keep them in a cell (the Ku band footprints of the ARSAT
+# satellites: -68.96836853027344,-81.1478500366211,0.0 -72.55793762207031,-79.67288208007812,0.0).
+_KML_NUMBER = r"[-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][-+]?\d+)?"
+_KML_TUPLE = re.compile(rf"({_KML_NUMBER}),({_KML_NUMBER})(?:,({_KML_NUMBER}))?")
+
+
+def validate_kml_coordinates(value):
+    """KML coordinates: two or more lon,lat or lon,lat,alt tuples separated by whitespace, in
+    WGS 84 ranges, at least one with a decimal point; not one pair (220,220,220 is a colour) and
+    not a GML posList (numbers separated by spaces only)."""
+    tuples = str(value).split()
+    if len(tuples) < 2:
+        return False
+    decimals = False
+    for item in tuples:
+        match = _KML_TUPLE.fullmatch(item)
+        if not match:
+            return False
+        lon, lat = float(match.group(1)), float(match.group(2))
+        if not (-180 <= lon <= 180 and -90 <= lat <= 90):
+            return False
+        decimals = decimals or "." in match.group(1) or "." in match.group(2)
+    return decimals
+
+
+def _fold_es(value):
+    text = unicodedata.normalize("NFKD", str(value)).encode("ascii", "ignore").decode()
+    return " ".join(text.lower().split()).strip(" .")
+
+
+# Sex and gender in words of Spanish tables: the staff tables of ARSAT (Mujeres, Hombres),
+# registers (Femenino, Masculino, Varón). A column of them may close with a Total row.
+ES_GENDER_WORDS = frozenset((
+    "masculino", "femenino", "masculina", "femenina", "mujer", "mujeres", "hombre", "hombres", "varon",
+    "varones", "no binario", "no binaria"))
+_ES_GENDER_CODES = frozenset(("f", "m", "v", "h", "x", "otro", "otra", "otros", "otres", "sin dato",
+                              "no informado", "no declarado", "total", "female", "male"))
+
+
+def validate_es_gender_word(value):
+    """A sex or gender in Spanish words: Mujeres, Hombres, Femenino, Masculino, Varón, No binario."""
+    return _fold_es(value) in ES_GENDER_WORDS
+
+
+def validate_es_gender_value(value):
+    """A value of a Spanish género or sexo column: a word (Mujeres, Masculino), a letter (F, M, V,
+    X) or a total; not the genre of a film or a book (Drama, Comedia, Novela)."""
+    text = _fold_es(value)
+    return text in ES_GENDER_WORDS or text in _ES_GENDER_CODES
+
+
+# Organizational units of Argentine state companies and agencies: the gerencias of ARSAT
+# (Gerencia de Operaciones Terrestres, Subgerencia de RRHH, Unidad de Auditoría Interna,
+# Presidencia, Directorio). Departments and directorates (Departamento de ..., Dirección
+# Nacional de ...) are left out of the values: they also name territories and whole agencies.
+_ES_ORGUNIT_PREFIXES = ("gerencia ", "subgerencia ", "jefatura de ", "unidad de auditoria interna",
+                        "secretaria general", "vicepresidencia", "coordinacion de ", "subcoordinacion de ")
+_ES_ORGUNIT_NAMES = frozenset(("presidencia", "vicepresidencia", "directorio", "gerencia general",
+                               "secretaria general", "unidad de auditoria interna", "sindicatura"))
+
+
+def validate_es_orgunit_name(value):
+    """The name of a unit of a Spanish-speaking organization: Gerencia Comercial, Subgerencia de
+    Servicios Corporativos y Logística, Unidad de Auditoría Interna, Presidencia, Directorio."""
+    text = _fold_es(value)
+    if len(text) > 120:
+        return False
+    return text in _ES_ORGUNIT_NAMES or text.startswith(_ES_ORGUNIT_PREFIXES)
+
+
+def validate_orgunit_text(value):
+    """A unit name in a field named for units (gerencia, dependencia, org_unit): text with
+    letters, not a number or a code of digits."""
+    text = str(value).strip()
+    return 2 < len(text) <= 150 and sum(c.isalpha() for c in text) >= 3

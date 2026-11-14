@@ -38,8 +38,10 @@ rules:
     maxlen: 12
     priority: 1
   esdatetimename:
-    key: datetime
-    name: Spanish date name
+    key: date
+    name: Spanish date by field name (fecha)
+    # fecha is a date, like Portuguese data and English date: a column of dates without a time
+    # (5/1/2018 in the transfers of ARSAT) is no datetime.
     match: text
     type: field
     priority: 1

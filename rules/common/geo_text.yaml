@@ -14,6 +14,17 @@ rules:
     minlen: 30
     maxlen: 100000
     priority: 1
+  kmlcoordinatestext:
+    key: kml_coordinates
+    name: KML coordinates written as text in a table cell (-68.968,-81.147,0.0 -72.557,-79.672,0.0)
+    # The Ku and C band footprints of the ARSAT satellites (Argentina) are KML polygons exported to
+    # CSV with the coordinates element of each ring in one cell.
+    rule: metacrafterext.rules.common.generic.validate_kml_coordinates
+    type: data
+    match: func
+    minlen: 7
+    maxlen: 100000
+    priority: 1
   iso3166subdivisionbyname:
     key: iso3166code
     name: ISO 3166-2 subdivision code by field name (iso_id, iso_3166_2) with the country code (AR-C, DE-BY)

@@ -75,6 +75,27 @@ rules:
     validator: metacrafterext.rules.common.generic.validate_longitude_value
     needs_values: true
     priority: 1
+  arprovincebyname:
+    key: ar_province
+    name: Argentine province name by field name (provincia, PROVINCIA, provincia_nombre, jurisdiccion)
+    rule: (?i)(?!(?:cod|codigo|id|in|nro|num)_)(?:[a-z]+_)*(?:provincia|prov|jurisdicci[oó]n)(?:_(?:nombre|desc|descripcion|residencia|nacimiento|origen|destino))?|(?:nombre|desc)_(?:provincia|prov)
+    type: field
+    match: regex
+    validator: metacrafterext.rules.ar_country.codes.validate_ar_province
+    needs_values: true
+    priority: 1
+  arprovincevalue:
+    key: ar_province
+    name: Argentine province name by value (Buenos Aires, CÓRDOBA, Entre Rios, Sgo Del Estero, CABA)
+    # Spanish and Colombian province and department columns share some names (La Rioja, Córdoba)
+    # but not most of them. The City of Buenos Aires counts in provincia fields only: alone in a
+    # column it is as often the census locality.
+    rule: metacrafterext.rules.ar_country.codes.validate_ar_province_by_value
+    type: data
+    match: func
+    minlen: 4
+    maxlen: 60
+    priority: 1
   arprovinceletterbyname:
     key: iso3166code_part
     name: Argentine province letter of ISO 3166-2:AR by field name (letra_provincia, B, K, X)

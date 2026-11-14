@@ -44,11 +44,11 @@ rules:
   genderbyspanishname:
     key: gender
     is_pii: True
-    name: Gender by Spanish field name (genero, género, identidad_de_genero, GENERO) with gender values
-    # Género is also a genre of literature, music or film (genero_area_principal_editorial:
-    # Poesía, Novela), so the values must be genders in words or letters: Mujer, Varón, No
-    # binaria, Masculino, F, M (validate_gender_word).
-    rule: '(?i)(?:[a-z0-9]+[ _.-]){0,2}g[eé]nero(?:[ _.-](?:code|id|cd|\d{2,4}))?|identidad[ _](?:de[ _])?g[eé]nero'
+    name: Gender identity by Spanish field name (identidad_de_genero, identidad_genero) with gender values
+    # The Registro Federal de Cultura and Más Cultura of the Argentine culture ministry: Mujer,
+    # Varón, No binaria, Varón trans, Otras identidades, Prefiero no decirlo
+    # (validate_gender_word). A bare género is esgenderbyname of pii/es/es_pii.yaml.
+    rule: '(?i)identidad[ _](?:de[ _])?g[eé]nero(?:[ _](?:autopercibida|declarada))?'
     type: field
     match: regex
     validator: metacrafterext.rules.common.directories.validate_gender_word

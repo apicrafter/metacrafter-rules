@@ -7,12 +7,33 @@ rules:
   esgenderknown:
     key: gender
     is_pii: True
-    name: Spanish gender by known field names
-    rule: masculino,femenino
+    name: Spanish gender by value (Masculino, Femenino, Mujeres, Hombres, Varón)
+    # The staff tables of ARSAT (Argentina) count Mujeres and Hombres and close with a Total row.
+    rule: metacrafterext.rules.common.generic.validate_es_gender_word
+    match: func
+    type: data
+    minlen: 5
+    maxlen: 11
+  esgenderbyname:
+    key: gender
+    is_pii: True
+    name: Spanish gender by field name (género, genero, sexo_genero) with gender values
+    # Género is also the genre of a film, a book or a song (Drama, Novela): the values decide.
+    rule: (?i)(?:[a-z]+[ _])?g[eé]nero(?:[ _](?:declarado|autopercibido|persona|id|cod))?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.generic.validate_es_gender_value
+    needs_values: true
+    priority: 1
+  esbirthdayknown:
+    key: birthday
+    is_pii: True
+    name: Spanish birthday by known field names
+    rule: anio_nacimiento
     match: text
     type: data
-  # This rule had the key of the rule above (esgenderknown), so it replaced it and masculino /
-  # femenino were no gender; anio_nacimiento is a field name of a year of birth, not a value.
+  # anio_nacimiento names a year of birth (the Registro Federal de Cultura and other Argentine
+  # registers): a field rule with years as values.
   esbirthyearknown:
     key: birth_year
     is_pii: True

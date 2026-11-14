@@ -133,8 +133,8 @@ FIELDS = [
     ("es/es_geo.yaml", "esstreetaddressbyname", ["direccion", "Dirección", "domicilio", "direccion_descripcion", "domicilio_de_planta"],
      ["direccion_nacional", "direcciones"]),
     ("es/es_geo.yaml", "esfloorbyname", ["piso", "Piso", "piso_dpto"], ["departamento", "pisos", "DEPTO", "dpto"]),
-    ("pii/pii.yaml", "genderbyspanishname", ["genero", "GENERO", "género", "identidad_genero", "identidad_de_genero"],
-     ["genero_area_principal_editorial", "generos"]),
+    ("pii/pii.yaml", "genderbyspanishname", ["identidad_genero", "identidad_de_genero", "identidad de género"],
+     ["genero", "genero_area_principal_editorial", "identidades"]),
     ("pii/pii.yaml", "agerangebyname", ["franja_etaria", "grupos_edad", "rango etario", "franja de edad"], ["franja", "edad"]),
     ("common/survey.yaml", "surveyweightbyname", ["ponderador", "pondera_dem", "expansor", "EXPANSOR", "factor_expansion"],
      ["peso", "pondera_puntaje_kg"]),
@@ -188,6 +188,6 @@ def test_spanish_year_names_guard_the_year_rule():
 def test_spanish_gender_and_birth_year_rules_keep_their_keys():
     rules = yaml.safe_load((RULES / "pii/es/es_pii.yaml").read_text(encoding="utf-8"))["rules"]
     assert rules["esgenderknown"]["key"] == "gender"
-    assert rules["esgenderknown"]["rule"] == "masculino,femenino"
+    assert rules["esbirthdayknown"]["key"] == "birthday"
     assert rules["esbirthyearknown"]["key"] == "birth_year"
     assert rules["esbirthyearknown"]["type"] == "field"
