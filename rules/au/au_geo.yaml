@@ -24,5 +24,8 @@ rules:
     rule: state,state_name,territory,territory_name
     type: field
     match: text
+    # A state field of 0 and 1 is a flag (state or non-state actor in AUSSDA INFO-POW); FIPS
+    # state codes (01, 06) and names stay.
+    validator: metacrafterext.rules.common.survey.validate_not_flag
     priority: 1
 

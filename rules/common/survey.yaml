@@ -1,0 +1,53 @@
+name: survey
+description: Survey and research data - survey weights, variable names of codebooks, Correlates of War country codes
+context: science
+lang: common
+country_code: xx
+rules:
+  # Survey data hold codes and weights, so the field name says what a column is. Found in the
+  # Dataverse exports of AUSSDA, the Austrian Social Science Data Archive (metacrafter-testdata).
+  surveyweightbyname:
+    key: survey_weight
+    name: Survey weight by field name (dweight, pspwght, anweight, design_weight, W1_WEIGHTD, Gewicht_DES, gew)
+    # European Social Survey (dweight, pspwght, pweight, anweight), IPUMS and ACS (perwt, hhwt,
+    # pwgtp), qualified weights (design_weight, weight_final, w1_weightd of a panel wave) and the
+    # German names of Austrian surveys (gew, gew_roh, gewichtung, Gewicht_DES). A bare weight or
+    # Gewicht is the mass of a thing; Gewicht_kg too.
+    rule: '(?i)dweight|pspwght|pspweight|pweight|anweight|perwt|hhwt|wtfinl|finalwt|pwgtp|wgtp|weighting(?:[ _]?factor)?|weight[ _]?factor|wfactor|(?:[a-z0-9]+[_.-])?w(?:gt|ght)(?:[_.-]?(?!kg$|lbs?$)[a-z0-9]+)?|(?:[a-z0-9]+[ _.-])?(?:design|post(?:strat(?:ification)?)?|ps|pop(?:ulation)?|analysis|cal(?:ib(?:ration)?)?|final|base|samp(?:le|ling)?|survey|resp(?:ondent)?|cross(?:sectional)?|long(?:itudinal)?|panel|trim(?:med)?|rak(?:e|ing))[ _.-]?weights?(?:[ _.-][a-z0-9]+)?|weights?[ _.-](?:design|post(?:strat[a-z]*)?|ps|pop|analysis|cal[a-z]*|final|base|samp[a-z]*|survey|resp[a-z]*|cross[a-z]*|long[a-z]*|panel|trim[a-z]*|rak[a-z]*|[dpc]|w?\d{1,2})|w\d{1,2}(?:w\d{1,2})?[_.]?weight[a-z]{0,2}|gew(?:[_.-][a-z0-9]+)?|[a-z0-9]+[_.-]gew|gewichtung(?:s?faktor)?(?:[_.-][a-z0-9]+)?|gewicht[_.-](?!(?:kg|g|t|gramm|tonnen|brutto|netto|leer)$)[a-z0-9]+|designgewicht|hochrechnungsfaktor'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.survey.validate_survey_weight
+    needs_values: true
+    priority: 1
+  variablenamebyname:
+    key: variable_name
+    name: Variable name by the field name of a codebook or data dictionary (variable, varname, VARIABLENAME, field_name)
+    rule: '(?i)variable|(?:variable|var)[ _]?(?:name|nm)|varname|variablen?name|variablename[ _]?in[ _]?dataset|field[ _]?name|column[ _]?name|feldname|spaltenname|nom[ _](?:de[ _](?:la[ _])?)?variable|nombre[ _](?:de[ _](?:la[ _])?)?variable|nome[ _](?:della[ _])?variabile|naam[ _]variabele'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.survey.validate_variable_name
+    needs_values: true
+    priority: 1
+  variablenamevalue:
+    key: variable_name
+    name: Variable names in the variable column of a codebook (Q1, M11, SEX_2016)
+    # A guarded value rule, so that variable names of the shape of other identifiers (Q10 and
+    # Q11 are Wikidata ids, AB12CDE a UK plate) keep their own type only.
+    rule: '[^\W\d][\w.@#$]{0,127}'
+    type: data
+    match: regex
+    minlen: 1
+    maxlen: 128
+    fieldregex: '(?i)^(?:variable|(?:variable|var)[ _]?(?:name|nm)|varname|variablen?name|variablename[ _]?in[ _]?dataset|field[ _]?name|column[ _]?name|feldname|spaltenname)$'
+    priority: 1
+  cowcountrycodebyname:
+    key: cow_country_code
+    name: Correlates of War country code by field name (COWcode, ccode, ccode1)
+    # ccode is the COW name; a ccode of ISO alpha-2 codes (AT, DK) fails the check and is a
+    # country code (intcodes.yaml). A bare cow is a number of cows.
+    rule: '(?i)cow_?codes?|cowc|cow_?(?:ccode|num(?:ber)?|id|country_?code|state_?(?:num|no))|ccode[12ab]?|stateno|statenum'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.survey.validate_cow_country_code
+    needs_values: true
+    priority: 1
