@@ -9,6 +9,43 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Rules for the openAFRICA files of metacrafter-testdata** (a May 2024 snapshot of open.africa, the
+  pan-African open data portal of Code for Africa, Dateno source cdi00000008; validators in
+  `metacrafterext.rules.ke.geo`, `ng.geo`, `tz.geo`, `za.geo`, `za.finances`, `common.admin` and
+  `common.sensors`):
+  - Kenyan counties (`ke_county`: Mombasa, Taita/Taveta, Nairobi City) by field name (`County`,
+    `NAME_1`) and value, and sub-counties (`ke_subcounty`: Changamwe, Embakasi East) by field name
+    (`Sub county`, `subCounty`), checked against the 47 counties and the sub-county lists of Code for
+    Africa and the Kenya Master Health Facility List;
+  - Nigerian states (`ng_state`: Kaduna, Akwa Ibom, FCT) and local government areas (`ng_lga`: Birnin
+    Gwari, Isiala-Ngwa South, the GADM 2 spellings) by field name (`State`, `Lga`, `NAME_1`, `NAME_2`)
+    and value; the GRID3 / eHealth Africa LGA codes (`ng_lga_code`: 19001) and ward codes
+    (`ng_ward_code`: KD0101) by field name; ISO 3166-2:NG state codes (`iso3166code_part`: KD) in
+    `State Code`;
+  - Sierra Leonean chiefdoms (`sl_chiefdom`) in `CHIEFDOM`; Tanzanian regions (`tz_region`, a registry
+    type without rules until now: Dodoma, Coast, Kaskazini Pemba) and South African provinces
+    (`za_province`, also without rules: KwaZulu-Natal, MPUMALANGA) by field name (`Region`, `Province`,
+    `Government` of a provincial budget) and value;
+  - South African budget data of National Treasury (vulekamali): economic classification items
+    (`za_economic_classification`: Compensation of employees, Goods And Services) in
+    `EconomicClassification1-5`, `Econ1-5`, `econClass_L1-L5` and by value, vote numbers
+    (`za_budget_vote_number`) in `VoteNumber`, `vote_number`, `Vote No#`;
+  - GADM and OCHA division fields: HASC codes (`hasc`, without rules until now: TZ.AS.AS) by field name
+    and value, `NAME_1` / `ADM1_EN` / `Adm1_Name` as `admin_area_1` (without rules until now), `NAME_2`
+    / `Adm2_Name` as `admin_area_2` (likewise), `NAME_3` / `Adm3_Name` as `admin_area_3`, division
+    types (`admin_area_type`: Local Authority, Wilaya, Water body) in `TYPE_2` and `ENGTYPE_2`; OCHA
+    p-codes with an alpha-3 prefix (`hdx_pcode`: SLE03040102) and in `adm1_code` to `adm5_code`;
+  - Open Civic Data division ids (`ocd_division_id`, without rules until now) and ODK geopoints
+    (`odk_geopoint`: 9.140918 7.496761 697.0 4.5, with decimals in latitude and longitude) by value;
+  - OurAirports: aerodrome types (`airport_type`: small_airport, heliport) by value, ICAO codes in
+    `gps_code` and `ident`, IATA airport codes of three letters in `iata_code` and `IATA`, ISO 3166-2
+    codes in `iso_region`, continent codes (`continentcode`, without rules until now) in `continent`;
+  - Sensor.Community / sensors.AFRICA archives: sensor models (`air_sensor_model`: SDS011, pms5003,
+    DHT22, BAM 1020) by field name (`sensor_type`) and value, value types (`sensor_community_value_type`:
+    P1, P2, temperature) by field name (`value_type`);
+  - World Bank project IDs (`wb_project_id`: P099939) and trust fund numbers (`wb_trust_fund_number`:
+    TF053509) by value in fields that name a project or a fund.
+
 - **Rules for the ArmSIS files of metacrafter-testdata** (an April 2024 snapshot of the Armenian Soil
   Information System, a GeoNode portal of the Armenian National Agrarian University, Dateno source
   cdi00000013; validators in `metacrafterext.rules.common.soils`, `metacrafterext.rules.common.fieldwork`
@@ -39,6 +76,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   (`elev_start`, `elev_end` of the river network of ArmSIS); ArcGIS object ids of joined layers
   (`OBJECTID_2`, `OBJECTID_3`) are `objectid`; `basin_area`, `catchment_area` and `drainage_area` are
   `area`.
+
+### Fixed
+
+- The Australian LGA rules no longer take the Nigerian LGA codes and names of the GRID3 settlement
+  data (`Lga Code` 19001, `Lga` Birnin Gwari): an ABS LGA code ends in 0 or is an unincorporated, no
+  usual address or migratory code (19399, 19499, 89399), and a plain LGA name is not a Nigerian LGA.
+- The UK parish and ward code rules (`parish`, `ward code`) need GSS codes: Ugandan parish names
+  (Busunga, Railway ward) and Nigerian ward codes (KD0101) are no UK codes.
+- `iata_code` and `icao_code` are an airline or an airport code by the length of the values (two or
+  three letters, three or four), not an airline code by name alone: the OurAirports `iata_code` JMY was
+  an IATA airline code.
+- `fqdn` refuses HASC codes (TZ.AS.AS, ZM.CE.CB of the GADM attribute tables).
+- A field named `timestamp` is `unixtime` only with Unix seconds: the written date and times of the
+  sensors.AFRICA archives (2021-12-01T00:01:53.614385+00:00) are datetimes.
 
 - **Rules for the data.gov.au files of metacrafter-testdata** (a snapshot of the Australian national
   open data portal, Dateno source cdi00000098; validators in `metacrafterext.rules.au.codes` and

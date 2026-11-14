@@ -1,0 +1,40 @@
+name: ke-geo
+description: Kenyan counties and sub-counties
+context: geo
+lang: en
+country_code: ke
+# Found in the openAFRICA snapshot of metacrafter-testdata (Kenya Subcounties of Code for Africa,
+# the Council of Governors county budget tables, KNBS household survey tables) and in the Kenya
+# Master Health Facility List. Other countries' counties (US, UK, Ireland, Hungary) and Ugandan sub
+# counties fail the validators.
+rules:
+  kecountybyname:
+    key: ke_county
+    name: Kenyan county by field name (County, county_name, NAME_1) with Kenyan county names
+    rule: (?i)(?:(?!sub)[a-z]+[ _])?county(?:[ _]?name)?|countyname|name_1|adm1_(?:name|en|nam)|admin1_?name(?:_en)?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.ke.geo.validate_ke_county
+    needs_values: true
+    priority: 1
+  kecountyvalue:
+    key: ke_county
+    name: Kenyan county by value (Mombasa, Taita/Taveta, Tharaka-Nithi, Nairobi City)
+    rule: metacrafterext.rules.ke.geo.validate_ke_county
+    type: data
+    match: func
+    minlen: 3
+    maxlen: 40
+    # Not on fields of towns, addresses or lower divisions, which repeat the names of the
+    # larger division (a city column of Nairobi, a district column of Kibera).
+    fieldregex: ^(?!.*(?:city|town|place|locality|municip|addr|street|district|division|location|village|settlement|community|ward|station|site|name_[2-5]|adm[2-5])).
+    priority: 1
+  kesubcountybyname:
+    key: ke_subcounty
+    name: Kenyan sub-county by field name (Sub county, subCounty, sub_county) with Kenyan sub-county names
+    rule: (?i)sub[ _-]?county(?:[ _]?name)?|subcounty(?:name)?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.ke.geo.validate_ke_subcounty
+    needs_values: true
+    priority: 1

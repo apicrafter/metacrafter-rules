@@ -1,0 +1,29 @@
+name: tz-geo
+description: Tanzanian regions
+context: geo
+lang: en
+country_code: tz
+# Found in the openAFRICA snapshot of metacrafter-testdata: the mini-grid locations of 2017 (Region)
+# and the GADM 2 poverty map of 2013 (NAME_1).
+rules:
+  tzregionbyname:
+    key: tz_region
+    name: Tanzanian region by field name (Region, region_name, NAME_1, Mkoa) with Tanzanian region names
+    rule: (?i)(?:[a-z]+[ _])?region(?:[ _]?name)?|regionname|mkoa|name_1|adm1_(?:name|en|nam)|admin1_?name(?:_en)?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.tz.geo.validate_tz_region
+    needs_values: true
+    priority: 1
+  tzregionvalue:
+    key: tz_region
+    name: Tanzanian region by value (Dodoma, Dar es Salaam, Kaskazini Pemba)
+    rule: metacrafterext.rules.tz.geo.validate_tz_region
+    type: data
+    match: func
+    minlen: 4
+    maxlen: 40
+    # Not on fields of towns, addresses or lower divisions, which repeat the names of the
+    # larger division (a city column of Nairobi, a district column of Kibera).
+    fieldregex: ^(?!.*(?:city|town|place|locality|municip|addr|street|district|division|location|village|settlement|community|ward|station|site|name_[2-5]|adm[2-5])).
+    priority: 1

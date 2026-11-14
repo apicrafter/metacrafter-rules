@@ -319,13 +319,15 @@ rules:
     priority: 1
   hdxpcodevalue:
     key: hdx_pcode
-    name: OCHA place code (GE11) by field name and value
-    rule: '[A-Z]{2}\d{1,12}'
+    name: OCHA place code (GE11, SLE03040102) by field name and value
+    # Older common operational datasets prefix the alpha-3 code of the country (SLE03040102 in
+    # Adm4_Code of the Sierra Leone schools on openAFRICA), newer ones the alpha-2 code (SL0101).
+    rule: '[A-Z]{2,3}\d{1,12}'
     type: data
     match: regex
     minlen: 3
     maxlen: 14
-    fieldrule: adm1_pcode,adm2_pcode,adm3_pcode,adm4_pcode,admin1pcode,admin2pcode,admin3pcode,admin4pcode,admin1_pcode,admin2_pcode,admin3_pcode,admin4_pcode,pcode,p_code,p-code
+    fieldrule: adm1_pcode,adm2_pcode,adm3_pcode,adm4_pcode,adm5_pcode,admin1pcode,admin2pcode,admin3pcode,admin4pcode,admin1_pcode,admin2_pcode,admin3_pcode,admin4_pcode,adm1_code,adm2_code,adm3_code,adm4_code,adm5_code,adm1code,adm2code,adm3code,adm4code,pcode,p_code,p-code
     fieldrulematch: text
     priority: 1
   adminarea3byfield:
