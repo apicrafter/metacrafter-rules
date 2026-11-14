@@ -18,6 +18,8 @@ rules:
     rule: data_size,datasize,size,data_size_bytes,data_size_mb,data_size_gb,dataset_size,software_size
     type: field
     match: text
+    # A Size field of size classes (Large, Medium, Small in the ORIC register) holds no data sizes.
+    validator: metacrafterext.rules.common.software.validate_datasize_value
     priority: 1
   datasizebyvalue:
     key: datasize

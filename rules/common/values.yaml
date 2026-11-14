@@ -35,3 +35,15 @@ rules:
     type: field
     match: regex
     priority: 1
+  moneyrangebyname:
+    key: money_range
+    name: Money range by field name (Taxable income range, Total Income 2019/20, Total assets, turnover, grant value) with band values
+    # ATO taxation statistics, the ORIC register and grant lists give income, assets, turnover,
+    # tax or grant value as bands ($100K - $5m, b. $18,201 to $37,000, Loss/nil); amounts of the
+    # same names are money, which the band validator refuses.
+    rule: (?i)(?:[a-z]+[ _])*(?:income|assets?|turnover|tax(?:able)?|revenue|debts?|grant[ _]value|value[ _]of[ _]assets|funding|assessment|loss|salary|wages?)(?:[ _](?:or[ _]loss|or[ _]net[ _]income|income|assessment))?(?:[ _](?:range|ranges|band|bands|bracket|brackets|group))?(?:[ _-]+tax[ _]brackets)?(?:[ _](?:19|20)\d{2}(?:[/_-]\d{2,4})?)?\d*
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.periods.validate_money_range
+    needs_values: true
+    priority: 1

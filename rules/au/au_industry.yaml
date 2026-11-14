@@ -1,0 +1,45 @@
+name: au-industry
+description: Australian and New Zealand classifications of industries and occupations, and standards designations
+context: industry
+lang: en
+country_code: au
+rules:
+  auanzsicbyname:
+    key: au_anzsic_code
+    name: ANZSIC industry code by field name (primary_anzsic_class_code, anzsic_code) or ATO industry field (Fine industry, Finer industry, Broad industry)
+    # The ATO taxation statistics give the industry as the code with its title (011 Nursery and
+    # Floriculture Production, A.Agriculture, Forestry and Fishing); a field named for ANZSIC may
+    # hold bare codes.
+    rule: (?i)(?:[a-z]+_)*anzsic(?:_\w+)?|(?:broad|fine|finer)[ _]+industry\d*
+    type: field
+    match: regex
+    validator: metacrafterext.rules.au.codes.validate_au_anzsic_code
+    needs_values: true
+    priority: 1
+  auanzscobyname:
+    key: au_anzsco_code
+    name: ANZSCO occupation code by field name (anzsco_code, Debtor Occupation Code (ANZSCO)) or occupation field of ANZSCO codes with titles
+    rule: (?i)(?:[a-z]+[ _])*(?:anzsco(?:[ _](?:code|group|unit[ _]group|major[ _]group|occupation))?|occupation(?:[ _]code)?(?:[ _]\(?anzsco\)?)?)
+    type: field
+    match: regex
+    validator: metacrafterext.rules.au.codes.validate_au_anzsco_titled
+    needs_values: true
+    priority: 1
+  austandarddesignationbyname:
+    key: au_standard_designation
+    name: Standards Australia / New Zealand designation by field name (N-Standard, test standard, ApplStandard) with AS, AS/NZS or NZS values
+    rule: (?i)(?:[a-z]+[ _-])*standard(?:[ _-]?(?:meps|used|number|designation|no))?|(?:what[ _])?test[ _]standard(?:[ _]was[ _]used)?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.au.codes.validate_au_standard_designation
+    needs_values: true
+    priority: 1
+  austandarddesignationvalue:
+    key: au_standard_designation
+    name: Standards Australia / New Zealand designation by value (AS/NZS 4847.1:2010, AS 1056.1, NZS 4606.1-1989)
+    rule: metacrafterext.rules.au.codes.validate_au_standard_designation
+    type: data
+    match: func
+    minlen: 6
+    maxlen: 60
+    priority: 1
