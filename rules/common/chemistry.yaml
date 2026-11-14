@@ -78,3 +78,12 @@ rules:
 #    validator: metacrafterext.rules.common.chemistry.validate_molecular_formula
 #    note: Complex pattern - validates basic structure but may need refinement
 
+  casrnbyfieldname:
+    key: casrn
+    name: CAS Registry Number by field name (cas_registry_numbers, CAS number, cas_rn) with a check digit
+    rule: (?i)(?:[a-z]+[ _])*cas(?:[ _]?(?:registry|reg|rn))?(?:[ _]?(?:numbers?|nos?|nr|no\.|id))?|casrn
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.chemistry.validate_casrn
+    needs_values: true
+    priority: 1

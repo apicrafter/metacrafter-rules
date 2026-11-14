@@ -41,6 +41,19 @@ rules:
     match: regex
     validator: metacrafterext.rules.common.survey.validate_gender_code
     priority: 1
+  genderbyspanishname:
+    key: gender
+    is_pii: True
+    name: Gender identity by Spanish field name (identidad_de_genero, identidad_genero) with gender values
+    # The Registro Federal de Cultura and Más Cultura of the Argentine culture ministry: Mujer,
+    # Varón, No binaria, Varón trans, Otras identidades, Prefiero no decirlo
+    # (validate_gender_word). A bare género is esgenderbyname of pii/es/es_pii.yaml.
+    rule: '(?i)identidad[ _](?:de[ _])?g[eé]nero(?:[ _](?:autopercibida|declarada))?'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.directories.validate_gender_word
+    needs_values: true
+    priority: 1
   agebyname:
     key: age
     is_pii: True
@@ -56,8 +69,8 @@ rules:
   agerangebyname:
     key: age_range
     is_pii: True
-    name: Age band by field name (age_group, AGE_CAT, alter_gr, Altersgruppen, grupo de edad)
-    rule: '(?i)(?:[a-z0-9]+[ _.-]){0,2}(?:age|alter|edad|vanus|âge)[ _.-]?(?:gr(?:oups?|uppen?|p)?|ranges?|bands?|cat(?:egor(?:y|ies|ie|ien))?|class(?:es)?|klassen?|kl|brackets?|intervals?|kat(?:egorien?)?)(?:[ _.-][a-z0-9]+)?|alters(?:gruppen?|klassen?|kategorien?|kat)(?:[ _.-][a-z0-9]+)?|(?:grupo|rango|tramo)s?[ _](?:de[ _])?edad|grupo[ _]etario|(?:tranche|classe)s?[ _](?:d[ _'']?)?[aâ]ge'
+    name: Age band by field name (age_group, AGE_CAT, alter_gr, Altersgruppen, grupo de edad, franja_etaria)
+    rule: '(?i)(?:[a-z0-9]+[ _.-]){0,2}(?:age|alter|edad|vanus|âge)[ _.-]?(?:gr(?:oups?|uppen?|p)?|ranges?|bands?|cat(?:egor(?:y|ies|ie|ien))?|class(?:es)?|klassen?|kl|brackets?|intervals?|kat(?:egorien?)?)(?:[ _.-][a-z0-9]+)?|alters(?:gruppen?|klassen?|kategorien?|kat)(?:[ _.-][a-z0-9]+)?|(?:grupo|rango|tramo|franja)s?[ _](?:de[ _])?edad|(?:grupo|rango|franja|tramo)[ _]etari[oa]|(?:tranche|classe)s?[ _](?:d[ _'']?)?[aâ]ge'
     type: field
     match: regex
     validator: metacrafterext.rules.common.survey.validate_age_range_value

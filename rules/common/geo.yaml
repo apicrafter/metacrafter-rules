@@ -572,3 +572,24 @@ rules:
     validator: metacrafterext.rules.common.statcodes.validate_longitude_long_name
     needs_values: true
     priority: 1
+  suburbbyname:
+    key: location
+    name: Suburb by field name (Suburb, SUBURB, suburb_name, Street Suburb) with place names
+    # Suburbs are the localities of addresses in Australia, New Zealand and South Africa. Without a
+    # scan country a suburb is a location, and this universal match covers the Australian
+    # au_suburb rule (a South African SUBURB is no au_suburb).
+    rule: (?i)(?:[a-z]+[ _/])*suburbs?(?:[ _/]?(?:name|locality))?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.generic.validate_place_name
+    needs_values: true
+    priority: 1
+  towncitybyname:
+    key: city
+    name: Town or city by field name (TOWN/CITY, Town/City, Suburb/Town, City/Town) with place names
+    rule: (?i)(?:[a-z]+[ _/])*(?:town[ _/]?city|city[ _/]?town|suburb[ _/]?town)
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.generic.validate_place_name
+    needs_values: true
+    priority: 1

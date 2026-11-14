@@ -627,3 +627,10 @@ def validate_winregkey(value):
         return False
     return all(part.strip() for part in parts[1:])
 
+
+
+def validate_datasize_value(value):
+    """A data size in a size field: a number of bytes (2048, 1.5) or a size with its unit (100 MB). A
+    size class (Large, Medium, Small: the ORIC register of data.gov.au) is no data size."""
+    text = str(value).strip()
+    return bool(re.match(r"^\d+(?:\.\d+)?$", text)) or validate_datasize(text)

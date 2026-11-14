@@ -50,3 +50,39 @@ rules:
     minlen: 3
     maxlen: 120
     priority: 1
+  ipccodebyname:
+    key: ipc_code
+    name: International Patent Classification symbol by field name (ipc_mark_value, edited_ipc_mark_value, primary_ipc_mark, ipc)
+    rule: (?i)(?:[a-z]+_)*ipc(?:_mark)?(?:_(?:value|code|symbol|class|classification))?|(?:ipc|cpc|patent)[ _]class(?:ification)?(?:[ _](?:code|symbol))?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.periods.validate_ipc_code
+    needs_values: true
+    priority: 1
+  ipccodevalue:
+    key: ipc_code
+    name: International Patent Classification symbol down to the group by value (A47G  23/02, A47G23/02, G06Q 90/00)
+    rule: metacrafterext.rules.common.periods.validate_ipc_group
+    type: data
+    match: func
+    minlen: 7
+    maxlen: 20
+    priority: 1
+  pctapplicationnumbervalue:
+    key: pct_application_number
+    name: PCT international application number by value (PCT/AU1980/000001, PCT/AU80/00001)
+    rule: metacrafterext.rules.common.periods.validate_pct_application_number
+    type: data
+    match: func
+    minlen: 13
+    maxlen: 17
+    priority: 1
+  wopublicationnumbervalue:
+    key: wo_publication_number
+    name: PCT international publication number by value (WO1980/002164, WO80/02164)
+    rule: metacrafterext.rules.common.periods.validate_wo_publication_number
+    type: data
+    match: func
+    minlen: 9
+    maxlen: 17
+    priority: 1
