@@ -1,0 +1,61 @@
+name: at-finance
+description: Austrian bank, company register and budget classification codes (BLZ, Firmenbuchnummer, VRV)
+context: finances
+lang: de
+country_code: at
+rules:
+  atblzbyname:
+    key: at_blz
+    name: Austrian bank code by field name (Bankleitzahl, BLZ) with five digits
+    rule: (?i)bankleitzahl|blz|bank_?leitzahl
+    type: field
+    match: regex
+    validator: metacrafterext.rules.at.codes.validate_at_blz
+    needs_values: true
+    priority: 1
+  atfirmenbuchbyname:
+    key: at_firmenbuchnummer
+    name: Austrian company register number by field name (Firmenbuchnummer, FN)
+    rule: (?i)firmenbuch(?:_?(?:nummer|nr|zahl))?|firmenbuchnummer|fn|fn_?nr|fbnr|fb_?nr
+    type: field
+    match: regex
+    validator: metacrafterext.rules.at.codes.validate_at_firmenbuchnummer
+    needs_values: true
+    priority: 1
+  atfirmenbuchvalue:
+    key: at_firmenbuchnummer
+    name: Austrian company register number written with FN by value (FN 32942w)
+    rule: metacrafterext.rules.at.codes.validate_at_firmenbuchnummer_with_prefix
+    type: data
+    match: func
+    minlen: 4
+    maxlen: 11
+    priority: 1
+  atvrvansatzbyname:
+    key: at_vrv_ansatz
+    name: Austrian VRV budget function code by field name (Ansatz, Teilabschnitt, haushaltskonto-ansatz)
+    rule: (?i)ansatz(?:_?(?:nr|nummer|code))?|haushaltskonto[-_ ]ansatz|teilabschnitt|unterabschnitt|vst_?ansatz
+    type: field
+    match: regex
+    validator: metacrafterext.rules.at.codes.validate_at_vrv_ansatz
+    needs_values: true
+    priority: 1
+  atvrvkontobyname:
+    key: at_vrv_konto
+    name: Austrian VRV budget account by field name (haushaltskonto-post, Konto of the budget files)
+    # A bare post is a WordPress post id as often as a budget post: not used.
+    rule: (?i)haushaltskonto[-_ ]post|haushalts?_?konto|vrv_?(?:konto|post)|kontonr_?vrv|finanzposition_?post
+    type: field
+    match: regex
+    validator: metacrafterext.rules.at.codes.validate_at_vrv_konto
+    needs_values: true
+    priority: 1
+  atvrvmvagbyname:
+    key: at_vrv_mvag
+    name: Austrian VRV 2015 MVAG code by field name (MvagCode, MVAG Ergebnishaushalt, mvag/code)
+    rule: (?i)mvag(?:[ _/.-]?code)?|mvag[ _-](?:ergebnis|finanzierungs|verm(?:oe|ö)gens)haushalt.*
+    type: field
+    match: regex
+    validator: metacrafterext.rules.at.codes.validate_at_vrv_mvag
+    needs_values: true
+    priority: 1
