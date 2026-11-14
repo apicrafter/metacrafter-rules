@@ -99,10 +99,11 @@ rules:
   esfloorbyname:
     key: address_line2
     is_pii: True
-    name: Floor or unit of an address by Spanish field name (piso, piso_dpto, depto)
-    # 1°, 2º B, P.B., Planta Alta, Subsuelo, Loc. 1. Departamento is an administrative division
-    # in Argentina and is left out.
-    rule: '(?i)piso(?:[ _](?:y[ _])?(?:dpto|depto|oficina|local))?|dpto|depto'
+    name: Floor or unit of an address by Spanish field name (piso, piso_dpto)
+    # 1°, 2º B, P.B., Planta Alta, Subsuelo, Loc. 1. Departamento, and DEPTO / DPTO alone, are an
+    # administrative division in Argentina (the department codes of the Córdoba census tables,
+    # 098) and are left out.
+    rule: '(?i)piso(?:[ _](?:y[ _])?(?:dpto|depto|oficina|local))?'
     type: field
     match: regex
     validator: metacrafterext.rules.common.directories.validate_floor

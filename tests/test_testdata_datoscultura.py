@@ -132,7 +132,7 @@ FIELDS = [
      ["telefonia", "tele", "cod_tel"]),
     ("es/es_geo.yaml", "esstreetaddressbyname", ["direccion", "Dirección", "domicilio", "direccion_descripcion", "domicilio_de_planta"],
      ["direccion_nacional", "direcciones"]),
-    ("es/es_geo.yaml", "esfloorbyname", ["piso", "Piso", "piso_dpto", "depto"], ["departamento", "pisos"]),
+    ("es/es_geo.yaml", "esfloorbyname", ["piso", "Piso", "piso_dpto"], ["departamento", "pisos", "DEPTO", "dpto"]),
     ("pii/pii.yaml", "genderbyspanishname", ["genero", "GENERO", "género", "identidad_genero", "identidad_de_genero"],
      ["genero_area_principal_editorial", "generos"]),
     ("pii/pii.yaml", "agerangebyname", ["franja_etaria", "grupos_edad", "rango etario", "franja de edad"], ["franja", "edad"]),

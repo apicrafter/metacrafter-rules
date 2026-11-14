@@ -39,7 +39,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     `Teléfono`, `Telefóno`, `tel`, `celular` with 5 to 15 digits; street addresses named
     `direccion`, `Dirección`, `domicilio`, `direccion_descripcion` with a number or a street word
     (a wind direction and a directorate fail); floors named `piso` (`address_line2`: P.B., 2º B,
-    Planta Alta); gender named `genero`, `GENERO`, `identidad_de_genero` with gender words (a genre
+    Planta Alta; not `DEPTO`, a department); gender named `genero`, `GENERO`, `identidad_de_genero` with gender words (a genre
     of literature or music fails); age bands named `franja_etaria` and written `18 A 29 ANIOS`,
     `65 ANIOS Y MAS`; survey weights named `ponderador`, `pondera_dem`, `expansor`.
 - `booleansino`: Sí, Si, SI and No are boolean. A yes/no column passed only when No was the
