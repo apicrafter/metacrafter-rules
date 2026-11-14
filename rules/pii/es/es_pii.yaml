@@ -32,6 +32,17 @@ rules:
     rule: anio_nacimiento
     match: text
     type: data
+  # anio_nacimiento names a year of birth (the Registro Federal de Cultura and other Argentine
+  # registers): a field rule with years as values.
+  esbirthyearknown:
+    key: birth_year
+    is_pii: True
+    name: Spanish year of birth by known field names
+    rule: anio_nacimiento,año_nacimiento,ano_nacimiento,anio_de_nacimiento,año_de_nacimiento
+    match: text
+    type: field
+    validator: metacrafterext.rules.common.generic.validate_year_value
+    needs_values: true
   es_pii_espassportfield:
     key: espassport
     is_pii: True
