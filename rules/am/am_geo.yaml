@@ -26,4 +26,23 @@ rules:
 #    minlen: 4
 #    priority: 1
 #    imprecise: 1
-
+  ammarzbyname:
+    key: am_marz
+    name: Armenian province (marz) by field name (marz, region, province, մարզ)
+    rule: (?i)(?:[a-z]+_)*(?:marz|marzer|region|province|oblast)(?:[ _](?:name|nm|en|eng|arm|hy|ru))?|name_?marz|մարզ(?:ը|ի)?|մարզի[ _]անվանում|марз|область
+    type: field
+    match: regex
+    validator: metacrafterext.rules.am.geo.validate_am_marz
+    needs_values: true
+    priority: 1
+  ammarzvalue:
+    key: am_marz
+    name: Armenian province (marz) by value (Gegharkunik, Վայոց Ձոր, Aragatsotn Province, Сюник)
+    # Ararat, Armavir, Lori and Yerevan alone also name cities and people: they count only in a
+    # field named for provinces.
+    rule: metacrafterext.rules.am.geo.validate_am_marz_by_value
+    type: data
+    match: func
+    minlen: 4
+    maxlen: 40
+    priority: 1

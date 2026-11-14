@@ -1,0 +1,74 @@
+name: soilscommon
+description: Soil survey and land cover values (WRB groups, soil types, texture, erosion, land cover)
+context: environment
+lang: common
+country_code: xx
+rules:
+  wrbsoilgroupvalue:
+    key: wrb_reference_soil_group
+    name: WRB reference soil group by value (Chernozems, Castanozems, Haplic Calcisols, Solonetzes-Solonchaks)
+    rule: metacrafterext.rules.common.soils.validate_wrb_soil_group
+    type: data
+    match: func
+    minlen: 6
+    maxlen: 120
+    priority: 1
+  wrbsoilgroupbyname:
+    key: wrb_reference_soil_group
+    name: WRB reference soil group by field name (WRB, WRB_refere, wrb_group, reference_soil_group)
+    # WRB_refere is a dBase-truncated WRB_reference (the soil profile database of ArmSIS).
+    rule: (?i)wrb(?:[ _-]?(?:refere\w*|rsg|group|soil[ _]?group|class(?:ification)?|name|2006|2014|2022))?|(?:reference|fao)[ _]soil[ _]group|rsg(?:[ _]name)?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.soils.validate_wrb_soil_group
+    needs_values: true
+    priority: 1
+  soiltypevalue:
+    key: soil_type
+    name: Soil type of a national classification by value (Mountain chernozem, Горно-каштановые, Լեռնային սևահողեր)
+    # Vegetation and landscape types share words with soil types (meadow steppe, forest), so a
+    # value needs a soil word; descriptions with numbers are left out.
+    rule: metacrafterext.rules.common.soils.validate_soil_type
+    type: data
+    match: func
+    minlen: 4
+    maxlen: 220
+    priority: 1
+  soiltypebyname:
+    key: soil_type
+    name: Soil type by field name (soil_type, Soil_Name, soil_name_en, почва, тип_почвы)
+    rule: (?i)soil[ _-]?(?:type|name|unit|class|classification|subtype)\d?(?:[ _-]?(?:en|ru|hy|arm|eng|rus|local|national))?|soil_name_|тип[ _]почв[ыа]?|почва|почвы|название[ _]почвы
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.soils.validate_soil_type
+    needs_values: true
+    priority: 1
+  soiltexturebyname:
+    key: soil_texture_class
+    name: Soil texture class by field name (Texture, Texture_EN, soil_texture, гранулометрический состав)
+    # Texture codes of survey forms (TERN soilTexture: 0, 2) fail the check.
+    rule: (?i)(?:soil[ _]?)?texture(?:[ _-]?(?:en|ru|eng|rus|class|classes|name|usda|fao|group))?|(?:granulometric|mechanical|particle[ _]size)[ _](?:class|composition)|текстура|гранулометрический[ _]состав|механический[ _]состав|грансостав
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.soils.validate_soil_texture
+    needs_values: true
+    priority: 1
+  soilerosionbyname:
+    key: soil_erosion_degree
+    name: Soil erosion degree by field name (Erosion, Erosion_EN, erosion_degree, эродированность)
+    rule: (?i)(?:soil[ _]?)?erosion(?:[ _-]?(?:en|ru|eng|rus|degree|class|level|grade|status|severity))?|degree[ _]of[ _]erosion|эрозия|эродированность|смытость|степень[ _](?:эрозии|смытости)
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.soils.validate_soil_erosion_degree
+    needs_values: true
+    priority: 1
+  landcoverbyname:
+    key: land_cover_class
+    name: Land cover class by field name (Land_cover, landcover, lc_class, land_use_class)
+    # Cropland, forest and water are common words: by field name only.
+    rule: (?i)land[ _-]?cover(?:[ _-]?(?:class|type|name|category|label|en))?|lc[ _]?(?:class|type|name)|land[ _-]?use[ _-]?(?:class|category|type)|landuse[ _]?(?:class|category|type)
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.soils.validate_land_cover_class
+    needs_values: true
+    priority: 1
