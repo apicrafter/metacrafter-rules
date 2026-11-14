@@ -274,3 +274,15 @@ rules:
     validator: metacrafterext.rules.common.fieldwork.validate_scientific_name_authorship
     needs_values: true
     priority: 1
+  # Rules for the AIMS files of metacrafter-testdata (AIMS GeoNetwork, Australian Institute of
+  # Marine Science).
+  dwclifestagebyfield:
+    key: dwc_life_stage
+    name: Life stage by field name (lifeStage, stage) and values (adult, juvenile, AD, JUV)
+    # stage is also a tournament, a project or a tumour stage: the values must be life stages.
+    rule: (?i)(?:dwc:)?life[ _]?stage|stage|life[ _]?history[ _]?stage|dev(?:elopment(?:al)?)?[ _]?stage|age[ _]?class
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.taxa.validate_life_stage
+    needs_values: true
+    priority: 1

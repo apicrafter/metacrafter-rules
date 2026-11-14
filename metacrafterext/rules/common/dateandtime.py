@@ -63,3 +63,12 @@ def validate_not_unixtime_ms(value):
     """A value of a timestamp field that is not Unix time in milliseconds (unixtime_ms): seconds
     (1471181882) or a written date and time (2024-01-05T10:00:00)."""
     return bool(str(value).strip()) and not validate_unixtime_ms(value)
+
+
+_DECIMAL_YEAR = re.compile(r"^(?:1[5-9]|2[01])\d{2}(?:\.\d{1,6})?$")
+
+
+def validate_decimal_year(value):
+    """A year with the elapsed part of the year as a fraction (1994.83, 2019.0417), or a whole
+    year in the same column (2004), between 1500 and 2199."""
+    return bool(_DECIMAL_YEAR.match(str(value).strip()))

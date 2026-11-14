@@ -232,3 +232,12 @@ rules:
     validator: metacrafterext.rules.common.identifiers.validate_uic_station_code
     needs_values: true
     priority: 1
+  vesselnamebyfield:
+    key: vessel_name
+    name: Ship or vessel name by field name (vessel_name, ship_name, RV)
+    rule: (?i)(?:(?:research|fishing)[ _]?)?(?:vessel|ship|boat)(?:[ _]?(?:name|nm))?|rv(?:[ _]?name)?|name[ _]of[ _](?:the[ _])?(?:vessel|ship)
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.generic.validate_vessel_name
+    needs_values: true
+    priority: 1

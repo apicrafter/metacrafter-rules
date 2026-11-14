@@ -226,3 +226,12 @@ rules:
     type: field
     rule: mime
     priority: 1
+  colourbyfield:
+    key: color
+    name: Colour by field name (colour, color, vehicle_colour) and colour names (Transparent, light blue)
+    rule: (?i)(?:[a-z]+[ _])?colou?rs?(?:[ _](?:name|code))?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.generic.validate_colour_name
+    needs_values: true
+    priority: 1

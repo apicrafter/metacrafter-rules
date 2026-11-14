@@ -59,3 +59,23 @@ def validate_higher_taxon_name(value):
     if text in HIGHER_TAXA:
         return True
     return any(text.endswith(ending) and len(text) - len(ending) >= stem for ending, stem in _RANK_ENDINGS)
+
+
+# Darwin Core lifeStage values: the GBIF LifeStage vocabulary and the words and abbreviations of
+# fish, invertebrate, coral and plant surveys.
+LIFE_STAGES = frozenset("""
+adult adults subadult sub-adult juvenile juveniles immature mature larva larvae larval egg eggs
+embryo embryos pupa pupae nymph nymphs imago instar seedling seedlings sapling saplings spore
+spores gametophyte sporophyte zygote yearling neonate hatchling fledgling chick nestling calf cub
+fry fingerling smolt parr alevin recruit recruits settler settlers megalopa zoea nauplius
+copepodite veliger polyp medusa planula ephyra cyprid postlarva post-larva young yoy
+ad adu juv juvs sa imm lar
+""".split())
+
+
+def validate_life_stage(value):
+    """A life stage: adult, juvenile, larva, AD, JUV, sub-adult, young of year."""
+    text = " ".join(str(value).strip().lower().split())
+    if text in LIFE_STAGES or text in ("young of year", "young of the year"):
+        return True
+    return text.rstrip(".") in LIFE_STAGES

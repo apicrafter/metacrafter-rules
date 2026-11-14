@@ -347,3 +347,13 @@ rules:
     validator: metacrafterext.rules.common.fieldwork.validate_week_of_year
     needs_values: true
     priority: 1
+  decimalyearbyfield:
+    key: decimal_year
+    name: Decimal year by field name (Deci_Year, decimal_date, year_frac)
+    # 1994.83 looks like any measure between 1500 and 2199: only the field name tells.
+    rule: (?i)dec(?:i(?:mal)?)?[ _.]?(?:year|yr|date)|(?:year|yr)[ _.]?(?:dec(?:imal)?|frac(?:tion)?)|frac(?:tional)?[ _.]?year
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.dateandtime.validate_decimal_year
+    needs_values: true
+    priority: 1
