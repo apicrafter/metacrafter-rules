@@ -36,7 +36,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `soil_horizon` takes the Soviet notation of transitional horizons (B2C1, A2B, B1C, CD) and the
   dBase-truncated `Horizon_in` (Horizon_index); `epsg_code` values may name the system before the code
   and have a space after the colon; `elevation` fields may end in start, end, min, max or mean
-  (`elev_start`, `elev_end` of the river network of ArmSIS).
+  (`elev_start`, `elev_end` of the river network of ArmSIS); ArcGIS object ids of joined layers
+  (`OBJECTID_2`, `OBJECTID_3`) are `objectid`; `basin_area`, `catchment_area` and `drainage_area` are
+  `area`.
 
 - **Rules for the data.gov.au files of metacrafter-testdata** (a snapshot of the Australian national
   open data portal, Dateno source cdi00000098; validators in `metacrafterext.rules.au.codes` and

@@ -118,6 +118,10 @@ FIELDS = [
      ["Name_eng", "regions_count"]),
 ]
 
+OTHER_FIELDS = [
+    ("common/values.yaml", "areabyfield", ["basin_area", "catchment_area", "Shape_Area"], ["area", "basin"]),
+]
+
 
 @pytest.mark.parametrize("path,rule_id,good,bad", FIELDS, ids=[f[1] for f in FIELDS])
 def test_field_rules(path, rule_id, good, bad):
@@ -143,6 +147,20 @@ def test_value_rules(path, rule_id, good, bad):
         assert value_matches(path, rule_id, value), value
     for value in bad:
         assert not value_matches(path, rule_id, value), value
+
+
+@pytest.mark.parametrize("path,rule_id,good,bad", OTHER_FIELDS, ids=[f[1] for f in OTHER_FIELDS])
+def test_other_field_rules(path, rule_id, good, bad):
+    for name in good:
+        assert field_matches(path, rule_id, name), name
+    for name in bad:
+        assert not field_matches(path, rule_id, name), name
+
+
+def test_objectid_of_joined_layers():
+    for name in ("OBJECTID_2", "OBJECTID_3", "OBJECTID_1", "FID"):
+        assert guarded_by("basic/identifiers.yaml", "arcgisobjectidvalue", name), name
+    assert not guarded_by("basic/identifiers.yaml", "arcgisobjectidvalue", "object_id")
 
 
 def test_gml_id_needs_a_feature_id_field():
