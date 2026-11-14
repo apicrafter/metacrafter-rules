@@ -3,6 +3,7 @@ values with letters, BIC country codes and day-month-year dates, and the value c
 field-name rules (names, place names, licenses, vehicle numbers, dates that are not years)."""
 import datetime
 import re
+import unicodedata
 
 from metacrafterext.rules.common.placeholders import is_missing_text
 
@@ -582,6 +583,80 @@ def validate_geojson_geometry_type(value):
     """A GeoJSON geometry type, written as RFC 7946 writes it: Point, LineString, Polygon, their
     Multi forms or GeometryCollection (Feature, the type of a feature, is not one)."""
     return str(value).strip() in _GEOJSON_GEOMETRY_TYPES
+
+
+# A GeoJSON geometry written as text in a table cell: datos.gob.ar energy data keep a geojson
+# column next to the WKB geom column ({"type":"MultiLineString","coordinates":[[[-58.66,-34.48],...).
+_GEOJSON_TYPE_FIRST = re.compile(
+    r'^\s*\{\s*"type"\s*:\s*"(?:Point|MultiPoint|LineString|MultiLineString|Polygon|MultiPolygon)"\s*,'
+    r'\s*"coordinates"\s*:\s*\[|^\s*\{\s*"type"\s*:\s*"GeometryCollection"\s*,\s*"geometries"\s*:\s*\['
+)
+_GEOJSON_COORDINATES_FIRST = re.compile(r'^\s*\{\s*"coordinates"\s*:\s*\[')
+_GEOJSON_TYPE_LAST = re.compile(
+    r'"type"\s*:\s*"(?:Point|MultiPoint|LineString|MultiLineString|Polygon|MultiPolygon)"\s*\}\s*$'
+)
+
+
+def validate_geojson_geometry_text(value):
+    """A GeoJSON geometry object as text: {"type":"Point","coordinates":[-58.6613,-34.48]} or with
+    the coordinates first; not a Feature or a bare coordinate list."""
+    text = str(value)
+    if _GEOJSON_TYPE_FIRST.match(text):
+        return True
+    return bool(_GEOJSON_COORDINATES_FIRST.match(text)) and bool(_GEOJSON_TYPE_LAST.search(text[-200:]))
+
+
+# A territorial unit or a body named in a Spanish nombre_completo field: the georef service of
+# datos.gob.ar (Argentina) writes the full names of provinces, departments and local governments
+# there (Provincia del Neuquén, Partido de Adolfo Gonzales Chaves, Municipio General Baldissera).
+_NOT_PERSON_FIRST_WORDS = frozenset((
+    "provincia", "partido", "departamento", "municipio", "comuna", "ciudad", "junta", "comision",
+    "comisión", "distrito", "juzgado", "ministerio", "secretaria", "secretaría", "direccion",
+    "dirección", "instituto", "universidad", "escuela", "colegio", "hospital", "banco", "club",
+    "asociacion", "asociación", "fundacion", "fundación", "cooperativa", "sociedad", "empresa"))
+_PERSON_WORD = re.compile(r"^[^\W\d_][^\W\d_'’.\-]*(?:['’\-][^\W\d_]+)*\.?,?$")
+
+
+def validate_person_fullname_not_place(value):
+    """A person's full name of two to six words (Luis Esteban Genoud, GENOUD, Luis Esteban):
+    not the full name of a province, department or local government."""
+    words = str(value).replace(",", ", ").split()
+    if not 2 <= len(words) <= 6:
+        return False
+    if words[0].lower() in _NOT_PERSON_FIRST_WORDS:
+        return False
+    return all(_PERSON_WORD.match(w) for w in words)
+
+
+# First words of statuses written in estado columns: in Spanish data estado is usually the
+# status of a record (Finalizada, En proceso, ANULADA in datos.gob.ar; Exploración Avanzada,
+# Producción in the SIACAM mining projects), in Brazilian and Mexican data the state.
+_STATUS_FIRST_WORDS = frozenset((
+    "activo", "activa", "inactivo", "inactiva", "ativo", "ativa", "inativo", "inativa", "vigente",
+    "vigentes", "finalizado", "finalizada", "iniciado", "iniciada", "pendiente", "pendente", "anulado",
+    "anulada", "cancelado", "cancelada", "cerrado", "cerrada", "encerrado", "encerrada", "abierto",
+    "abierta", "aberto", "aberta", "aprobado", "aprobada", "aprovado", "aprovada", "rechazado",
+    "rechazada", "suspendido", "suspendida", "produccion", "producao", "exploracion", "factibilidad",
+    "evaluacion", "construccion", "adjudicado", "adjudicada", "desierto", "desierta", "publicado",
+    "publicada", "abandonado", "abandonada", "baja", "alta", "terminado", "terminada", "concluido",
+    "concluida", "ejecucion", "ejecutado", "ejecutada", "en", "em", "sin", "sem", "con", "no", "nao",
+    "si", "sim", "ok", "otro", "otros", "otra"))
+
+
+def validate_state_not_status(value):
+    """A value of an estado / uf field that is not a status: SP, Jalisco, Rio de Janeiro pass;
+    Finalizada, En proceso, Exploración Avanzada, ANULADA do not."""
+    text = unicodedata.normalize("NFKD", str(value)).encode("ascii", "ignore").decode().strip().lower()
+    words = text.replace("-", " ").split()
+    return bool(words) and words[0] not in _STATUS_FIRST_WORDS
+
+
+_ISO3166_2 = re.compile(r"^[A-Z]{2}-[A-Z0-9]{1,3}$")
+
+
+def validate_iso3166_2_code(value):
+    """An ISO 3166-2 subdivision code with its country code: AR-C, DE-BY, FR-75C (not ARG or 06)."""
+    return bool(_ISO3166_2.match(str(value).strip()))
 
 
 _LATLON_PAIR = re.compile(r"^\s*\[?\s*(-?\d{1,2}(?:\.\d+)?)\s*[,;]\s*(-?\d{1,3}(?:\.\d+)?)\s*\]?\s*$")

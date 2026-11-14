@@ -1,0 +1,74 @@
+name: ar-energy
+description: Argentine oil, gas and electricity codes (Secretaría de Energía, CAMMESA)
+context: energy
+lang: es
+country_code: ar
+rules:
+  arwellcodebyname:
+    key: ar_hydrocarbon_well_code
+    name: Argentine oil and gas well designation by field name (sigla, sigla_pozo)
+    rule: (?i)sigla(?:_(?:pozo|del_pozo))?|pozo_sigla|sigla_del_pozo
+    type: field
+    match: regex
+    validator: metacrafterext.rules.ar_country.codes.validate_ar_hydrocarbon_well_code
+    needs_values: true
+    priority: 1
+  arwellcodevalue:
+    key: ar_hydrocarbon_well_code
+    name: Argentine oil and gas well designation by value in a well field (YPF.Nq.LLL-1218(d))
+    rule: metacrafterext.rules.ar_country.codes.validate_ar_hydrocarbon_well_code
+    type: data
+    match: func
+    minlen: 7
+    maxlen: 40
+    fieldregex: '(?i)sigla|pozo|well'
+    priority: 1
+  arsedimentarybasinbyname:
+    key: ar_sedimentary_basin
+    name: Argentine sedimentary basin by field name (cuenca, idcuenca) and name (NEUQUINA, GOLFO SAN JORGE)
+    # subcuenca (the sub-basins of the Matanza-Riachuelo river of ACUMAR) is a river basin.
+    rule: (?i)cuenca(?:_(?:sedimentaria|nombre|desc|descripcion))?|(?:id|cod|codigo)_?cuenca|basin(?:_name)?|sedimentary_basin
+    type: field
+    match: regex
+    validator: metacrafterext.rules.ar_country.codes.validate_ar_sedimentary_basin
+    needs_values: true
+    priority: 1
+  arcammesaagentbyname:
+    key: ar_cammesa_agent_code
+    name: Argentine wholesale electricity market agent code by field name (agente_nemo, nemo, agente)
+    rule: (?i)(?:agente_)?nemo(?:tecnico)?(?:_agente)?|agente(?:_(?:nemo|mem|codigo|cod))?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.ar_country.codes.validate_ar_cammesa_agent_code
+    needs_values: true
+    priority: 1
+  arcammesapowerplantbyname:
+    key: ar_cammesa_power_plant_code
+    name: Argentine power plant code (CAMMESA) by field name (central, central_nemo)
+    rule: (?i)central(?:_(?:nemo|codigo|cod|id))?|(?:cod|codigo|nemo)_central
+    type: field
+    match: regex
+    validator: metacrafterext.rules.ar_country.codes.validate_ar_cammesa_power_plant_code
+    needs_values: true
+    priority: 1
+  arcammesagenerationunitbyname:
+    key: ar_cammesa_generating_unit_code
+    name: Argentine generating unit code (CAMMESA) by field name (maquina, maquina_nemo)
+    rule: (?i)m[aá]quina(?:_(?:nemo|codigo|cod|id))?|(?:cod|codigo|nemo)_m[aá]quina|unidad_generadora
+    type: field
+    match: regex
+    validator: metacrafterext.rules.ar_country.codes.validate_ar_cammesa_generating_unit_code
+    needs_values: true
+    priority: 1
+  arcammesagenerationunitvalue:
+    key: ar_cammesa_generating_unit_code
+    name: Argentine generating unit code (CAMMESA) by value in a machine field (COSTTG08)
+    # The codes have the shape of BIC codes (COSTTG08: TG is Togo); in a maquina field the
+    # guarded rule outweighs the unguarded BIC detector.
+    rule: metacrafterext.rules.ar_country.codes.validate_ar_cammesa_generating_unit_code
+    type: data
+    match: func
+    minlen: 8
+    maxlen: 8
+    fieldregex: '(?i)m[aá]quina|unidad_generadora'
+    priority: 1
