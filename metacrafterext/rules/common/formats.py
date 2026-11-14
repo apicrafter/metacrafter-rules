@@ -109,6 +109,48 @@ def validate_gml_poslist(value):
     return len(parts) % 2 == 0 or len(parts) % 3 == 0
 
 
+_WKT = re.compile(
+    r"^(?:SRID=\d+;\s*)?(POINT|MULTIPOINT|LINESTRING|MULTILINESTRING|POLYGON|MULTIPOLYGON|GEOMETRYCOLLECTION"
+    r"|CIRCULARSTRING|COMPOUNDCURVE|CURVEPOLYGON|MULTICURVE|MULTISURFACE|POLYHEDRALSURFACE|TRIANGLE|TIN)"
+    r"\s*(?:ZM|Z|M)?\s*(\(.*\)|EMPTY)$",
+    re.I | re.S,
+)
+_WKT_KEYWORDS = re.compile(
+    r"\b(?:POINT|MULTIPOINT|LINESTRING|MULTILINESTRING|POLYGON|MULTIPOLYGON|CIRCULARSTRING|COMPOUNDCURVE"
+    r"|CURVEPOLYGON|MULTICURVE|MULTISURFACE|TRIANGLE|ZM|Z|M|EMPTY)\b",
+    re.I,
+)
+_WKT_NUMBERS = re.compile(r"[-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][-+]?\d+)?")
+
+
+def validate_wkt(value):
+    """A geometry in well-known text (OGC Simple Features, ISO 19125), or in extended WKT with an
+    SRID: POINT (15.41 47.93), POINT(50.74 15.09), MULTIPOLYGON (((14.0 48.4, ...))), POINT EMPTY.
+    The parentheses must balance and hold only numbers, commas and, in collections and curves,
+    the names of the parts."""
+    text = str(value).strip()
+    m = _WKT.match(text)
+    if not m:
+        return False
+    body = m.group(2)
+    if body.upper() == "EMPTY":
+        return True
+    depth = 0
+    for ch in body:
+        if ch == "(":
+            depth += 1
+        elif ch == ")":
+            depth -= 1
+            if depth < 0:
+                return False
+    if depth:
+        return False
+    rest = _WKT_NUMBERS.sub(" ", _WKT_KEYWORDS.sub(" ", body))
+    if rest.strip("() ,\t\r\n"):
+        return False
+    return len(_WKT_NUMBERS.findall(body)) >= 2
+
+
 _FILE_FORMATS = frozenset((
     "csv", "tsv", "txt", "xls", "xlsx", "xlsm", "ods", "xml", "json", "jsonl", "ndjson", "geojson", "html", "htm",
     "pdf", "doc", "docx", "odt", "rtf", "ppt", "pptx", "zip", "rar", "7z", "gz", "tar", "rdf", "ttl", "n3",

@@ -22,3 +22,54 @@ rules:
     fieldrule: stataustria_bez_code,bezirkskennziffer,bkz,bez_code,bezirk_code,bezirkscode,bezirk_kz
     fieldrulematch: text
     priority: 1
+  # Codes of the Austrian national survey and cadastre (BEV, data.bev.gv.at): the interface
+  # descriptions of the control point files (TP, EP, HP) and of the cadastre parcel data.
+  atkgnumberbyname:
+    key: at_kg_number
+    name: Austrian cadastral municipality number (KG-Nummer) by field name
+    # KG_NUMMER of the control point files, KG-NR and KG-EZ of the cadastre files, kgnr.
+    rule: (?i)kg[ _-]?(?:nummer|nr|number|no|code|ez)|kgnummer|katastralgemeinde(?:n)?[ _-]?(?:nummer|nr|code)?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.at.survey.validate_at_kg_number
+    needs_values: true
+    priority: 1
+  atkgnumberbyshortname:
+    key: at_kg_number
+    name: Austrian cadastral municipality number in a field named KG, written with five digits
+    # KG is also a weight in kilograms: only numbers written with five digits (01107).
+    rule: kg
+    type: field
+    match: text
+    validator: metacrafterext.rules.at.survey.validate_at_kg_number_text
+    needs_values: true
+    priority: 1
+  atoek50sheetbyname:
+    key: at_oek50_sheet
+    name: ÖK 50 map sheet number in the BMN layout (1-213) by field name (OeK50_BMN_NR)
+    rule: (?i)(?:oe|ö)k[ _-]?50(?:[ _-]?bmn)?(?:[ _-]?(?:nr|nummer|blatt|blattnr|sheet))?|bmn[ _-]?blatt(?:[ _-]?(?:nr|nummer))?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.at.survey.validate_at_oek50_sheet
+    needs_values: true
+    priority: 1
+  atgkmeridianbyname:
+    key: at_gk_meridian
+    name: Meridian zone of the Austrian Gauss-Krüger grid (M28, M31, M34) by field name
+    rule: (?i)(?:gk[ _-]?|bezugs)?meridian(?:streifen)?|m[ _-]?streifen
+    type: field
+    match: regex
+    validator: metacrafterext.rules.at.survey.validate_at_gk_meridian
+    needs_values: true
+    priority: 1
+  atfestpunktidvalue:
+    key: at_festpunkt_id
+    name: BEV control point designation (TP47-38T1, EP01404-3545E1) by value
+    # Alone (IDENT_PUNKT of the height points) or with a semicolon and the point name
+    # (ANSCHLUSS1-3: TP4-84T1; GRÄN, KIRCHE). The sheet and the KG number are checked.
+    rule: metacrafterext.rules.at.survey.validate_at_festpunkt_id
+    type: data
+    match: func
+    minlen: 7
+    maxlen: 80
+    priority: 1
