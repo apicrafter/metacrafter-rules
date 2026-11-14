@@ -44,3 +44,35 @@ rules:
     validator: metacrafterext.rules.common.chemistry.validate_polymer_name_or_code
     needs_values: true
     priority: 1
+  # EM-DAT disaster numbers: year and a four-digit sequence (2020-0218), with the ISO alpha-3 code
+  # of the affected country in the public table (1993-0500-CMR). Other year-number ids
+  # (case numbers 2021-0034) have the same shape, so the field name must speak of a disaster.
+  emdatdisasternumbervalue:
+    key: emdat_disaster_number
+    name: EM-DAT disaster number (Dis No, DisNo.) by value and field name
+    rule: (?:19|20)\d{2}-\d{4}(?:-[A-Z]{3})?
+    type: data
+    match: regex
+    minlen: 9
+    maxlen: 13
+    fieldregex: dis[ _.-]?no|em[ _-]?dat|disaster
+    priority: 1
+  # DisNo. of the EM-DAT public table ends with a dot, so its short name is empty: by the full name.
+  emdatdisasternumberbyname:
+    key: emdat_disaster_number
+    name: EM-DAT disaster number by field name (Dis No, DisNo.)
+    rule: dis no,disno,disno.,dis no.,dis_no,dis-no,emdat_id,emdat id,em-dat id,emdat_disno
+    type: field
+    match: text
+    validator: metacrafterext.rules.common.statcodes.validate_emdat_disaster_number
+    needs_values: true
+    priority: 1
+  glidenumbervalue:
+    key: glide_number
+    name: GLIDE disaster number (EQ-2010-000009-HTI) by value
+    rule: (?:AC|AV|CE|CW|DR|EC|EP|EQ|ET|FA|FF|FL|FR|HT|IN|LS|MS|OT|SL|SS|ST|TC|TO|TS|VO|VW|WF|WV)-(?:19|20)\d{2}-\d{6}-(?:[A-Z]{3}|---)
+    type: data
+    match: regex
+    minlen: 18
+    maxlen: 18
+    priority: 1
