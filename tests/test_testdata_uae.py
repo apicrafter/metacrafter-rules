@@ -106,7 +106,7 @@ FIELDS = [
     ("ae/ae_geo.yaml", "aedubaicommunitybyname", ["community", "community_name_en", "community_name_ar", "Community Name"],
      ["community_num", "community_id"]),
     ("ae/ae_geo.yaml", "aepoboxbyname", ["p_o_box", "pobox", "PO Box", "P.O. Box", "po_box_no", "صندوق البريد"],
-     ["box", "postbox", "postcode"]),
+     ["box", "postbox", "postcode", "postOfficeBox", "addresses.postOfficeBox"]),
     ("ae/ae_finances.yaml", "aedewacontractaccountbyname",
      ["contract_account", "Contract Account", "contract_account_number", "contractaccount"],
      ["account", "business_partner", "contract_type"]),

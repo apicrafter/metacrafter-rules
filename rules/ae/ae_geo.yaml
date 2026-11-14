@@ -16,7 +16,8 @@ rules:
     name: UAE P.O. Box number by field name (p_o_box, pobox, PO Box, صندوق البريد)
     # The UAE have no postal codes: addresses give a P.O. Box (p_o_box, pobox of the FCSC
     # business and facility lists). The names are distinctive and the values short numbers.
-    rule: (?i)p\.?[ _]?o\.?[ _]?box(?:[ _]?(?:no|number|num))?|post[ _]?office[ _]?box|صندوق[ _]البريد|ص\.?[ _]?ب
+    # Only the spellings of the UAE files: a postOfficeBox of other countries is no UAE address part.
+    rule: (?i)p\.?[ _]?o\.?[ _]?box(?:[ _]?(?:no|number|num))?|صندوق[ _]البريد|ص\.?[ _]?ب
     type: field
     match: regex
     validator: metacrafterext.rules.ae.geo.validate_ae_po_box
