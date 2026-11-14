@@ -4,6 +4,26 @@ context: chemistry
 lang: common
 country_code: xx
 rules:
+  casrnbyfieldname:
+    key: casrn
+    name: CAS Registry Number by field name (CAS No., cas_number, CASRN)
+    # Lists of pesticides and chemicals (CAS No. of the UAE banned pesticides lists); a bare cas is
+    # also a case or a cassette, so the values must be CAS numbers with a valid check digit.
+    rule: (?i)cas(?:[ _.-]*(?:no|nr|num|number|rn|code|id|registry[ _]?(?:no|number)))?\.?|casrn|cas[ _-]?#
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.chemistry.validate_cas_number
+    needs_values: true
+    priority: 1
+  casrnvalue:
+    key: casrn
+    name: CAS Registry Number by value with its check digit (534-52-1, 7732-18-5)
+    rule: metacrafterext.rules.common.chemistry.validate_cas_number
+    type: data
+    match: func
+    minlen: 7
+    maxlen: 14
+    priority: 1
   inchibyfieldname:
     key: inchl
     name: International Chemical Identifier (InChI) by field name

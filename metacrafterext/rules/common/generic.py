@@ -787,3 +787,80 @@ def validate_orgunit_text(value):
     letters, not a number or a code of digits."""
     text = str(value).strip()
     return 2 < len(text) <= 150 and sum(c.isalpha() for c in text) >= 3
+
+
+# A point as text with hemisphere letters or in degrees, minutes and seconds, as the UAE
+# statistics write the position of each emirate (24.4539° N, 54.3773° E; 25°17'29.7"N 55°30'01.6"E),
+# or as a decimal latitude and longitude pair (25.276987,55.296249).
+_DEG = r"(\d{1,3}(?:\.\d+)?)\s*°?\s*(?:(\d{1,2}(?:\.\d+)?)\s*['′]\s*(?:(\d{1,2}(?:\.\d+)?)\s*[\"″]\s*)?)?"
+_HEMISPHERE_PAIR = re.compile(r"^\s*" + _DEG + r"([NS])\s*[,;/ ]\s*" + _DEG + r"([EW])\s*$", re.IGNORECASE)
+
+
+def _dms(degrees, minutes, seconds):
+    return float(degrees) + float(minutes or 0) / 60 + float(seconds or 0) / 3600
+
+
+def validate_geopoint_text(value):
+    """A point as latitude and longitude text: a decimal pair (25.276987,55.296249), with
+    hemisphere letters (24.4539° N, 54.3773° E) or in degrees, minutes and seconds
+    (25°17'29.7"N 55°30'01.6"E)."""
+    text = str(value).strip()
+    if validate_latlon_pair(text):
+        return True
+    m = _HEMISPHERE_PAIR.match(text)
+    if not m:
+        return False
+    lat = _dms(m.group(1), m.group(2), m.group(3))
+    lon = _dms(m.group(5), m.group(6), m.group(7))
+    return lat <= 90.0 and lon <= 180.0 and (m.group(2) is None) == (m.group(6) is None)
+
+
+_QUARTER = re.compile(
+    r"^(?:q[1-4]|[1-4]|[1-4](?:st|nd|rd|th)\s+quarter|(?:first|second|third|fourth)\s+quarter|quarter\s+[1-4]"
+    r"|q[1-4]\s*[-/ ]?\s*(?:19|20)\d{2}|(?:19|20)\d{2}\s*[-/ ]?\s*q[1-4])$"
+)
+_QUARTER_AR = re.compile(r"^(?:ال)?ربع\s+(?:ال)?(?:اول|ثاني|ثالث|رابع)(?:\s+\d{4})?$")
+
+
+def validate_quarter_value(value):
+    """A quarter of the year: Q1 to Q4, 1 to 4, Q1-2015, 2015 Q1, First Quarter, الربع الأول."""
+    text = " ".join(str(value).strip().lower().split())
+    if text.endswith(".0"):
+        text = text[:-2]
+    if _QUARTER.match(text):
+        return True
+    folded = text.replace("أ", "ا").replace("إ", "ا").replace("ى", "ي").replace("ة", "ه")
+    return bool(_QUARTER_AR.match(folded))
+
+
+def validate_compact_date(value):
+    """A date written as eight digits, year, month and day (20171119; 1900 to 2099)."""
+    text = str(value).strip()
+    if text.endswith(".0"):
+        text = text[:-2]
+    if not re.fullmatch(r"(?:19|20)\d{6}", text):
+        return False
+    try:
+        datetime.date(int(text[:4]), int(text[4:6]), int(text[6:]))
+    except ValueError:
+        return False
+    return True
+
+
+_ICD10_LABEL = re.compile(
+    r"^[A-Z]\d{2}(?:\.\d{1,2})?(?:\s*(?:[-–,]|and|&)\s*[A-Z]?\d{2}(?:\.\d{1,2})?)*(?:\s+[^\W\d_].*)?$"
+)
+
+
+def validate_icd10_with_label(value):
+    """An ICD-10 code or range with its title, as cancer registries group the sites
+    (C18-C21 Colorectal, C23, C24 Gallbladder, C50 Breast)."""
+    return bool(_ICD10_LABEL.match(" ".join(str(value).split())))
+
+
+_SIZE = re.compile(r"^\d+(?:[.,]\d+)?\s*(?:[kmgtpezy]i?b|b|bytes?|kb|mb|gb|tb)?$", re.IGNORECASE)
+
+
+def validate_size_value(value):
+    """A size of data: a number of bytes (2048) or a number with a unit (5.2 GB, 100 KiB)."""
+    return bool(_SIZE.match(str(value).strip()))

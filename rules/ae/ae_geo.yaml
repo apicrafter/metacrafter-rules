@@ -11,6 +11,17 @@ rules:
     type: field
     priority: 3
     match: text
+  aepoboxbyname:
+    key: aepostcode
+    name: UAE P.O. Box number by field name (p_o_box, pobox, PO Box, صندوق البريد)
+    # The UAE have no postal codes: addresses give a P.O. Box (p_o_box, pobox of the FCSC
+    # business and facility lists). The names are distinctive and the values short numbers.
+    rule: (?i)p\.?[ _]?o\.?[ _]?box(?:[ _]?(?:no|number|num))?|post[ _]?office[ _]?box|صندوق[ _]البريد|ص\.?[ _]?ب
+    type: field
+    match: regex
+    validator: metacrafterext.rules.ae.geo.validate_ae_po_box
+    needs_values: true
+    priority: 1
 # Disabled: matches any 4-6 digit number, colliding with years, ZIP codes and
 # generic numeric ids/counts. Cannot be distinguished from an arbitrary number;
 # rely on aepostcodefield instead.
@@ -29,17 +40,95 @@ rules:
     # Restricted to UAE-specific field names. Generic terms (city, city_name,
     # المدينة, اسم_المدينة) were removed because they matched every city column
     # worldwide and overlap with the generic `city` datatype, causing false
-    # positives. UAE city detection now relies on the enumerated value list below.
-    rule: emirate,uae_city,emirate_name,الإمارة
+    # positives. UAE city detection now relies on the guarded value rule below.
+    # An emirate column (emirate, emirate_name, الإمارة) is ae_emirate.
+    rule: uae_city
     type: field
     priority: 1
     match: text
   aecityvalue:
     key: aecity
-    name: UAE city name by value
-    rule: Dubai,Abu Dhabi,Sharjah,Ajman,Umm Al Quwain,Ras Al Khaimah,Fujairah,Al Ain,Al Dhafra,Madinat Zayed,Liwa Oasis,Al Gharbia,Al Shamal
-    maxlen: 20
-    minlen: 4
+    name: UAE city or town name in a city field (Dubai, Al Ain, Khor Fakkan, خورفكان)
+    # The seven emirates carry the names of their capitals: in a city column they are cities. A
+    # column of emirates is ae_emirate (aeemiratevalue), which this guarded rule outweighs here.
+    rule: metacrafterext.rules.ae.geo.validate_ae_city
     type: data
-    match: text
-
+    match: func
+    minlen: 2
+    maxlen: 40
+    fieldregex: '(?i)(?:^|[ _.()-])(?:city|cities|town|towns|city_?name|location \(city\))(?:$|[ _.()-])|^city|مدين[ةه]|المدين[ةه]|المدن'
+    priority: 1
+  aeemiratebyname:
+    key: ae_emirate
+    name: UAE emirate by field name (Emirate, Emirates_EN, Emirate_AR, EmirateTitleEn, الإمارة)
+    # The validator takes the seven emirates (Abu Dhabi, R.A.K., أم القيوين): a column of the
+    # regions of Abu Dhabi (Al Ain, Al Dhafra) or of codes (EmirateCode 1-8) does not pass.
+    rule: '(?i)(?:child)?emirates?(?:[ _]*(?:name|title|desc))?(?:[ _-]*(?:en|ar|eng|ara|english|arabic))?(?:[ _.]*\d)?|emirates?_?name_?(?:en|ar)|الإمار[ةه]|الامار[ةه]|إمار[ةه]|امار[ةه]|الإمارات|الامارات'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.ae.geo.validate_ae_emirate
+    needs_values: true
+    priority: 1
+  aeemiratevalue:
+    key: ae_emirate
+    name: UAE emirate name by value (Dubai, Ras Al-Khaimah, U.A.Q., الشارقة, أبوظبي)
+    rule: metacrafterext.rules.ae.geo.validate_ae_emirate
+    type: data
+    match: func
+    minlen: 3
+    maxlen: 40
+    priority: 1
+  aeabudhabiregionbyname:
+    key: ae_abu_dhabi_region
+    name: Region of the emirate of Abu Dhabi by field name (Region, Region_EN, المنطقة)
+    # Region columns of the Abu Dhabi statistics hold Abu Dhabi, Al Ain and Al Dhafra; region
+    # columns of the federal ones hold the emirates or the agricultural areas (Al Khatim) and
+    # do not pass the validator.
+    rule: '(?i)regions?(?:[ _]*(?:name|desc))?(?:[ _-]*(?:en|ar|eng|ara|english|arabic))?|المنطق[ةه]|منطق[ةه]'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.ae.geo.validate_ae_abu_dhabi_region
+    needs_values: true
+    priority: 1
+  aeabudhabiregionvalue:
+    key: ae_abu_dhabi_region
+    name: Region of the emirate of Abu Dhabi in a region field (Al Ain, Al Dhafra, Western Region, العين)
+    # Abu Dhabi is an emirate and a region: the rule runs on region columns only, where it
+    # outweighs the emirate value rule.
+    rule: metacrafterext.rules.ae.geo.validate_ae_abu_dhabi_region
+    type: data
+    match: func
+    minlen: 3
+    maxlen: 40
+    fieldregex: '(?i)(?:^|[ _.-])regions?(?:$|[ _.-])|^regions?|المنطق[ةه]|منطق[ةه]'
+    priority: 1
+  aedubaicommunitycodebyname:
+    key: ae_dubai_community_code
+    name: Dubai community number by field name (community, community_num, community_number)
+    # Dubai Municipality, RTA and DEWA files number the communities of Dubai (123 Al Muteena,
+    # 621 Al Khawaneej): the validator takes the 226 codes of the Dubai Statistics Center.
+    rule: '(?i)communit(?:y|ies)(?:[ _]*(?:num|number|no|nr|code|id))?|comm_?(?:num|no|code)|رقم_المجتمع|رقم_المنطق[ةه]'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.ae.geo.validate_ae_dubai_community_code
+    needs_values: true
+    priority: 1
+  aedubaicommunitybyname:
+    key: ae_dubai_community
+    name: Dubai community name by field name (community_name_en, community_name_ar, community)
+    rule: '(?i)communit(?:y|ies)(?:[ _]*(?:name|desc))?(?:[ _-]*(?:en|ar|eng|ara|english|arabic))?|community_name_(?:en|ar)|اسم_المجتمع|المجتمع'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.ae.geo.validate_ae_dubai_community
+    needs_values: true
+    priority: 1
+  aedubaicommunityvalue:
+    key: ae_dubai_community
+    name: Dubai community name in an area or location field (Al Qusais, Al Barsha 2, Oud Metha, المطينة)
+    rule: metacrafterext.rules.ae.geo.validate_ae_dubai_community
+    type: data
+    match: func
+    minlen: 3
+    maxlen: 60
+    fieldregex: '(?i)communit|(?:^|[ _.-])(?:area|areas|location|locality|district|neighbou?rhood|zone)(?:$|[ _.-])|^(?:area|location)|المنطق[ةه]|المجتمع|الحي'
+    priority: 1

@@ -360,7 +360,8 @@ rules:
     key: latitude
     name: Latitude by short field name (lat, geo_point_2d.lat, lat_wgs84)
     # featureLatitude, transectLatitude, decimalLatitude of survey data; latdecimal (TERN).
-    rule: (?i)(?:(?:gps|geo|y|wgs84|point|stop|start|end|centroid|center|centre|feature|transect|decimal|sample|station)[ _-]?)?lat(?:itude)?(?:[ _-]?(?:wgs84|wgs|dd|deg|gps|y|dec|decimal|4326))?
+    # point_y of ArcGIS exports, y latitude, stop_location_latitiude (sic) of the RTA stop lists.
+    rule: (?i)(?:(?:gps|geo|y|wgs84|point|stop|start|end|centroid|center|centre|feature|transect|decimal|sample|station)[ _-]?)?lat(?:itude)?(?:[ _-]?(?:wgs84|wgs|dd|deg|gps|y|dec|decimal|4326))?|point[ _-]?y|(?:[a-z]+[ _-]){0,3}latitiude
     type: field
     match: regex
     validator: metacrafterext.rules.common.generic.validate_latitude_value
@@ -370,7 +371,8 @@ rules:
     key: longitude
     name: Longitude by short field name (lon, lng, geo_point_2d.lon, lon_wgs84)
     # long is also a length (longueur): it is left out.
-    rule: (?i)(?:(?:gps|geo|x|wgs84|point|stop|start|end|centroid|center|centre|feature|transect|decimal|sample|station)[ _-]?)?(?:lon|lng|longitude)(?:[ _-]?(?:wgs84|wgs|dd|deg|gps|x|dec|decimal|4326))?|long[ _-]?decimal
+    # point_x of ArcGIS exports, x longitude, stop_location_longitiude (sic) of the RTA stop lists.
+    rule: (?i)(?:(?:gps|geo|x|wgs84|point|stop|start|end|centroid|center|centre|feature|transect|decimal|sample|station)[ _-]?)?(?:lon|lng|longitude)(?:[ _-]?(?:wgs84|wgs|dd|deg|gps|x|dec|decimal|4326))?|long[ _-]?decimal|point[ _-]?x|(?:[a-z]+[ _-]){0,3}longitiude
     type: field
     match: regex
     validator: metacrafterext.rules.common.generic.validate_longitude_value
@@ -395,6 +397,17 @@ rules:
     type: field
     match: text
     validator: metacrafterext.rules.common.generic.validate_latlon_pair
+    needs_values: true
+    priority: 1
+  geopointtextbyname:
+    key: geopoint
+    name: Point as latitude and longitude text by field name (Coordinates, coords, latlng, الإحداثيات)
+    # The UAE statistics give each emirate its position as text (24.4539° N, 54.3773° E;
+    # 25°17'29.7"N 55°30'01.6"E; 25.276987,55.296249).
+    rule: (?i)coordinates?|coords?|geo[ _-]?coordinates|location[ _-]?coordinates|lat[ _-]?(?:lon|long|lng)|latlng|latlong|الإحداثيات|الاحداثيات|إحداثيات|احداثيات
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.generic.validate_geopoint_text
     needs_values: true
     priority: 1
   compasspointbyname:

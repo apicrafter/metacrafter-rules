@@ -9,6 +9,42 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Rules for the UAE Open Data files of metacrafter-testdata** (an April 2024 Dateno snapshot of
+  opendata.fcsc.gov.ae, the portal of the Federal Competitiveness and Statistics Centre; validators in
+  `metacrafterext.rules.ae.geo` and `metacrafterext.rules.ar.countries`, rules in `rules/ae/` and
+  `rules/ar/ar_geo.yaml`):
+  - emirates (`ae_emirate`) in English and Arabic with the spellings and abbreviations of the federal
+    statistics (Umm Al - Quwain, U.A.Q., R.A.K., أبو ظبي, أم القيوين), by field name (`Emirate_EN`,
+    `Emirates_AR`, `EmirateTitleEn`, `الإمارة`) and by value; a region of Abu Dhabi is no emirate;
+  - regions of the emirate of Abu Dhabi (`ae_abu_dhabi_region`: Abu Dhabi, Al Ain, Al Dhafra, Western
+    Region, العين, الظفرة) by field name (`Region`, `Region_AR`, `المنطقة`) and in region fields, where
+    the guarded rule outweighs the emirate value rule;
+  - Dubai community numbers (`ae_dubai_community_code`: `community`, `community_num`; the 226 codes of
+    the Dubai Statistics Center bulletin of 2021) and names (`ae_dubai_community`: AL DAGHAYA, Al
+    Dhagaya, Al Barsha 2, المطينة, compared by their consonants without the article and with ordinals
+    as digits);
+  - DEWA contract accounts (`ae_dewa_contract_account`: `contract_account`, ten digits, the 20 series
+    with a weighted modulo 11 check digit); in a contract account field the guarded rule outweighs the
+    NHS number and ISBN-10 value rules, whose check the accounts pass;
+  - P.O. Boxes as `aepostcode` by field name (`p_o_box`, `pobox`, `PO Box`, `صندوق البريد`);
+  - UAE city columns (`aecity`) by a value rule guarded by city field names, with the towns that are no
+    emirate capital (Al Ain, Khor Fakkan, خورفكان); `emirate` fields are no longer `aecity`;
+  - country names in Arabic (`arcountryname`): CLDR and ISO 3166 names in Arabic and Gulf spellings
+    (بنجلاديش, نيوزلندا), compared without hamza, vowel marks, tatweel and spaces;
+    `scripts/update_ar_country_names.py` refreshes the list.
+- CAS Registry Numbers (`casrn`) by field name (`CAS No.`, `cas_number`, `CASRN`) and by value, with the
+  check digit.
+- ICD-10 codes and ranges with their titles (C18-C21 Colorectal, C23, C24 Gallbladder) in fields named
+  for a classification (`Primary_Site-ICD_10`).
+- Points as latitude and longitude text by field name (`Coordinates`, `coords`, `latlng`):
+  24.4539° N, 54.3773° E; 25°17'29.7"N 55°30'01.6"E; 25.276987,55.296249.
+- Dates written as eight digits (20171119) in fields named for a date (`loading_date` of the Dubai Pulse
+  files), by field name and by a guarded value rule that outweighs the registry detector of the Czech
+  IČO; quarters (Q1 to Q4, Q1-2015, الربع الأول) by field name and in quarter fields, where they
+  outweigh the Wikidata id value rule.
+- `point_x` / `point_y` and the misspelt `stop_location_longitiude` / `stop_location_latitiude` as
+  longitude and latitude (decimal degrees only).
+- The Arabic month name list has ديسيمبر.
 - **Rules for the ARSAT files of metacrafter-testdata** (an April 2024 Dateno snapshot of the open
   data portal of ARSAT, the Argentine state satellite and telecommunications company):
   - KML coordinates written as text in a cell (`kml_coordinates`: lon,lat,alt tuples separated by
@@ -220,6 +256,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- A bare `serial_number` field is no VIN and no ISSN (smart meter serials 1000247T, 12H0500467).
+- `revision`, `rev` and the other commit hash field names need hexadecimal hashes (Revision 1, R4 of
+  building permits are no commit hashes).
+- A bare `size` field is a data size only when its values are numbers of bytes or numbers with a unit
+  (MAJOR, MINOR and General of surgery tables are not).
 - `pii/es/es_pii.yaml` gave the Spanish birthday rule the key of the gender rule
   (`esgenderknown`), so PyYAML kept only the birthday rule and Spanish gender values were never
   matched; the birthday rule is `esbirthdayknown` now.

@@ -291,3 +291,18 @@ def validate_lipid_number(value, carbon=True):
 def validate_lipid_number_any(value):
     """A fatty acid in C:D shorthand with or without the C (18:2 n-6) in a fatty acid column."""
     return validate_lipid_number(value, carbon=False)
+
+
+_CAS = re.compile(r"^([1-9]\d{1,6})-(\d{2})-(\d)$")
+
+
+def validate_cas_number(value):
+    """A CAS Registry Number with a valid check digit: 50-00-0, 7732-18-5, 534-52-1. En dashes
+    (68359–37–5) are taken for hyphens. The check digit is the sum of the other digits, each
+    times its position from the right, modulo 10."""
+    text = str(value).strip().replace("–", "-").replace("‑", "-").replace(" ", "")
+    m = _CAS.match(text)
+    if not m:
+        return False
+    digits = (m.group(1) + m.group(2))[::-1]
+    return sum(int(d) * (i + 1) for i, d in enumerate(digits)) % 10 == int(m.group(3))
