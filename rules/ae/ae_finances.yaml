@@ -52,3 +52,24 @@ rules:
     maxlen: 30
     minlen: 28
 
+  aedewacontractaccountbyname:
+    key: ae_dewa_contract_account
+    name: DEWA contract account by field name (contract_account, contract_account_number)
+    rule: '(?i)contract[ _]?(?:account|acc|acct)(?:[ _]?(?:no|number|num|nr))?|dewa[ _]?(?:account|acc|ca)(?:[ _]?(?:no|number))?|رقم_الحساب_التعاقدي|الحساب_التعاقدي'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.ae.geo.validate_ae_dewa_contract_account
+    needs_values: true
+    priority: 1
+  aedewacontractaccountvalue:
+    key: ae_dewa_contract_account
+    name: DEWA contract account in a contract account field (2002323313)
+    # Accounts of the 20 series have the weighted modulo 11 check digit of the NHS number and
+    # ISBN-10: in a contract account column this guarded rule outweighs those value rules.
+    rule: metacrafterext.rules.ae.geo.validate_ae_dewa_contract_account
+    type: data
+    match: func
+    minlen: 10
+    maxlen: 12
+    fieldregex: '(?i)contract[ _]?(?:account|acc|acct)|dewa[ _]?(?:account|acc|ca)|الحساب_التعاقدي'
+    priority: 1

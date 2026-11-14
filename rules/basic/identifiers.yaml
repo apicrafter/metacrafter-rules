@@ -59,7 +59,8 @@ rules:
     minlen: 1
     maxlen: 18
     # ArcGIS names the column OBJECTID, OBJECTID_1, FID or OID; object_id is any object's id (#69).
-    fieldrule: objectid,objectid_1,fid,oid,esri_oid
+    # A join or a merge of layers keeps the earlier ids as OBJECTID_2, OBJECTID_3 (rivers of ArmSIS).
+    fieldrule: objectid,objectid_1,objectid_2,objectid_3,objectid_12,fid,oid,esri_oid
     fieldrulematch: text
     priority: 1
   mongodbidvalue:

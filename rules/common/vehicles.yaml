@@ -26,7 +26,8 @@ rules:
   vinbyfieldname:
     key: vin
     name: Vehicle Identification Number by field name
-    rule: vin,vehicle_identification_number,vehicle_id,chassis_number,frame_number,serial_number,vin_number,vin_code
+    # A bare serial_number is the serial number of anything (smart meters: 1000247T, 12H0500467).
+    rule: vin,vehicle_identification_number,vehicle_id,chassis_number,frame_number,vin_number,vin_code
     match: text
     type: field
     priority: 1

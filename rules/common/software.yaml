@@ -384,6 +384,9 @@ rules:
     rule: commit_hash,commit,git_commit,commit_id,revision,rev,sha,commit_sha
     type: field
     match: text
+    # A revision is also a drawing revision (Revision 1, R2) of building permits.
+    validator: metacrafterext.rules.common.software.validate_commit_hash
+    needs_values: true
     priority: 1
   commithashbyvalue:
     key: commit_hash

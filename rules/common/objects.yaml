@@ -87,7 +87,8 @@ rules:
   objects_issnfield:
     key: issn
     name: International Standard Serial Number (ISSN) by field name
-    rule: issn,issn_number,issn_code,serial_number
+    # ISSN is the number of a serial publication; a serial_number field is not (smart meters).
+    rule: issn,issn_number,issn_code
     type: field
     match: text
     priority: 1

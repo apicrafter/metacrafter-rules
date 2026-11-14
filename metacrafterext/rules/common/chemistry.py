@@ -298,8 +298,9 @@ _CASRN = re.compile(r"^([1-9]\d{1,6})-(\d{2})-(\d)$")
 
 def validate_casrn(value):
     """A CAS Registry Number with a valid check digit: 75-07-0 (acetaldehyde), 64-19-7, 7732-18-5
-    (not 75-07-1 or 0075-07-0)."""
-    m = _CASRN.match(str(value).strip())
+    (not 75-07-1 or 0075-07-0). En dashes (68359–37–5 in the UAE banned pesticides list) are taken
+    for hyphens."""
+    m = _CASRN.match(str(value).strip().replace("\u2013", "-").replace("\u2011", "-"))
     if not m:
         return False
     digits = (m.group(1) + m.group(2))[::-1]

@@ -75,11 +75,13 @@ def validate_author_byline(value):
 # Master horizons O P A E B C D R (L H M W of FAO and WRB), transitional horizons, numbered
 # subdivisions (A1, A12, B21), lower case suffixes (Ap, Bt, Bk2) and lithological
 # discontinuities (2C).
-_SOIL_HORIZON = re.compile(r"^\d?(?:[OPAEBCDRLHMW]|AB|AE|AC|BA|BC|BE|CB|EB|[AB]/[BC])\d{0,2}[a-z]{0,3}\d?$")
+# Soviet and Russian profile descriptions run the designations of a transitional horizon
+# together (B2C1, A2B, B1C, CD; soil profile database of the Armenian Soil Information System).
+_SOIL_HORIZON = re.compile(r"^\d?(?:[OPAEBCDRLHMW]|AB|AE|AC|BA|BC|BE|CB|EB|[AB]/[BC])\d{0,2}(?:[BCD]\d?)?[a-z]{0,3}\d?$")
 
 
 def validate_soil_horizon(value):
-    """A soil horizon designation: A, A1, A12, B21, Bt, Bk2, 2C, AB."""
+    """A soil horizon designation: A, A1, A12, B21, Bt, Bk2, 2C, AB, B2C1, A0."""
     return bool(_SOIL_HORIZON.match(str(value).strip()))
 
 
@@ -229,12 +231,16 @@ def validate_geocentric_coordinate(value):
     return abs(float(text)) <= 6400000.0
 
 
-_EPSG_PREFIXED = re.compile(r"^(?:EPSG:|urn:ogc:def:crs:EPSG::|https?://www\.opengis\.net/def/crs/EPSG/0/)[1-9]\d{3,4}$")
+# A label may name the system before the code: WGS 84 EPSG: 4326 (CRS of the soil profile
+# database of the Armenian Soil Information System).
+_EPSG_PREFIXED = re.compile(
+    r"^(?:(?:[A-Z][A-Za-z0-9 ./()-]{0,60} )?EPSG: ?|urn:ogc:def:crs:EPSG::|https?://www\.opengis\.net/def/crs/EPSG/0/)"
+    r"[1-9]\d{3,4}$")
 
 
 def validate_epsg_code(value):
     """An EPSG coordinate reference system code with its authority (EPSG:25832,
-    urn:ogc:def:crs:EPSG::4326) or, in a field named after EPSG, the bare code of 4 or 5 digits
+    urn:ogc:def:crs:EPSG::4326, WGS 84 EPSG: 4326) or, in a field named after EPSG, the bare code of 4 or 5 digits
     from 1024 to 32767 (4936, 25833)."""
     text = str(value).strip()
     if _EPSG_PREFIXED.match(text):
@@ -244,9 +250,47 @@ def validate_epsg_code(value):
     return text.isdigit() and not text.startswith("0") and 1024 <= int(text) <= 32767
 
 
+def validate_epsg_code_with_authority(value):
+    """An EPSG code that names its authority: EPSG:25832, urn:ogc:def:crs:EPSG::4326, WGS 84 EPSG: 4326."""
+    return bool(_EPSG_PREFIXED.match(str(value).strip()))
+
+
 def validate_week_of_year(value):
     """A week number of a year, 1 to 53 (a whole float, 35.0, too)."""
     text = str(value).strip()
     if text.endswith(".0"):
         text = text[:-2]
     return text.isdigit() and 1 <= int(text) <= 53
+
+
+_DECIMAL = re.compile(r"^[+-]?\d{1,3}(?:[.,]\d+)?$")
+
+
+def _decimal(value):
+    """The number of a short decimal (8.1, 6,8, -3, 7.0), or None."""
+    text = str(value).strip()
+    if not _DECIMAL.match(text):
+        return None
+    return float(text.replace(",", "."))
+
+
+def validate_ph_value(value):
+    """A pH value from 0 to 14: 8.1, 7, 4.25, 6,8."""
+    number = _decimal(value)
+    return number is not None and 0 <= number <= 14 and not str(value).strip().startswith(("+", "-"))
+
+
+def validate_temperature_value(value):
+    """A temperature in degrees Celsius as a bare number from -90 to 60 (-3, 11, 24.5), as a
+    temperature column or the isotherms of a climate map give it."""
+    number = _decimal(value)
+    return number is not None and -90 <= number <= 60
+
+
+_IUCN_CATEGORY = re.compile(r"^(?:Ia|Ib|I|II|III|IV|V|VI)$", re.I)
+
+
+def validate_iucn_protected_area_category(value):
+    """An IUCN protected area management category: Ia, Ib, II to VI, or I as national registers
+    wrote it before Ia and Ib (1994)."""
+    return bool(_IUCN_CATEGORY.match(str(value).strip()))
