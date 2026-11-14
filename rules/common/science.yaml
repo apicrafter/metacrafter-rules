@@ -286,3 +286,46 @@ rules:
     validator: metacrafterext.rules.common.taxa.validate_life_stage
     needs_values: true
     priority: 1
+  # Rules for the RDA-UNR files of metacrafter-testdata (Repositorio de Datos Académicos of the
+  # Universidad Nacional de Rosario, Argentina).
+  lipidnumbervalue:
+    key: lipid_number
+    name: Fatty acid in C:D shorthand by value (C16:0, C18:1n-9, iC15:0, aC15:0)
+    # The C before the carbon count is required: a bare 18:1 is also a ratio or a match score.
+    rule: metacrafterext.rules.common.chemistry.validate_lipid_number
+    type: data
+    match: func
+    minlen: 4
+    maxlen: 24
+    priority: 1
+  lipidnumberbyname:
+    key: lipid_number
+    name: Fatty acid shorthand by field name (fatty_acid, FAME, ácido graso) and values (18:2 n-6)
+    rule: '(?i)(?:[a-z0-9]+[ _.-]){0,2}(?:fatty[ _]?acids?|fames?|lipid[ _]?(?:numbers?|names?|species)|fa[ _]?(?:names?|ids?|codes?)|[aá]cidos?[ _]grasos?|fetts(?:ä|ae)uren?|acides?[ _]gras)'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.chemistry.validate_lipid_number_any
+    needs_values: true
+    priority: 1
+  postagbyname:
+    key: pos_tag
+    name: Part-of-speech tag by field name (pos, upos, xpos, pos_tag, ETIQUETA_1, etiqueta_correcta)
+    # etiqueta is also any label (of a product, a map, a chart): the values must be tags of a
+    # known tag set (Universal Dependencies, Penn Treebank, EAGLES, short tagger tags).
+    rule: '(?i)(?:[a-z0-9]+[ _.-]){0,2}(?:u?pos|xpos|ppos|pos[ _]?tags?|postags?|part[ _]of[ _]speech|word[ _]?class|tags?[ _]?pos|etiquetas?|categor[ií]a[ _]gramatical|wortart|cat[ée]gorie[ _]grammaticale)(?:[ _.-][a-z0-9]+){0,2}'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.linguistics.validate_pos_tag
+    needs_values: true
+    priority: 1
+  academicdisciplinebyname:
+    key: academic_discipline
+    name: Academic discipline by field name (disciplina, discipline, field_of_research, área de conocimiento)
+    # A bare area or field is a surface or a form field: the name must say discipline or
+    # research. disciplinary_action and disciplina_deportiva (a sport) are left out.
+    rule: '(?i)(?:[a-z0-9]+[ _.-]){0,2}(?:disciplin[ae]s?(?:[ _.-]?(?:otr[ao]s?|other|principal|secundaria|main|primary|secondary|acad[ée]mica|cient[ií]fica|scientifique|name|nombre))?|academic[ _]discipline|fields?[ _]of[ _](?:research|science|study)|research[ _](?:fields?|areas?|disciplines?)|[aá]reas?[ _]de[ _](?:conocimiento|investigaci[oó]n)|campo[ _]disciplinar|fachgebiet|fachrichtung|wissenschaftsgebiet|domaines?[ _]de[ _]recherche|ford|fos)'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.survey.validate_discipline_name
+    needs_values: true
+    priority: 1

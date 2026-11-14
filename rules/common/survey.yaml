@@ -52,3 +52,17 @@ rules:
     validator: metacrafterext.rules.common.survey.validate_cow_country_code
     needs_values: true
     priority: 1
+  # Found in the survey of researchers of the Universidad Nacional de Rosario on sharing
+  # research data (RDA-UNR, 2023; metacrafter-testdata).
+  likertresponsevalue:
+    key: likert_response
+    name: Answer of a rating-scale item in words (Totalmente de acuerdo, Algo probable, A veces, Strongly disagree)
+    # Survey exports name the item columns after their questions (preocupaperder,
+    # beneficioscienciacalidad), so the values are the evidence. Yes / no and coded answers
+    # (1 to 5) are not answers in words.
+    rule: metacrafterext.rules.common.survey.validate_likert_response
+    type: data
+    match: func
+    minlen: 2
+    maxlen: 60
+    priority: 1

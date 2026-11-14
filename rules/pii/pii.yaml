@@ -63,6 +63,18 @@ rules:
     validator: metacrafterext.rules.common.survey.validate_age_range_value
     needs_values: true
     priority: 1
+  agerangebyagename:
+    key: age_range
+    is_pii: True
+    name: Age bands in an age column (edad 45-54, 25 a 34, 65 o más; age 18-24)
+    # Surveys put the band in a column named for age: the age rule refuses the bands (they
+    # are no numbers), this one takes them. Codes of bands (1 to 7) stay age.
+    rule: '(?i)(?:[a-z0-9]+[ _.-]){0,2}(?:age|alter|edad|âge|idade|leeftijd|vanus|wiek|ålder|возраст|вік)(?:[ _.-](?:years?|yrs|jahre|in[ _]years|in[ _]jahren|ans|años|anos|anni|лет))?'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.survey.validate_age_band
+    needs_values: true
+    priority: 1
   genderbyvalue:
     key: gender
     is_pii: True

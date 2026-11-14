@@ -165,6 +165,17 @@ def validate_elevation_value(value):
     return -430.0 <= number <= 8849.0
 
 
+_LENGTH = re.compile(r"[+-]?\d+(?:[.,]\d+)?(?:[eE][-+]?\d+)?\s*(?:mm|cm|dm|m|km|in|inch(?:es)?|ft|feet|\"|\'|px|pt)?\.?",
+                     re.IGNORECASE)
+
+
+def validate_length_value(value):
+    """A length, as a number with or without its unit: 175, 3.2 m, 12,5 cm, 1080 px. Words are
+    not: a height column of the grazing records of dairy cows says tall or short (the sward
+    height class of the pasture, RDA-UNR jaw movement data)."""
+    return bool(_LENGTH.fullmatch(str(value).strip()))
+
+
 def validate_week_of_year(value):
     """A week number of a year, 1 to 53 (a whole float, 35.0, too)."""
     text = str(value).strip()

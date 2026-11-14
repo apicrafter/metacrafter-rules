@@ -211,6 +211,9 @@ rules:
     match: text
     type: field
     rule: height
+    # A height is a number (175, 3.2 m); a height column of tall and short is a class of the
+    # sward height in grazing records (RDA-UNR dairy cow jaw movements).
+    validator: metacrafterext.rules.common.fieldwork.validate_length_value
     priority: 1
   sizefilebyknown:
     key: datasize
