@@ -3,7 +3,28 @@ description: South African provinces
 context: geo
 lang: en
 country_code: za
+# Found in the openAFRICA snapshot of metacrafter-testdata: the 2022 census tables of Statistics
+# South Africa (Province) and the provincial budgets of vulekamali (Province, Government); and in
+# the Africa Data Hub snapshot: the province codes of the Wazimap COVID-19 subsets.
 rules:
+  zaprovincebyname:
+    key: za_province
+    name: South African province by field name (Province, province_name, Government of a provincial budget)
+    rule: (?i)(?:[a-z]+[ _])?province(?:[ _]?name)?|provincename|government|prov
+    type: field
+    match: regex
+    validator: metacrafterext.rules.za.geo.validate_za_province
+    needs_values: true
+    priority: 1
+  zaprovincevalue:
+    key: za_province
+    name: South African province by value (KwaZulu-Natal, MPUMALANGA, North West)
+    rule: metacrafterext.rules.za.geo.validate_za_province
+    type: data
+    match: func
+    minlen: 7
+    maxlen: 30
+    priority: 1
   # Province codes of ISO 3166-2:ZA without the ZA- prefix (EC, FS, GP, KZN, LP, MP, NC, NW, WC) and
   # GT for Gauteng (Wazimap, NICD), in fields named after a province or a geography: EC, NC and MP
   # are country codes too.

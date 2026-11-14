@@ -28,7 +28,8 @@ rules:
   iso3166subdivisionbyname:
     key: iso3166code
     name: ISO 3166-2 subdivision code by field name (iso_id, iso_3166_2) with the country code (AR-C, DE-BY)
-    rule: (?i)iso[ _-]?(?:3166[ _-]?2|id|subdivision(?:[ _-]?code)?)(?:[ _-]?code)?|subdivision[ _-]?code
+    # iso_region of OurAirports (SL-N, US-CA).
+    rule: (?i)iso[ _-]?(?:3166[ _-]?2|id|region|subdivision(?:[ _-]?code)?)(?:[ _-]?code)?|subdivision[ _-]?code
     type: field
     match: regex
     validator: metacrafterext.rules.common.generic.validate_iso3166_2_code

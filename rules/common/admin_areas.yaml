@@ -1,0 +1,92 @@
+name: common-admin-areas
+description: Administrative divisions across countries (GADM, OCHA common operational datasets, HASC, Open Civic Data)
+context: geo
+lang: common
+country_code: xx
+# Found in the openAFRICA snapshot of metacrafter-testdata: the GADM 2 attribute tables of the World
+# Bank poverty maps (NAME_1, NAME_2, HASC_2, TYPE_2, ENGTYPE_2), the OCHA admin names and p-codes of
+# the Sierra Leone schools (Adm2_Name, Adm3_Name, Adm4_Code), the Open Civic Data division ids of the
+# parliament of Uganda, the ODK geopoints of the NMIS facility lists (gps) and the continent of the
+# OurAirports export.
+rules:
+  hascbyname:
+    key: hasc
+    name: HASC code by field name (HASC_1, HASC_2, hasc_code)
+    rule: (?i)hasc(?:[ _]?\d)?(?:[ _]?code)?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.admin.validate_hasc
+    needs_values: true
+    priority: 1
+  hascvalue:
+    key: hasc
+    name: HASC code by value (TZ.AS.AS, ZM.CE.CB, FR.NC)
+    rule: metacrafterext.rules.common.admin.validate_hasc
+    type: data
+    match: func
+    minlen: 5
+    maxlen: 11
+    priority: 1
+  adminarea1gadmbyname:
+    key: admin_area_1
+    name: First-level administrative division by the field names of GADM and OCHA (NAME_1, ADM1_EN, Adm1_Name, admin1Name_en)
+    rule: (?i)name_1|adm1_(?:name|en|nam)(?:_\d)?|admin1_?name(?:_en)?|adm1name
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.generic.validate_place_name
+    needs_values: true
+    priority: 1
+  adminarea2gadmbyname:
+    key: admin_area_2
+    name: Second-level administrative division by the field names of GADM and OCHA (NAME_2, ADM2_EN, Adm2_Name, admin2Name_en)
+    rule: (?i)name_2|adm2_(?:name|en|nam)(?:_\d)?|admin2_?name(?:_en)?|adm2name
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.generic.validate_place_name
+    needs_values: true
+    priority: 1
+  adminarea3gadmbyname:
+    key: admin_area_3
+    name: Third-level administrative division by the field names of GADM and OCHA (NAME_3, ADM3_EN, Adm3_Name, admin3Name_en)
+    rule: (?i)name_3|adm3_(?:name|en|nam)(?:_\d)?|admin3_?name(?:_en)?|adm3name
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.generic.validate_place_name
+    needs_values: true
+    priority: 1
+  adminareatypebyname:
+    key: admin_area_type
+    name: Administrative division type by the field names of GADM (TYPE_2, ENGTYPE_2) and gazetteers (admin_type)
+    rule: (?i)(?:eng)?type_[0-5]|admin(?:istrative)?[ _]?(?:area[ _]?|unit[ _]?|division[ _]?)?type|adm[ _]?type
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.admin.validate_admin_area_type
+    needs_values: true
+    priority: 1
+  ocddivisionidvalue:
+    key: ocd_division_id
+    name: Open Civic Data division id by value (ocd-division/country:ug/region:eastern/district:kween)
+    rule: metacrafterext.rules.common.admin.validate_ocd_division_id
+    type: data
+    match: func
+    minlen: 22
+    maxlen: 300
+    priority: 1
+  odkgeopointvalue:
+    key: odk_geopoint
+    name: ODK geopoint by value (latitude longitude altitude accuracy, 9.140918 7.496761 697.0 4.5)
+    rule: metacrafterext.rules.common.admin.validate_odk_geopoint
+    type: data
+    match: func
+    minlen: 9
+    maxlen: 80
+    priority: 1
+  continentcodebyname:
+    key: continentcode
+    name: Continent code by field name (continent, continent_code) with two-letter codes (AF, EU, SA)
+    rule: (?i)continent(?:[ _]?code)?|continentcode|cont[ _]?code
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.admin.validate_continent_code
+    needs_values: true
+    priority: 1
