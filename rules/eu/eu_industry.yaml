@@ -1,0 +1,16 @@
+name: eu-industry
+description: EU classifications of economic activities (NACE, ÖNACE)
+context: industry
+lang: en
+country_code: eu
+rules:
+  eunacebyname:
+    key: eu_nace
+    name: NACE or ÖNACE code by field name (NACE_4, NACE_1, nace_code, oenace_code)
+    # ÖNACE writes classes without the dot (5610) in the AMS files.
+    rule: (?i)nace(?:_?(?:rev_?2|v2|2))?(?:_?(?:code|kode|[1-4]))?|(?:oe|ö)nace(?:_?(?:code|[1-4]))?|nace_?(?:abschnitt|section|division|klasse|class)
+    type: field
+    match: regex
+    validator: metacrafterext.rules.at.codes.validate_nace_code
+    needs_values: true
+    priority: 1

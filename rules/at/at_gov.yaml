@@ -1,0 +1,61 @@
+name: at-gov
+description: Austrian administration, register, school and labour market codes (e-government OKZ, ERsB, Schulkennzahl, AMS)
+context: government
+lang: de
+country_code: at
+rules:
+  atokzvalue:
+    key: at_okz
+    name: Austrian e-government organisation code by value (L5AL-20001, GGA-10101, L7BH-IL-BH)
+    rule: metacrafterext.rules.at.codes.validate_at_okz_value
+    type: data
+    match: func
+    minlen: 4
+    maxlen: 80
+    priority: 1
+  atokzbyname:
+    key: at_okz
+    name: Austrian e-government organisation code by field name (OKZ, OKZu, Organisationskennzeichen)
+    rule: (?i)okzu?|organisations?kennzeichen|org_?kz|vkz|verwaltungskennzeichen
+    type: field
+    match: regex
+    validator: metacrafterext.rules.at.codes.validate_at_okz
+    needs_values: true
+    priority: 1
+  atersbvalue:
+    key: at_ersb
+    name: Austrian ERsB number by value (a GLN starting with 9110 with its check digit)
+    rule: metacrafterext.rules.at.codes.validate_at_ersb
+    type: data
+    match: func
+    minlen: 13
+    maxlen: 15
+    priority: 1
+  atersbbyname:
+    key: at_ersb
+    name: Austrian ERsB number by field name (ERsB-Nr, ersb_kennziffer)
+    rule: (?i)ersb(?:[-_ ]?(?:nr|nummer|kennziffer|id))?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.at.codes.validate_at_ersb
+    needs_values: true
+    priority: 1
+  atamsrgsbyname:
+    key: at_ams_rgs
+    name: AMS regional office code by field name (RGSCode, RGS_Nr)
+    rule: (?i)rgs_?(?:code|nr|id|kz)?|ams_?rgs(?:_?code)?|regionalgesch(?:ae|ä)ftsstelle_?(?:code|nr)?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.at.codes.validate_at_ams_rgs
+    needs_values: true
+    priority: 1
+  atschulkennzahlbyname:
+    key: at_schulkennzahl
+    name: Austrian school code by field name (Schulkennzahl, SKZ Exp)
+    # SKZ is also the street code (at_strassenkennziffer): school codes start with a district code.
+    rule: (?i)schulkenn(?:zahl|ziffer)|schul_?(?:kz|kennz|code|id)|skz(?:[ _-]?(?:exp|schule|expositur|stammschule))?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.at.codes.validate_at_schulkennzahl
+    needs_values: true
+    priority: 1
