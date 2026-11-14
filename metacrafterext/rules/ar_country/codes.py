@@ -284,3 +284,56 @@ def validate_ar_ncm_code(value):
     """An NCM / HS code of digits, with or without dots: 010121, 0101.21, 01012100 (not a
     product name such as Caballos, reproductores de raza pura)."""
     return bool(_NCM.match(str(value).strip()))
+
+
+# The 23 provinces and the Ciudad Autónoma de Buenos Aires, as the national data and the ARSAT
+# open data portal write them: with or without accents and in capitals (BUENOS AIRES, Neuquén,
+# Entre Rios), with the long official names (Santiago del Estero, Tierra del Fuego, Antártida e
+# Islas del Atlántico Sur) and the abbreviations of staff tables (Sgo Del Estero, CABA).
+AR_PROVINCES = frozenset((
+    "BUENOS AIRES", "CATAMARCA", "CHACO", "CHUBUT", "CORDOBA", "CORRIENTES", "ENTRE RIOS", "FORMOSA",
+    "JUJUY", "LA PAMPA", "LA RIOJA", "MENDOZA", "MISIONES", "NEUQUEN", "RIO NEGRO", "SALTA", "SAN JUAN",
+    "SAN LUIS", "SANTA CRUZ", "SANTA FE", "SANTIAGO DEL ESTERO", "SGO DEL ESTERO", "STGO DEL ESTERO",
+    "SANTIAGO D ESTERO", "TIERRA DEL FUEGO", "TUCUMAN",
+    "TIERRA DEL FUEGO ANTARTIDA E ISLAS DEL ATLANTICO SUR", "CIUDAD AUTONOMA DE BUENOS AIRES",
+    "CIUDAD DE BUENOS AIRES", "CAPITAL FEDERAL", "CABA", "C A B A", "CIUDAD AUTONOMA BUENOS AIRES"))
+_AR_PROVINCE_PREFIXES = ("PROVINCIA DE ", "PROVINCIA DEL ", "PCIA DE ", "PCIA ", "PROV DE ", "PROV ")
+
+
+def validate_ar_province(value):
+    """The name of an Argentine province or of the City of Buenos Aires (Buenos Aires, CÓRDOBA,
+    Entre Rios, Sgo Del Estero, Provincia del Neuquén, CABA); not a city or a department."""
+    text = _plain(re.sub(r"[.,()-]", " ", str(value)))
+    for prefix in _AR_PROVINCE_PREFIXES:
+        if text.startswith(prefix):
+            text = text[len(prefix):]
+            break
+    return text in AR_PROVINCES
+
+
+_AR_CAPITAL = frozenset(("CIUDAD AUTONOMA DE BUENOS AIRES", "CIUDAD DE BUENOS AIRES", "CAPITAL FEDERAL", "CABA",
+                         "C A B A", "CIUDAD AUTONOMA BUENOS AIRES"))
+
+
+def validate_ar_province_by_value(value):
+    """A province name for the value rule: as validate_ar_province without the City of Buenos
+    Aires. A column of the City alone is as often the census locality (localidad_censal_nombre of
+    the georef streets) as the jurisdiction; columns named provincia keep it through the field
+    rule."""
+    if not validate_ar_province(value):
+        return False
+    return _plain(re.sub(r"[.,()-]", " ", str(value))) not in _AR_CAPITAL
+
+
+# A bank account number in a field named cuenta: digits with the separators of the banks
+# (0012-3456/7, 123-004567/8) or a CBU. Budget and accounting tables name the line of a chart of
+# accounts cuenta as well (Ingresos de Operación, Remuneraciones): those are no bank accounts.
+_ACCOUNT_SEPARATORS = re.compile(r"[\s./-]")
+
+
+def validate_ar_bank_account_number(value):
+    """A bank account number of 6 to 22 digits, with dashes, slashes, dots or spaces between
+    them and at most two letters (a branch or account type); not a name of an account line."""
+    text = _ACCOUNT_SEPARATORS.sub("", str(value).strip())
+    digits = sum(c.isdigit() for c in text)
+    return 6 <= digits <= 22 and len(text) - digits <= 2 and text[-1:].isdigit()

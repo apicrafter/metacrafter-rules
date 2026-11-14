@@ -1,0 +1,27 @@
+name: common-procurement
+description: Procurement methods (procedure types) of public procurement registers in many languages
+context: government
+lang: common
+country_code: xx
+rules:
+  procurementmethodbyname:
+    key: procurement_method
+    name: Procurement method by field name (tipo_procedimiento, Tipocompra, procedure, procurementMethod, ProcedureCode)
+    # The values must be procedure names or codes of the OCDS method and eForms procedure type
+    # code lists: a procedure column of a court or a lab holds other things.
+    rule: (?i)(?:tender[._])?procurement_?method(?:_?details)?|procurementmethod(?:details)?|(?:[a-z]+[ _.])?procedure(?:[ _]?(?:type|code|kind))?|(?:[a-z]+\.)*procedurecode(?:\.#text)?|tipo[ _]?(?:de[ _])?(?:procedimiento|compra|contrataci[oó]n|licitaci[oó]n|adjudicaci[oó]n)(?:[ _]\(cat[aá]logo\))?|procedimiento(?:[ _](?:de[ _])?(?:adjudicaci[oó]n|contrataci[oó]n|selecci[oó]n|compra|tipo))?|tipocompra|modalidad(?:[ _]de)?(?:[ _](?:contrataci[oó]n|compra|selecci[oó]n|adjudicaci[oó]n))?|modalidade(?:[ _]de[ _]licita[cç][aã]o)?|procedura(?:[ _]di[ _]scelta(?:[ _]del[ _]contraente)?)?|tipo[ _]procedura|scelta[ _]contraente|vergabeart|verfahrensart|vergabeverfahren|hankemenetlus(?:e[ _]liik)?|入札方法|入札方式|契約方法|契約方式|способ[ _](?:закупки|определения[ _]поставщика)
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.procurement.validate_procurement_method_or_code
+    needs_values: true
+    priority: 1
+  procurementmethodvalue:
+    key: procurement_method
+    name: Procurement method by value (Licitación Pública, Contratación directa, Procédure adaptée, 指名競争入札)
+    # The Japanese bid results of Tochigi keep the method in a column named 契約名称.
+    rule: metacrafterext.rules.common.procurement.validate_procurement_method
+    type: data
+    match: func
+    minlen: 4
+    maxlen: 120
+    priority: 1
