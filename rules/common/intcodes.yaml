@@ -135,3 +135,92 @@ rules:
     match: regex
     validator: metacrafterext.rules.common.identifiers.validate_iati_org_ref
     priority: 1
+
+  # Country codes in fields named after ISO rather than country (iso_code of Our World in Data,
+  # ISO and ISO_2 of the IMF World Economic Outlook, ISO_3 of HDX, SpatialDimValueCode of the WHO
+  # GHO exports, Geography of the Africa Data Hub tables). The full ISO 3166-1 lists, with Kosovo
+  # (XK, XKX); the OWID_ codes of an OWID iso_code column are owid_entity_code.
+  iso3166alpha3byisofield:
+    key: countrycode_alpha3
+    name: ISO 3166 country code alpha 3 in a field named after ISO (iso_code, ISO, iso3, ISO_3)
+    rule: abw,afg,ago,aia,ala,alb,and,are,arg,arm,asm,ata,atf,atg,aus,aut,aze,bdi,bel,ben,bes,bfa,bgd,bgr,bhr,bhs,bih,blm,blr,blz,bmu,bol,bra,brb,brn,btn,bvt,bwa,caf,can,cck,che,chl,chn,civ,cmr,cod,cog,cok,col,com,cpv,cri,cub,cuw,cxr,cym,cyp,cze,deu,dji,dma,dnk,dom,dza,ecu,egy,eri,esh,esp,est,eth,fin,fji,flk,fra,fro,fsm,gab,gbr,geo,ggy,gha,gib,gin,glp,gmb,gnb,gnq,grc,grd,grl,gtm,guf,gum,guy,hkg,hmd,hnd,hrv,hti,hun,idn,imn,ind,iot,irl,irn,irq,isl,isr,ita,jam,jey,jor,jpn,kaz,ken,kgz,khm,kir,kna,kor,kwt,lao,lbn,lbr,lby,lca,lie,lka,lso,ltu,lux,lva,mac,maf,mar,mco,mda,mdg,mdv,mex,mhl,mkd,mli,mlt,mmr,mne,mng,mnp,moz,mrt,msr,mtq,mus,mwi,mys,myt,nam,ncl,ner,nfk,nga,nic,niu,nld,nor,npl,nru,nzl,omn,pak,pan,pcn,per,phl,plw,png,pol,pri,prk,prt,pry,pse,pyf,qat,reu,rou,rus,rwa,sau,sdn,sen,sgp,sgs,shn,sjm,slb,sle,slv,smr,som,spm,srb,ssd,stp,sur,svk,svn,swe,swz,sxm,syc,syr,tca,tcd,tgo,tha,tjk,tkl,tkm,tls,ton,tto,tun,tur,tuv,twn,tza,uga,ukr,umi,ury,usa,uzb,vat,vct,ven,vgb,vir,vnm,vut,wlf,wsm,yem,zaf,zmb,zwe,xkx
+    maxlen: 3
+    minlen: 3
+    priority: 1
+    match: text
+    type: data
+    fieldrule: iso,iso3,iso_3,iso-3,iso 3,iso_code,isocode,iso code,iso3_code,iso_3_code,iso3code,iso_alpha3,iso_alpha_3,isoalpha3,iso3166,iso_3166,iso3166_1,iso_3166_1,iso3166-1,iso_3166_1_alpha_3,alpha3,alpha_3,alpha-3,alpha3_code,iso_a3,adm0_a3,gu_a3,spatialdimvaluecode,geography,iso_country_code
+    fieldrulematch: text
+  iso3166alpha2byisofield:
+    key: countrycode_alpha2
+    name: ISO 3166 country code alpha 2 in a field named after ISO (ISO_2, iso2, iso_alpha2)
+    rule: ad,ae,af,ag,ai,al,am,ao,aq,ar,as,at,au,aw,ax,az,ba,bb,bd,be,bf,bg,bh,bi,bj,bl,bm,bn,bo,bq,br,bs,bt,bv,bw,by,bz,ca,cc,cd,cf,cg,ch,ci,ck,cl,cm,cn,co,cr,cu,cv,cw,cx,cy,cz,de,dj,dk,dm,do,dz,ec,ee,eg,eh,er,es,et,fi,fj,fk,fm,fo,fr,ga,gb,gd,ge,gf,gg,gh,gi,gl,gm,gn,gp,gq,gr,gs,gt,gu,gw,gy,hk,hm,hn,hr,ht,hu,id,ie,il,im,in,io,iq,ir,is,it,je,jm,jo,jp,ke,kg,kh,ki,km,kn,kp,kr,kw,ky,kz,la,lb,lc,li,lk,lr,ls,lt,lu,lv,ly,ma,mc,md,me,mf,mg,mh,mk,ml,mm,mn,mo,mp,mq,mr,ms,mt,mu,mv,mw,mx,my,mz,na,nc,ne,nf,ng,ni,nl,no,np,nr,nu,nz,om,pa,pe,pf,pg,ph,pk,pl,pm,pn,pr,ps,pt,pw,py,qa,re,ro,rs,ru,rw,sa,sb,sc,sd,se,sg,sh,si,sj,sk,sl,sm,sn,so,sr,ss,st,sv,sx,sy,sz,tc,td,tf,tg,th,tj,tk,tl,tm,tn,to,tr,tt,tv,tw,tz,ua,ug,um,us,uy,uz,va,vc,ve,vg,vi,vn,vu,wf,ws,xk,ye,yt,za,zm,zw
+    maxlen: 2
+    minlen: 2
+    priority: 1
+    match: text
+    type: data
+    fieldrule: iso2,iso_2,iso-2,iso 2,iso2_code,iso_2_code,iso2code,iso_alpha2,iso_alpha_2,isoalpha2,iso_3166_1_alpha_2,alpha2,alpha_2,alpha-2,alpha2_code,iso_a2,wb_a2
+    fieldrulematch: text
+  # IMF World Economic Outlook subject codes (NGDP_R, PCPIPCH, LUR): the 45 subjects of the April
+  # 2021 WEO. LE, LP and GGR are short, so the field name must speak of a subject or a series.
+  imfweosubjectcodevalue:
+    key: imf_weo_subject_code
+    name: IMF World Economic Outlook subject code by value (WEO Subject Code)
+    rule: bca,bca_ngdpd,flibor6,ggr,ggr_ngdp,ggsb,ggsb_npgdp,ggx,ggxcnl,ggxcnl_ngdp,ggxonlb,ggxonlb_ngdp,ggxwdg,ggxwdg_ngdp,ggxwdn,ggxwdn_ngdp,ggx_ngdp,le,lp,lur,ngap_npgdp,ngdp,ngdpd,ngdpdpc,ngdppc,ngdprpc,ngdprppppc,ngdp_d,ngdp_fy,ngdp_r,ngdp_rpch,ngsd_ngdp,nid_ngdp,pcpi,pcpie,pcpiepch,pcpipch,pppex,pppgdp,ppppc,pppsh,tmg_rpch,tm_rpch,txg_rpch,tx_rpch
+    maxlen: 12
+    minlen: 2
+    priority: 1
+    match: text
+    type: data
+    fieldregex: subject|weo|series|indicator|concept
+  imfcountrycodebyname:
+    key: imf_country_code
+    name: IMF country code by field name (WEO Country Code, IFS code, imf_code)
+    rule: (?i)(?:weo|imf|ifs)[ _.-]?(?:country[ _.-]?)?(?:code|id|number)|imf[ _.-]?country|country[ _.-]?code[ _.-]?\(?(?:imf|weo|ifs)\)?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.statcodes.validate_imf_country_code
+    needs_values: true
+    priority: 1
+  # IMF indicator codes (PCPI_IX, PCPI_PC_CP_A_PT) in an Indicator Code column. The separator is
+  # required: IndicatorCode is the column of the WHO GHO exports (who_gho_indicator_code).
+  imfindicatorcodebyname:
+    key: imf_indicator_code
+    name: IMF indicator code by field name (Indicator Code, Indicator.Code, series_code)
+    rule: (?i)(?:imf[ _.-]?)?(?:indicator|series)[ _.-](?:code|id)|imf[ _.-]?(?:indicator|series)
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.statcodes.validate_imf_indicator_code
+    needs_values: true
+    priority: 1
+  whoghoindicatorcodebyname:
+    key: who_gho_indicator_code
+    name: WHO GHO indicator code by field name (IndicatorCode of the GHO exports)
+    rule: indicatorcode,gho_code,gho_indicator,gho_indicator_code,who_indicator_code,gho code
+    type: field
+    match: text
+    validator: metacrafterext.rules.common.statcodes.validate_who_gho_indicator_code
+    needs_values: true
+    priority: 1
+  # EUR is the euro and AMR a rate too: only fields named after a WHO region (ParentLocationCode
+  # of the GHO exports) are read.
+  whoregioncodevalue:
+    key: who_region_code
+    name: WHO region code (AFR, AMR, SEAR, EUR, EMR, WPR) by value and field name
+    rule: afr,amr,sear,eur,emr,wpr
+    maxlen: 4
+    minlen: 3
+    priority: 1
+    match: text
+    type: data
+    fieldregex: who[ _.-]?region|parentlocationcode|parent[ _.-]?location[ _.-]?code
+  owidentitycodevalue:
+    key: owid_entity_code
+    name: Our World in Data entity code (OWID_WRL, OWID_AFR, OWID_KOS)
+    rule: OWID_[A-Z]{2,4}
+    maxlen: 9
+    minlen: 7
+    priority: 1
+    match: regex
+    type: data

@@ -9,6 +9,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Rules for the Africa Data Hub files of metacrafter-testdata** (a 2024 Dateno snapshot of the
+  CKAN portal ckan.africadatahub.org: COVID-19, vaccination, inflation and climate tables; validators
+  in the new `metacrafterext.rules.common.statcodes`):
+  - ISO 3166-1 alpha-3 and alpha-2 codes in fields named after ISO rather than country (`iso_code`
+    of Our World in Data, `ISO`, `ISO_2` and `ISO_3`, `iso3`, `SpatialDimValueCode` of the WHO GHO
+    exports, `Geography` of the Wazimap tables), with the full ISO lists (SSD, CUW, XKX);
+  - IMF codes: World Economic Outlook subject codes (`imf_weo_subject_code`: NGDP_R, PCPIPCH, LUR)
+    in subject or series fields, country codes (`imf_country_code`: `WEO Country Code`, `IFS Code`)
+    and indicator codes (`imf_indicator_code`: PCPI_PC_CP_A_PT in `Indicator Code`,
+    `Indicator.Code`), whose first part must be an IMF concept (a WDI or SDG code is not one);
+  - WHO GHO indicator codes (`who_gho_indicator_code`: `IndicatorCode`, MALARIA_EST_DEATHS) and WHO
+    region codes (`who_region_code`: AFR, AMR, SEAR, EUR, EMR, WPR in `ParentLocationCode`);
+  - Our World in Data entity codes (`owid_entity_code`: OWID_AFR, OWID_WRL) and Google Maps place
+    ids (`google_place_id`: ChIJ and 23 characters) by value;
+  - EM-DAT disaster numbers (`emdat_disaster_number`, 1993-0500-CMR) in `Dis No` / `DisNo.` fields
+    and GLIDE numbers (`glide_number`, EQ-2010-000009-HTI) by value: the two types had no rules;
+  - compact dates (`date_ymd_compact`, 20200305) in `YYYYMMDD` fields, and longitudes in `Long` and
+    `Long_` fields (JHU CSSE) with three or more decimals: `Long` is a length too;
+  - South African province codes (`za_province_code`, which had no rules: EC, GP, KZN, and GT of
+    Wazimap) in province and geography fields, in the new `rules/za/za_geo.yaml`;
+  - SARS-CoV-2 Pango lineages (`pango_lineage`: B.1.1.7, P.1, XBB.1.5) and WHO variant labels
+    (`sars_cov_2_variant_label`: Alpha, Delta, Omicron) in lineage or variant fields, and COVID-19
+    vaccine names (`covid19_vaccine`: Pfizer-BioNTech, Oxford-AstraZeneca, Sputnik V, Covaxin) in
+    vaccine and `common_name` fields;
+  - HXL hashtags (`hxl_hashtag`: #country+code, #affected+infected) of the HXL dictionary by value;
+    social media hashtags (#COVID19) are left out.
 - **Rules for the UAE Open Data files of metacrafter-testdata** (an April 2024 Dateno snapshot of
   opendata.fcsc.gov.ae, the portal of the Federal Competitiveness and Statistics Centre; validators in
   `metacrafterext.rules.ae.geo` and `metacrafterext.rules.ar.countries`, rules in `rules/ae/` and

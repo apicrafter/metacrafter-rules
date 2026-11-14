@@ -134,3 +134,15 @@ rules:
     fieldrulematch: text
     imprecise: 1
 
+  # HXL hashtags (#country+code, #adm1+name, #affected+infected) of the HXL dictionary, as HXL data
+  # dictionaries and HDX schemas list them; social media hashtags (#COVID19) are left out.
+  hxlhashtagvalue:
+    key: hxl_hashtag
+    name: HXL hashtag (#country+code) by value
+    rule: '#[A-Za-z][A-Za-z0-9_]*(?:\s*\+[A-Za-z][A-Za-z0-9_]*)*'
+    type: data
+    match: regex
+    minlen: 4
+    maxlen: 100
+    validator: metacrafterext.rules.common.statcodes.validate_hxl_hashtag
+    priority: 1
