@@ -24,4 +24,23 @@ rules:
     validator: metacrafterext.rules.common.generic.validate_person_fullname_not_place
     needs_values: true
     priority: 1
-
+  # Found in the cultural directories of the Argentine culture ministry (datos.cultura.gob.ar,
+  # metacrafter-testdata).
+  arheritagecategoryvalue:
+    key: ar_heritage_category
+    name: Argentine national heritage category by value (Monumento Histórico Nacional, Lugar Histórico, Bien de Interés Histórico)
+    rule: metacrafterext.rules.ar_country.codes.validate_ar_heritage_category
+    type: data
+    match: func
+    minlen: 6
+    maxlen: 120
+    priority: 1
+  arconabipnumberbyname:
+    key: ar_conabip_number
+    name: CONABIP popular library number by field name (nro_conabip, numero_conabip, conabip)
+    rule: '(?i)(?:n(?:[uú]me)?ro|nro|num|n[º°]|registro|id)[ _.]?(?:de[ _])?conabip|conabip(?:[ _](?:nro|n[uú]mero|id|registro))?'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.ar_country.codes.validate_ar_conabip_number
+    needs_values: true
+    priority: 1

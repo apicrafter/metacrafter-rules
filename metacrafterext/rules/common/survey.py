@@ -36,16 +36,17 @@ def validate_age_value(value):
 
 _AGE_RANGE = re.compile(
     r"(?:\d{1,3}\s*(?:-|–|—|bis|to|a|à|до)\s*\d{1,3}|\d{1,3}\s*\+|[<>≤≥]=?\s*\d{1,3}|"
-    r"\d{1,3}\s*(?:und|and|et|y|e|o|ou|or|и)\s*(?:älter|mehr|over|older|plus|más|mas|mais|plus|старше)|"
+    r"\d{1,3}\s*(?:(?:jahre?|years?|ans|años|anos|anios)\s*)?(?:und|and|et|y|e|o|ou|or|и)\s*(?:älter|mehr|over|older|plus|más|mas|mais|plus|старше)|"
     r"(?:unter|under|bis|up to|moins de|menos de|menor(?:es)? (?:a|de)|mayor(?:es)? (?:a|de)|más de|"
     r"over|above|до)\s*\d{1,3}|\d{1,3}\s*(?:und|and)\s*(?:jünger|younger))"
-    r"(?:\s*(?:jahre?|years?|yrs|ans|años|anos|anni|лет|j\.?))?",
+    r"(?:\s*(?:jahre?|years?|yrs|ans|años|anos|anios|anni|лет|j\.?))?",
     re.IGNORECASE,
 )
 
 
 def validate_age_range_value(value):
-    """An age band (16-34, 65+, <18, 20 bis 29 Jahre, 70 und älter) or a small code of a band
+    """An age band (16-34, 65+, <18, 20 bis 29 Jahre, 70 und älter, 18 A 29 ANIOS, 65 ANIOS Y MAS
+    of the Argentine survey of cultural consumption, which writes años without ñ) or a small code of a band
     (1 to 99) in a column named for age bands."""
     text = str(value).strip()
     if _AGE_RANGE.fullmatch(text):

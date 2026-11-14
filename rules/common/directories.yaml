@@ -1,0 +1,138 @@
+name: directories
+description: Fields of directories of facilities, events and media and of the surveys that go with them - broadcast frequencies, geocoding precision, public or private management, attendance mode, periodicity, levels of education, socioeconomic levels, legal acts
+context: common
+lang: common
+country_code: xx
+rules:
+  # Found in the cultural directories (Mapa Cultural) and the national surveys of cultural
+  # consumption (ENCC) of the Argentine culture ministry, an April 2024 snapshot of
+  # datos.cultura.gob.ar (metacrafter-testdata). The fields hold a few words of a small
+  # vocabulary, so the names are guarded by the values (metacrafterext.rules.common.directories).
+  radiofrequencybyname:
+    key: radio_frequency
+    name: Broadcast frequency by field name (frecuencia, frequency, freq_mhz) with FM or AM values
+    # FM in MHz with its decimal (88.3) or with the band (FM 104.1), AM in kHz with the band or
+    # the unit (1410KHZ). The band alone (FM) and survey items named after how often (frecuencia
+    # de uso: A veces) fail.
+    rule: '(?i)frecuencias?(?:[ _](?:fm|am|mhz|khz|de[ _]emisi[oó]n|asignada|radio))?|(?:broadcast[ _]?)?frequency(?:[ _](?:mhz|khz|fm|am))?|freq[ _]?(?:mhz|khz)|fr[eé]quence(?:[ _](?:fm|am|mhz|khz))?'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.directories.validate_radio_frequency
+    needs_values: true
+    priority: 1
+  radiofrequencyvalue:
+    key: radio_frequency
+    name: Broadcast frequency with its band or unit by value (FM 104.1, 97.9 FM, 1410KHZ)
+    rule: metacrafterext.rules.common.directories.validate_radio_frequency_marked
+    type: data
+    match: func
+    minlen: 4
+    maxlen: 12
+    priority: 1
+  geocodingprecisionbyname:
+    key: geocoding_precision
+    name: Geocoding precision by field name (tipo_latitud_longitud, TipoLatitudLongitud, detalle_georreferencia, location_type)
+    # Localización precisa, Centroide de la localidad, Localización aproximada, Exacta, Localidad;
+    # the location_type of the Google Geocoding API (ROOFTOP, GEOMETRIC_CENTER). A location_type of
+    # places (Store, Indoor) fails.
+    rule: '(?i)tipo[ _]?(?:de[ _])?(?:latitud[ _]?(?:y[ _])?longitud|latitudlongitud|lat[ _]?(?:lon|long|lng)|georreferencia(?:ci[oó]n)?|geolocalizaci[oó]n|geocodificaci[oó]n|localizaci[oó]n|coordenadas?)|detalle[ _](?:de[ _](?:la[ _])?)?georreferencia(?:ci[oó]n)?|precisi[oó]n[ _](?:de[ _](?:la[ _])?)?(?:georreferencia(?:ci[oó]n)?|localizaci[oó]n|ubicaci[oó]n|coordenadas?|geo)|geocod(?:e|ing)?[ _]?(?:precision|accuracy|quality|type|level|match[ _]?type)|location[ _]?(?:type|precision|accuracy)|loc[ _]?precision|geo[ _]?(?:precision|accuracy)'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.directories.validate_geocoding_precision
+    needs_values: true
+    priority: 1
+  geocodingprecisionvalue:
+    key: geocoding_precision
+    name: Geocoding precision by value (Localización precisa, Centroide, Localización aproximada, ROOFTOP)
+    # The festival directory keeps it in a field named Nota. Localidad alone is a locality, so
+    # without the field name a value must say precise, exact, approximate or centroid.
+    rule: metacrafterext.rules.common.directories.validate_geocoding_precision_strong
+    type: data
+    match: func
+    minlen: 5
+    maxlen: 60
+    priority: 1
+  ownershiptypebyname:
+    key: ownership_type
+    name: Public or private management by field name (tipo_gestion, tipo de gestión, jurisdiccion, dependencia, ownership)
+    # Público, Privado, Mixto, Estatal, Municipal, Provincial, Nacional, public, private. The
+    # administration period of a GESTION field (2015-2019) and the name of a jurisdiction fail.
+    rule: '(?i)tipo[ _]?(?:de[ _])?gesti[oó]n|tipo[ _]gest|gesti[oó]n|sector[ _](?:de[ _])?gesti[oó]n|(?:tipo[ _](?:de[ _])?)?dependencia|titularidad|jurisdicci[oó]n|ownership(?:[ _](?:type|status))?|management[ _]type|owner[ _]?type|public[ _]?private|statut[ _]public[ _]priv[eé]|secteur[ _]public[ _]priv[eé]'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.directories.validate_ownership_type
+    needs_values: true
+    priority: 1
+  attendancemodebyname:
+    key: attendance_mode
+    name: Attendance mode by field name (modalidad, attendance_mode, course_mode) with in-person or online values
+    # Presencial, Virtual, Bimodal, Mixta, A distancia. The modalidad of a procurement procedure
+    # (Licitación pública) fails.
+    rule: '(?i)modalidad(?:[ _](?:de[ _])?(?:cursada|dictado|realizaci[oó]n|evento|participaci[oó]n|asistencia|ense[ñn]anza|estudio))?|(?:event[ _]?)?attendance[ _]?mode|course[ _]?mode|delivery[ _]?mode|mode[ _]of[ _](?:delivery|attendance|study)|modalit[eé](?:[ _]d[ _]?enseignement)?'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.directories.validate_attendance_mode
+    needs_values: true
+    priority: 1
+  periodicitybyname:
+    key: periodicity
+    name: Periodicity by field name (periodicidad, periodicity, frecuencia de actualización, accrual_periodicity)
+    # Anual, Bianual, Mensual, monthly, ANNUAL. Survey items on how often (Nunca, A veces) are
+    # likert_response and fail.
+    rule: '(?i)periodicidad(?:[ _](?:de[ _])?(?:actualizaci[oó]n|publicaci[oó]n|realizaci[oó]n|edici[oó]n))?|periodicity|p[eé]riodicit[eé]|periodicit[aà]|frecuencia[ _]de[ _](?:actualizaci[oó]n|publicaci[oó]n|realizaci[oó]n|edici[oó]n)|(?:update|publication|release)[ _]frequency|accrual[ _]?periodicity|fr[eé]quence[ _]de[ _](?:mise[ _][àa][ _]jour|publication)'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.directories.validate_periodicity
+    needs_values: true
+    priority: 1
+  educationlevelbyname:
+    key: education_level
+    name: Level of education by field name (nivel, nivel_educativo, education_level) with level names
+    # Grado, Pregrado, Posgrado, Secundario completo. Nivel is any level: the values must be
+    # levels of education.
+    rule: '(?i)nivel(?:[ _](?:educativo|educacional|de[ _]estudios?|de[ _](?:la[ _])?educaci[oó]n|de[ _]instrucci[oó]n|acad[eé]mico|de[ _]formaci[oó]n|del[ _]t[ií]tulo|de[ _]ense[ñn]anza|m[aá]ximo[ _](?:de[ _])?(?:estudios|educativo|alcanzado)))?|niv[ _]?educ|education(?:al)?[ _]?level|level[ _]of[ _]education|educational[ _]attainment|niveau[ _](?:d[ _]?)?(?:[ée]tudes|formation|dipl[oô]me)'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.directories.validate_education_level
+    needs_values: true
+    priority: 1
+  socioeconomiclevelbyname:
+    key: socioeconomic_level
+    name: Socioeconomic level by field name (NSE, nse_3, NSEcat1, niv_socioe, nivel_socioeconomico, social_grade)
+    # ABC1, C2, C3, D1, D2E, C2+C3. The point score (NSEpuntaje) is a number and is left out.
+    rule: '(?i)nse(?:[ _.-]?(?:\d|cat\d?|socioe(?:c(?:on(?:[oó]mico)?)?)?|nivel|grupo|agrupado|rec))?|niv(?:el)?[ _.-]?socio[ _.-]?e(?:c(?:on(?:[oó]mico)?)?)?|nivel[ _](?:socio[ _-]?)?econ[oó]mico|socio[ _-]?economic[ _]?(?:level|status|class|grade)|ses[ _]?(?:level|class|group)|social[ _]?grade|nrs[ _]?(?:social[ _])?grade|clase[ _]social|estrato[ _]socio(?:econ[oó]mico)?'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.directories.validate_socioeconomic_level
+    needs_values: true
+    priority: 1
+  legislationtypebyname:
+    key: legislationtype
+    name: Type of a legal act by field name (decreto_o_ley, tipo_norma, instrumento_legal, legislation_type)
+    rule: '(?i)decreto[ _]o[ _]ley|ley[ _]o[ _]decreto|tipo[ _](?:de[ _])?(?:norma(?:tiva)?|instrumento(?:[ _]legal)?|acto(?:[ _]administrativo)?)|instrumento[ _](?:legal|normativo)|norma[ _]tipo|legislation[ _]?type|type[ _]of[ _](?:act|legislation)'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.directories.validate_legislation_type
+    needs_values: true
+    priority: 1
+  legislationnumberbyname:
+    key: legislation_number
+    name: Number of a law, decree or resolution by field name (numero_de_decreto_o_ley, nro_decreto, numero_ley)
+    # 325, 24.262, 1172/2003. The ids of records (norma_id) are left out.
+    rule: '(?i)(?:n(?:[uú]me)?ro|nro|num|n[º°])[ _.]?(?:de[ _](?:la[ _])?)?(?:decreto|ley|resoluci[oó]n|norma|ordenanza|disposici[oó]n|dnu)(?:[ _]o[ _](?:ley|decreto|resoluci[oó]n))?|(?:decreto|ley|norma|resoluci[oó]n|ordenanza|disposici[oó]n)[ _](?:n(?:[uú]me)?ro|nro|num)|(?:law|act|decree|ordinance)[ _](?:number|no)'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.directories.validate_legislation_number
+    needs_values: true
+    priority: 1
+  degreetitlebyname:
+    key: academicdegree
+    name: Degree title by field name (titulo, Título, titulo_otorgado, degree) with titles of degrees
+    # Licenciado en Comunicación Social, Profesor de Música, Arquitecto, Bachelor of Arts. Título
+    # is also the title of a book or a film: the values must start with a degree.
+    rule: '(?i)t[ií]tulos?(?:[ _](?:otorgado|obtenido|acad[eé]mico|universitario|de[ _]grado|profesional))?|titulaci[oó]n|(?:academic[ _])?degree(?:[ _](?:title|name|awarded))?|grado[ _]acad[eé]mico'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.directories.validate_degree_title
+    needs_values: true
+    priority: 1
