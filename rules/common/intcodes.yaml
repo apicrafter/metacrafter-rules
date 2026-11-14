@@ -50,7 +50,9 @@ rules:
     priority: 1
     match: text
     type: data
-    fieldrule: landkode,landskode,landskod,landkod,landcode,landecode,ländercode,laendercode,länderkennung,code_pays,codepays,code pays,code_du_pays,pays_code,codigo_pais,código país,código de país,cod_pais,codice_paese,codice paese,kod_kraju,kod kraju,kód země,kod_zeme,maakood,maatunnus,valsts_kods,valsts kods,šalies kodas,salies_kodas,országkód,код страны,код_страны,код країни,ülke kodu,ulke_kodu,国家代码,국가코드
+    # cntry is the European Social Survey name, ccode the name in migration and comparative
+    # databases (a ccode of COW numbers fails the list: survey.yaml).
+    fieldrule: cntry,ctry,ccode,c_alphan,landkode,landskode,landskod,landkod,landcode,landecode,ländercode,laendercode,länderkennung,code_pays,codepays,code pays,code_du_pays,pays_code,codigo_pais,código país,código de país,cod_pais,codice_paese,codice paese,kod_kraju,kod kraju,kód země,kod_zeme,maakood,maatunnus,valsts_kods,valsts kods,šalies kodas,salies_kodas,országkód,код страны,код_страны,код країни,ülke kodu,ulke_kodu,国家代码,국가코드
     fieldrulematch: text
 # This rule generates a lot of False positives because 2-character codes match many common abbreviations and codes
 # Without a fieldrule constraint, this matches any 2-character string that happens to be a valid country code

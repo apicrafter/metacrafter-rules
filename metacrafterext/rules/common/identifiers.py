@@ -2383,6 +2383,19 @@ def validate_uic_station_code(value):
 _IT_CIG = re.compile(r"^(?:\d{7}[0-9A-F]{3}|[XYZ][0-9A-F]{9})$")
 
 
+# Codice fiscale of a person (omocodia letters may replace the digits) or the 11 digits of a
+# partita IVA, with or without IT.
+_IT_TAXID = re.compile(
+    r"^(?:[A-Z]{6}[0-9LMNPQRSTUV]{2}[A-EHLMPR-T][0-9LMNPQRSTUV]{2}[A-Z][0-9LMNPQRSTUV]{3}[A-Z]|(?:IT)?\d{11})$"
+)
+
+
+def validate_it_taxid_shape(value):
+    """The shape of an Italian tax number: a codice fiscale of a person (RSSMRA85T10A562S) or the
+    eleven digits of a partita IVA or of the codice fiscale of a company (IT00743110157)."""
+    return bool(_IT_TAXID.match(str(value).strip().upper().replace(" ", "")))
+
+
 def validate_it_cig(value):
     """An Italian tender identification code (CIG): ten characters, seven digits and three
     hexadecimal ones, or a SmartCIG starting with X, Y or Z and nine hexadecimal characters

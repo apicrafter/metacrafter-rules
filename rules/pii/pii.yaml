@@ -31,11 +31,37 @@ rules:
   genderbyname:
     key: gender
     is_pii: True
-    name: Gender or sex by field name (sex, author_sex, patient_gender, пол)
-    # One or two words before sex or gender, optionally followed by code or id.
-    rule: '(?i)(?:[a-z0-9]+[ _.-]){0,2}(?:sex|gender)(?:[ _.-](?:code|id))?|пол'
+    name: Gender or sex by field name (sex, author_sex, patient_gender, SEX_2016, Geschlecht, sexo, sugu, пол)
+    # One or two words before sex or gender (or Geschlecht, sexe, sexo, sesso, Estonian sugu),
+    # optionally followed by code or id, the year of a survey (SEX_2016) or a bracketed note
+    # (Sexo (catálogo), Gender (name)). The values are words, letters or small codes: the V-Dem
+    # women's political empowerment index v2x_gender (0.912) is no sex column.
+    rule: '(?i)(?:[a-z0-9]+[ _.-]){0,2}(?:sex|gender|geschlecht|geschl|sexe|sexo|sesso|sugu)(?:[ _.-](?:code|id|cd|\d{2,4})|[ _]\((?:name|code|cat[aá]logo)\))?|пол'
     type: field
     match: regex
+    validator: metacrafterext.rules.common.survey.validate_gender_code
+    priority: 1
+  agebyname:
+    key: age
+    is_pii: True
+    name: Age by field name (age, Alter, edad, vanus, age_years, kaaskoneleja_vanus)
+    # One or two words before the word for age, optionally in years. The values are ages or
+    # the codes of age bands; age bands have agerangebyname.
+    rule: '(?i)(?:[a-z0-9]+[ _.-]){0,2}(?:age|alter|edad|âge|idade|leeftijd|vanus|wiek|ålder|возраст|вік)(?:[ _.-](?:years?|yrs|jahre|in[ _]years|in[ _]jahren|ans|años|anos|anni|лет))?'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.survey.validate_age_value
+    needs_values: true
+    priority: 1
+  agerangebyname:
+    key: age_range
+    is_pii: True
+    name: Age band by field name (age_group, AGE_CAT, alter_gr, Altersgruppen, grupo de edad)
+    rule: '(?i)(?:[a-z0-9]+[ _.-]){0,2}(?:age|alter|edad|vanus|âge)[ _.-]?(?:gr(?:oups?|uppen?|p)?|ranges?|bands?|cat(?:egor(?:y|ies|ie|ien))?|class(?:es)?|klassen?|kl|brackets?|intervals?|kat(?:egorien?)?)(?:[ _.-][a-z0-9]+)?|alters(?:gruppen?|klassen?|kategorien?|kat)(?:[ _.-][a-z0-9]+)?|(?:grupo|rango|tramo)s?[ _](?:de[ _])?edad|grupo[ _]etario|(?:tranche|classe)s?[ _](?:d[ _'']?)?[aâ]ge'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.survey.validate_age_range_value
+    needs_values: true
     priority: 1
   genderbyvalue:
     key: gender

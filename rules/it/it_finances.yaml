@@ -10,6 +10,8 @@ rules:
     rule: codice_fiscale,cf,tax_id,partita_iva,iva
     type: field
     match: text
+    # CF is also the consumption column of National Transfer Accounts (5616.664).
+    validator: metacrafterext.rules.common.identifiers.validate_it_taxid_shape
     priority: 1
   itbankaccountknown:
     key: bankaccount

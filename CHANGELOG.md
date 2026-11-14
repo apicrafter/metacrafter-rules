@@ -9,6 +9,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Rules for the AUSSDA files of metacrafter-testdata** (Dataverse exports of the Austrian Social
+  Science Data Archive, a 2024 snapshot of data.aussda.at): survey data hold codes, so these are
+  field-name rules whose values are checked (`metacrafterext.rules.common.survey`):
+  - survey weights (`survey_weight`, new in the registry): ESS `dweight`, `pspwght`, `pweight`,
+    `anweight`, qualified weights (`design_weight`, `weight_final`, `W1_WEIGHTD` of a panel
+    wave), IPUMS / ACS `perwt`, `pwgtp`, the German `gew`, `gewichtung`, `Gewicht_DES`; a
+    bare `weight` or `Gewicht` (the mass of a thing) and `Gewicht_kg` are left alone;
+  - ages (`age`: `age`, `Alter`, `edad`, `vanus`, `age_years`, 0 to 130) and age bands
+    (`age_range`: `age_group`, `SD_AGE_CAT`, `alter_gr`, `Altersgruppen`; 16-34, 65+ or codes);
+  - the Eurostat degree of urbanisation (`eu_degurba`, new: `degurba`, `urban`, `xurb`,
+    `urbanisierung_ec` with the values 1, 2, 3);
+  - Correlates of War country codes (`cow_country_code`, new: `COWcode`, `ccode`, checked
+    against the 217 codes of the State System Membership List);
+  - variable names of codebooks and data dictionaries (`variable_name`, new: `variable`,
+    `VARIABLENAME`, `field_name`), also as a guarded value rule, so that variable names of the
+    shape of other identifiers (Q10 is a Wikidata id, AB12CDE a UK plate) keep that type only;
+  - ESS and survey country names `cntry`, `ctry`, `ccode` for ISO alpha-2 codes.
+
+### Changed
+
+- Gender by field name takes `Geschlecht`, `sexe`, `sexo`, `sesso`, Estonian `sugu`, a survey
+  year (`SEX_2016`) and a bracketed note (`Sexo (catálogo)`), and checks the values: words,
+  letters or small codes. The V-Dem index `v2x_gender` (0.912) is no sex column.
+- The Italian tax number by field name (`cf`, `tax_id`, `iva`) checks the shape of a codice fiscale
+  or partita IVA: `CF` is also private consumption in National Transfer Accounts (5616.664).
+- The Australian and Indian `state` field rules do not label a flag: a `state` of 0 and 1 marks
+  state actors (FIPS state codes and names stay).
+
 - **Rules for the Opendatasoft files of metacrafter-testdata** (registry datatypes and records
   without rules found in a 2022 snapshot of data.opendatasoft.com, mostly French public bodies):
   - the INSEE geography that Opendatasoft adds to French records and that Sirene and statistics

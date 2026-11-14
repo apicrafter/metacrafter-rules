@@ -34,3 +34,15 @@ rules:
     validator: metacrafterext.rules.common.identifiers.validate_eu_eic
     needs_values: true
     priority: 1
+  eudegurbabyname:
+    key: eu_degurba
+    name: Eurostat degree of urbanisation (DEGURBA) by field name (degurba, urbanisation, xurb, Grad der Urbanisierung)
+    # Eurostat LAU lists (DEGURBA), the Austrian Mikrozensus (xurb, xurb12) and AUSSDA surveys
+    # (urban, urbanisierung_ec): 1 cities, 2 towns and suburbs, 3 rural areas. An urban flag of
+    # 0 and 1 or a text class fails the check.
+    rule: '(?i)(?:[a-z0-9]+[ _.-])?(?:deg_?urba|dgurba|degurb|urbani[sz]ation(?:[ _.-]?(?:degree|level|grade|ec|class))?|degree[ _]of[ _]urbani[sz]ation|urbanisierung(?:sgrad)?(?:[ _.-]?ec)?|grad[ _]der[ _]urbanisierung|xurb|urban)(?:[ _.-]?(?:\d{2,4}|code|cd|class|lau))?'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.survey.validate_degurba
+    needs_values: true
+    priority: 1
