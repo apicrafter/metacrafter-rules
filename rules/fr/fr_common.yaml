@@ -91,6 +91,7 @@ rules:
     type: field
     match: regex
     validator: metacrafterext.rules.fr.codes.validate_fr_res_installation_id
+    needs_values: true
     priority: 1
   frresequipementvalue:
     key: fr_res_equipement_id
@@ -108,4 +109,5 @@ rules:
     type: field
     match: regex
     validator: metacrafterext.rules.fr.codes.validate_fr_res_equipement_id
+    needs_values: true
     priority: 1

@@ -32,4 +32,5 @@ rules:
     type: field
     match: regex
     validator: metacrafterext.rules.ca.validators.validate_ca_fsa
+    needs_values: true
     priority: 1

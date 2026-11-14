@@ -26,4 +26,5 @@ rules:
     type: field
     match: regex
     validator: metacrafterext.rules.common.identifiers.validate_it_cig
+    needs_values: true
     priority: 1

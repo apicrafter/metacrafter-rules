@@ -70,6 +70,7 @@ rules:
     type: field
     match: regex
     validator: metacrafterext.rules.fr.codes.validate_fr_commune_code
+    needs_values: true
     priority: 1
   frdepartmentcodebyname:
     key: fr_department_code
@@ -79,6 +80,7 @@ rules:
     type: field
     match: regex
     validator: metacrafterext.rules.fr.codes.validate_fr_department_code
+    needs_values: true
     priority: 1
   frregioncodebyname:
     key: fr_region_code
@@ -87,6 +89,7 @@ rules:
     type: field
     match: regex
     validator: metacrafterext.rules.fr.codes.validate_fr_region_code
+    needs_values: true
     priority: 1
   frdepartmentnamebyname:
     key: fr_department
@@ -95,6 +98,7 @@ rules:
     type: field
     match: regex
     validator: metacrafterext.rules.fr.codes.validate_fr_department_name
+    needs_values: true
     priority: 1
   frregionnamebyname:
     key: fr_region
@@ -103,6 +107,7 @@ rules:
     type: field
     match: regex
     validator: metacrafterext.rules.fr.codes.validate_fr_region_name
+    needs_values: true
     priority: 1
   frcommunenamebyname:
     key: fr_commune
@@ -112,6 +117,7 @@ rules:
     type: field
     match: regex
     validator: metacrafterext.rules.common.generic.has_letters
+    needs_values: true
     priority: 1
   frepcicodebysiren:
     key: epcicode
@@ -120,6 +126,7 @@ rules:
     type: field
     match: regex
     validator: metacrafterext.rules.fr.codes.validate_fr_epci_siren
+    needs_values: true
     priority: 1
   frarrondissementcodebyname:
     key: fr_arrondissement_code
@@ -128,6 +135,7 @@ rules:
     type: field
     match: regex
     validator: metacrafterext.rules.fr.codes.validate_fr_arrondissement_code
+    needs_values: true
     priority: 1
   frcantoncodebyname:
     key: fr_canton_code
@@ -136,6 +144,7 @@ rules:
     type: field
     match: regex
     validator: metacrafterext.rules.fr.codes.validate_fr_canton_code
+    needs_values: true
     priority: 1
   fririsbyname:
     key: fr_iris_code
@@ -144,6 +153,7 @@ rules:
     type: field
     match: regex
     validator: metacrafterext.rules.fr.codes.validate_fr_iris_code
+    needs_values: true
     priority: 1
   frzoneemploibyname:
     key: fr_zone_emploi_code
@@ -152,6 +162,7 @@ rules:
     type: field
     match: regex
     validator: metacrafterext.rules.fr.codes.validate_fr_zone_emploi_code
+    needs_values: true
     priority: 1
   frbassinviebyname:
     key: fr_bassin_vie_code
@@ -160,6 +171,7 @@ rules:
     type: field
     match: regex
     validator: metacrafterext.rules.fr.codes.validate_fr_bassin_vie_code
+    needs_values: true
     priority: 1
   frunitebyname:
     key: fr_unite_urbaine_code
@@ -168,6 +180,7 @@ rules:
     type: field
     match: regex
     validator: metacrafterext.rules.fr.codes.validate_fr_unite_urbaine_code
+    needs_values: true
     priority: 1
   fraavbyname:
     key: fr_aire_attraction_villes_code
@@ -176,6 +189,7 @@ rules:
     type: field
     match: regex
     validator: metacrafterext.rules.fr.codes.validate_fr_aire_code
+    needs_values: true
     priority: 1
   frqpvvalue:
     key: fr_qpv_code
@@ -194,4 +208,5 @@ rules:
     type: field
     match: regex
     validator: metacrafterext.rules.fr.codes.validate_fr_qpv_code
+    needs_values: true
     priority: 1

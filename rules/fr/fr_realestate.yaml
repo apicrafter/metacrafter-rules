@@ -54,4 +54,5 @@ rules:
     type: field
     match: regex
     validator: metacrafterext.rules.fr.codes.validate_fr_dpe_number
+    needs_values: true
     priority: 1

@@ -23,6 +23,7 @@ rules:
     type: field
     match: regex
     validator: metacrafterext.rules.fr.codes.validate_fr_uai
+    needs_values: true
     priority: 1
   fracademiecodebyname:
     key: fr_academie_code
@@ -31,4 +32,5 @@ rules:
     type: field
     match: regex
     validator: metacrafterext.rules.fr.codes.validate_fr_academie_code
+    needs_values: true
     priority: 1

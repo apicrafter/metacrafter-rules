@@ -363,6 +363,7 @@ rules:
     type: field
     match: regex
     validator: metacrafterext.rules.common.generic.validate_latitude_value
+    needs_values: true
     priority: 1
   longitudebyshortname:
     key: longitude
@@ -372,6 +373,7 @@ rules:
     type: field
     match: regex
     validator: metacrafterext.rules.common.generic.validate_longitude_value
+    needs_values: true
     priority: 1
   geojsongeometrytypebyname:
     key: geojson_geometry_type
@@ -381,6 +383,7 @@ rules:
     type: field
     match: regex
     validator: metacrafterext.rules.common.generic.validate_geojson_geometry_type
+    needs_values: true
     priority: 1
   geopoint2dbyname:
     key: geo_point_2d
@@ -391,4 +394,5 @@ rules:
     type: field
     match: text
     validator: metacrafterext.rules.common.generic.validate_latlon_pair
+    needs_values: true
     priority: 1

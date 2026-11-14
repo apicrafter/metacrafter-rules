@@ -37,6 +37,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - ENTSO-E EIC codes by value with their check character (`eu_eic`), UIC station codes in UIC
     and DiDok fields (`uiccode`), Spanish cadastral references by value with their check letters,
     Italian CIG, Canadian FSA, more Swiss BFS municipality number field names.
+  - these field-name rules check their values and need values (`needs_values: true`): an empty
+    `type`, `lat` or `region` column gets no label from its name alone.
 
 - **Rules for the data.gov.uk types of metacrafter-testdata** (registry datatypes added from a
   January 2022 snapshot of data.gov.uk):

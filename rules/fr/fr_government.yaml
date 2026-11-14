@@ -11,6 +11,7 @@ rules:
     type: field
     match: regex
     validator: metacrafterext.rules.fr.codes.validate_fr_election_nuance
+    needs_values: true
     priority: 1
   fractesmatierebyname:
     key: fr_actes_matiere_code
@@ -19,4 +20,5 @@ rules:
     type: field
     match: regex
     validator: metacrafterext.rules.fr.codes.validate_fr_actes_matiere_code
+    needs_values: true
     priority: 1

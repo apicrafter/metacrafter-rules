@@ -32,4 +32,5 @@ rules:
     type: field
     match: regex
     validator: metacrafterext.rules.common.identifiers.validate_eu_eic
+    needs_values: true
     priority: 1

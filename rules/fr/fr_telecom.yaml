@@ -21,6 +21,7 @@ rules:
     type: field
     match: regex
     validator: metacrafterext.rules.fr.codes.validate_fr_fibre_building_id
+    needs_values: true
     priority: 1
   frarcepoperatorbyname:
     key: fr_arcep_operator_code
@@ -31,4 +32,5 @@ rules:
     type: field
     match: regex
     validator: metacrafterext.rules.fr.codes.validate_fr_arcep_operator_code
+    needs_values: true
     priority: 1

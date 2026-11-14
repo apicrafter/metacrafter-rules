@@ -230,4 +230,5 @@ rules:
     type: field
     match: regex
     validator: metacrafterext.rules.common.identifiers.validate_uic_station_code
+    needs_values: true
     priority: 1

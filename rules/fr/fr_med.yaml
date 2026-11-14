@@ -52,4 +52,5 @@ rules:
     type: field
     match: regex
     validator: metacrafterext.rules.fr.codes.validate_fr_finess
+    needs_values: true
     priority: 1

@@ -11,6 +11,7 @@ rules:
     type: field
     match: regex
     validator: metacrafterext.rules.fr.codes.validate_fr_hydro_station_code
+    needs_values: true
     priority: 1
   frsandrecourseauvalue:
     key: fr_sandre_cours_eau_code
@@ -28,6 +29,7 @@ rules:
     type: field
     match: regex
     validator: metacrafterext.rules.fr.codes.validate_fr_sandre_cours_eau_code
+    needs_values: true
     priority: 1
   frsandrezonehydrobyname:
     key: fr_sandre_zone_hydro_code
@@ -36,6 +38,7 @@ rules:
     type: field
     match: regex
     validator: metacrafterext.rules.fr.codes.validate_fr_sandre_zone_hydro_code
+    needs_values: true
     priority: 1
   frgasparvalue:
     key: fr_gaspar_id
@@ -53,4 +56,5 @@ rules:
     type: field
     match: regex
     validator: metacrafterext.rules.fr.codes.validate_fr_gaspar_id
+    needs_values: true
     priority: 1
