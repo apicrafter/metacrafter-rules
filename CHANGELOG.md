@@ -43,7 +43,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     fields (NT postcodes without the leading zero, 871); ACNs (`auacn`) by check digit in `acn` fields
     that lost the leading zeros (2399653); ABNs by check digit in `ABN_ACN` and `Supplier ABN` fields;
     CAS Registry Numbers (`casrn`) by check digit in CAS fields; PCT application numbers and WO
-    publication numbers by value; UPOV codes (`upov_code`) in `upov_code` fields.
+    publication numbers by value; UPOV codes (`upov_code`) in `upov_code` fields;
+  - common: suburbs as `location` (Suburb, SUBURB, suburb_name) and town or city fields as `city`
+    (TOWN/CITY, Suburb/Town): without a scan country this universal match covers `au_suburb`, so a
+    South African SUBURB is no Australian suburb.
 
 - **Rules for the ARSAT files of metacrafter-testdata** (an April 2024 Dateno snapshot of the open
   data portal of ARSAT, the Argentine state satellite and telecommunications company):
