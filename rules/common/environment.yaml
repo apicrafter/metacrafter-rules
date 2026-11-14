@@ -44,3 +44,34 @@ rules:
     validator: metacrafterext.rules.common.chemistry.validate_polymer_name_or_code
     needs_values: true
     priority: 1
+  # Sensor.Community (luftdaten) and sensors.AFRICA archives, one row per reading:
+  # sensor_id;sensor_type;location;lat;lon;timestamp;value_type;value (247 files of the openAFRICA
+  # snapshot of metacrafter-testdata).
+  airsensormodelbyname:
+    key: air_sensor_model
+    name: Air quality sensor model by field name (sensor_type, sensor_model) with sensor models (SDS011, DHT22)
+    rule: (?i)sensor[ _]?(?:type|model|name)|sensortype
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.sensors.validate_air_sensor_model
+    needs_values: true
+    priority: 1
+  airsensormodelvalue:
+    key: air_sensor_model
+    name: Air quality sensor model by value (SDS011, pms5003, DHT22, BME280, BAM 1020)
+    rule: metacrafterext.rules.common.sensors.validate_air_sensor_model
+    type: data
+    match: func
+    minlen: 3
+    maxlen: 12
+    priority: 1
+  sensorcommunityvaluetypebyname:
+    key: sensor_community_value_type
+    name: Sensor.Community value type by field name (value_type) with value types (P1, P2, temperature)
+    # P1 and P2 alone are also priorities and parts of a code: only by field name.
+    rule: (?i)value[ _]?type|valuetype|measurement[ _]?type
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.sensors.validate_sensor_community_value_type
+    needs_values: true
+    priority: 1

@@ -1,0 +1,18 @@
+name: sl-geo
+description: Sierra Leonean chiefdoms
+context: geo
+lang: en
+country_code: sl
+# Found in the openAFRICA snapshot of metacrafter-testdata: the water point survey of 2012
+# (CHIEFDOM, SECTION), the STEWARD schools (Adm3_Name) and the Truth and Reconciliation research
+# data. Chiefdoms are the admin 3 units of the OCHA common operational datasets of Sierra Leone.
+rules:
+  slchiefdombyname:
+    key: sl_chiefdom
+    name: Sierra Leonean chiefdom by field name (CHIEFDOM, chiefdom_name)
+    rule: (?i)(?:[a-z]+[ _])?chiefdom(?:[ _]?(?:name|nm))?|chiefdoms?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.generic.validate_place_name
+    needs_values: true
+    priority: 1
