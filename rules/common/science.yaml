@@ -173,7 +173,7 @@ rules:
     rule: domain,superkingdom,kingdom,subkingdom,superphylum,phylum,subphylum,superclass,class,subclass,infraclass,superorder,order,suborder,infraorder,superfamily,family,subfamily,tribe,subtribe,genus,subgenus,section,series,species,subspecies,variety,subvariety,form,subform,cultivar,strain,unranked,infraspecific_name,species_aggregate
     type: data
     match: text
-    fieldrule: taxonrank,taxon_rank,taxonomic_rank,taxonomic rank,verbatimtaxonrank,dwc:taxonrank,rank
+    fieldrule: taxonrank,taxon_rank,taxonomic_rank,taxonomic rank,verbatimtaxonrank,dwc:taxonrank,rank,match_rank,matchrank
     fieldrulematch: text
     priority: 1
   dwctaxonrankknown:
@@ -253,4 +253,24 @@ rules:
     type: field
     match: text
     validator: metacrafterext.rules.common.generic.validate_institution_code
+    priority: 1
+  # Scientific names without authorship (Pardalotus striatus, Solenopsis sp. B) are two words of
+  # any text: by the Darwin Core and survey field names, with the values checked (TERN plot data).
+  speciesbyfieldname:
+    key: species
+    name: Scientific name of a species by field name (scientificName, verbatimIdentification, mostDominantSpecies)
+    rule: (?i)(?:dwc:)?scientific_?name|verbatim_?identification|original_?scientific_?name|species_?original|(?:target_?|main_?)?species(?:_?name)?|herbarium_?determination|field_?species_?names?|taxon_?name|latin_?name|binomial(?:_?name)?|(?:(?:second|third|fourth|fifth)_?)?most_?dom[a-z]*[ _]?species
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.fieldwork.validate_scientific_name
+    needs_values: true
+    priority: 1
+  dwcscientificnameauthorshipbyfield:
+    key: dwc_scientific_name_authorship
+    name: Authorship of a scientific name by field name (authorship, scientificNameAuthorship, Author/Date)
+    rule: (?i)(?:dwc:)?(?:scientific_?name_?)?authorship|author_?/?_?date|author_?year|taxon_?author(?:ity)?|species_?author|naming_?authority
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.fieldwork.validate_scientific_name_authorship
+    needs_values: true
     priority: 1

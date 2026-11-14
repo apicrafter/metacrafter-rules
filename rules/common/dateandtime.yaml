@@ -302,3 +302,48 @@ rules:
     match: regex
     validator: metacrafterext.rules.common.generic.validate_school_year
     priority: 1
+  clocktimebyname:
+    key: time
+    name: Time of day with a one-digit hour by field name (startTime 7:02:00, endTime 9:50:00 AM)
+    rule: (?i)(?:start|end|finish|stop|begin|observation|survey|sampling|visit|search|count)[ _]?time|time[ _]?(?:start|end|finish|stop|of[ _]?day)|phenomenon_?time
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.fieldwork.validate_clock_time
+    needs_values: true
+    priority: 1
+  clocktimewithsecondsvalue:
+    key: time
+    name: Time of day with a one-digit hour and seconds or AM / PM (7:02:00, 9:50:00 AM) by value
+    rule: metacrafterext.rules.common.fieldwork.validate_clock_time_with_seconds
+    type: data
+    match: func
+    minlen: 7
+    maxlen: 11
+    priority: 1
+  durationtextbyname:
+    key: duration
+    name: Duration in words by field name (samplingDuration 3 hours, 20 minutes)
+    rule: (?i)(?:sampling|survey|search|observation|trapping|recording|event|visit|count)?_?duration
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.fieldwork.validate_duration_text
+    needs_values: true
+    priority: 1
+  durationtextvalue:
+    key: duration
+    name: Duration in words with its unit (3 hours, 20 minutes; 2 days) by value
+    rule: metacrafterext.rules.common.fieldwork.validate_duration_text
+    type: data
+    match: func
+    minlen: 5
+    maxlen: 60
+    priority: 1
+  weekofyearbyname:
+    key: week_of_year
+    name: Week number of a year by field name (week_number, week_of_year)
+    rule: (?i)week_?(?:number|num|no|of_?year|nr)|weeknumber|weekno|calendar_?week|kalenderwoche
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.fieldwork.validate_week_of_year
+    needs_values: true
+    priority: 1

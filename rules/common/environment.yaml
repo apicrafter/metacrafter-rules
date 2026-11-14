@@ -16,3 +16,13 @@ rules:
     fieldrule: station code,station_code,stationcode,eoi_code,ab_eoi_code,eoi code,airbase_code,eu_code,station_eoi_code,international_code,code_eoi
     fieldrulematch: text
     priority: 1
+  soilhorizonbyname:
+    key: soil_horizon
+    name: Soil horizon designation by field name (soilHorizon, horizon)
+    # A1, B21 and Bt are short codes of any table: by field name only.
+    rule: (?i)(?:soil_?)?horizon(?:_?(?:name|designation|code|id|label))?|horizon_?designation
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.fieldwork.validate_soil_horizon
+    needs_values: true
+    priority: 1
