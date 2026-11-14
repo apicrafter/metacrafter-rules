@@ -9,6 +9,42 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Rules for the datos.cultura.gob.ar files of metacrafter-testdata** (an April 2024 Dateno
+  snapshot of the open data portal of the Argentine culture ministry: the cultural directories of
+  the Mapa Cultural and the national survey of cultural consumption, ENCC). A new rule file,
+  `rules/common/directories.yaml`, with validators in `metacrafterext.rules.common.directories`
+  that compare the words of a value with a small vocabulary after case and accents are folded:
+  - broadcast frequencies (`radio_frequency`: `frecuencia`, 88.3, FM 104.1, 1410KHZ; by value
+    with the band or the unit); geocoding precision (`geocoding_precision`:
+    `tipo_latitud_longitud`, `TipoLatitudLongitud`, `detalle_georreferencia`, `location_type`;
+    by value when it says precise, approximate or centroid, as the `Nota` field of the festivals
+    does); public or private management (`ownership_type`: `tipo_gestion`, `tipo de gestión`,
+    `jurisdiccion`, `statut_public_prive`: Público, Privado, Mixto, Estatal, Municipal, Privé);
+    attendance mode (`attendance_mode`: `Modalidad`: Presencial, Virtual, Bimodal, A distancia);
+    periodicity (`periodicity`: `Periodicidad`: Anual, Bianual, Mensual, ANNUAL); levels of
+    education (`education_level`: `Nivel`, `nivel_educativo`: Grado, Pregrado, Posgrado,
+    Secundarios completos); socioeconomic levels (`socioeconomic_level`: `NSE_3`, `NSEcat1`,
+    `niv_socioe`: ABC1, C2+C3, D2E, C+); the type and the number of a legal act
+    (`legislationtype`: `decreto_o_ley`: Decreto, Ley, Resolución SC; `legislation_number`:
+    `numero_de_decreto_o_ley`: 325, 24.262, 1172/2003); degree titles (`academicdegree`:
+    `Título`: Licenciado en Comunicación Social, Profesor de Música);
+  - Argentine regions (`ar_region`: `region`, `REGION`: NOA, NEA, CUYO, CENTRO, PATAGONIA, GBA,
+    and the electricity market regions COMAHUE, GRAN BS.AS.), national heritage categories by
+    value (`ar_heritage_category`: Monumento Histórico, Lugar Histórico, Sepulcro, Bien de Interés
+    Histórico y Artístico) and CONABIP popular library numbers (`ar_conabip_number`:
+    `nro_conabip`);
+  - Spanish names of existing types: years in any field named with año, anio or ano
+    (`año_inauguracion`, `Año de inicio`, `último año de actividad`, `declaracion_año`) and
+    `inicio_actividad`; Spanish month names (`es_month`: Octubre, FEBRERO); phones named
+    `Teléfono`, `Telefóno`, `tel`, `celular` with 5 to 15 digits; street addresses named
+    `direccion`, `Dirección`, `domicilio`, `direccion_descripcion` with a number or a street word
+    (a wind direction and a directorate fail); floors named `piso` (`address_line2`: P.B., 2º B,
+    Planta Alta); gender named `genero`, `GENERO`, `identidad_de_genero` with gender words (a genre
+    of literature or music fails); age bands named `franja_etaria` and written `18 A 29 ANIOS`,
+    `65 ANIOS Y MAS`; survey weights named `ponderador`, `pondera_dem`, `expansor`.
+- `booleansino`: Sí, Si, SI and No are boolean. A yes/no column passed only when No was the
+  commoner answer, through the English no.
+
 - **Rules for the datos.gob.ar files of metacrafter-testdata** (an April 2024 Dateno snapshot of
   the Argentine national open data portal; validators in `metacrafterext.rules.ar_country.codes`):
   - INDEC geographic codes of the georef service and national data, by field name with the
@@ -182,6 +218,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- `esgenderknown` of `rules/pii/es/es_pii.yaml` was defined twice: the second rule (a data rule
+  for the text anio_nacimiento) replaced the first, so masculino and femenino were no gender. The
+  second is now `esbirthyearknown`, a field rule for `birth_year` (`anio_nacimiento`,
+  `año_de_nacimiento`).
 - `nombre_completo` is a person's full name only when its values are (Argentine and Mexican
   rules): the georef service of datos.gob.ar writes the full names of provinces and
   departments there (Provincia del Neuquén, Partido de Adolfo Gonzales Chaves).

@@ -284,3 +284,65 @@ def validate_ar_ncm_code(value):
     """An NCM / HS code of digits, with or without dots: 010121, 0101.21, 01012100 (not a
     product name such as Caballos, reproductores de raza pura)."""
     return bool(_NCM.match(str(value).strip()))
+
+
+# --- Found in the cultural directories and surveys of the Argentine culture ministry -----------
+# (datos.cultura.gob.ar, an April 2024 snapshot; metacrafter-testdata, 2026-11-14).
+
+def _fold(value):
+    text = unicodedata.normalize("NFKD", str(value).strip().lower())
+    text = "".join(ch for ch in text if not unicodedata.combining(ch))
+    return re.sub(r"\s+", " ", text.replace("_", " ")).strip(" .")
+
+
+# Regions of INDEC (Gran Buenos Aires, Noroeste, Noreste, Cuyo, Pampeana, Patagonia), of cultural
+# statistics and surveys (NOA, NEA, Cuyo, Centro, Patagonia, CABA, GBA, Buenos Aires) and of the
+# wholesale electricity market (Litoral, Comahue, GRAN BS.AS.).
+AR_REGIONS = frozenset((
+    "noa", "nea", "noroeste", "noreste", "nordeste", "noroeste argentino", "noreste argentino",
+    "nordeste argentino", "cuyo", "centro", "region centro", "pampeana", "region pampeana", "patagonia",
+    "patagonica", "gba", "gran buenos aires", "gran bs as", "gran bs. as", "gran bsas", "amba",
+    "area metropolitana de buenos aires", "conurbano", "conurbano bonaerense", "caba", "c.a.b.a",
+    "ciudad autonoma de buenos aires", "capital federal", "buenos aires", "bs as", "bs. as", "pba",
+    "provincia de buenos aires", "litoral", "comahue", "metropolitana", "region metropolitana",
+    "gba norte", "gba sur", "gba oeste", "noa y nea", "norte", "sur",
+))
+
+
+_AR_REGION_KEYS = frozenset(re.sub(r"[\s.]+", "", name) for name in AR_REGIONS)
+
+
+def _region_key(value):
+    return re.sub(r"[\s.]+", "", _fold(value))
+
+
+def validate_ar_region(value):
+    """An Argentine region by name or abbreviation: NOA, NEA, CUYO, CENTRO, PATAGONIA, GBA, CABA,
+    C.A.B.A, Pampeana, Noroeste, BUENOS AIRES, Comahue, GRAN BS.AS. A province other than Buenos
+    Aires (Neuquén) fails."""
+    return _region_key(value) in _AR_REGION_KEYS
+
+
+# Categories of national heritage declarations (Ley 12.665 as amended by Ley 27.103).
+_HERITAGE_HEADS = ("monumento historico", "monumento", "lugar historico", "sepulcro", "bien de interes",
+                   "poblado historico", "pueblo historico", "area urbana historica", "area de amortiguacion",
+                   "arbol historico", "sitio historico", "sitio arqueologico", "ciudad historica",
+                   "conjunto urbano", "patrimonio historico", "monumento historico artistico")
+
+
+def validate_ar_heritage_category(value):
+    """A national heritage category: Monumento Histórico (Nacional), Lugar Histórico, Sepulcro,
+    Bien de Interés Histórico y Artístico, Árbol Histórico, Poblado Histórico, Área Urbana
+    Histórica, Sitio Arqueológico. A kind of institution (Museo) fails."""
+    folded = _fold(value).replace("-", " ").replace("í", "i").replace("ì", "i")
+    folded = unicodedata.normalize("NFKD", folded)
+    folded = "".join(ch for ch in folded if not unicodedata.combining(ch))
+    return len(folded) <= 120 and any(folded.startswith(head) for head in _HERITAGE_HEADS)
+
+
+def validate_ar_conabip_number(value):
+    """The number of a popular library in the CONABIP register: a whole number from 1 to 9999."""
+    text = str(value).strip()
+    if text.endswith(".0"):
+        text = text[:-2]
+    return text.isdigit() and 1 <= int(text) <= 9999

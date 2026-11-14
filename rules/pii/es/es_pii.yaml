@@ -11,13 +11,17 @@ rules:
     rule: masculino,femenino
     match: text
     type: data
-  esgenderknown:
-    key: birthday
+  # This rule had the key of the rule above (esgenderknown), so it replaced it and masculino /
+  # femenino were no gender; anio_nacimiento is a field name of a year of birth, not a value.
+  esbirthyearknown:
+    key: birth_year
     is_pii: True
-    name: Spanish birthday by known field names
-    rule: anio_nacimiento
+    name: Spanish year of birth by known field names
+    rule: anio_nacimiento,año_nacimiento,ano_nacimiento,anio_de_nacimiento,año_de_nacimiento
     match: text
-    type: data
+    type: field
+    validator: metacrafterext.rules.common.generic.validate_year_value
+    needs_values: true
   es_pii_espassportfield:
     key: espassport
     is_pii: True

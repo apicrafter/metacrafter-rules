@@ -14,6 +14,10 @@ rules:
     type: data
     fieldrule: ano,anio
     fieldrulematch: text
+    # Or a field name with the word año, anio or ano among other words (año_inauguracion, Año de
+    # inicio, último año de actividad, declaracion_año, anio_actualizacion) and the start of an
+    # activity (inicio_actividad, inicio_act) in the Argentine cultural directories; años is a count.
+    fieldregex: '(?i)^(?:[^\W\d_]+[ _.-]){0,3}(?:a[ñn]o|anio)(?:[ _.-][^\W_]+){0,4}$|^inicio[ _](?:de[ _])?act(?:ividad(?:es)?)?$'
   esmonthbydatafiltered:
     key: month
     name: Spanish month by fieldname and value
@@ -24,6 +28,15 @@ rules:
     type: data
     fieldrule: mes
     fieldrulematch: text
+  esmonthnamevalue:
+    key: es_month
+    name: Spanish month name by value (Octubre, febrero, FEBRERO, setiembre)
+    rule: metacrafterext.rules.common.directories.validate_es_month
+    type: data
+    match: func
+    minlen: 4
+    maxlen: 12
+    priority: 1
   esdatetimename:
     key: datetime
     name: Spanish date name

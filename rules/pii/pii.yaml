@@ -41,6 +41,19 @@ rules:
     match: regex
     validator: metacrafterext.rules.common.survey.validate_gender_code
     priority: 1
+  genderbyspanishname:
+    key: gender
+    is_pii: True
+    name: Gender by Spanish field name (genero, género, identidad_de_genero, GENERO) with gender values
+    # Género is also a genre of literature, music or film (genero_area_principal_editorial:
+    # Poesía, Novela), so the values must be genders in words or letters: Mujer, Varón, No
+    # binaria, Masculino, F, M (validate_gender_word).
+    rule: '(?i)(?:[a-z0-9]+[ _.-]){0,2}g[eé]nero(?:[ _.-](?:code|id|cd|\d{2,4}))?|identidad[ _](?:de[ _])?g[eé]nero'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.directories.validate_gender_word
+    needs_values: true
+    priority: 1
   agebyname:
     key: age
     is_pii: True
@@ -56,8 +69,8 @@ rules:
   agerangebyname:
     key: age_range
     is_pii: True
-    name: Age band by field name (age_group, AGE_CAT, alter_gr, Altersgruppen, grupo de edad)
-    rule: '(?i)(?:[a-z0-9]+[ _.-]){0,2}(?:age|alter|edad|vanus|âge)[ _.-]?(?:gr(?:oups?|uppen?|p)?|ranges?|bands?|cat(?:egor(?:y|ies|ie|ien))?|class(?:es)?|klassen?|kl|brackets?|intervals?|kat(?:egorien?)?)(?:[ _.-][a-z0-9]+)?|alters(?:gruppen?|klassen?|kategorien?|kat)(?:[ _.-][a-z0-9]+)?|(?:grupo|rango|tramo)s?[ _](?:de[ _])?edad|grupo[ _]etario|(?:tranche|classe)s?[ _](?:d[ _'']?)?[aâ]ge'
+    name: Age band by field name (age_group, AGE_CAT, alter_gr, Altersgruppen, grupo de edad, franja_etaria)
+    rule: '(?i)(?:[a-z0-9]+[ _.-]){0,2}(?:age|alter|edad|vanus|âge)[ _.-]?(?:gr(?:oups?|uppen?|p)?|ranges?|bands?|cat(?:egor(?:y|ies|ie|ien))?|class(?:es)?|klassen?|kl|brackets?|intervals?|kat(?:egorien?)?)(?:[ _.-][a-z0-9]+)?|alters(?:gruppen?|klassen?|kategorien?|kat)(?:[ _.-][a-z0-9]+)?|(?:grupo|rango|tramo|franja)s?[ _](?:de[ _])?edad|(?:grupo|rango|franja|tramo)[ _]etari[oa]|(?:tranche|classe)s?[ _](?:d[ _'']?)?[aâ]ge'
     type: field
     match: regex
     validator: metacrafterext.rules.common.survey.validate_age_range_value

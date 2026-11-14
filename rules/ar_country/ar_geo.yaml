@@ -123,3 +123,16 @@ rules:
     maxlen: 8
     fieldregex: '(?i)postal|^cpa?$|_cpa?$|^cp_|zip'
     priority: 1
+  # Found in the national surveys of cultural consumption (ENCC) and the Puntos de Cultura
+  # programme of the Argentine culture ministry (datos.cultura.gob.ar, metacrafter-testdata).
+  arregionbyname:
+    key: ar_region
+    name: Argentine region by field name (region, REGION, region_nombre) with region names
+    # NOA, NEA, CUYO, CENTRO, PATAGONIA, GBA, CABA, Pampeana; the electricity market regions
+    # (GRAN BS.AS., COMAHUE, LITORAL). Regions of other countries fail.
+    rule: '(?i)(?:[a-z0-9]+[ _.-]){0,2}regi[oó]n(?:[ _.-](?:nombre|name|geogr[aá]fica|estad[ií]stica|indec|desc|des))?|nombre[ _]regi[oó]n'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.ar_country.codes.validate_ar_region
+    needs_values: true
+    priority: 1

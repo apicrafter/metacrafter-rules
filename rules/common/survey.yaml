@@ -8,13 +8,14 @@ rules:
   # Dataverse exports of AUSSDA, the Austrian Social Science Data Archive (metacrafter-testdata).
   surveyweightbyname:
     key: survey_weight
-    name: Survey weight by field name (dweight, pspwght, anweight, design_weight, W1_WEIGHTD, Gewicht_DES, gew)
+    name: Survey weight by field name (dweight, pspwght, anweight, design_weight, W1_WEIGHTD, Gewicht_DES, gew, ponderador, expansor)
     # European Social Survey (dweight, pspwght, pweight, anweight), IPUMS and ACS (perwt, hhwt,
     # pwgtp), qualified weights (design_weight, weight_final, w1_weightd of a panel wave) and the
     # German names of Austrian surveys (gew, gew_roh, gewichtung, Gewicht_DES). A bare weight or
-    # Gewicht is the mass of a thing; Gewicht_kg too, and a sample weight (grams of tissue in the
+    # Spanish surveys: ponderador, pondera_dem, expansor and factor de expansión (the national surveys
+    # of cultural consumption of Argentina, ENCC). Gewicht is the mass of a thing; Gewicht_kg too, and a sample weight (grams of tissue in the
     # AIMS microplastics file) or a weight with a unit (final_weight_kg): sampling weight stays.
-    rule: '(?i)dweight|pspwght|pspweight|pweight|anweight|perwt|hhwt|wtfinl|finalwt|pwgtp|wgtp|weighting(?:[ _]?factor)?|weight[ _]?factor|wfactor|(?:[a-z0-9]+[_.-])?w(?:gt|ght)(?:[_.-]?(?!kg$|lbs?$)[a-z0-9]+)?|(?:[a-z0-9]+[ _.-])?(?:design|post(?:strat(?:ification)?)?|ps|pop(?:ulation)?|analysis|cal(?:ib(?:ration)?)?|final|base|samp(?:ling)?|survey|resp(?:ondent)?|cross(?:sectional)?|long(?:itudinal)?|panel|trim(?:med)?|rak(?:e|ing))[ _.-]?weights?(?:[ _.-](?!(?:kg|g|mg|lbs?|oz|t|grams?|tonnes?)$)[a-z0-9]+)?|weights?[ _.-](?:design|post(?:strat[a-z]*)?|ps|pop|analysis|cal[a-z]*|final|base|samp[a-z]*|survey|resp[a-z]*|cross[a-z]*|long[a-z]*|panel|trim[a-z]*|rak[a-z]*|[dpc]|w?\d{1,2})|w\d{1,2}(?:w\d{1,2})?[_.]?weight[a-z]{0,2}|gew(?:[_.-][a-z0-9]+)?|[a-z0-9]+[_.-]gew|gewichtung(?:s?faktor)?(?:[_.-][a-z0-9]+)?|gewicht[_.-](?!(?:kg|g|t|gramm|tonnen|brutto|netto|leer)$)[a-z0-9]+|designgewicht|hochrechnungsfaktor'
+    rule: '(?i)dweight|pspwght|pspweight|pweight|anweight|perwt|hhwt|wtfinl|finalwt|pwgtp|wgtp|weighting(?:[ _]?factor)?|weight[ _]?factor|wfactor|(?:[a-z0-9]+[_.-])?w(?:gt|ght)(?:[_.-]?(?!kg$|lbs?$)[a-z0-9]+)?|(?:[a-z0-9]+[ _.-])?(?:design|post(?:strat(?:ification)?)?|ps|pop(?:ulation)?|analysis|cal(?:ib(?:ration)?)?|final|base|samp(?:ling)?|survey|resp(?:ondent)?|cross(?:sectional)?|long(?:itudinal)?|panel|trim(?:med)?|rak(?:e|ing))[ _.-]?weights?(?:[ _.-](?!(?:kg|g|mg|lbs?|oz|t|grams?|tonnes?)$)[a-z0-9]+)?|weights?[ _.-](?:design|post(?:strat[a-z]*)?|ps|pop|analysis|cal[a-z]*|final|base|samp[a-z]*|survey|resp[a-z]*|cross[a-z]*|long[a-z]*|panel|trim[a-z]*|rak[a-z]*|[dpc]|w?\d{1,2})|w\d{1,2}(?:w\d{1,2})?[_.]?weight[a-z]{0,2}|gew(?:[_.-][a-z0-9]+)?|[a-z0-9]+[_.-]gew|gewichtung(?:s?faktor)?(?:[_.-][a-z0-9]+)?|gewicht[_.-](?!(?:kg|g|t|gramm|tonnen|brutto|netto|leer)$)[a-z0-9]+|designgewicht|hochrechnungsfaktor|pondera(?:dor(?:es)?|ci[oó]n)?(?:[_.-][a-z0-9]+)?|expansor(?:es)?|factor[ _]?(?:de[ _])?expansi[oó]n|f[_.]?exp'
     type: field
     match: regex
     validator: metacrafterext.rules.common.survey.validate_survey_weight
