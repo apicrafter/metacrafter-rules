@@ -47,3 +47,14 @@ rules:
     validator: metacrafterext.rules.common.periods.validate_money_range
     needs_values: true
     priority: 1
+  temperaturebyname:
+    key: temperature
+    name: Temperature by field name (temperature, Temperatur, air_temperature, temperature_c) with numbers
+    # Temperatur is the German and Nordic word and the dBase-truncated Temperature (isotherms of
+    # ArmSIS). A bare temp is a temporary value as often.
+    rule: (?i)(?:(?:air|water|soil|sea|surface|mean|avg|average|max|min|maximum|minimum|daily|annual|monthly)[ _-]?)?temperat(?:ure|ur)(?:[ _-]?(?:c|°c|degc|deg_c|celsius|mean|avg|max|min|\(°c\)|\(c\)))?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.fieldwork.validate_temperature_value
+    needs_values: true
+    priority: 1

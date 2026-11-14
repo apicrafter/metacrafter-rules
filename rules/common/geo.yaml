@@ -447,7 +447,8 @@ rules:
   elevationbyname:
     key: elevation
     name: Elevation above sea level in metres by field name (elevation, elevation_metres, altitude)
-    rule: (?i)(?:site_?|ground_?|surface_?|plot_?|station_?)?(?:elevation|altitude|elev)(?:[ _]?(?:m|metres?|meters?|masl|amsl|asl|\[metre\]|\(m\)))?|height_?above_?sea_?level
+    # elev_start and elev_end give the source and mouth of a river (river network of ArmSIS).
+    rule: (?i)(?:site_?|ground_?|surface_?|plot_?|station_?)?(?:elevation|altitude|elev)(?:[ _](?:start|end|min|max|mean))?(?:[ _]?(?:m|metres?|meters?|masl|amsl|asl|\[metre\]|\(m\)))?|height_?above_?sea_?level
     type: field
     match: regex
     validator: metacrafterext.rules.common.fieldwork.validate_elevation_value
@@ -540,6 +541,30 @@ rules:
     match: regex
     validator: metacrafterext.rules.common.fieldwork.validate_epsg_code
     needs_values: true
+    priority: 1
+  epsgcodebycrs:
+    key: epsg_code
+    name: 'EPSG code with its authority in a field named crs (WGS 84 EPSG: 4326, EPSG:25832)'
+    # A bare crs may hold a system name (WGS 84) or another number, so only codes that name the
+    # authority count, alone or after the name of the system (soil profile database of ArmSIS).
+    rule: (?i)crs|coordinate[ _]reference[ _]system|srs|srs[ _]?name
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.fieldwork.validate_epsg_code_with_authority
+    needs_values: true
+    priority: 1
+  gmlidvalue:
+    key: gml_id
+    name: GML feature id of a WFS export (Soil_map0.1, states.12) by field name (FID, gml_id)
+    # GeoServer names features after the feature type and a number; WFS CSV exports keep the id in
+    # a FID column, ogr2ogr in gml_id. Integer FIDs of shapefiles are objectid.
+    rule: '[A-Za-z_][A-Za-z0-9_-]*\.[1-9]\d{0,9}'
+    type: data
+    match: regex
+    minlen: 3
+    maxlen: 120
+    fieldrule: fid,gml_id,gml:id,feature_id,featureid,@gml:id
+    fieldrulematch: text
     priority: 1
   wktvalue:
     key: wkt

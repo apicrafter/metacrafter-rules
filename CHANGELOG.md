@@ -9,6 +9,35 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Rules for the ArmSIS files of metacrafter-testdata** (an April 2024 snapshot of the Armenian Soil
+  Information System, a GeoNode portal of the Armenian National Agrarian University, Dateno source
+  cdi00000013; validators in `metacrafterext.rules.common.soils`, `metacrafterext.rules.common.fieldwork`
+  and `metacrafterext.rules.am.geo`):
+  - soil survey values (`rules/common/soils.yaml`): WRB reference soil groups
+    (`wrb_reference_soil_group`: Chernozems, Castanozems, Haplic Calcisols, Solonetzes-Solonchaks) by
+    value and in WRB fields (`WRB_refere`); soil types of the Soviet classification and those derived
+    from it (`soil_type`: Mountain chernozem, Горно-каштановые, Լեռնային սևահողեր) by value and in soil
+    name fields; texture classes (`soil_texture_class`: loam, sandy loam, суглинистые,
+    супесчано-суглинистые), erosion degrees (`soil_erosion_degree`: slight, moderately and severely
+    eroded, слабоэродированные) and land cover classes (`land_cover_class`: cropland, Tree cover,
+    Built-up) in fields named for them only, because the values are common words;
+  - pH (`ph_value`) in pH fields (pH, pH_H2O, pHwater, phLevel_calciumChloride) with values from 0 to
+    14; IUCN protected area categories (`iucn_protected_area_category`, which had no rule) in IUCN
+    fields (`IUCN_CAT`, the truncated `IUCNCATEGO`), with the category I of before 1994;
+    temperatures (`temperature`) in temperature fields (`Temperatur`) with numbers from -90 to 60;
+  - Armenian provinces (`am_marz`: Gegharkunik, Վայոց Ձոր, Aragatsotn Province, Сюник) by value and in
+    marz, region and province fields; Ararat, Armavir, Lori and Yerevan alone count only by field name;
+  - GML feature ids of WFS CSV exports (`gml_id`: Soil_map0.1) in FID and gml_id fields; EPSG codes
+    with their authority in a bare crs field, also after the name of the system (`WGS 84 EPSG: 4326`;
+    a bare number there is not a code, as the BEV round decided).
+
+### Changed
+
+- `soil_horizon` takes the Soviet notation of transitional horizons (B2C1, A2B, B1C, CD) and the
+  dBase-truncated `Horizon_in` (Horizon_index); `epsg_code` values may name the system before the code
+  and have a space after the colon; `elevation` fields may end in start, end, min, max or mean
+  (`elev_start`, `elev_end` of the river network of ArmSIS).
+
 - **Rules for the data.gov.au files of metacrafter-testdata** (a snapshot of the Australian national
   open data portal, Dateno source cdi00000098; validators in `metacrafterext.rules.au.codes` and
   `metacrafterext.rules.common.periods`):
