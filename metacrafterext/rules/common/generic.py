@@ -595,3 +595,42 @@ def validate_latlon_pair(value):
         return False
     lat, lon = float(m.group(1)), float(m.group(2))
     return -90.0 <= lat <= 90.0 and -180.0 <= lon <= 180.0
+
+
+# Colour names of English data (and the modifiers before them), as colour fields write them:
+# Transparent, black, light blue, blue-green, Black/White, multicoloured.
+COLOUR_NAMES = frozenset("""
+black white red green blue yellow orange purple violet pink brown grey gray silver gold golden
+beige cream tan maroon navy teal turquoise cyan magenta indigo lilac lavender khaki olive burgundy
+ivory bronze copper amber aqua charcoal coral crimson mauve ochre peach plum rose ruby rust
+salmon scarlet tangerine taupe transparent clear translucent opaque colourless colorless
+multicolour multicolor multicoloured multicolored multi-coloured multi-colored multi rainbow
+""".split())
+_COLOUR_MODIFIERS = frozenset("light dark pale bright deep pastel metallic navy sky royal off".split())
+_HEX_COLOUR = re.compile(r"^#?[0-9A-Fa-f]{6}$")
+
+
+def validate_colour_name(value):
+    """A colour by name, with modifiers and combinations (light blue, blue-green, Black/White), or
+    a hex triplet (#1E90FF)."""
+    text = str(value).strip()
+    if _HEX_COLOUR.match(text) and text.startswith("#"):
+        return True
+    words = [w for w in re.split(r"[\s/,&+-]+|\band\b", text.lower()) if w]
+    if not words or len(words) > 5:
+        return False
+    if not any(w in COLOUR_NAMES for w in words):
+        return False
+    return all(w in COLOUR_NAMES or w in _COLOUR_MODIFIERS or w.rstrip("ish") in COLOUR_NAMES for w in words)
+
+
+_VESSEL_NAME = re.compile(r"^(?=.*[A-Za-z]{2})[A-Za-z0-9][A-Za-z0-9 .'’&()\-/]{1,59}$")
+
+
+def validate_vessel_name(value):
+    """A ship name: words of letters with digits allowed (Solander, Cape Ferguson, RV Investigator,
+    Queen Mary 2); not a number, an IMO number, a date or a URL."""
+    text = " ".join(str(value).split())
+    if not _VESSEL_NAME.match(text):
+        return False
+    return sum(c.isdigit() for c in text) <= len(text) // 2

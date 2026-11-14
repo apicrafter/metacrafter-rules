@@ -14,9 +14,11 @@ rules:
   timebypatmin:
     key: time
     name: Time by pattern (10:00:00)
+    # The colon before the seconds was missing, so 16:41:59 did not match and digit runs such as
+    # 10:3000 did (one-digit hours: clocktimewithsecondsvalue).
     type: data
     match: ppr
-    rule: Word("012", exact=1) + Word(nums, exact=1) + Literal(":") + Word("012345", exact=1) + Word(nums, exact=1) + Word("012345", exact=1) + Word(nums, exact=1)
+    rule: Word("012", exact=1) + Word(nums, exact=1) + Literal(":") + Word("012345", exact=1) + Word(nums, exact=1) + Literal(":") + Word("012345", exact=1) + Word(nums, exact=1)
     validator: metacrafterext.rules.common.dateandtime.is_valid_time
   timerangebypat:
     key: timerange

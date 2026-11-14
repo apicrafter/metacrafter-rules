@@ -9,6 +9,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Rules for the AIMS files of metacrafter-testdata** (registry datatypes added from a 2024
+  snapshot of the AIMS GeoNetwork, Australian Institute of Marine Science):
+  - Great Barrier Reef feature identifiers of GBRMPA (`au_gbr_reef_id`: 11-049, 19-051a) in
+    `GBR_ID`, `LABEL_ID` and reef id fields, and by value in fields that name a reef or the GBR;
+    AIMS Long-Term Monitoring Program sector codes (`au_aims_ltmp_sector`: CA, SW, CB) in sector
+    fields only, since six of the codes are country codes;
+  - decimal years (`decimal_year`: 1994.83) in `Deci_Year`, `decimal_date` and `year_frac`
+    fields; Darwin Core life stages (`dwc_life_stage`: adult, juvenile, AD, JUV) in `lifeStage`
+    and `stage` fields; ship names (`vessel_name`) in `vessel_name`, `ship_name` and `RV`
+    fields; plastic polymers (`polymer_type`) by name (polypropylene, polyethylene
+    terephthalate, rayon:polyester as FTIR matches list them) and, in polymer fields, by
+    abbreviation (PET, HDPE);
+  - `color` in colour fields (`colour`, `vehicle_colour`, `hair color`) holding colour names
+    (Transparent, light blue, Black/White) or hex triplets: `color` had no rules;
+  - these field-name rules check their values and need values (`needs_values: true`).
+
 - **Rules for the AUSSDA files of metacrafter-testdata** (Dataverse exports of the Austrian Social
   Science Data Archive, a 2024 snapshot of data.aussda.at): survey data hold codes, so these are
   field-name rules whose values are checked (`metacrafterext.rules.common.survey`):
@@ -26,6 +42,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     `VARIABLENAME`, `field_name`), also as a guarded value rule, so that variable names of the
     shape of other identifiers (Q10 is a Wikidata id, AB12CDE a UK plate) keep that type only;
   - ESS and survey country names `cntry`, `ctry`, `ccode` for ISO alpha-2 codes.
+
 - **Rules for the TERN files of metacrafter-testdata** (registry datatypes added from a snapshot of
   the TERN geonetwork catalogue, plot surveys of Australian ecosystems; validators in
   `metacrafterext/rules/au/ecology.py` and `metacrafterext/rules/common/fieldwork.py`):
@@ -172,6 +189,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   (`clrutdigitsvalue`).
 
 ### Fixed
+
+- **Times with seconds did not match** (`timebypatmin`): the pattern had no colon before the
+  seconds, so 16:41:59 was not a `time` and the rule matched digit runs such as 10:3000. It now
+  needs both colons (one-digit hours are `clocktimewithsecondsvalue`).
 
 - `openalexid` by value needs an id or OpenAlex field: W and nine digits is also the RNA number of
   a French association (Sirene `identifiantAssociationUniteLegale`), I and nine digits a sports

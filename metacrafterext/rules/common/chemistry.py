@@ -191,3 +191,73 @@ def validate_molecular_formula(value):
     
     return True
 
+
+
+# Plastic polymers as microplastics studies and waste statistics name them: "poly" with the
+# monomer stems (polypropylene, polybutyleneterephthalate, polyvinyl chloride), copolymers of
+# the stems (styrene-ethylene-butylene-styrene), common names, and the abbreviations of
+# ISO 1043-1 that only a polymer field makes safe (PE, PP, PET, PS, PVC, PA).
+_POLYMER_STEMS = sorted("""
+ethylene propylene butylene styrene vinyl amide ester urethane carbonate acrylate acrylonitrile
+acrylic tetrafluoroethylene fluoroethylene oxymethylene siloxane glycol lactide lactic acid methyl
+methacrylate imide sulfone phenylene chloride fluoride formal ether isoprene butadiene
+terephthalate naphthalate alcohol acetate vinylidene ethyleneterephthalate hydroxybutyrate
+caprolactone ketone aramid olefin
+""".split(), key=len, reverse=True)
+_POLYMER_NAMES = frozenset("""
+nylon rayon viscose lyocell cellulose cellulose-based keratin chitin latex rubber acrylic
+polyester polyolefin polyamide silicone epoxy resin bakelite neoprene spandex elastane kevlar
+teflon cellophane acetate alkyd melamine
+""".split()) | {"cellulose based", "natural rubber", "methyl methacrylate", "cellulose acetate",
+                "ethylene vinyl acetate", "acrylonitrile butadiene styrene"}
+_POLYMER_CODES = frozenset("""
+PE HDPE LDPE LLDPE MDPE UHMWPE PP PET PETE PBT PS EPS XPS PVC PVDC PVDF PVF PA PU PUR PTFE PMMA
+ABS SAN EVA PC POM PLA PAN PES PEVA SBS SEBS PEEK PI PVA PVAL PVAC PHB PCL PEN PPS PSU TPU
+""".split())
+_POLYMER_PREFIXES = frozenset("nfc".split())
+
+
+def _stems(word):
+    """True when the word is a run of monomer stems (butyleneterephthalate)."""
+    rest = word
+    while rest:
+        for stem in _POLYMER_STEMS:
+            if rest.startswith(stem):
+                rest = rest[len(stem):]
+                break
+        else:
+            return False
+    return True
+
+
+def _polymer(part, codes):
+    text = " ".join(part.strip().split())
+    if not text:
+        return False
+    if codes and text.upper() in _POLYMER_CODES:
+        return True
+    low = text.lower()
+    if low in _POLYMER_NAMES:
+        return True
+    squashed = low.replace(" ", "").replace("-", "")
+    if squashed.startswith("poly") and len(squashed) > 6 and _stems(squashed[4:]):
+        return True
+    words = [w for w in re.split(r"[ -]", low) if w]
+    return len(words) >= 2 and all(_stems(w) for w in words)
+
+
+def validate_polymer_name(value, codes=False):
+    """A plastic polymer by name (polypropylene, Polyethylene terephthalate, nylon, Cellulose
+    based) or a list of them joined with ":" or "/" as FTIR matches report them
+    (rayon:polyester, NFC:rayon); abbreviations (PET, PP) only with codes=True."""
+    text = str(value).strip()
+    if not text or len(text) > 80:
+        return False
+    parts = [p for p in re.split(r"[:/;,+]", text) if p.strip()]
+    parts = [p for p in parts if p.strip().lower() not in _POLYMER_PREFIXES]
+    return bool(parts) and all(_polymer(p, codes) for p in parts)
+
+
+def validate_polymer_name_or_code(value):
+    """A polymer by name or abbreviation (PET, HDPE, polypropylene): for polymer fields."""
+    return validate_polymer_name(value, codes=True)

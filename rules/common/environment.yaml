@@ -26,3 +26,21 @@ rules:
     validator: metacrafterext.rules.common.fieldwork.validate_soil_horizon
     needs_values: true
     priority: 1
+  polymertypevalue:
+    key: polymer_type
+    name: Plastic polymer by name (polypropylene, polyethylene terephthalate, nylon, rayon:polyester)
+    match: func
+    type: data
+    rule: metacrafterext.rules.common.chemistry.validate_polymer_name
+    minlen: 5
+    maxlen: 80
+    priority: 1
+  polymertypebyfield:
+    key: polymer_type
+    name: Plastic polymer by field name (Polymer, polymer_type, plastic_type) with names or codes (PET, PP)
+    rule: (?i)(?:ftir[ _]?)?polymers?(?:[ _]?(?:type|id|identification|name|class|match))?|plastic[ _]?(?:type|polymer)|resin[ _]?type
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.chemistry.validate_polymer_name_or_code
+    needs_values: true
+    priority: 1

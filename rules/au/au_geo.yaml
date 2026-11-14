@@ -28,4 +28,34 @@ rules:
     # state codes (01, 06) and names stay.
     validator: metacrafterext.rules.common.survey.validate_not_flag
     priority: 1
-
+  augbrreefidbyname:
+    key: au_gbr_reef_id
+    name: Great Barrier Reef feature identifier by field name (GBR_ID, LABEL_ID, GBRMPA_REEF_ID)
+    rule: (?i)(?:gbr|gbrmpa)(?:[ _]?reef)?[ _]?id|label[ _]?id|reef[ _]?(?:id|label)
+    type: field
+    match: regex
+    validator: metacrafterext.rules.au.codes.validate_au_gbr_reef_id
+    needs_values: true
+    priority: 1
+  augbrreefidvalue:
+    key: au_gbr_reef_id
+    name: Great Barrier Reef feature identifier in a reef field (11-049, 19-051a)
+    # Two digits, a hyphen and three digits is also a file or case number: the field must name
+    # a reef or the GBR.
+    rule: (?:09|1\d|2[0-4])-\d{3}[a-z]?
+    type: data
+    match: regex
+    minlen: 6
+    maxlen: 7
+    fieldregex: '(?i)reef|gbr'
+    priority: 1
+  auaimsltmpsectorbyname:
+    key: au_aims_ltmp_sector
+    name: AIMS Long-Term Monitoring Program sector by field name (sector, A_SECTOR) and codes (CA, SW, CB)
+    # CA, CG, CL, CU, IN and TO are also country codes: no value rule.
+    rule: (?i)(?:(?:a|ltmp|aims|gbr|reef)[ _]?)?sector(?:[ _]?code)?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.au.codes.validate_au_aims_ltmp_sector
+    needs_values: true
+    priority: 1
