@@ -9,6 +9,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Rules for the ARSAT files of metacrafter-testdata** (an April 2024 Dateno snapshot of the open
+  data portal of ARSAT, the Argentine state satellite and telecommunications company):
+  - KML coordinates written as text in a cell (`kml_coordinates`: lon,lat,alt tuples separated by
+    whitespace, two or more, in WGS 84 ranges), as the Ku and C band footprints of the ARSAT
+    satellites keep each polygon ring; one tuple (`220,220,220`) and GML position lists are left out;
+  - procurement methods (`procurement_method`, new `metacrafterext.rules.common.procurement`) by
+    value in Spanish, Portuguese, French, Italian, German, English, Estonian, Russian and Japanese
+    (Contratacion directa - Inciso F, Compras Menores, Licitación Pública BAC, Negociado sin
+    publicidad, Procédure adaptée, Avatud hankemenetlus, 指名競争入札), and by field name
+    (`Tipocompra`, `tipo_procedimiento`, `procedure`, `procurementMethod`, `ProcedureCode`) with
+    the OCDS method and eForms procedure type codes too (open, oth-single, neg-wo-call); a value
+    that goes on with a number or a sentence (Licitación Pública N° 12/2020 para ...) is a
+    procedure name, not a method;
+  - Argentine province names (`ar_province`: Buenos Aires, CÓRDOBA, Entre Rios, Sgo Del Estero,
+    Provincia del Neuquén, CABA) by value and in `provincia` / `jurisdiccion` fields;
+  - Spanish gender words (`gender`: Mujeres, Hombres, Femenino, Masculino, Varón) by value, and
+    `género` fields whose values are genders (not the genres Drama or Novela);
+  - organizational units (`orgunit`, which had no rules): Spanish unit names by value (Gerencia
+    Comercial, Subgerencia de RRHH, Unidad de Auditoría Interna, Presidencia, Directorio) and
+    fields named `gerencia`, `subgerencia`, `dependencia`, `unidad organizativa`, `org_unit`.
+
 - **Rules for the Córdoba files of metacrafter-testdata** (an April 2024 Dateno snapshot of the
   open data portal of the statistics office of the province of Córdoba, Argentina, DGEyC;
   validators in `metacrafterext.rules.ar_country.census`, rules in `rules/ar_country/ar_census.yaml`):
@@ -199,6 +220,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- `pii/es/es_pii.yaml` gave the Spanish birthday rule the key of the gender rule
+  (`esgenderknown`), so PyYAML kept only the birthday rule and Spanish gender values were never
+  matched; the birthday rule is `esbirthdayknown` now.
+- Fields named `fecha` (`es/es_datetime.yaml`, `esdatetimename`) are `date`, as `data` and `date`
+  are in the Portuguese and common rules, not `datetime`: the transfers of ARSAT hold dates alone.
+- `bankaccount` on fields named `cuenta` (`ar/ar_finances.yaml`, `ar_country/ar_finances.yaml`)
+  needs account numbers in the values: the budget execution tables of ARSAT name the line of the
+  savings-investment-financing account `CUENTA` (Ingresos de Operación, Remuneraciones).
 - `semver` refuses numbers with dots as thousands separators (1.003.522 head of cattle, 3.413.530
   people in Argentine tables).
 - `nombre_completo` is a person's full name only when its values are (Argentine and Mexican

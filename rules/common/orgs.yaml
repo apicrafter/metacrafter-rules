@@ -75,3 +75,21 @@ rules:
     fieldrule: category,entitycategory,entity_category,entity category,legal_entity_category
     fieldrulematch: text
     priority: 1
+  orgunitbyname:
+    key: orgunit
+    name: Organizational unit by field name (gerencia, subgerencia, dependencia, unidad organizativa, org_unit)
+    rule: (?i)(?:sub)?gerencias?(?:[ _](?:solicitante|requirente|responsable|nombre))?|dependencia(?:[ _](?:solicitante|requirente))?|unidad[ _](?:organizativa|org[aá]nica|requirente|solicitante)|repartici[oó]n|org(?:anization(?:al)?|anisation(?:al)?)?[ _]?unit(?:[ _]name)?|business[ _]unit
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.generic.validate_orgunit_text
+    needs_values: true
+    priority: 1
+  orgunitesvalue:
+    key: orgunit
+    name: Organizational unit by Spanish value (Gerencia Comercial, Subgerencia de RRHH, Unidad de Auditoría Interna, Directorio)
+    rule: metacrafterext.rules.common.generic.validate_es_orgunit_name
+    type: data
+    match: func
+    minlen: 9
+    maxlen: 120
+    priority: 1

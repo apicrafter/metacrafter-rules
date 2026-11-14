@@ -14,9 +14,13 @@ rules:
   ar_finances_arbankaccountknown:
     key: bankaccount
     name: Argentine bank account by known name
+    # Budget and accounting tables name the line of a chart of accounts cuenta (Ingresos de
+    # Operación, Remuneraciones in the budget execution of ARSAT): the values must be numbers.
     rule: cuenta_bancaria,cuenta,numero_cuenta
     type: field
     match: text
+    validator: metacrafterext.rules.ar_country.codes.validate_ar_bank_account_number
+    needs_values: true
     priority: 1
 
   arcuitbyfieldname:
