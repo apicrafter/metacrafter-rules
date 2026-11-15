@@ -190,6 +190,10 @@ rules:
     rule: gln,gln_number,global_location_number,location_id,location_number
     match: text
     type: field
+    # location_id and location_number are ids of any list as often (1, 2, 3 in the IoT devices of
+    # Ballarat): the values must be GLNs.
+    validator: metacrafterext.rules.common.identifiers.validate_gln
+    needs_values: true
     priority: 1
   objects_glnvalue:
     key: gln

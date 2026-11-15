@@ -9,6 +9,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Rules for the Ballarat files of metacrafter-testdata** (a 2024 snapshot of the City of Ballarat Data
+  Exchange, data.ballarat.vic.gov.au, an Opendatasoft portal of Victoria, Australia, Dateno source cdi00000089;
+  validators in `metacrafterext.rules.common.observations`, rules in `rules/common/observations.yaml`):
+  - readings of environmental sensors and weather stations by field name, with checks of the numbers: PM1,
+    PM2.5 and PM10 (`pm1_concentration`, `pm25_concentration`, `pm10_concentration`: pm1, pm2_5, PM2.5 (µg/m³)),
+    ozone, nitrogen dioxide and carbon monoxide (`ozone_concentration`, `no2_concentration`, `co_concentration`;
+    a bare `co` is not one), relative humidity (`relative_humidity`, 0 to 100), air and vapour pressure
+    (`atmospheric_pressure` in hPa, kPa or Pa, `vapour_pressure`), precipitation (`precipitation_amount`:
+    precipitation, rainfall, prcp), solar radiation (`solar_radiation`: W/m², MJ/m²), wind speed and gusts
+    (`wind_speed`) and wind direction in degrees (`wind_direction`, 0 to 360), sound level (`sound_pressure_level`:
+    sound_pressure_level_average, LAeq, LAmax), and water quality: electrical conductivity
+    (`electrical_conductivity`: µS/cm, dS/m, conductivity_deciSiemensPerMetre), salinity, turbidity (NTU, FNU) and
+    total dissolved solids;
+  - the diameter of a tree at breast height (`tree_dbh`: dbh, diameter_breast_height, 45 cm or size classes
+    <15cm, 31cm - 60cm, > 90cm), military ranks (`military_rank`: SGT., LT COL. DSO., PTE. Driver in `rank`
+    fields; a decoration alone or a taxon rank is not one), the CRS of a geometry in well-known text (`wkt_crs`:
+    GEOGCS[...], PROJCS[...], GEOGCRS[...] by value and in `json_ogc_wkt_crs`), LoRaWAN EUIs (`eui64`:
+    end_device_ids_dev_eui, dev_eui, join_eui with sixteen hexadecimal digits);
+  - `point` fields of latitude and longitude text as `geopoint` (Opendatasoft names a geo_point field point
+    in 29 of the 95 Ballarat tables), `wind_direction_cardinal` as `compass_point`, `acidity` of water as
+    `ph_value`, council property numbers (`propertyid`: propnum, property_number, with priority 1), full
+    Australian addresses by value (`address`: 16 Cypress Avenue WENDOUREE VIC 3355, with a postcode of the state).
 - **Rules for the Mendoza files of metacrafter-testdata** (a 2024 snapshot of datosabiertos.mendoza.gov.ar,
   the open data portal of the province of Mendoza, Argentina, Dateno source cdi00000026; validators in
   `metacrafterext.rules.ar_country.mendoza`, `metacrafterext.rules.common.tourism` and
@@ -262,6 +284,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `area`.
 
 ### Fixed
+
+- `device_id` and `equipment_id` are an `imei` only when the values are IMEIs (sensor ids lst25275720,
+  ems-b879); `location_id` and `location_number` are a `gln` only with GLN values (1, 2, 16 were); `plaque`
+  is a `fr_vehicle_plate` only with French plates (memorial plaque numbers 2559 were).
+- A legal form after an article is not a company name (`encompanyname`): Supported by a trust and Not
+  supported by a trust of the GIAS schools register, which were the only values left once metacrafter took
+  Not applicable for an empty value.
 
 - `za_economic_classification` by value no longer takes a column of CAPITAL or Current: the level 1
   words of the South African classification are common words, and the Capital department of Mendoza

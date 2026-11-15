@@ -11,6 +11,18 @@ rules:
     type: field
     priority: 3
     match: text
+  propertynumberbyname:
+    key: propertyid
+    name: Property number by field name (propnum, property_number, prop_no, property_ref) with ids
+    # Councils number the rateable properties of their register (City of Ballarat: propnum 2006864 in the
+    # waste collection days, property_number 2030025 in the neighbourhood character study). The text
+    # rule above has priority 3, too weak to report.
+    rule: (?i)prop(?:erty)?[ _-]?(?:num(?:ber)?|no|nbr|ref(?:erence)?)|propnum
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.urban.validate_property_number
+    needs_values: true
+    priority: 1
   propertyidvalue:
     key: propertyid
     name: Property ID by pattern

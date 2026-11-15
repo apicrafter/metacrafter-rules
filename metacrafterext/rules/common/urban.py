@@ -144,3 +144,20 @@ def validate_urban_rural_class(value):
     text = " ".join(re.sub(r"[^\w/():]+", " ", raw).split())
     words = " ".join(re.sub(r"[^\w]+", " ", raw).split())
     return bool(words) and (words in URBAN_RURAL or bool(_URBAN_RURAL_CLASS.match(text)))
+
+
+_PROPERTY_NUMBER = re.compile(r"^(?=.*\d)[A-Za-z0-9][A-Za-z0-9/.\-]{2,19}$")
+
+
+def validate_property_number(value):
+    """A property number of a council or land register: 3 to 20 letters and digits with at least one
+    digit, optionally with / . - (2006864, 2030025, P12345, 123/456); not a whole-number float such
+    as 2006864.5 or a date."""
+    text = str(value).strip()
+    if text.endswith(".0"):
+        text = text[:-2]
+    if not _PROPERTY_NUMBER.match(text):
+        return False
+    if re.match(r"^\d+\.\d+$", text) or re.match(r"^\d{4}-\d{2}-\d{2}$", text):
+        return False
+    return True
