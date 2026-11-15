@@ -9,6 +9,39 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Rules for the Colombian files of metacrafter-testdata** (a May 2024 snapshot of Datos Abiertos Colombia,
+  www.datos.gov.co, Dateno source cdi00000385, which also lists the tables of the Cundinamarca map portal, the
+  ICDE, the CAR, the city of Cali and Postdata; validators in the new `metacrafterext.rules.co.codes` and
+  `metacrafterext.rules.common.registers`, rules in the new `rules/co/co_codes.yaml` and
+  `rules/common/registers.yaml` and in `rules/co/co_geo.yaml` and `rules/common/directories.yaml`):
+  - territory: departments by name (`co_department`: DEPARTAMENTO, DEPARTAMEN, Depa_Resi, Departamento de
+    residencia; no rule read them before) and by DIVIPOLA code (`co_department_code`: Código Departamento,
+    COD_DEPTO, CodigoDaneDepartamento, ID_DEPARTAMENTO with 05, 25, 5), municipality codes under more names and
+    without the leading zero (`co_divipola`: Cod_Municipio, CodigoDaneMunicipio, ID_MUNICIPIO, muni_codigo,
+    CODDANE with 76001, 5001), comunas by field name (`co_comuna`: 4, 21, Comuna 5, 17. MUTIS, SEIS; labelled
+    `ar_caba_comuna` before) and, written with the word, by value (Comuna 5), corregimientos and veredas by name
+    (`co_corregimiento`, `co_vereda`);
+  - people and households: the socioeconomic stratum (`co_estrato`: ESTRATO with 1 to 6 or ESTRATO 2), Sisbén IV
+    groups (`co_sisben_group`: A5, B4, C18), identity document types (`co_identity_document_type`: TIPODOC, Tipo
+    de identificación with CC, TI, RC, C.C.), health insurance regimes (`co_health_regime`: Régimen, Regimen
+    Seguridad Social with Contributivo, Subsidiado, Excepción);
+  - property and vehicles: the matrícula inmobiliaria (`co_matricula_inmobiliaria`: 001-948136), the national
+    parcel number by name and, for 30 digits that start with a municipality code, by value
+    (`co_predial_number`), vehicle plates in fields named for them (`co_vehicle_plate`: EYY-710, AGH260, MRM02C,
+    636ADX);
+  - businesses and schools: CIIU Rev. 4 A.C. classes (`co_ciiu`: CIIU-1 with G4512 ** Comercio de vehiculos
+    automotores usados, 4711; a class with its title after two asterisks also by value), the NIT by field name (`co_nit`: NIT, NIT ENTIDAD, ACUEDUCTO-NIT with 890201725,
+    901603677-2; no rule before), DANE school codes (`co_school_dane_code`: CODIGO_DANE_SEDE, CodigoDane_EE,
+    codigo with 176001004973);
+  - small vocabularies of registers, universal rules: school shifts (`school_shift`: JORNADA with Diurna,
+    Nocturna, Fin de semana; turno), hazard, vulnerability and risk levels in words (`risk_level`: AMENAZA,
+    RIESGO, VULNERABILIDAD, TORRENCIAL, CAT_VULNER, Cat_F_Soci with Alta, Media, Baja, Amenaza Baja), the
+    medium of a record (`record_medium`: Medio de conservación y/o soporte with Físico, Electrónico, Digital),
+    languages by Spanish name (`language`: Idioma with Español, Castellano, Español - Ingles), the year of a
+    budget (`year` in Vigencia with 2021; semesters and dates fail);
+  - `attendance_mode` also in METODOLOGIA (Presencial, Distancia tradicional, Virtual) and `education_level` in
+    FORMACION_ACADEMICA and Escolaridad.
+
 - **Rules for the Canadian files of metacrafter-testdata** (2024 snapshots of the Dateno catalogue: the Canadian
   Watershed Information Network, canwinmap.ad.umanitoba.ca, cdi00000267, and the open data portals of the City
   of Calgary, data.calgary.ca, cdi00000286, and the City of Edmonton, data.edmonton.ca, cdi00000289; validators
@@ -627,6 +660,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     a bare number there is not a code, as the BEV round decided).
 
 ### Changed
+
+- `city` and the other place-name rules no longer read a division numbered before its name (17. MUTIS, 01.
+  NORTE, the comunas of Bucaramanga): `validate_place_name` refuses it as it refuses Comuna 14.
 
 - Age bands: `age_group_of_mother`, `age_groups_of_husband` (two words after the band word) are age band
   fields, and the bands `65 Years & Above`, `12 & Above`, `Less than 50`, `65 سنة فأكثر` and `أقل من 15`

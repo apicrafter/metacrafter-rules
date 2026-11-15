@@ -1,0 +1,142 @@
+name: co-codes
+description: Colombian registers of people, property, vehicles, businesses and schools
+context: common
+lang: es
+country_code: co
+# Found in a May 2024 snapshot of Datos Abiertos Colombia (www.datos.gov.co, Dateno source
+# cdi00000385), which also lists the tables of the Cundinamarca map portal, the ICDE, the CAR, the
+# city of Cali and Postdata; metacrafter-testdata.
+rules:
+  # ------------------------------------------------------------ people and households
+  # Registers of students, patients and beneficiaries give the stratum of the dwelling (1 to 6).
+  coestratobyname:
+    key: co_estrato
+    name: Colombian socioeconomic stratum by field name (ESTRATO, Estrato, estrato_socioeconomico, ESTU_ESTRATO) with 1 to 6 or ESTRATO 2
+    rule: (?i)(?:[a-z]+[-_ ])?estratos?(?:[ _](?:socio[ _]?econ[oó]mico|vivienda|de[ _]la[ _]vivienda|residencia|alcald[ií]a|predio))?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.co.codes.validate_co_estrato
+    needs_values: true
+    priority: 1
+  cosisbengroupbyname:
+    key: co_sisben_group
+    name: Sisbén IV group by field name (SISBEN, grupo_sisben, Clasificación Sisbén) with A5, B4, C18
+    rule: (?i)(?:(?:grupo|subgrupo|nivel|clasificaci[oó]n|categor[ií]a)[ _](?:del?[ _])?)?sisb[eé]n(?:[ _]iv)?(?:[ _](?:grupo|subgrupo))?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.co.codes.validate_co_sisben_group
+    needs_values: true
+    priority: 1
+  coidentitydocumenttypebyname:
+    key: co_identity_document_type
+    name: Colombian identity document type by field name (TIPODOC, Tipo de identificación, TIPO IDENTIFICACIÓN, tipo_documento) with CC, TI, RC, CE
+    rule: (?i)tipo[ _]?(?:de[ _])?(?:doc(?:umento)?|identificaci[oó]n|id(?:entidad)?)(?:[ _][a-zñáéíóú]+){0,4}|tip[ _]?doc|clase[ _](?:de[ _])?documento
+    type: field
+    match: regex
+    validator: metacrafterext.rules.co.codes.validate_co_identity_document_type
+    needs_values: true
+    priority: 1
+  cohealthregimebyname:
+    key: co_health_regime
+    name: Colombian health insurance regime by field name (REGIMEN, Régimen, Regimen Seguridad Social, tipo_regimen) with Contributivo, Subsidiado
+    # Regimen of mining royalties (Ley 756 8% variable) and of taxes (Común, Simplificado) fails.
+    rule: (?i)(?:tipo[ _](?:de[ _])?)?r[eé]gimen(?:[ _](?:de[ _])?(?:seguridad(?:[ _]social)?|salud|afiliaci[oó]n|del[ _](?:usuario|paciente|afiliado)))?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.co.codes.validate_co_health_regime
+    needs_values: true
+    priority: 1
+  # ------------------------------------------------------------ vehicles
+  # Traffic registers, fines and fleet lists: EYY-710, AGH260, MRM02C (motorcycle), 636ADX (motocarro).
+  covehicleplatebyname:
+    key: co_vehicle_plate
+    name: Colombian vehicle plate by field name (PLACA, Placa, placa_vehiculo, Placa de la Moto) with ABC123 or ABC12D
+    rule: (?i)(?:n[uú]mero[ _](?:de[ _])?)?placas?(?:[ _](?:de[ _])?(?:la[ _]|del[ _])?(?:veh[ií]culo|moto|motocicleta|carro|automotor))?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.co.codes.validate_co_vehicle_plate
+    needs_values: true
+    priority: 1
+  covehicleplatevalue:
+    key: co_vehicle_plate
+    name: Colombian vehicle plate by value in a field named for plates
+    rule: metacrafterext.rules.co.codes.validate_co_vehicle_plate
+    type: data
+    match: func
+    minlen: 5
+    maxlen: 7
+    fieldregex: (?i)^(?:n[uú]mero[ _](?:de[ _])?)?placas?(?:[ _](?:de[ _])?(?:la[ _]|del[ _])?(?:veh[ií]culo|moto|motocicleta|carro|automotor))?$
+    priority: 1
+  # ------------------------------------------------------------ property
+  comatriculainmobiliariabyname:
+    key: co_matricula_inmobiliaria
+    name: Colombian matrícula inmobiliaria by field name (Matricula Inmobiliaria, MATRICULA, folio_matricula, FMI) with 001-948136
+    # MATRICULA of school and business tables holds enrolment counts and trade register numbers: they fail.
+    rule: (?i)(?:n[uú]mero[ _](?:de[ _])?)?(?:folio[ _](?:de[ _])?)?matr[ií]culas?(?:[ _]inmobiliaria)?|fmi
+    type: field
+    match: regex
+    validator: metacrafterext.rules.co.codes.validate_co_matricula_inmobiliaria
+    needs_values: true
+    priority: 1
+  copredialnumberbyname:
+    key: co_predial_number
+    name: Colombian national parcel number by field name (NPN, numero_predial, Cédula Catastral, codigo_predial) with 30 or 20 digits
+    rule: (?i)npn(?:[ _][a-z]+){0,3}|n[uú]mero[ _]predial(?:[ _]nacional)?|c[oó]digo[ _](?:predial|catastral)(?:[ _]nacional)?|c[eé]dula[ _]catastral|ficha[ _]catastral
+    type: field
+    match: regex
+    validator: metacrafterext.rules.co.codes.validate_co_predial_number
+    needs_values: true
+    priority: 1
+  copredialnumbervalue:
+    key: co_predial_number
+    name: Colombian national parcel number by value (30 digits that start with a DIVIPOLA municipality code)
+    rule: metacrafterext.rules.co.codes.validate_co_predial_number
+    type: data
+    match: func
+    minlen: 30
+    maxlen: 30
+    priority: 1
+  # ------------------------------------------------------------ businesses
+  # The business registers of the chambers of commerce: CIIU-1 to CIIU-4 with G4512 ** Comercio de
+  # vehiculos automotores usados.
+  cociiubyname:
+    key: co_ciiu
+    name: Colombian CIIU Rev. 4 A.C. class by field name (CIIU, CIIU-1, Cod_CIIU Rev 4, CLASIFICACION CIIU) with 4711 or G4512
+    rule: (?i)(?:(?:cod(?:igo)?|c[oó]digo|clasificaci[oó]n|actividad)[ _])?ciiu(?:[ _-]?\d|[ _]rev\.?[ _]?4(?:[ _]a\.?c\.?)?|[ _](?:principal|secundari[oa]))?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.co.codes.validate_co_ciiu
+    needs_values: true
+    priority: 1
+  # The same export in columns of other names (codigo, actividad): the two asterisks after a letter and
+  # four digits are the chambers' own form.
+  cociiuvalue:
+    key: co_ciiu
+    name: Colombian CIIU Rev. 4 A.C. class with its title by value (F4111 ** Construccion de edificios residenciales)
+    rule: metacrafterext.rules.co.codes.validate_co_ciiu_titled
+    type: data
+    match: func
+    minlen: 10
+    maxlen: 200
+    priority: 1
+  conitbyname:
+    key: co_nit
+    name: Colombian NIT by field name (NIT, Nit, NIT ENTIDAD, nit_proveedor, ACUEDUCTO-NIT) with 890201725 or 901603677-2
+    rule: (?i)(?:[a-zñ]+[-_ ])?n\.?i\.?t\.?(?:[ _](?:de[ _]la[ _]|del[ _])?[a-zñáéíóú]+){0,2}
+    type: field
+    match: regex
+    validator: metacrafterext.rules.co.codes.validate_co_nit
+    needs_values: true
+    priority: 1
+  # ------------------------------------------------------------ schools
+  # The twelve-digit DANE code of a school or a site: CODIGO_DANE_SEDE, CodigoDane_EE, CodigoSede_EE,
+  # codigo of the Cali school tables (176001004973).
+  coschooldanecodebyname:
+    key: co_school_dane_code
+    name: Colombian DANE school code by field name (CODIGO_DANE_SEDE, CodigoDane_EE, CodigoSede_EE, codigo_dane, codigo) with twelve digits
+    rule: (?i)(?:cod(?:igo)?|c[oó]digo)[ _]?dane(?:[ _]?(?:de[ _]la[ _]|del[ _])?(?:sede|ee|establecimiento|instituci[oó]n|colegio|ie))?|(?:cod(?:igo)?|c[oó]digo)[ _]?sede(?:[ _]?ee)?|dane[ _]?(?:sede|ee|establecimiento)|c[oó]digo
+    type: field
+    match: regex
+    validator: metacrafterext.rules.co.codes.validate_co_school_dane_code
+    needs_values: true
+    priority: 1

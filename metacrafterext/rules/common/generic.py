@@ -182,10 +182,14 @@ _NUMBERED_DIVISION = re.compile(
     r"^(?:comuna|distrito|zona|sector|secci[oó]n|circuito|regi[oó]n|[aá]rea|ward|district|zone|division|precinct|bezirk)"
     r"\.? ?(?:n[°ºro.]* ?)?\d{1,3}$", re.IGNORECASE)
 
+# A division with its number before the name: 17. MUTIS, 01. NORTE (the comunas of Bucaramanga).
+_NUMBER_BEFORE_NAME = re.compile(r"^\d{1,3}\.\s+\S")
+
 
 def validate_place_name(value):
     """A place name: a name (validate_name_text) of at most 60 characters with at most one
-    comma, not a two-letter code and not a numbered division (Comuna 14, Distrito 6, Ward 5).
+    comma, not a two-letter code and not a numbered division (Comuna 14, Distrito 6, Ward 5,
+    17. MUTIS).
 
     Numeric city ids (335), province codes (ON, BC) and free-text localities ("Gia Dinh Park,
     Hoang Minh Giam Steet, ..., Ho Chi Minh City") are not names of a city or province
@@ -196,7 +200,7 @@ def validate_place_name(value):
     text = value.strip()
     if len(text) > 60 or text.count(",") > 1:
         return False
-    if _NUMBERED_DIVISION.match(text):
+    if _NUMBERED_DIVISION.match(text) or _NUMBER_BEFORE_NAME.match(text):
         return False
     return not (len(text) <= 2 and text.isupper())
 
