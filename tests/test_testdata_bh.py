@@ -18,12 +18,18 @@ from metacrafterext.rules.ar.persons import (
     validate_ar_nationality_value,
     validate_religion,
 )
-from metacrafterext.rules.bh.geo import validate_bh_block, validate_bh_governorate, validate_gcc_customs_tariff_code
+from metacrafterext.rules.bh.geo import (
+    validate_bh_block,
+    validate_bh_governorate,
+    validate_bh_governorate_value,
+    validate_gcc_customs_tariff_code,
+)
 from metacrafterext.rules.common.classifications import (
     validate_coicop_code,
     validate_icd10_chapter,
     validate_icd10_chapter_or_other,
     validate_isic_section_name,
+    validate_isic_section_name_value,
     validate_trade_unit_code,
 )
 from metacrafterext.rules.common.directories import validate_education_level
@@ -78,6 +84,13 @@ VALIDATORS = [
       "Injuries, Poisoning & Certain Other Consequences of External Causes", "الأورام", "أمراض الجهاز الدوري",
       "العيوب والتشوهات خلقية"],
      ["C18-C21", "J11", "-", "Others", "Slight Injury", "Serious Injury", "Death", "Eye clinic", "Blood donation", ""]),
+    (validate_bh_governorate_value, ["Muharraq", "Northern Governorate", "العاصمة", "الوسطى"],
+     ["Capital", "Northern", "Central", "Southern", "North", ""]),
+    (validate_isic_section_name_value,
+     ["Mining & Quarrying", "Real Estate Activities", "الصناعة التحويلية",
+      "Agriculture, Forestry and Fishing"],
+     ["Education", "Construction", "education", "Financial And Insurance Services", "Other Services", "Other Service Activities",
+      "Administrative And Support Services", "التشييد", ""]),
     (validate_icd10_chapter_or_other, ["Others", "أخرى", "D50 - D89"], ["Total", "Slight Injury", ""]),
     (validate_coicop_code, ["01.1.7", "10.4", "08", "0", "12", "13.1", "01.1.1.1"], ["14", "2019", "A01", ""]),
     (validate_trade_unit_code, ["KG", "NO", "L", "T", "CUM", "SQM", "MTR", "G", "KGM"], ["Yes", "km/h", "Male", ""]),
@@ -145,12 +158,12 @@ def test_field_rules(path, rule_id, good, bad):
 
 
 GUARDED = [
-    ("bh/bh_geo.yaml", "bhgovernoratevalue", ["Muharraq", "الشمالية"], ["Manama"]),
+    ("bh/bh_geo.yaml", "bhgovernoratevalue", ["Muharraq", "الشمالية"], ["Manama", "Central", "Capital"]),
     ("ar/ar_persons.yaml", "argendervalue", ["ذكر", "انثى"], ["أخرى"]),
     ("ar/ar_persons.yaml", "arnationalityvalue", ["غير بحريني", "سعودية"], ["أخرى", "البحريني"]),
     ("ar/ar_persons.yaml", "armaritalstatusvalue", ["لم يسبق له الزواج"], ["الأول"]),
     ("ar/ar_datetime.yaml", "armonthnumberedvalue", ["01 يناير", "04 أبريل"], ["مارس", "13 مارس"]),
-    ("common/classifications.yaml", "isicsectionnamevalue", ["Mining & Quarrying"], ["Mining"]),
+    ("common/classifications.yaml", "isicsectionnamevalue", ["Mining & Quarrying"], ["Mining", "Education", "Other Services"]),
     ("common/classifications.yaml", "icd10chaptervalue", ["D50 - D89", "Neoplasms"], ["Others", "Slight Injury"]),
     ("common/intcodes.yaml", "iso3166alpha2byuncodefield", ["ae", "in"], ["xs"]),
 ]

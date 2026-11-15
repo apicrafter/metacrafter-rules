@@ -15,7 +15,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `metacrafterext.rules.common.classifications`, rules in the new `rules/bh/bh_geo.yaml`,
   `rules/bh/bh_trade.yaml` and `rules/common/classifications.yaml`):
   - Bahraini governorates (`bh_governorate`: Capital, Muharraq, Northern, Southern, the former Central, in
-    English and Arabic) in `governorate`, `lmhfz` (المحافظة) and by value; address block numbers
+    English and Arabic) in `governorate`, `lmhfz` (المحافظة) and by value (not the bare English Capital,
+    Northern, Southern, Central: other countries have them); address block numbers
     (`bh_block`: 101 to 1299, also 305.0) in `Block`; GCC Common Customs Tariff codes
     (`gcc_customs_tariff_code`: 95030090) in `Commodity No`;
   - Arabic person attributes under the Arabic labels and the transliterated Opendatasoft names: sex (`ljns`,
@@ -27,7 +28,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - religion by the English field name (`religion`: Muslim, Others); the type had no rule;
   - generic: ISIC Rev. 4 section titles in English and Arabic (`isicrev4_section_name`: Manufacturing,
     Mining & Quarrying, الصناعة التحويلية) in `isic`, `lnsht`, `sector`, `industry` and by value (a title of one
-    word only by name, as Mining or Trade also name national accounts activities); ICD-10 chapters
+    word only by name, as Mining or Education also name national accounts activities and institution types, and
+    not the ANZSIC titles that end in Services); ICD-10 chapters
     (`icd10_chapter`: D50 - D89, C00 - D49, Diseases of the Circulatory System, الأورام) in
     `international_disease_code`, `cause_of_death`, `sbb_lwf` (سبب الوفاة) and by value; COICOP codes
     (`coicop`: 01.1.7, 10.4; the type had no rule) in `coicop_code`; units of trade tables (KG, NO, CUM, SQM)

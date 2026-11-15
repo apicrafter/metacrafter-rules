@@ -114,6 +114,21 @@ def validate_isic_section_name(value):
     return _matches_section(_en_words(text), _ISIC_EN)
 
 
+def validate_isic_section_name_value(value):
+    """An ISIC Rev. 4 section title as a value of its own column (validate_isic_section_name) with two
+    words or more of its title, and not in the ANZSIC style that ends in Services (Financial And Insurance
+    Services, Other Services): the titles of one word (Education, Construction) name institution types and
+    the ANZSIC divisions too (the OpenAlex institution type, the ACT grants by ANZSIC division)."""
+    text = str(value).strip()
+    if has_arabic(text):
+        words = _ar_words(text)
+    else:
+        if re.search(r"(?i)\bservices?\s*$", text):
+            return False
+        words = _en_words(text)
+    return len(words) > 1 and validate_isic_section_name(value)
+
+
 # --- ICD-10 chapters -------------------------------------------------------------------------
 
 # First and last codes of the 22 chapters of ICD-10 (WHO 2019) and the rounded ends national tables

@@ -45,6 +45,20 @@ def validate_bh_governorate(value):
     return bool(key) and _GOVERNORATES.get(key) is not None
 
 
+_AMBIGUOUS_EN = frozenset(("capital", "northern", "southern", "central"))
+
+
+def validate_bh_governorate_value(value):
+    """A governorate of Bahrain as a value of its own column (validate_bh_governorate), without the bare
+    English Capital, Northern, Southern and Central: a sector of the Great Barrier Reef (Central) or a
+    department of Mendoza (Capital) has them too. They are governorates in a field named after them, and
+    Muharraq, the Arabic names and Northern Governorate are governorates anywhere."""
+    text = str(value).strip()
+    if not has_arabic(text) and _key(text) in _AMBIGUOUS_EN and not re.search(r"(?i)governorate", text):
+        return False
+    return validate_bh_governorate(value)
+
+
 _BLOCK = re.compile(r"^(?:1[0-2]|[1-9])\d{2}$")
 
 

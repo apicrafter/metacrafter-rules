@@ -20,8 +20,10 @@ rules:
     priority: 1
   isicsectionnamevalue:
     key: isicrev4_section_name
-    name: ISIC Rev. 4 section title by value (Manufacturing, Mining & Quarrying, الصناعة التحويلية)
-    rule: metacrafterext.rules.common.classifications.validate_isic_section_name
+    name: ISIC Rev. 4 section title by value (Mining & Quarrying, Real Estate Activities, الصناعة التحويلية)
+    # Two words or more, not ending in Services: Education alone is an OpenAlex institution type, and the
+    # ANZSIC divisions share half of the titles (au_anzsic_division_name).
+    rule: metacrafterext.rules.common.classifications.validate_isic_section_name_value
     type: data
     match: func
     minlen: 5

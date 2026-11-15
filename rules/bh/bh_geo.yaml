@@ -21,10 +21,11 @@ rules:
     priority: 1
   bhgovernoratevalue:
     key: bh_governorate
-    name: Bahrain governorate by value (Capital, Muharraq, Northern, Southern, العاصمة, المحرق, الشمالية, الجنوبية)
-    # A column of all four in English, or in Arabic: tables by usual residence of the mother of the
-    # Ministry of Health (usual_residence_of_mother, mkn_qm_l_m_lm_td).
-    rule: metacrafterext.rules.bh.geo.validate_bh_governorate
+    name: Bahrain governorate by value (Muharraq, Northern Governorate, العاصمة, المحرق, الشمالية, الجنوبية)
+    # A column of the Arabic names: tables by usual residence of the mother of the Ministry of Health
+    # (mkn_qm_l_m_lm_td). The bare English Capital, Northern, Southern and Central are taken by field
+    # name only (GBR_SECTOR of AIMS: Central, North, South).
+    rule: metacrafterext.rules.bh.geo.validate_bh_governorate_value
     type: data
     match: func
     minlen: 5
