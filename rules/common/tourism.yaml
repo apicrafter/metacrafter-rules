@@ -37,8 +37,9 @@ rules:
     priority: 1
   accommodationstarsvalue:
     key: accommodation_star_rating
-    name: Star rating of an accommodation by value (3 ESTRELLAS, 4 étoiles, 5 stars, ****)
-    rule: metacrafterext.rules.common.tourism.validate_accommodation_star_rating
+    name: Star rating of an accommodation by value (3 ESTRELLAS, 4 étoiles, 5 stars; asterisks alone only by field name)
+    # ** fills empty cells of a Moroccan grants table (منجزات الجمعية of metacrafter-testdata).
+    rule: metacrafterext.rules.common.tourism.validate_accommodation_star_rating_value
     type: data
     match: func
     minlen: 2

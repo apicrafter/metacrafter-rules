@@ -66,3 +66,11 @@ def validate_accommodation_star_rating(value):
     3*, ****, Sin categorizar (not 4.5, 3 or a class of establishment)."""
     text = _fold(value)
     return bool(text) and (bool(_STARS.match(text)) or text in _UNRATED)
+
+
+def validate_accommodation_star_rating_value(value):
+    """A star rating with a word for the stars or a category (3 ESTRELLAS, 4 étoiles, 3*, Sin
+    categorizar), for value rules on any field: asterisks alone (**, ***) are placeholders of other
+    tables as often and count under the field names only."""
+    text = _fold(value)
+    return validate_accommodation_star_rating(value) and not re.fullmatch(r"[*★]+", text)

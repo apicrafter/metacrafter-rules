@@ -31,7 +31,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     (`ar_hazardous_waste_category`: Y8-Y9-Y48, Y8, Y9, Y11 with the Basel operations R9, D10);
   - tourist accommodation: its type (`accommodation_type`: HOTEL, APART-HOTEL, CABAÑAS, Hostería,
     camping, chambre d'hôtes, Ferienwohnung in `clase`, `rubro` and by value) and its star rating
-    (`accommodation_star_rating`: 3 ESTRELLAS, 4 étoiles, 5 stars, ****, Sin categorizar);
+    (`accommodation_star_rating`: 3 ESTRELLAS, 4 étoiles, 5 stars, Sin categorizar; **** in
+    `categoria` fields only, as ** fills the empty cells of other tables);
   - interest rates (`interest_rate`: 6,00%, Badlar + 2%, Libor + 3,70%, tasa fija anual del 21% in
     `tasa`, `Cupón/Cupon`, `coupon`, `interest_rate`; by value only a reference rate with or without a
     spread) and the urban or rural class of a place (`urban_rural_class`: Urbano, Urbano marginal, Rural,

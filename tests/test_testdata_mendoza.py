@@ -31,7 +31,11 @@ from metacrafterext.rules.common.rates import (
     validate_interest_rate_reference,
     validate_marked_amount,
 )
-from metacrafterext.rules.common.tourism import validate_accommodation_star_rating, validate_accommodation_type
+from metacrafterext.rules.common.tourism import (
+    validate_accommodation_star_rating,
+    validate_accommodation_star_rating_value,
+    validate_accommodation_type,
+)
 from metacrafterext.rules.common.urban import validate_building_number, validate_urban_rural_class
 from metacrafterext.rules.es.periods import validate_es_duration_words
 from metacrafterext.rules.za.finances import validate_za_economic_classification_value
@@ -78,6 +82,7 @@ VALIDATORS = [
     (validate_accommodation_star_rating, ["3 ESTRELLAS", "1 ESTRELLA", "4 étoiles", "4 Sterne Superior", "5 stars", "3*", "****",
                                           "★★★", "SIN CATEGORIZAR"],
      ["4.5", "3", "HOSPEDAJE", "Clase 5", ""]),
+    (validate_accommodation_star_rating_value, ["3 ESTRELLAS", "4 étoiles", "3*", "SIN CATEGORIZAR"], ["**", "****", "★★★", "4.5"]),
     (validate_interest_rate, ["6,00%", "11.41 %", "Libor + 3,70%", "Badlar + 2", "BADLAR Bancos Privados", "CER + 0,1%",
                               "tasa fija anual del 21%", "30 % de la TNA del BNA", "15% / BADLAR Bancos Privados",
                               "Badlar Públicos + 2%"],
@@ -207,7 +212,7 @@ VALUES = [
     ("ar_country/ar_mendoza.yaml", "arhazardouswastevalue", ["Y8-Y9-Y48", "Y8, Y9, Y11"], ["Y46", "R9"]),
     ("ar_country/ar_energy.yaml", "arelectricitydistributorvalue", ["EDEMSA", "Coop. Godoy Cruz"], ["GODOY CRUZ"]),
     ("common/tourism.yaml", "accommodationtypevalue", ["APART-HOTEL", "Hostería"], ["RESTAURANTE"]),
-    ("common/tourism.yaml", "accommodationstarsvalue", ["3 ESTRELLAS", "4 étoiles"], ["3"]),
+    ("common/tourism.yaml", "accommodationstarsvalue", ["3 ESTRELLAS", "4 étoiles"], ["3", "**"]),
     ("common/rates.yaml", "interestratereferencevalue", ["Badlar + 2%", "Libor + 3,70%"], ["6,00%", "Uva"]),
     ("common/geo.yaml", "urbanruralvalue", ["Urbano marginal", "städtisches Gebiet"], ["Centro"]),
     ("es/es_datetime.yaml", "esdurationwordsvalue", ["1 días, 13 horas, 20 minutos"], ["13:20"]),
