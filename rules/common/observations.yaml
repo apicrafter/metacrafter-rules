@@ -149,7 +149,7 @@ rules:
     validator: metacrafterext.rules.common.observations.validate_conductivity
     needs_values: true
     priority: 1
-  salinitybyname:
+  salinityreadingbyname:
     key: salinity
     name: Salinity by field name (salinity, salinity_ppt, sal_psu, psal) with numbers
     rule: (?i)(?:(?:avg|mean|average|max|min|surface|bottom|water)[ _-]?)?(?:salinity(?:[ _-]?(?:ppt|psu|g[ _/]?l|g[ _/]?kg|mg[ _/]?l|‰|practical|avg|mean|\(ppt\)|\(psu\)))*|sal[ _-]?(?:psu|ppt)|psal)
@@ -158,7 +158,7 @@ rules:
     validator: metacrafterext.rules.common.observations.validate_salinity
     needs_values: true
     priority: 1
-  turbiditybyname:
+  turbidityreadingbyname:
     key: turbidity
     name: Turbidity by field name (turbidity, turbidity_ntu, turbidity_fnu, turb_ntu) with numbers
     rule: (?i)(?:(?:avg|mean|average|max|min|water)[ _-]?)?(?:turbidity(?:[ _-]?(?:ntu|fnu|ftu|jtu|mg[ _/]?l|avg|mean|\(ntu\)|\(fnu\)))*|turb[ _-]?(?:ntu|fnu|ftu))
@@ -167,10 +167,11 @@ rules:
     validator: metacrafterext.rules.common.observations.validate_turbidity
     needs_values: true
     priority: 1
-  totaldissolvedsolidsbyname:
+  totaldissolvedsolidsreadingbyname:
     key: total_dissolved_solids
-    name: Total dissolved solids by field name (total_dissolved_solids, tds, tds_mg_l) with numbers
-    rule: (?i)(?:(?:avg|mean|average|max|min|water)[ _-]?)?(?:total[ _-]?dissolved[ _-]?solids|tds)(?:[ _-]?(?:mg[ _/]?l|ppm|g[ _/]?l|avg|mean|\(mg/l\)|\(ppm\)))*
+    name: Total dissolved solids by field name (total_dissolved_solids, tds_mg_l, TDS (mg/L)) with numbers
+    # A bare TDS is also the tax deducted at source of Indian accounts: only with a unit.
+    rule: (?i)(?:(?:avg|mean|average|max|min|water)[ _-]?)?(?:total[ _-]?dissolved[ _-]?solids(?:[ _-]?(?:mg[ _/]?l|ppm|g[ _/]?l|avg|mean|\(mg/l\)|\(ppm\)))*|tds[ _-]?(?:mg[ _/]?l|ppm|g[ _/]?l|\(mg/l\)|\(ppm\)))
     type: field
     match: regex
     validator: metacrafterext.rules.common.observations.validate_dissolved_solids
