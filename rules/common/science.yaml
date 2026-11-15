@@ -372,10 +372,11 @@ rules:
     priority: 1
   vernacularnamecommonnamebyname:
     key: vernacular_name
-    name: Common name of a taxon by field name of a biodiversity table (Common Name, common_nam, Common name(s)) with names of animals and plants
-    # Bat records, bird atlases and plant lists of the City of Melbourne and the City of Greater Geelong
-    # name it Common Name alone; the values must be names of taxa, not drugs or companies.
-    rule: (?i)common[ _]?nam(?:e(?:[ _]?\(?s\)?)?)?|common[ _]?names
+    name: Common name of a taxon by field names of biodiversity tables (common_nam, Common name(s), common names) with names of animals and plants
+    # The shapefile name common_nam of the Geelong bird atlas and the Common name(s) of the Melbourne
+    # pre-colonial plant list. A bare common_name is also a vaccine (COVID-19 vaccine lists) or a bus
+    # stop (CommonName of TfGM), whose names pass as common names: not here.
+    rule: (?i)common[ _]?nam|common[ _]?name[ _]?\(?s\)?|common[ _]?names
     type: field
     match: regex
     validator: metacrafterext.rules.common.taxa.validate_vernacular_name

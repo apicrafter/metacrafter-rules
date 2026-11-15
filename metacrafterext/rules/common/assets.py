@@ -67,12 +67,13 @@ def validate_tree_age_class(value):
 
 # ------------------------------------------------------------------ electric power
 _POWER = re.compile(
-    r"^\d+(?:[.,]\d+)?\s*(?:(?:-|–|to)\s*\d+(?:[.,]\d+)?\s*)?(?:w|kw|mw|gw|watts?|kilowatts?|megawatts?)$", re.I)
+    r"^(?:0|[1-9]\d{0,4})(?:[.,]\d+)?\s*(?:(?:-|–|to)\s*(?:0|[1-9]\d{0,4})(?:[.,]\d+)?\s*)?"
+    r"(?:w|kw|mw|gw|watts?|kilowatts?|megawatts?)$", re.I)
 
 
 def validate_electric_power(value):
     """An electric power with its unit: 80W, 150 W, 350 kW, 50 - 350 kW, 6.6 kW, 1.5 MW (not 350 kWh,
-    80, kW or 50 kVA)."""
+    80, kW, 50 kVA or a French school UAI code, 0950123W)."""
     return bool(_POWER.match(_text(value)))
 
 

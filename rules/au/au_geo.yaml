@@ -264,8 +264,9 @@ rules:
     priority: 1
   aulocalitybyname:
     key: au_suburb
-    name: Australian suburb or locality by field name (loc_name, locality_name, SAL_NAME21, suburb_2) with place names
-    rule: (?i)loc[ _]name|locality[ _]name|sal[ _]name(?:[ _]?(?:20)?\d{2})?|suburbs?[ _]\d
+    name: Australian suburb or locality by field name (locality_name, SAL_NAME21, suburb_2) with place names
+    # LOC_NAME is the name of a location of any kind (the child care centres of Toronto): not here.
+    rule: (?i)locality[ _]name|sal[ _]name(?:[ _]?(?:20)?\d{2})?|suburbs?[ _]\d
     type: field
     match: regex
     validator: metacrafterext.rules.common.generic.validate_place_name

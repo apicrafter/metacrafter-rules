@@ -43,12 +43,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - more names for types that had rules: ANZSIC codes with the level after the word (`ANZSIC4_CODE`,
     `industry_anzsic4_code`, `industry_class_code`); LGA names in council fields (`lga_label`, `Council Name`,
     `NSW_LGA__3`, `official_name_local_government_area`, `abb_name`) and LGA codes in a bare `lga` field; ABS
-    Postal Area codes (`POA_CODE21`); suburbs in `loc_name`, `SAL_NAME21`, `suburb_2`; AS 1742 sign codes in
+    Postal Area codes (`POA_CODE21`); suburbs in `SAL_NAME21`, `suburb_2`; AS 1742 sign codes in
     `scode`, `svalue`, `a_code`; Australian phones in `business_phone_number`, `contact_ph`, `Phone 2`, `Free
     Call`; trading names; Opendatasoft geo_point fields named `co_ordinates`, `coordinatelocation`,
     `latlong_text`, `geo`, `centroid`; street names in `str_name`, `StreetFrom`, `between_street_1`,
     `road_name`; addresses in `building_address`, `venue_address`, `address_point`; `sdirection` as a compass
-    point; common names of taxa in a bare `Common Name`; scientific names in `scientific`, `vegspecies`; higher
+    point; common names of taxa in `common_nam` and `Common name(s)` (a bare `common_name` is also a vaccine or
+    a bus stop); scientific names in `scientific`, `vegspecies`; higher
     taxa in upper case (ANIMALIA, CHIROPTERA, MOLOSSIDAE).
 - **Rules for the ACT files of metacrafter-testdata** (a 2024 snapshot of www.data.act.gov.au, the Socrata
   portal of the Australian Capital Territory Government, Dateno source cdi00000095; validators in the new
