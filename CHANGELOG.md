@@ -27,8 +27,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     labelled `cz_ico` before); the CNES number of a health establishment (`br_cnes`: CNES, CNESFINAL,
     CNESADESÃO, 0000957 and 957.0); ICD-10 codes as the Brazilian health information systems write them,
     without the dot (`icd10code`: causabas W788, CAUSABASICADO, co_cid_causa_basica C159, RASTREIOCID); the
-    chapters of the Portuguese CID-10 by title and in `capitulo_cid_*` fields (`icd10_chapter`: II.
-    NEOPLASIAS (TUMORES), IX. Doenças do aparelho circulatório);
+    chapters of the Portuguese CID-10 (`icd10_chapter`: II. NEOPLASIAS (TUMORES), IX. Doenças do aparelho
+    circulatório) by value with the number of the chapter, and bare titles in `capitulo_cid_*` fields (the
+    CAPES specialities carry chapter titles: DOENÇAS INFECCIOSAS E PARASITÁRIAS);
   - persons: race or colour in the IBGE categories (`race_ethnicity`, which had no rule: tp_raca_cor, CS_RACA,
     CORRAÇA: Branca, Parda, Indígena, Ignorado); numeric codes and breeds of animals are not read;
   - Sim and Não as booleans (`booleansimnao`), as the Spanish sí and no are.

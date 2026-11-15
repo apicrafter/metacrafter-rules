@@ -19,7 +19,7 @@ from metacrafterext.rules.br.codes import (
     validate_br_state_ibge_code,
     validate_icd10_datasus,
 )
-from metacrafterext.rules.common.classifications import validate_icd10_chapter
+from metacrafterext.rules.common.classifications import validate_icd10_chapter, validate_icd10_chapter_or_other
 from tests.test_testdata_baseline import field_matches, value_matches
 
 VALIDATORS = [
@@ -38,7 +38,10 @@ VALIDATORS = [
     (validate_icd10_chapter, ["II. NEOPLASIAS (TUMORES)", "IV. DOENÇAS ENDÓCRINAS NUTRICIONAIS E METABÓLICAS",
                               "IX. Doenças do aparelho circulatório", "XX. Causas externas de morbidade e de mortalidade",
                               "XV. Gravidez, parto e puerpério", "Neoplasms"],
-     ["Parto normal", "Doenças", "C159", "NEOPL MALIG DO ESOFAGO", ""]),
+     ["Parto normal", "Doenças", "C159", "NEOPL MALIG DO ESOFAGO", "DOENÇAS INFECCIOSAS E PARASITÁRIAS", ""]),
+    (validate_icd10_chapter_or_other, ["DOENÇAS INFECCIOSAS E PARASITÁRIAS", "Doenças do aparelho digestivo", "II. NEOPLASIAS (TUMORES)",
+                                       "Capítulo IX - Doenças do aparelho circulatório"],
+     ["CARDIOLOGIA", "NÃO SE APLICA", ""]),
 ]
 
 

@@ -167,6 +167,7 @@ _ICD_TITLE_PT = re.compile(
     r"|osteomuscular|tecido conjuntivo|geniturinario|gravidez|puerperio|perinatal|malformacoes|congenitas"
     r"|cromossomicas|sintomas|achados anormais|lesoes|envenenamento|causas externas|fatores que influenciam"
     r"|propositos especiais")
+_ICD_NUMBER_PT = re.compile(r"(?:cap[a-z]*\.?\s+)?[ivxl]{1,5}\s*[.:)\u2013-]\s*\S|cap[a-z]*\.?\s+[ivxl]{1,5}\b")
 _ICD_DISEASE_PT = re.compile(
     r"doencas|transtornos|neoplasias|tumores|anomalias|malformacoes|afeccoes|envenenamento|causas|fatores"
     r"|sintomas|sinais|lesoes|gravidez|infecciosas|propositos")
@@ -192,7 +193,18 @@ def validate_icd10_chapter(value):
     lower = text.lower().replace("&", "and")
     if _ICD_TITLE_EN.search(lower) and _ICD_DISEASE_EN.search(lower):
         return True
-    folded = unicodedata.normalize("NFKD", lower).encode("ascii", "ignore").decode()
+    # A Portuguese title passes with the number of its chapter (II. NEOPLASIAS (TUMORES), Capítulo IX):
+    # the medical specialities of CAPES carry chapter titles without one (DOENÇAS INFECCIOSAS E
+    # PARASITÁRIAS). Fields named for the chapter take the bare titles (validate_icd10_chapter_or_other).
+    return _icd_title_pt(lower) and bool(_ICD_NUMBER_PT.match(_fold_ascii(lower)))
+
+
+def _fold_ascii(text):
+    return unicodedata.normalize("NFKD", text).encode("ascii", "ignore").decode()
+
+
+def _icd_title_pt(lower):
+    folded = _fold_ascii(lower)
     return bool(_ICD_TITLE_PT.search(folded)) and bool(_ICD_DISEASE_PT.search(folded))
 
 
@@ -205,7 +217,7 @@ def validate_icd10_chapter_or_other(value):
             return True
     elif text.lower().rstrip("*") in _OTHERS:
         return True
-    return validate_icd10_chapter(value)
+    return validate_icd10_chapter(value) or (len(text) <= 160 and _icd_title_pt(text.lower()))
 
 
 # --- COICOP ----------------------------------------------------------------------------------
