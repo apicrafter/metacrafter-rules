@@ -354,6 +354,8 @@ rules:
     maxlen: 5
     fieldrule: date,дата,data,fecha,datum,contract_date,date_contract,дата договора,дата_договора,дата контракта,күні
     fieldrulematch: text
+    # DateBirrth and DateAss of an SPSS file exported through a spreadsheet (35625)
+    fieldregex: (?i)^(?:date|fecha)[ _.]?(?:of[ _.]?)?[a-z]{3,12}$
     priority: 1
   excelserialdatetimebyname:
     key: excel_serial_datetime

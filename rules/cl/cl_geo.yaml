@@ -15,3 +15,30 @@ rules:
     fieldrule: region tributaria,cod_region,codigo_region,código región,codigo region,cut_region,region_cut,num_region,n_region
     fieldrulematch: text
     priority: 1
+  # Found in the 2024 snapshots of the research data repositories of the Universidad de Chile (datos.uchile.cl,
+  # Dateno source cdi00000365) of metacrafter-testdata: the comuna of the projects of the environmental
+  # assessment system (Lo Barnechea, Til Til, Paine) and the place of birth of survey respondents (3a:
+  # Santiago, Chillán, Temuco).
+  clcomunabyname:
+    key: cl_comuna
+    name: Chilean comuna by field name (comuna, nombre_comuna, comuna_residencia, glosa_comuna, nom_com) with names of the 346 comunas
+    # The comunas of Buenos Aires are numbered (Comuna 14) and those of Colombian cities have other names:
+    # they fail.
+    rule: (?i)(?:nom(?:bre)?[ _]?(?:de[ _])?(?:la[ _])?)?comunas?(?:[ _]?(?:nombre|nom|desc|glosa|residencia|origen|nacimiento|establecimiento|domicilio|proyecto|sede))?|glosa[ _]?comuna|com[ _]?nom(?:bre)?|nom[ _]?com|comuna[ _]de[ _][a-z_]+
+    type: field
+    match: regex
+    validator: metacrafterext.rules.cl.geo.validate_cl_comuna_or_none
+    needs_values: true
+    priority: 1
+  clcomunavalue:
+    key: cl_comuna
+    name: Chilean comuna by value in a field named for comunas (Comuna Social, Comuna Tributaria, comuna_establecimiento)
+    # Many names are towns of other countries (Santiago, Concepción, San Pedro, the departments Maipú and San
+    # Rafael of Mendoza) and words of registers (Constitución of a company), so the field must name comunas.
+    rule: metacrafterext.rules.cl.geo.validate_cl_comuna
+    type: data
+    match: func
+    minlen: 3
+    maxlen: 40
+    fieldregex: (?i)comuna
+    priority: 1

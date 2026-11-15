@@ -88,7 +88,7 @@ def validate_opening_hours(value):
 
 _MARITAL_HEADS = (
     "soltero", "soltera", "casado", "casada", "divorciado", "divorciada", "viudo", "viuda", "separado",
-    "separada", "unido", "unida", "union", "conviviente", "concubinato", "en pareja", "single", "married",
+    "separada", "anulado", "anulada", "unido", "unida", "union", "conviviente", "concubinato", "en pareja", "single", "married",
     "divorced", "widowed", "widow", "widower", "separated", "never married", "civil union",
     "domestic partner", "celibataire", "marie", "veuf", "veuve", "divorce", "ledig", "verheiratet",
     "geschieden", "verwitwet", "solteiro", "solteira", "viuvo", "viuva", "uniao",
@@ -101,6 +101,8 @@ def validate_marital_status(value):
     text = _fold(value).replace("(", "/").replace(")", "")
     if not text or len(text) > 60:
         return False
+    # option codes of survey forms: soltero_a, conviviente_civil__con_acuerdo_de_uni_n_
+    text = text.replace("_", " ").strip() if "_" in text else text
     return any(text == head or text.startswith(head + "/") or text.startswith(head + " ") for head in _MARITAL_HEADS)
 
 

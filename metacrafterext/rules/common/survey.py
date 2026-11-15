@@ -172,6 +172,11 @@ LIKERT_ANSWERS = frozenset(
         "probable", "improbable", "ni probable ni improbable", "importante", "sin importancia",
         "satisfecho", "insatisfecho", "ni satisfecho ni insatisfecho",
         "nunca", "casi nunca", "raramente", "rara vez", "pocas veces", "a veces", "algunas veces",
+        "ocasionalmente", "unas pocas veces", "casi todo el tiempo", "todo el tiempo", "habitualmente",
+        "no es importante", "facil", "muy facil", "dificil", "muy dificil", "ni facil ni dificil",
+        "apropiado", "medianamente apropiado", "poco apropiado", "inapropiado", "muy apropiado",
+        "muy preocupado", "algo preocupado", "poco preocupado", "no muy preocupado", "para nada preocupado",
+        "nada preocupado", "bastante preocupado",
         "frecuentemente", "a menudo", "muchas veces", "casi siempre", "siempre",
         "me interesa poco", "no me interesa", "me interesa mucho", "me interesa",
         "no se", "ns/nc", "no sabe", "no sabe/no contesta", "no contesta", "prefiero no responder",
@@ -197,7 +202,29 @@ def validate_likert_response(value):
     Extremadamente probable, A veces, Strongly disagree, Stimme eher zu, No sé. Coded answers
     (1 to 5) and yes / no are not."""
     text = _fold(value)
-    return bool(text) and len(text) <= 60 and text in LIKERT_ANSWERS
+    if not text or len(text) > 60:
+        return False
+    return text in LIKERT_ANSWERS or _form_answer(text) in LIKERT_ANSWERS
+
+
+# Option codes of survey forms (KoboToolbox, ODK): muy_de_acuerdo_5 and 1_muy_en_desacuerdo with the number of
+# the step, algo_preocupado_a for preocupado/a, muy_f_cil with a lost accented letter. Found in the NEMS-P-Ch
+# pilot survey of the Universidad de Chile (datos.uchile.cl; metacrafter-testdata).
+_FORM_KNOWN = frozenset(("facil", "dificil", "mas", "dias", "esta", "ningun", "ningun", "quiza", "quizas"))
+_FORM_STEP = re.compile(r"^(?:[0-9] )?(.*?)(?: [0-9])?$")
+_FORM_GENDER = re.compile(r"(o|a) (?:a|o)\b")
+
+
+def _form_answer(text):
+    """The answer of an option code: muy_de_acuerdo_5 -> muy de acuerdo, algo_preocupado_a -> algo
+    preocupado, muy_f_cil -> muy facil. Text without an underscore is no code."""
+    if "_" not in text:
+        return None
+    from metacrafterext.rules.common.formcodes import form_text
+
+    words = form_text(text, _FORM_KNOWN)
+    words = _FORM_STEP.match(words).group(1)
+    return _FORM_GENDER.sub(lambda m: m.group(1), words).strip()
 
 
 _DISCIPLINE_WORD = re.compile(r"[^\W\d_]{3,}")

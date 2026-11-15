@@ -9,6 +9,44 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Rules for the Chilean files of metacrafter-testdata** (2024 snapshots of the Dateno catalogue: the research
+  data repositories of the Universidad de Chile, datos.uchile.cl, cdi00000365, and of the Universidad de
+  Concepción, datav.udec.cl, cdi00000364; validators in the new `metacrafterext.rules.cl.geo`,
+  `metacrafterext.rules.cl.persons`, `metacrafterext.rules.es.countries`, `metacrafterext.rules.common.omics`,
+  `metacrafterext.rules.common.seismology` and `metacrafterext.rules.common.formcodes` and in
+  `metacrafterext.rules.common.respondents`, rules in the new `rules/cl/cl_persons.yaml` and in
+  `rules/cl/cl_geo.yaml`, `rules/common/science.yaml`, `rules/common/observations.yaml`,
+  `rules/common/survey.yaml`, `rules/common/generic.yaml` and `rules/common/geo.yaml`):
+  - Chile: the 346 comunas by name (`cl_comuna`: comuna, nombre_comuna, Comuna Social, Comuna Tributaria with
+    Lo Barnechea, Til Til, CONCEPCION, Puerto Saavedra; the value rule runs only in fields named for comunas,
+    because Maipú and San Rafael are also departments of Mendoza and Constitución an act of a company register)
+    and the indigenous people of a respondent (`cl_indigenous_people`: pueblo_originario,
+    04Ustedseconsideraperten with mapuche, diaguitas, quechua, ninguna_no_sabe);
+  - country names in Spanish (`escountryname`: pais_origen, pais_nacimiento, nombre_pais, pais_desc with
+    Alemania, Estados Unidos, PERU); a bare pais stays `country`, as Portuguese tables name the field so too;
+  - expression and codon usage tables: `amino_acid` by three-letter code (AmAcid: Arg, Leu; by value for the
+    twenty standard ones), `codon` (Codon: GCG, guarded by the field name), `kegg_orthology_id` (K0s, KO,
+    KEGG_ko: K00128), `p_value` (p-value, pvalue, padj, FDR, Differential Expression p-value) and
+    `log2_fold_change` (log2FoldChange, logFC, Differential Expression Log2 Ratio);
+  - earthquake catalogues: `earthquake_magnitude` (magnitude, mag, magnitude(Mw), local_magnitude with numbers
+    from -3 to 10; the scale names alone, ML and Mw, are also millilitres and megawatts and are not read);
+  - survey respondents: `self_rated_health` (estado_de_salud, general_health, 45Engeneralcmoesuestadodesalud:
+    excelente, muy_bueno, regular, malo), `smoking_status` (smoking_status, 46Ustedfumatabaco: nunca_he_fumado,
+    Former smoker) and `employment_status` (situacion_laboral, 06Cmodefiniraacinlaboralactual: desempleado,
+    Employed full-time);
+  - `sports_team` in the two sides of a match (homeTeam, awayTeam, equipo_local);
+  - option codes of survey forms (KoboToolbox, ODK), which write an option by its name with underscores for
+    spaces, punctuation and every accented letter (`metacrafterext.rules.common.formcodes`): `likert_response`
+    reads muy_de_acuerdo_5, 1_muy_en_desacuerdo, muy_f_cil, algo_preocupado_a and the scales of importance,
+    difficulty, appropriateness and concern; `marital_status` reads soltero_a, anulado_a and
+    conviviente_civil__con_acuerdo_de_uni_n_; `education_level` reads educaci_n_media_completa__cient_fico_hum
+    and 8vo_b_sico_o_menor, also cut at 40 characters; their field rules read the names a Dataverse makes of
+    the questions (05Culessuestadocivil, 07Culfuesultducacionalalcanzado);
+  - `excel_serial_date` is read in fields named for a kind of date (DateBirrth, DateAss, fecha_nacimiento), not
+    only in date and fecha, and the pH rule reads sed_pH, soil_ph and water pH;
+  - a field named url, website or uri whose values have no letters is not a `url`: the uri of a table of
+    penalty shootouts holds row numbers (1, 2, 3).
+
 - **Rules for the Swiss files of metacrafter-testdata** (2024 snapshots of six Swiss open data portals of the
   Dateno catalogue: the cantons of Basel-Landschaft, data.bl.ch, cdi00000340, Basel-Stadt, data.bs.ch, cdi00000341,
   and Schwyz, data.sz.ch, cdi00000344, the Swiss Federal Railways, data.sbb.ch, cdi00000342, the City of Zurich,
