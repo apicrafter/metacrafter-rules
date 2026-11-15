@@ -117,9 +117,10 @@ rules:
     priority: 1
   legislationnumberbyname:
     key: legislation_number
-    name: Number of a law, decree or resolution by field name (numero_de_decreto_o_ley, nro_decreto, numero_ley)
-    # 325, 24.262, 1172/2003. The ids of records (norma_id) are left out.
-    rule: '(?i)(?:n(?:[uú]me)?ro|nro|num|n[º°])[ _.]?(?:de[ _](?:la[ _])?)?(?:decreto|ley|resoluci[oó]n|norma|ordenanza|disposici[oó]n|dnu)(?:[ _]o[ _](?:ley|decreto|resoluci[oó]n))?|(?:decreto|ley|norma|resoluci[oó]n|ordenanza|disposici[oó]n)[ _](?:n(?:[uú]me)?ro|nro|num)|(?:law|act|decree|ordinance)[ _](?:number|no)|(?!.*_(?:anio|ano|año|fecha)$)(?:[a-záéíóúñü]+_)*(?:resoluci[oó]n|reolucion)(?:_[a-záéíóúñü]+)*|(?:decreto|ley|resoluci[oó]n|ordenanza|disposici[oó]n)(?:_[a-záéíóúñü]+)?_(?:n[uú]mero|numero|nro|num)|res\.?|resol\.?(?:[ _]?reinscrip)?|(?:n[uú]mero|numero|nro)_resoluci[oó]n(?:_[a-záéíóúñü]+)*|resoluci[oó]n[ _](?:de[ _])?(?:inscripci[oó]n|reinscripci[oó]n|alta)'
+    name: Number of a law, decree or resolution by field name (numero_de_decreto_o_ley, nro_decreto, numero_ley, Decreto)
+    # 325, 24.262, 1172/2003. The ids of records (norma_id) are left out. A bare Decreto of the lists of
+    # works and purchases of Mercedes (Buenos Aires) holds the number of the decree (533/18).
+    rule: '(?i)decretos?|(?:n(?:[uú]me)?ro|nro|num|n[º°])[ _.]?(?:de[ _](?:la[ _])?)?(?:decreto|ley|resoluci[oó]n|norma|ordenanza|disposici[oó]n|dnu)(?:[ _]o[ _](?:ley|decreto|resoluci[oó]n))?|(?:decreto|ley|norma|resoluci[oó]n|ordenanza|disposici[oó]n)[ _](?:n(?:[uú]me)?ro|nro|num)|(?:law|act|decree|ordinance)[ _](?:number|no)|(?!.*_(?:anio|ano|año|fecha)$)(?:[a-záéíóúñü]+_)*(?:resoluci[oó]n|reolucion)(?:_[a-záéíóúñü]+)*|(?:decreto|ley|resoluci[oó]n|ordenanza|disposici[oó]n)(?:_[a-záéíóúñü]+)?_(?:n[uú]mero|numero|nro|num)|res\.?|resol\.?(?:[ _]?reinscrip)?|(?:n[uú]mero|numero|nro)_resoluci[oó]n(?:_[a-záéíóúñü]+)*|resoluci[oó]n[ _](?:de[ _])?(?:inscripci[oó]n|reinscripci[oó]n|alta)'
     type: field
     match: regex
     validator: metacrafterext.rules.common.directories.validate_legislation_number

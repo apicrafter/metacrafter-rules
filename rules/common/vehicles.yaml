@@ -75,3 +75,35 @@ rules:
     maxlen: 20
     priority: 2
     imprecise: 1
+  # Found in the fleet lists of the municipality of Mercedes, Buenos Aires (datosabiertos.mercedes.gob.ar,
+  # metacrafter-testdata): Vehículo, Motor Nro., Chasis Nro.
+  vehicletypebyname:
+    key: vehicle_type
+    name: Vehicle type by field name (Vehículo, tipo_vehiculo, tipo de vehículo, vehicle_type, body type) with kinds of vehicles
+    # Automóvil, Pick Up, Camioneta, Camión, Motoniveladora; Sedan, Truck. A vehiculo field of plates
+    # or makes fails. No rule by value: Bus and Tram are modes of transport (vm of the St. Gallen
+    # timetables) and Rural (a station wagon in Argentina) is also rural against urban.
+    rule: (?i)(?:tipo[ _](?:de[ _])?)?veh[ií]culos?(?:[ _](?:tipo|clase))?|(?:tipo|clase)[ _](?:de[ _])?(?:unidad|rodado|automotor|m[oó]vil)|clase[ _](?:de[ _])?veh[ií]culo|vehicle[ _]?(?:type|class|category|kind|body[ _]?type)(?:[ _]?code)?(?:[ _]?\d)?|body[ _]?type
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.vehicles.validate_vehicle_type
+    needs_values: true
+    priority: 1
+  esenginenumberbyname:
+    key: engine_number
+    name: Engine number by Spanish field name (Motor Nro., nro_motor, numero_de_motor, N° motor)
+    rule: (?i)(?:n(?:[uú]me)?ro|nro|num|n[º°])[ _.]?(?:de[ _])?motor|motor[ _.]?(?:n(?:[uú]me)?ro|nro|num|n[º°])[ _.\\]*
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.vehicles.validate_engine_or_chassis_number
+    needs_values: true
+    priority: 1
+  eschassisnumberbyname:
+    key: chassis_number
+    name: Chassis number by Spanish field name (Chasis Nro., nro_chasis, numero_de_chasis, bastidor)
+    rule: (?i)(?:n(?:[uú]me)?ro|nro|num|n[º°])[ _.]?(?:de[ _])?(?:chasis|bastidor)|(?:chasis|bastidor)(?:[ _.]?(?:n(?:[uú]me)?ro|nro|num|n[º°])[ _.\\]*)?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.vehicles.validate_engine_or_chassis_number
+    needs_values: true
+    priority: 1

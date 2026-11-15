@@ -21,8 +21,9 @@ rules:
     key: money
     name: Money amount by field name (several languages)
     # Amount, total_amount, contract_amount; importe / monto / montant / betrag / bedrag /
-    # importo with any suffix (IMPORTE ADJUDICACION IVA INC., MONTO_DEFINITIVO, Bedrag (x1000)).
-    rule: (?i)(?:(?:total|contract|grant|award|awarded|payment|paid|invoice|net|gross|budget|budgeted|estimated|transaction)[ _.-]?)?amount(?:[ _.-]?(?:eur|usd|gbp|\(\w+\)))?|(?:importe|monto|montant|betrag|bedrag|importo)(?:[ _.(-].*)?
+    # importo with any suffix (IMPORTE ADJUDICACION IVA INC., MONTO_DEFINITIVO, Bedrag (x1000)); presupuesto
+    # (Presupuesto Oficial o adjudicado, PRESUPUESTO TOTAL IVA INC.).
+    rule: (?i)(?:(?:total|contract|grant|award|awarded|payment|paid|invoice|net|gross|budget|budgeted|estimated|transaction)[ _.-]?)?amount(?:[ _.-]?(?:eur|usd|gbp|\(\w+\)))?|(?:importe|monto|montant|betrag|bedrag|importo|presupuesto)(?:[ _.(-].*)?
     type: field
     match: regex
     priority: 1
