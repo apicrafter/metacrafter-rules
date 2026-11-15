@@ -272,3 +272,39 @@ def validate_au_postcode(value):
     if not text.isdigit() or len(text) not in (3, 4):
         return False
     return 200 <= int(text) <= 9999
+
+
+# A full Australian address: the street part, the suburb or town, the state (abbreviated or in full)
+# and the postcode, optionally followed by the country, as council registers and geocoders write it:
+# 16 Cypress Avenue WENDOUREE VIC 3355, 1020 Lal Lal Street, BUNINYONG VIC 3357, Ca 53c Foreshore Road
+# Learmonth VIC 3352, 7 Eastwood Street, Ballarat Central, Victoria 3350, Australia (City of Ballarat).
+_AU_STATES = {
+    "vic": "38", "victoria": "38", "nsw": "12", "new south wales": "12", "act": "02", "australian capital territory": "02",
+    "qld": "49", "queensland": "49", "sa": "5", "south australia": "5", "wa": "6", "western australia": "6",
+    "tas": "7", "tasmania": "7", "nt": "0", "northern territory": "0",
+}
+_AU_ADDRESS = re.compile(
+    r"^(?P<street>.*?\S)[\s,]+(?P<locality>[A-Za-z][A-Za-z'’.\- ]*?)[\s,]+"
+    r"(?P<state>VIC|NSW|ACT|QLD|SA|WA|TAS|NT|Victoria|New South Wales|Australian Capital Territory|Queensland"
+    r"|South Australia|Western Australia|Tasmania|Northern Territory)\.?,?\s+(?P<postcode>\d{4})"
+    r"(?:,?\s*Australia)?$",
+    re.I,
+)
+_AU_STREET_TYPES = frozenset("""
+street st road rd avenue ave av drive dr court ct crt parade pde lane ln place pl crescent cres cr way
+highway hwy boulevard blvd bvd terrace tce close cl circuit cct grove gr square sq walk esplanade esp
+track trail rise mews row parkway pkwy freeway fwy promenade quay mall glade green loop view vista ridge
+""".split())
+
+
+def validate_au_address(value):
+    """A full Australian address with the suburb, the state and a postcode of that state:
+    16 Cypress Avenue WENDOUREE VIC 3355, 1020 Lal Lal Street, BUNINYONG VIC 3357, 7 Eastwood Street,
+    Ballarat Central, Victoria 3350, Australia. The street part has a number or a street type."""
+    m = _AU_ADDRESS.match(str(value).strip())
+    if not m:
+        return False
+    if not m.group("postcode")[0] in _AU_STATES[m.group("state").lower()]:
+        return False
+    words = re.findall(r"[A-Za-z]+", m.group("street").lower())
+    return bool(re.search(r"\d", m.group("street"))) or any(w in _AU_STREET_TYPES for w in words)

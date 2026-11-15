@@ -24,14 +24,7 @@ from metacrafterext.rules.au.planning import (
 )
 from metacrafterext.rules.common.fieldwork import validate_cardinal_direction, validate_compass_point
 from metacrafterext.rules.common.taxa import validate_vernacular_name, validate_vernacular_with_scientific
-from metacrafterext.rules.common.waterquality import (
-    validate_conductivity,
-    validate_dissolved_oxygen,
-    validate_energy_amount,
-    validate_salinity,
-    validate_total_dissolved_solids,
-    validate_turbidity,
-)
+from metacrafterext.rules.common.waterquality import validate_dissolved_oxygen, validate_energy_amount
 from tests.test_testdata_baseline import field_matches, load, value_matches
 
 VALIDATORS = [
@@ -69,10 +62,6 @@ VALIDATORS = [
                                            "masked lapwing - plover (vanellus miles)"],
      ["Manorina melanocephala", "noisy miner", "clear incident", "Camden (NSW)"]),
     (validate_dissolved_oxygen, ["4.9", "0.0", "55.49", "8.2 mg/L", "95 %", "112"], ["-1", "2022-03-16", "12 NTU", "600", "abc"]),
-    (validate_turbidity, ["41.56", "18.7", "0.8 FNU", "120 NTU", "79.47"], ["-3.2", "638 uS/cm", "20000", "abc"]),
-    (validate_conductivity, ["638.0", "637.28", "1.2 dS/m", "638 uS/cm", "52000"], ["-5", "7.2 pH", "300000", "abc"]),
-    (validate_salinity, ["0.34", "35.1 PSU", "34‰", "280 ppm"], ["-1", "12 NTU", "abc"]),
-    (validate_total_dissolved_solids, ["322.0", "480 mg/L", "321.63"], ["-2", "638 uS/cm", "abc"]),
     (validate_energy_amount, ["2.325", "0.0", "-0.05056", "9.059 kWh", "1200 MWh", "35 GJ"], ["5 kW", "2023-04-12", "A+++", "abc", ""]),
     (validate_au_lga_name_plain, ["CAMDEN", "WARRUMBUNGLE", "UPPER HUNTER", "Camden", "Albury (C)"],
      ["NSW", "QLD", "10050", "NORTH WARD", "Division 3", "BIRNIN GWARI"]),
@@ -120,19 +109,17 @@ FIELDS = [
                                                           "payload_fields_optod_oxygen_ppm", "dissolved_oxygen", "DO_mg_L", "DO (%)",
                                                           "do_sat", "Dissolved Oxygen (mg/L)", "oxygen_ppm", "mean_dissolved_oxygen"],
      ["oxygen", "o2", "do", "oxygen_saturation", "spo2", "door"]),
-    ("common/environment.yaml", "turbiditybyname", ["payload_fields_ntu_turbidityntu", "payload_fields_ntu_turbidityfnu",
-                                                    "payload_fields_ntu_turbidity_mg_l", "turbidity", "Turbidity_NTU", "NTU",
-                                                    "turbidity (ntu)"],
-     ["turbine", "turb", "turbidity_flag"]),
-    ("common/environment.yaml", "conductivitybyname", ["payload_fields_c4e_conductivity_us_cm", "conductivity", "EC_uS_cm",
-                                                       "specific_conductance", "SpC", "electrical_conductivity", "cond_us_cm"],
-     ["thermal_conductivity", "hydraulic_conductivity", "ec", "cond", "conductor"]),
-    ("common/environment.yaml", "salinitybyname", ["payload_fields_c4e_salinity_ppm", "salinity", "salinity_psu", "sal_ppt",
-                                                   "surface_salinity"],
-     ["sal", "salary", "salinity_flag"]),
-    ("common/environment.yaml", "totaldissolvedsolidsbyname", ["payload_fields_c4e_tdskcl_ppm", "total_dissolved_solids", "TDS_mg_L",
-                                                               "tds_ppm", "tds (mg/l)", "tdskcl"],
-     ["tds", "tds_amount", "tds_deducted"]),
+    ("common/environment.yaml", "turbiditybysensorname", ["payload_fields_ntu_turbidityntu", "payload_fields_ntu_turbidityfnu",
+                                                          "payload_fields_ntu_turbidity_mg_l", "object_turbidity", "payload_fields_ntu"],
+     ["turbidity", "payload_fields_turbine", "turbidity_flag"]),
+    ("common/environment.yaml", "conductivitybysensorname", ["payload_fields_c4e_conductivity_us_cm", "object_ec_us_cm",
+                                                             "uplink_message_decoded_payload_conductivity"],
+     ["conductivity", "payload_fields_ec", "payload_fields_thermal_conductivity_x"]),
+    ("common/environment.yaml", "salinitybysensorname", ["payload_fields_c4e_salinity_ppm", "object_salinity_psu", "payload_fields_salinity"],
+     ["salinity", "payload_fields_salary", "payload_fields_salinity_flag"]),
+    ("common/environment.yaml", "totaldissolvedsolidsbysensorname", ["payload_fields_c4e_tdskcl_ppm", "object_tds_ppm",
+                                                                     "payload_fields_total_dissolved_solids"],
+     ["tds_ppm", "payload_fields_tds", "payload_fields_tds_amount"]),
     ("common/values.yaml", "temperaturebysensorname", ["payload_fields_optod_temperature", "payload_fields_pheht_temperature",
                                                        "payload_fields_c4e_temperature", "uplink_message_decoded_payload_temp",
                                                        "object_temperature"],
@@ -152,7 +139,6 @@ FIELDS = [
                                                      "bird_species", "tree_common_name", "species_common_name", "common_species_name"],
      ["common_name", "species", "fish_size"]),
     ("common/science.yaml", "vernacularnamewithscientificbyspecies", ["species", "species_name", "bird species"], ["subspecies_x", "specie"]),
-    ("common/telecom.yaml", "imeideviceidfield", ["device_id", "mobile_device_id", "equipment_id"], ["imei", "dev_id"]),
 ]
 
 
@@ -186,10 +172,11 @@ def test_new_field_rules_need_values():
 
 
 def test_device_id_is_no_imei_by_its_name_alone():
-    # The LoRaWAN sensors of Camden Council have device ids such as snla1k512.
-    assert not field_matches("common/telecom.yaml", "imeifield", "device_id")
-    assert field_matches("common/telecom.yaml", "imeifield", "imei")
-    assert load("common/telecom.yaml", "imeideviceidfield")["validator"].endswith("validate_imei")
+    # The LoRaWAN sensors of Camden Council have device ids such as snla1k512 (the fix of the Ballarat round).
+    spec = load("common/telecom.yaml", "imeifield")
+    assert spec["validator"].endswith("validate_imei") and spec["needs_values"] is True
+    from metacrafterext.rules.common.identifiers import validate_imei
+    assert not validate_imei("snla1k512")
 
 
 def test_uk_ward_name_refuses_australian_council_wards():

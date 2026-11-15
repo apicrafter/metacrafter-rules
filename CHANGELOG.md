@@ -24,12 +24,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     heritage significance levels (`au_heritage_significance`: Local, State in `itemsig`, `SIG`);
   - blue-green algae alert levels (`au_algae_alert_level`: Green alert, Amber alert, Red alert, No alert
     in alert fields; bare colours only in fields named for algae);
-  - water quality readings by field name with the values checked (`dissolved_oxygen`, `turbidity`,
-    `electrical_conductivity`, `salinity`, `total_dissolved_solids`), the names of The Things Network
-    and ChirpStack payloads included (`payload_fields_optod_oxygen_mg`, `payload_fields_ntu_turbidityntu`,
-    `payload_fields_c4e_conductivity_us_cm`, `payload_fields_c4e_tdskcl_ppm`), and pH and temperature
-    under those names (`payload_fields_ph`, `payload_fields_optod_temperature`); a bare oxygen, EC,
-    cond or TDS stays out (SpO2, enzyme numbers, the tax deducted at source);
+  - dissolved oxygen (`dissolved_oxygen`: `dissolved_oxygen`, `DO_mg_L`, `DO (%)`, `oxygen_ppm`, the
+    optode readings `payload_fields_optod_oxygen_mg`, `_percent`, `_ppm`; a bare oxygen or O2 stays
+    out, SpO2), and the names of The Things Network and ChirpStack payloads for the water quality
+    readings of the Ballarat round (`payload_fields_ntu_turbidityntu`, `payload_fields_c4e_conductivity_us_cm`,
+    `payload_fields_c4e_tdskcl_ppm`, `payload_fields_c4e_salinity_ppm`, with the Ballarat validators),
+    pH (`payload_fields_ph`; `payload_fields_ph_mv` is the electrode voltage) and temperature
+    (`payload_fields_optod_temperature`);
   - amounts of energy (`energy_amount`: `energy_generated` in kWh of the council solar systems,
     `energy_kwh`, `kwh_consumed`, `electricity_consumption_kwh`);
   - common names of species (`vernacular_name`: `vernacularName`, `fish_species`, `bird_species`,
@@ -45,6 +46,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     Camden LGA boundary is one polygon of 200 202 characters). metacrafter before
     apicrafter/metacrafter#127 refuses a maxlen above 100 000 and skips this rule with a diagnostic;
     the 100 000 rule still covers the shorter geometries.
+- **Rules for the Ballarat files of metacrafter-testdata** (a 2024 snapshot of the City of Ballarat Data
+  Exchange, data.ballarat.vic.gov.au, an Opendatasoft portal of Victoria, Australia, Dateno source cdi00000089;
+  validators in `metacrafterext.rules.common.observations`, rules in `rules/common/observations.yaml`):
+  - readings of environmental sensors and weather stations by field name, with checks of the numbers: PM1,
+    PM2.5 and PM10 (`pm1_concentration`, `pm25_concentration`, `pm10_concentration`: pm1, pm2_5, PM2.5 (µg/m³)),
+    ozone, nitrogen dioxide and carbon monoxide (`ozone_concentration`, `no2_concentration`, `co_concentration`;
+    a bare `co` is not one), relative humidity (`relative_humidity`, 0 to 100), air and vapour pressure
+    (`atmospheric_pressure` in hPa, kPa or Pa, `vapour_pressure`), precipitation (`precipitation_amount`:
+    precipitation, rainfall, prcp), solar radiation (`solar_radiation`: W/m², MJ/m²), wind speed and gusts
+    (`wind_speed`) and wind direction in degrees (`wind_direction`, 0 to 360), sound level (`sound_pressure_level`:
+    sound_pressure_level_average, LAeq, LAmax), and water quality: electrical conductivity
+    (`electrical_conductivity`: µS/cm, dS/m, conductivity_deciSiemensPerMetre), salinity, turbidity (NTU, FNU) and
+    total dissolved solids;
+  - the diameter of a tree at breast height (`tree_dbh`: dbh, diameter_breast_height, 45 cm or size classes
+    <15cm, 31cm - 60cm, > 90cm), military ranks (`military_rank`: SGT., LT COL. DSO., PTE. Driver in `rank`
+    fields; a decoration alone or a taxon rank is not one), the CRS of a geometry in well-known text (`wkt_crs`:
+    GEOGCS[...], PROJCS[...], GEOGCRS[...] by value and in `json_ogc_wkt_crs`), LoRaWAN EUIs (`eui64`:
+    end_device_ids_dev_eui, dev_eui, join_eui with sixteen hexadecimal digits);
+  - `point` fields of latitude and longitude text as `geopoint` (Opendatasoft names a geo_point field point
+    in 29 of the 95 Ballarat tables), `wind_direction_cardinal` as `compass_point`, `acidity` of water as
+    `ph_value`, council property numbers (`propertyid`: propnum, property_number, with priority 1), full
+    Australian addresses by value (`address`: 16 Cypress Avenue WENDOUREE VIC 3355, with a postcode of the state).
 
 - **Rules for the Buenos Aires files of metacrafter-testdata** (a 2024 snapshot of data.buenosaires.gob.ar,
   the open data portal of the City of Buenos Aires, Dateno source cdi00000023; validators in
@@ -217,8 +240,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- A bare `device_id`, `mobile_device_id` or `equipment_id` is an IMEI only with 15-digit IMEIs
-  that pass the Luhn check: the LoRaWAN sensors of Camden Council are snla1k512.
+- `device_id` and `equipment_id` are an `imei` only when the values are IMEIs (sensor ids lst25275720,
+  ems-b879; the LoRaWAN sensors of Camden Council, snla1k512);
+  `location_id` and `location_number` are a `gln` only with GLN values (1, 2, 16 were); `plaque`
+  is a `fr_vehicle_plate` only with French plates (memorial plaque numbers 2559 were).
+- A legal form after an article is not a company name (`encompanyname`): Supported by a trust and Not
+  supported by a trust of the GIAS schools register, which were the only values left once metacrafter took
+  Not applicable for an empty value.
+
 - The Australian LGA rules no longer take the Nigerian LGA codes and names of the GRID3 settlement
   data (`Lga Code` 19001, `Lga` Birnin Gwari): an ABS LGA code ends in 0 or is an unincorporated, no
   usual address or migratory code (19399, 19499, 89399), and a plain LGA name is not a Nigerian LGA.

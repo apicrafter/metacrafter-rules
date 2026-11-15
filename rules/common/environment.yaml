@@ -80,8 +80,10 @@ rules:
     priority: 1
   phbyname:
     key: ph_value
-    name: pH by field name (pH, pH_H2O, pH KCl, pHwater, pHcacl2, phLevel_water) with values from 0 to 14
-    rule: (?i)ph(?:[ _-]?(?:h2o|kcl|cacl2|bacl2|nacl|water|w|value|level|field|lab|in[ _]water|1[:_]?[25](?:\.5)?))?|ph[ _]?level[ _]?(?:water|calcium[ _]?chloride|cacl2|kcl|h2o)|ph[ _-]?(?:водн\w*|солев\w*)|рн(?:[ _-]?(?:водн\w*|солев\w*|kcl|h2o))?
+    name: pH by field name (pH, pH_H2O, pH KCl, pHwater, pHcacl2, phLevel_water, acidity) with values from 0 to 14
+    # acidity is the pH of the water quality sensors of Ballarat (8.771); fixed_acidity and
+    # volatile_acidity of wine are grams per litre and do not match.
+    rule: (?i)(?:water[ _-]?)?acidity(?:[ _-]?ph)?|ph(?:[ _-]?(?:h2o|kcl|cacl2|bacl2|nacl|water|w|value|level|field|lab|in[ _]water|1[:_]?[25](?:\.5)?))?|ph[ _]?level[ _]?(?:water|calcium[ _]?chloride|cacl2|kcl|h2o)|ph[ _-]?(?:водн\w*|солев\w*)|рн(?:[ _-]?(?:водн\w*|солев\w*|kcl|h2o))?
     type: field
     match: regex
     validator: metacrafterext.rules.common.fieldwork.validate_ph_value
@@ -156,42 +158,42 @@ rules:
     validator: metacrafterext.rules.common.waterquality.validate_dissolved_oxygen
     needs_values: true
     priority: 1
-  turbiditybyname:
+  # The plain names (turbidity, conductivity, salinity, TDS_mg_L) are the reading rules of the
+  # Ballarat round in observations.yaml; these take the names of sensor payloads only.
+  turbiditybysensorname:
     key: turbidity
-    name: Turbidity by field name (turbidity, Turbidity_NTU, ntu_turbidityntu, turbidity_fnu, NTU) with readings
-    rule: (?i)(?:(?:uplink_message_)?(?:decoded_)?payload(?:_fields)?[._]|object[._])?(?:[a-z0-9]{2,8}[._ ])?(?:turbidity(?:[._ ]?(?:ntu|fnu|ftu|fau|mg[._ /]?l|\(ntu\)|\(fnu\)))?|ntu|fnu)
+    name: Turbidity by the field name of a sensor payload (payload_fields_ntu_turbidityntu, payload_fields_ntu_turbidityfnu, object_turbidity)
+    rule: (?i)(?:(?:uplink_message_)?(?:decoded_)?payload(?:_fields)?|object)[._](?:[a-z0-9]{2,8}[._])?(?:turbidity[._]?(?:ntu|fnu|ftu|fau|mg[._]?l)?|ntu|fnu)
     type: field
     match: regex
-    validator: metacrafterext.rules.common.waterquality.validate_turbidity
+    validator: metacrafterext.rules.common.observations.validate_turbidity
     needs_values: true
     priority: 1
-  conductivitybyname:
+  conductivitybysensorname:
     key: electrical_conductivity
-    name: Electrical conductivity by field name (conductivity, EC_uS_cm, c4e_conductivity_us_cm, specific_conductance, SpC) with readings
-    # Thermal, hydraulic and heat conductivity are other quantities; a bare EC or cond is also a code
-    # (an enzyme commission number, a condition): only with a unit.
-    rule: (?i)(?:(?:uplink_message_)?(?:decoded_)?payload(?:_fields)?[._]|object[._])?(?!(?:thermal|hydraulic|heat)[._ ])(?:[a-z0-9]{2,8}[._ ])?(?:(?:electrical[._ ]?)?conductivity(?:[._ ]?(?:[uµ]s[._ /]?cm|ms[._ /]?cm|ds[._ /]?m|at[._ ]?25[._ ]?c|25c|\([uµ]s/cm\)))?|specific[._ ]conductance|spc|(?:ec|cond)[._ ]?(?:[uµ]s[._ /]?cm|ms[._ /]?cm|ds[._ /]?m|\([uµ]s/cm\)))
+    name: Electrical conductivity by the field name of a sensor payload (payload_fields_c4e_conductivity_us_cm, object_ec_us_cm)
+    rule: (?i)(?:(?:uplink_message_)?(?:decoded_)?payload(?:_fields)?|object)[._](?:[a-z0-9]{2,8}[._])?(?:(?:electrical[._]?)?conductivity(?:[._]?(?:[uµ]s[._]?cm|ms[._]?cm|ds[._]?m|25c))?|spc|(?:ec|cond)[._]?(?:[uµ]s[._]?cm|ms[._]?cm|ds[._]?m))
     type: field
     match: regex
-    validator: metacrafterext.rules.common.waterquality.validate_conductivity
+    validator: metacrafterext.rules.common.observations.validate_conductivity
     needs_values: true
     priority: 1
-  salinitybyname:
+  salinitybysensorname:
     key: salinity
-    name: Salinity by field name (salinity, salinity_psu, sal_ppt, c4e_salinity_ppm) with readings
-    rule: (?i)(?:(?:uplink_message_)?(?:decoded_)?payload(?:_fields)?[._]|object[._])?(?:[a-z0-9]{2,8}[._ ])?(?:salinity(?:[._ ]?(?:psu|ppt|ppm|pss|g[._ /]?l|mg[._ /]?l|\(psu\)|\(ppt\)))?|sal[._ ]?(?:psu|ppt))
+    name: Salinity by the field name of a sensor payload (payload_fields_c4e_salinity_ppm, object_salinity_psu)
+    rule: (?i)(?:(?:uplink_message_)?(?:decoded_)?payload(?:_fields)?|object)[._](?:[a-z0-9]{2,8}[._])?salinity(?:[._]?(?:psu|ppt|ppm|g[._]?l|mg[._]?l))?
     type: field
     match: regex
-    validator: metacrafterext.rules.common.waterquality.validate_salinity
+    validator: metacrafterext.rules.common.observations.validate_salinity
     needs_values: true
     priority: 1
-  totaldissolvedsolidsbyname:
+  totaldissolvedsolidsbysensorname:
     key: total_dissolved_solids
-    name: Total dissolved solids by field name (total_dissolved_solids, TDS_mg_L, c4e_tdskcl_ppm, tds_ppm) with readings
+    name: Total dissolved solids by the field name of a sensor payload (payload_fields_c4e_tdskcl_ppm, object_tds_ppm)
     # A bare TDS is also the tax deducted at source of Indian accounts: only with a unit or a scale.
-    rule: (?i)(?:(?:uplink_message_)?(?:decoded_)?payload(?:_fields)?[._]|object[._])?(?:[a-z0-9]{2,8}[._ ])?(?:total[._ ]dissolved[._ ]solids(?:[._ ]?(?:mg[._ /]?l|ppm|\(mg/l\)))?|tds[._ ]?(?:kcl|nacl|442)?[._ ]?(?:mg[._ /]?l|ppm|g[._ /]?l|\(mg/l\)|\(ppm\))|tds[._ ]?(?:kcl|nacl|442))
+    rule: (?i)(?:(?:uplink_message_)?(?:decoded_)?payload(?:_fields)?|object)[._](?:[a-z0-9]{2,8}[._])?(?:total[._]dissolved[._]solids(?:[._]?(?:mg[._]?l|ppm))?|tds[._]?(?:kcl|nacl|442)?[._]?(?:mg[._]?l|ppm|g[._]?l)|tds[._]?(?:kcl|nacl|442))
     type: field
     match: regex
-    validator: metacrafterext.rules.common.waterquality.validate_total_dissolved_solids
+    validator: metacrafterext.rules.common.observations.validate_dissolved_solids
     needs_values: true
     priority: 1

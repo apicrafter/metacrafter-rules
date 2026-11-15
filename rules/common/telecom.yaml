@@ -8,19 +8,11 @@ rules:
     key: imei
     is_pii: True
     name: International Mobile Equipment Identity (IMEI) by field name
-    rule: imei,imei_number,device_imei,imei_code,imei_string,device_imei_number,mobile_imei
+    rule: imei,device_id,mobile_device_id,equipment_id,imei_number,device_imei,imei_code,imei_string,device_imei_number,mobile_imei
     type: field
     match: text
-    priority: 1
-  imeideviceidfield:
-    key: imei
-    is_pii: True
-    name: IMEI by a device id field name (device_id, mobile_device_id, equipment_id) with 15-digit IMEIs
-    # A device_id is any device's id: the LoRaWAN sensors of Camden Council are snla1k512, a
-    # solar inverter a serial. Only IMEIs with their Luhn check digit.
-    rule: device_id,mobile_device_id,equipment_id
-    type: field
-    match: text
+    # device_id and equipment_id name sensors and gateways too (lst25275720, ems-b879, 014da0 in the IoT
+    # tables of Ballarat): the values must be IMEIs.
     validator: metacrafterext.rules.common.identifiers.validate_imei
     needs_values: true
     priority: 1
