@@ -210,3 +210,35 @@ rules:
     validator: metacrafterext.rules.fr.codes.validate_fr_qpv_code
     needs_values: true
     priority: 1
+
+  # ------------------------------------------------------------ Strasbourg (data.strasbourg.eu), Belgian round
+  # The Base Adresse Locale of the Eurométropole de Strasbourg and its lists of places key the
+  # addresses by the BAN interoperability key (cle_interop 67519_0940_00015, cle_ban); the street
+  # reference gives the RIVOLI code (code_rivoli 4460J).
+  frbancleinteropbyname:
+    key: fr_ban_cle_interop
+    name: BAN address interoperability key by field name (cle_interop, cle_ban, cle_interoperabilite)
+    rule: (?i)cl[ée][ _](?:interop(?:erabilite)?|ban|bal)|ban[ _]?(?:id|key|cle)|id[ _]ban
+    type: field
+    match: regex
+    validator: metacrafterext.rules.fr.codes.validate_fr_ban_cle_interop
+    needs_values: true
+    priority: 1
+  frbancleinteropvalue:
+    key: fr_ban_cle_interop
+    name: BAN address interoperability key by value (67519_0940_00015, 67482_3379_00019_bis)
+    rule: metacrafterext.rules.fr.codes.validate_fr_ban_cle_interop
+    type: data
+    match: func
+    minlen: 10
+    maxlen: 30
+    priority: 1
+  frrivolibyname:
+    key: fr_rivoli
+    name: RIVOLI street code by field name (code_rivoli, rivoli, code_fantoir_voie)
+    rule: (?i)(?:code[ _])?rivoli|code[ _]fantoir[ _]voie|code[ _]voie[ _]fantoir
+    type: field
+    match: regex
+    validator: metacrafterext.rules.fr.codes.validate_fr_rivoli
+    needs_values: true
+    priority: 1

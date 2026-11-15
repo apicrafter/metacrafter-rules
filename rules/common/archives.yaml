@@ -1,0 +1,17 @@
+name: archivescommon
+description: References of archival and manuscript sources (folios)
+context: publishing
+lang: common
+country_code: xx
+rules:
+  # Databases of the registers of Bruges and Leuven (SODHA) give the folio of each entry: 1r, 16v,
+  # 77r, and in the matriculation registers 1, 1v, 2.
+  manuscriptfoliobyname:
+    key: manuscript_folio
+    name: Folio of a manuscript or register by field name (Folio, Folio(mss), Folio/pagina, fol, foliering)
+    rule: (?i)fol(?:io|\.)?(?:[ _]?(?:\(?mss?\)?|/pagina|/page|nr|no|number|nummer|ms))?|foliering|foliatie
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.archives.validate_manuscript_folio
+    needs_values: true
+    priority: 1
