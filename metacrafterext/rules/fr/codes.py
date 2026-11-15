@@ -448,3 +448,51 @@ def validate_fr_gaspar_id(value):
     service in charge, the year and a four-digit number (2BDREAL20170001, 01DDT19950008); since
     GASPAR NG the procedure type, the year and a number (PPRN-RGA_2025_0396)."""
     return bool(_GASPAR.match(_text(value).upper()))
+
+
+# --- Addresses and streets (Base Adresse Nationale, FANTOIR) ---------------------------------
+
+_BAN_KEY = re.compile(r"^(?:\d{5}|2[ab]\d{3})_[0-9a-z]{4}(?:_\d{5}(?:_[0-9a-z]+)?)?$")
+
+
+def validate_fr_ban_cle_interop(value):
+    """A BAN / BAL interoperability key: INSEE code, FANTOIR code of the street and five-digit
+    number joined by underscores, with a suffix, in lowercase (67519_0940_00015, 67482_3379_00019_bis,
+    2a004_0010_00003); a street key has two parts (67482_0241). Not 67482-3379-00019."""
+    return bool(_BAN_KEY.match(str(value).strip().lower()))
+
+
+_RIVOLI = re.compile(r"^[\dA-Z]{4}[A-HJ-NP-Z]$")
+
+
+def validate_fr_rivoli(value):
+    """A RIVOLI street code within its commune: four characters and the check letter (4460J,
+    3086F, A001B), which is never I or O; not 4460 or 44601."""
+    return bool(_RIVOLI.match(_text(value).upper()))
+
+
+# --- Vehicles --------------------------------------------------------------------------------
+
+_CRITAIR = re.compile(r"^(?:(?:crit'?\s?air|v|classe|vignette)\s?)?(?:[1-5]|e|el|0)$|^(?:nc|non class[ée]s?)$", re.I)
+
+
+def validate_fr_critair(value):
+    """A Crit'Air class: E (zero emission) or 1 to 5, written V3, Crit'Air 3, crit air 2, 3, EL, or NC
+    for vehicles without a class. Not V6 or a word."""
+    text = str(value).strip().replace("’", "'")
+    return bool(_CRITAIR.match(text))
+
+
+# --- Cadastre ----------------------------------------------------------------------------------
+
+# IDU of a cadastral parcel (14 characters: INSEE code, prefix of the former commune, section,
+# number) and the 15-character form of the DGFiP files (department, direction digit, commune).
+_PARCEL = re.compile(r"^(?:(?:\d{5}|2[AB]\d{3})\d{3}|(?:\d{2}|2[AB])\d{4}\d{3})[0-9A-Z]{2}\d{4}$")
+
+
+def validate_fr_parcel_id(value):
+    """A French cadastral parcel identifier, or several separated by |: the IDU of 14 characters
+    (67482000NY0079) or the DGFiP form of 15 (670482000ET0399, 670519000070018). Not a SIRET."""
+    parts = [p.strip().upper() for p in str(value).split("|") if p.strip()]
+    # Fourteen digits are a SIRET; the DGFiP form may be all digits (section 07).
+    return bool(parts) and all(_PARCEL.match(p) and (len(p) == 15 or not p.isdigit()) for p in parts)

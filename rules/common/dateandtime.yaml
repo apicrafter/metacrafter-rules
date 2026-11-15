@@ -367,8 +367,8 @@ rules:
     priority: 1
   schoolyearbyfield:
     key: school_year
-    name: School or academic year (2025/26, 202526) by multilingual field name
-    rule: (?i)(?:.*\.)?(?:anno[ _]?scolas(?:tico)?|school[ _]?year|academic[ _]?year|schooljaar|schuljahr|ann[ée]e[ _]scolaire|a[ñn]o[ _]escolar|curso[ _](?:escolar|acad[ée]mico)|ano[ _]letivo|rok[ _]szkolny|[šs]koln[ií][ _]rok|учебный[ _]год|навчальний[ _]рік|tan[ée]v|l[äa]s[åa]r|lukuvuosi)
+    name: School or academic year (2025/26, 202526) by multilingual field name (school_year, annee_academique, academiejaar)
+    rule: (?i)(?:.*\.)?(?:anno[ _]?scolas(?:tico)?|school[ _]?year|academic[ _]?year|schooljaar|schuljahr|ann[ée]e[ _]scolaire|ann[ée]e[ _]acad[ée]mique(?:[ _]d[ _]application)?|academiejaar|akademisches[ _]jahr|a[ñn]o[ _]escolar|curso[ _](?:escolar|acad[ée]mico)|ano[ _]letivo|rok[ _]szkolny|[šs]koln[ií][ _]rok|учебный[ _]год|навчальний[ _]рік|tan[ée]v|l[äa]s[åa]r|lukuvuosi)
     type: field
     match: regex
     validator: metacrafterext.rules.common.generic.validate_school_year

@@ -1,0 +1,27 @@
+name: be-companies
+description: Belgian KBO/BCE enterprise and establishment unit numbers
+context: companies
+lang: common
+country_code: be
+rules:
+  # The FWB register of schools gives the KBO/BCE number of each school (an establishment unit,
+  # 2167228636) and of its organising authority (an enterprise number stored as an integer,
+  # 207310774 for 0207.310.774). The validators check the mod 97 digits.
+  beenterprisenumberbyname:
+    key: be_vat
+    name: Belgian enterprise number (KBO/BCE) by field name (numero_bce, ndeg_bce_du_p_o, kbo_nummer, ondernemingsnummer)
+    rule: (?i)(?:n(?:deg|o|um(?:ero)?|r)?[ _]?)?(?:bce|kbo|cbe)(?:[ _](?:nummer|number|nr|no))?(?:[ _](?:du[ _]p[ _]o|po|pouvoir[ _]organisateur|entreprise|onderneming))?|numero[ _]d[ _]entreprise|ondernemingsnummer|unternehmensnummer|enterprise[ _]number
+    type: field
+    match: regex
+    validator: metacrafterext.rules.be.codes.validate_be_enterprise_number
+    needs_values: true
+    priority: 1
+  beestablishmentunitnumberbyname:
+    key: be_establishment_unit_number
+    name: Belgian establishment unit number (KBO/BCE) by field name (numero_bce_de_l_etablissement, vestigingsnummer)
+    rule: (?i)(?:n(?:deg|o|um(?:ero)?|r)?[ _]?)?(?:bce|kbo)[ _](?:de[ _]l[ _])?(?:etablissement|implantation|unite[ _]d[ _]etablissement|vestiging(?:seenheid)?)|(?:numero[ _]d[ _])?unite[ _]d[ _]etablissement|vestigingseenheidsnummer|vestigingsnummer|establishment[ _]unit[ _]number
+    type: field
+    match: regex
+    validator: metacrafterext.rules.be.codes.validate_be_establishment_unit_number
+    needs_values: true
+    priority: 1

@@ -1,0 +1,18 @@
+name: be-pii
+description: Belgian phone numbers in the national format
+context: pii
+lang: common
+country_code: be
+rules:
+  # Directories of Namur and Liège write phone numbers in the national format (083/68.80.83,
+  # 081 74 43 22, 042219117, 0478 688 898) in telephone_de_la_structure, phone_numbers, fax_numbers and gsm.
+  bephonebyname:
+    key: phone
+    is_pii: True
+    name: Belgian phone number by field name (telephone, telephone_de_la_structure, phone_numbers, fax_numbers, gsm, telefoon)
+    rule: (?i)(?:numero[ _](?:de[ _])?)?t[ée]l[ée]phone(?:s)?(?:[ _][a-z_]+)?|t[ée]l(?:[ _][a-z_]+)?|phone[ _]?numbers?|gsm(?:[ _](?:nummer|number))?|telefoon(?:nummer)?|mobile|portable|fax(?:es)?(?:[ _]?numbers?)?|cell[ _]?phone[ _]?numbers?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.be.codes.validate_be_phone_national
+    needs_values: true
+    priority: 1

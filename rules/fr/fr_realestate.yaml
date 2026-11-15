@@ -56,3 +56,16 @@ rules:
     validator: metacrafterext.rules.fr.codes.validate_fr_dpe_number
     needs_values: true
     priority: 1
+
+  # ------------------------------------------------------------ Strasbourg (data.strasbourg.eu), Belgian round
+  # The parcels of the urban pre-emption rights carry their IDU (67482000NY0079), the Base Adresse
+  # Locale the parcels of each address in the 15-character DGFiP form (cad_parcelles 670482000ET0399).
+  frparcelidbyname:
+    key: frcadastral
+    name: French cadastral parcel identifier by field name (idu, cad_parcelles, id_parcelle, idpar, code_parcelle)
+    rule: (?i)idu|cad[ _]parcelles?|id[ _]?parcelles?|parcelles?[ _]id|idpar|code[ _]parcelle|numero[ _]parcelle
+    type: field
+    match: regex
+    validator: metacrafterext.rules.fr.codes.validate_fr_parcel_id
+    needs_values: true
+    priority: 1
