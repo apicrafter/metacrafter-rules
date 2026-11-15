@@ -2413,3 +2413,24 @@ def validate_hs_code_digits(value):
     if text.endswith(".0"):
         text = text[:-2]
     return bool(_HS_CODE_DIGITS.match(text))
+
+
+_CARD_NUMBER = re.compile(r"^(?=(?:.*\d){4})[\dXx*•]{4}(?:[ -]?[\dXx*•]{2,6}){1,4}$")
+
+
+def validate_card_number_text(value):
+    """A payment card number, also masked (4111 1111 1111 1111, 4111-XXXX-XXXX-1111, ************1111),
+    for the field names of card numbers: a creditcard field of Yes and No (does a car park take cards,
+    City of Melbourne off-street car parks) is a flag."""
+    text = str(value).strip()
+    digits = re.sub(r"[ -]", "", text)
+    return 12 <= len(digits) <= 19 and bool(_CARD_NUMBER.match(text))
+
+
+_AT_HANDLE = re.compile(r"^@[A-Za-z0-9_]{1,15}$")
+
+
+def validate_twitter_at_handle(value):
+    """A Twitter (X) handle with its @: @LifelineAust, @TheRMH (not LifelineAust, a profile URL
+    https://twitter.com/ASSMStrata or an e-mail address)."""
+    return bool(_AT_HANDLE.match(str(value).strip()))

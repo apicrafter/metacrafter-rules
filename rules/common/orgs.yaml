@@ -93,3 +93,12 @@ rules:
     minlen: 9
     maxlen: 120
     priority: 1
+  tradingnamebyname:
+    key: orgname
+    name: Trading name of a business by field name (trading_name, Trading name, what_is_your_business_trading_name)
+    rule: (?i)(?:[a-z]+[ _])*trading[ _]?name
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.generic.validate_name_text
+    needs_values: true
+    priority: 1

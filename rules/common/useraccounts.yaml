@@ -54,7 +54,9 @@ rules:
     rule: Literal('@') + Word(alphanums + '_', min=1, max=15)
     maxlen: 16
     minlen: 2
-    fieldrule: user_handle,handle,social_handle,twitter_handle,instagram_handle
+    # A twitter or instagram field holds @handles (City of Melbourne support services) or profile URLs
+    # (Liverpool business directory): by these names only the values with @ count.
+    fieldrule: user_handle,handle,social_handle,twitter_handle,instagram_handle,twitter,twitter_account,instagram
     fieldrulematch: text
     imprecise: 1
     priority: 3
@@ -77,3 +79,14 @@ rules:
     fieldrulematch: text
     priority: 2
 
+  twitterusernamebyname:
+    key: twitter_username
+    name: Twitter (X) handle by field name (Twitter, twitter_handle, X handle) with @handles
+    # The support services of the City of Melbourne list @LifelineAust, @TheRMH; a twitter field of
+    # profile URLs (Liverpool business directory) is url.
+    rule: (?i)(?:[a-z]+[ _])?twitter(?:[ _]?(?:handle|account|username|name|id))?|x[ _](?:handle|account|username)
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.identifiers.validate_twitter_at_handle
+    needs_values: true
+    priority: 1

@@ -145,11 +145,12 @@ def validate_ng_lga(value):
 
 def validate_ng_lga_code(value):
     """A five-digit LGA code of GRID3: the state number (01 Abia to 37 Zamfara) and the LGA number,
-    19001 (Birnin Gwari, Kaduna); not 38001, 00001 or 19000."""
+    19001 (Birnin Gwari, Kaduna); not 38001, 00001, 19000 or the ABS LGA codes of Australia (10500,
+    11250), whose last three digits are above 44, the most LGAs of a state (Kano)."""
     text = str(value).strip()
     if text.endswith(".0"):
         text = text[:-2]
-    return len(text) == 5 and text.isdigit() and 1 <= int(text[:2]) <= 37 and int(text[2:]) > 0
+    return len(text) == 5 and text.isdigit() and 1 <= int(text[:2]) <= 37 and 1 <= int(text[2:]) <= 44
 
 
 _WARD_CODE = re.compile(r"^([A-Z]{2})(\d{2})(\d{2})$")
