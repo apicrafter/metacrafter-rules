@@ -71,7 +71,7 @@ rules:
   arcuebyname:
     key: ar_cue
     name: Argentine school establishment code by field name (cue, CUE, codigo_cue) with seven digits starting with a jurisdiction
-    rule: (?i)(?:(?:cod(?:igo)?|nro|id|n[uú]mero)[ _]?)?cue(?:[ _](?:id|cod|codigo|establecimiento|sede))?
+    rule: (?i)(?:(?:cod(?:igo)?|nro|id|n[uú]mero)[ _]?)?cue(?:[ _](?:id|cod|codigo|establecimiento|sede|escuela))?|(?:escuela|establecimiento)[ _]cue
     type: field
     match: regex
     validator: metacrafterext.rules.ar_country.caba.validate_ar_cue

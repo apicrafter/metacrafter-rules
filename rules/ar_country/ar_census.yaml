@@ -95,7 +95,7 @@ rules:
     # Department names of the georef list, written in capitals without accents (RIO CUARTO) or
     # abbreviated (Gral. San Martín, Pte. Roque S. Peña). A Departamento column of a housing table
     # counts apartments, and departments of Colombia or Uruguay are not on the list.
-    rule: (?i)(?:nom(?:bre)?[ _]?)?(?:departamentos?|depto|dpto\.?|partido)(?:[ _]?(?:nombre|nom|desc))?|(?:departamento|depto|dpto\.?)\s+(?:de\s+)?residencia(?:\s+de\s+la\s+madre)?|departamento_residencia|dpa_desc(?:ripcion)?
+    rule: (?i)(?:nom(?:bre)?[ _]?)?(?:departamentos?|depto|dpto\.?|partido)(?:[ _]?(?:nombre|nom|desc))?|(?:departamento|depto|dpto\.?)\s+(?:de\s+)?residencia(?:\s+de\s+la\s+madre)?|departamento_residencia|(?!(?:tipo|cod|codigo)[ _])(?:[a-z]+[ _]+){1,4}(?:departamento|depto|dpto)(?:[ _]+(?!(?:id|cod|codigo)\b)[a-z]+){0,4}|(?:departamento|depto|dpto)(?:[ _]+(?!(?:id|cod|codigo)\b)[a-z]+){1,4}|c[ _]depto|departamen|dpa_desc(?:ripcion)?
     type: field
     match: regex
     validator: metacrafterext.rules.ar_country.census.validate_ar_department_name

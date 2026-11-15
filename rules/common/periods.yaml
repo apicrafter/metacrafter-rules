@@ -49,7 +49,7 @@ rules:
     key: yearmonth
     name: Year and month by field name (periodo, PERIODO, anio_mes, year_month, yyyymm) with 201909, 2019-09 or 09/2019
     # A periodo of years (2016) or of quarters is not one.
-    rule: (?i)per[ií]odos?(?:[ _](?:liquidaci[oó]n|fiscal|informado|mensual))?|a[ñn]i?o[ _]?mes|mes[ _]?a[ñn]i?o|yyyy[ _-]?mm|year[ _-]?month|month[ _-]?year|anomes
+    rule: (?i)per[ií]odos?(?:[ _](?:liquidaci[oó]n|fiscal|informado|mensual))?|a[ñn]i?o[ _]?mes|mes[ _]?a[ñn]i?o|yyyy[ _-]?mm|year[ _-]?month|month[ _-]?year|anomes|(?:id[ _])?ejercicio[ _/-]?mes
     type: field
     match: regex
     validator: metacrafterext.rules.common.urban.validate_yearmonth

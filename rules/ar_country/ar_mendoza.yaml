@@ -1,0 +1,125 @@
+name: ar-mendoza
+description: Province of Mendoza (districts, school numbers, budget classifiers, accounting units, administrative files) and Argentine categories of hazardous waste
+context: government
+lang: es
+country_code: ar
+# Found in the open data of the province of Mendoza (datosabiertos.mendoza.gov.ar, a 2024 snapshot,
+# Dateno source cdi00000026; metacrafter-testdata): the budget execution of the provincial
+# administration and of the Fondo para la Transformación y el Crecimiento, school and health
+# directories, the registers of hazardous waste and the environmental impact assessments.
+rules:
+  armendozadistrictbyname:
+    key: ar_mendoza_district
+    name: District of a department of Mendoza by field name (distrito, DISTRITO, distrito_nombre, guia_domicilio_distrito)
+    # Rodeo de la Cruz, EL PLUMERILLO, Va. Hipódromo, San José (G), Segunda Sección. The school
+    # and planning districts of Buenos Aires (DISTRITO 6, R2a II) fail.
+    rule: '(?i)(?:[a-záéíóúñü]+[ _]+)*distritos?(?:[ _]+[a-záéíóúñü]+)*'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.ar_country.mendoza.validate_ar_mendoza_district
+    needs_values: true
+    priority: 1
+  armendozaschoolnumberbyname:
+    key: ar_mendoza_school_number
+    name: School number of the DGE of Mendoza by field name (ESC, numero_escuela, numero_establecimiento)
+    # 4-013, P-131, PS-046, P113. A bare numero is a house number as often, and is left out.
+    rule: '(?i)esc(?:uela)?|(?:n(?:[uú]me)?ro|nro|num|n[º°])[ _.]?(?:de[ _])?(?:la[ _])?(?:escuela|establecimiento)|(?:escuela|establecimiento)[ _](?:n(?:[uú]me)?ro|nro|num|n[º°])'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.ar_country.mendoza.validate_ar_mendoza_school_number
+    needs_values: true
+    priority: 1
+  armendozaeconomicbyname:
+    key: ar_mendoza_economic_classification
+    name: Economic classification of expenditure of Mendoza by field name (Clasificación Económica, clasificacion_economica, ejecucion presupuesto_partida gasto)
+    rule: '(?i)clasificaci[oó]n[ _-]econ[oó]mica|(?:ejecucio?n[ _]?)?presupuesto[ _]partida[ _]gasto|ejecucio?n[ _]presupuesto[ _]partida[ _]gasto|partida[ _](?:de[ _])?gasto'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.ar_country.mendoza.validate_ar_mendoza_economic_classification
+    needs_values: true
+    priority: 1
+  armendozaeconomicvalue:
+    key: ar_mendoza_economic_classification
+    name: Economic classification of expenditure of Mendoza by value (41101 PERSONAL PERMANENTE, 41300 - SERVICIOS)
+    rule: metacrafterext.rules.ar_country.mendoza.validate_ar_mendoza_economic_classification_value
+    type: data
+    match: func
+    minlen: 9
+    maxlen: 120
+    priority: 1
+  armendozafinancingbyname:
+    key: ar_mendoza_financing_source
+    name: Financing source of the budget of Mendoza by field name (Financiamiento, ejecucion presupuesto_ nomenclador financiamiento)
+    # 0 Rentas Generales, 000 - Rentas Generales, 21 Tasa de Justicia.
+    rule: '(?i)(?:fuente[ _](?:de[ _])?)?financiamiento|(?:ejecucio?n?[ _]+)?presupuesto[ _]+nomenclador[ _]+financiamiento|nomenclador[ _]financiamiento'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.ar_country.mendoza.validate_ar_mendoza_financing_source
+    needs_values: true
+    priority: 1
+  armendozaresourcebyname:
+    key: ar_mendoza_resource_account
+    name: Resource account of the budget of Mendoza by field name (Cuenta Contable Nivel 4, plan_cuentas, presupuesto_partidas)
+    rule: '(?i)cuenta[ _]contable(?:[ _]nivel[ _]*\d)?|plan[ _](?:de[ _])?cuentas|presupuesto[ _]partidas|partida[ _](?:de[ _])?recursos?'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.ar_country.mendoza.validate_ar_mendoza_resource_account
+    needs_values: true
+    priority: 1
+  armendozaresourcevalue:
+    key: ar_mendoza_resource_account
+    name: Resource account of the budget of Mendoza by value (1110100000-IMPUESTO SOBRE LAS ACTIVIDADES, 1120202000 - INT. GANADOS)
+    rule: metacrafterext.rules.ar_country.mendoza.validate_ar_mendoza_resource_account
+    type: data
+    match: func
+    minlen: 12
+    maxlen: 160
+    priority: 1
+  armendozacucbyname:
+    key: ar_mendoza_cuc
+    name: Accounting unit of the public sector of Mendoza by field name (CUC, cuc, id_cuc)
+    # 906-Administración Central, 259-Hospital Central, 906.
+    rule: '(?i)(?:id[ _])?cuc|c[oó]digo[ _]unidad[ _]contable|unidad[ _]contable'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.ar_country.mendoza.validate_ar_mendoza_cuc
+    needs_values: true
+    priority: 1
+  armendozaexpedientebyname:
+    key: ar_mendoza_expediente_number
+    name: Administrative file of Mendoza before GDE by field name (expediente_numero, numero_expediente, expediente_operatoria, expediente_mina)
+    # 4259-D-2015-03834, 1310/G/07/03834, 3451-N-1943; the GDE numbers of the same fields are
+    # ar_gde_number.
+    rule: '(?i)(?:[a-záéíóúñü]+[ _])*(?:expedientes?|expte\.?)(?:[ _][a-záéíóúñü]+)*|(?:n(?:[uú]me)?ro|nro)[ _](?:de[ _])?(?:expediente|expte)'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.ar_country.mendoza.validate_ar_mendoza_expediente_number
+    needs_values: true
+    priority: 1
+  armendozaexpedientevalue:
+    key: ar_mendoza_expediente_number
+    name: Administrative file of Mendoza before GDE by value, with its office (4259-D-2015-03834, 1310/G/07/03834)
+    rule: metacrafterext.rules.ar_country.mendoza.validate_ar_mendoza_expediente_number_with_office
+    type: data
+    match: func
+    minlen: 12
+    maxlen: 120
+    priority: 1
+  arhazardouswastebyname:
+    key: ar_hazardous_waste_category
+    name: Argentine categories of hazardous waste by field name (categorias de control autorizadas, categorias_gestion_autorizadas, corrientes_autorizadas)
+    rule: '(?i)categor[ií]as?(?:[ _](?:de[ _])?(?:control|gesti[oó]n|residuos?))?(?:[ _]a(?:u)?torizadas?)?|corrientes?(?:[ _](?:de[ _])?residuos?)?[ _]autorizadas?|categor[ií]as?[ _]sometidas?[ _]a[ _]control'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.ar_country.mendoza.validate_ar_hazardous_waste_categories
+    needs_values: true
+    priority: 1
+  arhazardouswastevalue:
+    key: ar_hazardous_waste_category
+    name: Argentine categories of hazardous waste by value (Y8-Y9-Y48, Y8, Y9, Y11)
+    rule: metacrafterext.rules.ar_country.mendoza.validate_ar_hazardous_waste_categories
+    type: data
+    match: func
+    minlen: 3
+    maxlen: 300
+    priority: 1
