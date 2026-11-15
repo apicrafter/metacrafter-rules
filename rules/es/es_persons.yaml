@@ -87,3 +87,27 @@ rules:
     validator: metacrafterext.rules.common.generic.validate_person_fullname_not_place
     needs_values: true
     priority: 1
+  # Found in the lists of schools, health centres and halls of Mercedes, Buenos Aires
+  # (datosabiertos.mercedes.gob.ar, metacrafter-testdata): the heads and staff in office.
+  esofficialfullnamebyname:
+    key: person_fullname
+    name: Full name of a person in office by Spanish field name (directivo, director, profesional, presidente, responsable, coordinador)
+    # PONCE, ESTEBAN; DRA. PITARO, ANA; Javier Laresca. A titular is often an organization (Grupo
+    # TELEFE) and is left out; the names of provinces and institutions fail the validator.
+    rule: (?i)directiv[oa]s?|director(?:a|es|as)?|profesional(?:es)?|presidente|responsables?|referentes?|coordinador(?:a|es)?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.generic.validate_person_fullname_not_place
+    needs_values: true
+    priority: 1
+  esjobtitlebyname:
+    key: jobtitle
+    name: Job title by Spanish field name (puesto, puesto_de_trabajo, cargo, ocupación) with text
+    # Operario, Chofer Camión Jaula, Tornero CNC in the job requests of an employment office; a
+    # cargo of amounts fails.
+    rule: (?i)puestos?(?:[ _](?:de[ _]trabajo|solicitados?|ofrecidos?|laboral|vacante))?|cargos?(?:[ _](?:que[ _]ocupa|actual|funcionario))?|ocupaci[oó]n
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.generic.validate_name_text
+    needs_values: true
+    priority: 1

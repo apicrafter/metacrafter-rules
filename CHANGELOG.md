@@ -9,6 +9,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Rules for the Mercedes files of metacrafter-testdata** (datosabiertos.mercedes.gob.ar, the open data
+  portal of the municipality of Mercedes, Buenos Aires: a 2024 snapshot, Dateno source cdi00000027, and
+  the portal of 2026; validators in the new `metacrafterext.rules.ar_country.pba` and
+  `metacrafterext.rules.es.vocab` and in `metacrafterext.rules.common.vehicles`, rules in the new
+  `rules/ar_country/ar_pba.yaml`):
+  - schools of Buenos Aires Province: the designations of the DGCyE (`ar_pba_school_service`: EP Nº 1,
+    E.S Nº3 NACIONAL, E.E.S Nº8, EET Nº1, JARDÍN 901, JIRMM Nº1, CFP Nº 401 in `SERV. EDUC`,
+    `servicio_educativo`, `escuela`, `establecimiento`, and by value with the number sign) and the
+    DIPREGEP numbers of private schools (`ar_pba_dipregep_number` in `N° Diepregep`, `dipregep`,
+    `diegep`);
+  - municipal tender numbers (`ar_licitacion_number`: LPub Nº 03/2018, Lpriv Nº 29/2018, Licitación
+    Pública N° 12/2021, Concurso de Precios N° 3/2019 in `Licitación` fields and by value);
+  - vehicle types (`vehicle_type`: Automóvil, Pick Up, Camioneta, Camión, Motoniveladora, Truck in
+    `Vehículo`, `tipo_vehiculo`, `vehicle_type`, `body_type`; no rule by value, Bus and Rural are
+    other things too);
+  - registry types that had no rules or no Spanish ones: medical specialties (`medical_specialty`:
+    CARDIOLOGÍA, CLÍNICA MÉDICA, Pediatría, Cardiology in `especialidad`, `specialty` and by value),
+    engine and chassis numbers by Spanish names (`engine_number` in `Motor Nro.`, `nro_motor`;
+    `chassis_number` in `Chasis Nro.`, `nro_chasis`, `bastidor`);
+  - more names and values of types with rules: `species` by the common names of street trees
+    (Fresno Americano, Plátano, Ligustro Variegado, also with an accent that did not decode) and in
+    `especie`, `nombre_comun`, `nombre_vulgar`; `person_fullname` in `directivo`, `director`,
+    `profesional`, `presidente`, `responsable`, `coordinador` (DRA. PITARO, ANA; PONCE, ESTEBAN);
+    `jobtitle` in `puesto`, `cargo`, `ocupación`; `brand` in `marca`; `year` in `modelo` of years (the
+    model year of a vehicle); `money` in `presupuesto` (Presupuesto Oficial o adjudicado, PRESUPUESTO
+    TOTAL IVA INC.); `orgunit` in `secretaria`, `subsecretaría`, `area solicitante`; `phone` in `TEL
+    FIJO`, `tel. fijo`; `legislation_number` in a bare `decreto`.
+
 - **Rules for the Buenos Aires files of metacrafter-testdata** (a 2024 snapshot of data.buenosaires.gob.ar,
   the open data portal of the City of Buenos Aires, Dateno source cdi00000023; validators in
   `metacrafterext.rules.ar_country.caba`, `metacrafterext.rules.es.periods` and

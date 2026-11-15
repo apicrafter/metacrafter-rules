@@ -5,6 +5,9 @@ These functions validate vehicle identifiers such as VIN (Vehicle Identification
 chassis numbers, engine numbers, and vehicle registration plates.
 """
 
+import re as _re
+import unicodedata as _unicodedata
+
 from metacrafterext.rules.common.placeholders import rejects_repeated_digits
 
 
@@ -79,3 +82,67 @@ def validate_vin(value):
     
     return True
 
+
+
+# --- Vehicle types and the numbers of a fleet list ---------------------------------------------------
+# Found in the fleet lists of the municipality of Mercedes, Buenos Aires (datosabiertos.mercedes.gob.ar,
+# metacrafter-testdata): Vehículo (Automóvil, Pick Up, Camioneta, Camión, Motoniveladora), Motor Nro. and
+# Chasis Nro.
+
+
+
+def _fold(value):
+    text = _unicodedata.normalize("NFKD", str(value).strip())
+    text = "".join(ch for ch in text if not _unicodedata.combining(ch)).lower()
+    return _re.sub(r"[\s_]+", " ", text).strip(" .")
+
+
+# Kinds of road vehicles and self-propelled machines, folded: Spanish (Argentina, Spain, Mexico) and
+# English; the abbreviations of the fleet lists (Motonivelad., Retro) are cut forms of them.
+VEHICLE_TYPES = frozenset((
+    "automovil", "auto", "autos", "coche", "turismo", "sedan", "rural", "camioneta", "pick up", "pickup",
+    "pick-up", "utilitario", "furgon", "furgoneta", "minibus", "microbus", "camion", "camion volcador",
+    "camion regador", "camion compactador", "camion grua", "camion atmosferico", "camion cisterna",
+    "camion tanque", "camion recolector", "recolector", "compactador", "volcador", "batea", "semirremolque",
+    "acoplado", "tractor", "tractor cortacesped", "cortacesped", "motoniveladora", "retroexcavadora",
+    "pala cargadora", "pala mecanica", "cargadora", "excavadora", "topadora", "aplanadora", "rodillo",
+    "rodillo compactador", "barredora", "hidroelevador", "grua", "autobomba", "ambulancia", "colectivo",
+    "omnibus", "autobus", "bus", "minibus", "moto", "motocicleta", "motoneta", "ciclomotor", "cuatriciclo",
+    "bicicleta", "patrullero", "trafic", "jeep", "todo terreno", "chasis", "chasis cabina",
+    "car", "passenger car", "saloon", "station wagon", "suv", "van", "minivan", "truck", "pickup truck",
+    "lorry", "tipper", "dump truck", "fire truck", "fire engine", "ambulance", "bus", "coach", "minibus",
+    "motorcycle", "motorbike", "moped", "scooter", "bicycle", "tractor", "trailer", "semi-trailer",
+    "excavator", "loader", "grader", "road roller", "forklift", "taxi", "limousine", "tow truck",
+))
+_VEHICLE_CUT = _re.compile(r"^([a-z]{5,})\.$")
+
+
+def validate_vehicle_type(value):
+    """A kind of vehicle: Automóvil, Pick Up, Camioneta, Camión, Motoniveladora, Motonivelad., Truck,
+    Motorcycle (not a make, a plate or a mode of transport such as Rail)."""
+    raw = str(value).strip().lower()
+    text = _fold(value)
+    if not 2 <= len(text) <= 40:
+        return False
+    if text in VEHICLE_TYPES:
+        return True
+    cut = _VEHICLE_CUT.match(_re.sub(r"\s+", " ", raw))
+    if cut:
+        stem = _fold(cut.group(1))
+        return any(name.startswith(stem) for name in VEHICLE_TYPES if " " not in name)
+    return False
+
+
+_SERIAL = _re.compile(r"^[A-Z0-9][A-Z0-9 \-/.]{2,38}[A-Z0-9]$")
+
+
+def validate_engine_or_chassis_number(value):
+    """An engine or chassis number as fleet lists write it: 10DXBA0003019, 2KD-5369584, 9BFFF25G6YD036053,
+    BF6L913 Serie 703481, 30627914 (not a year, a short number or a word)."""
+    text = _re.sub(r"\s+", " ", str(value).strip().upper())
+    if text.endswith(".0") and text[:-2].isdigit():
+        text = text[:-2]
+    if not _SERIAL.match(text):
+        return False
+    digits = sum(ch.isdigit() for ch in text)
+    return digits >= 4 and len(text.replace(" ", "")) >= 6

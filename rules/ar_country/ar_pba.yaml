@@ -1,0 +1,57 @@
+name: ar-pba
+description: Buenos Aires Province (school designations of the DGCyE, DIPREGEP numbers of private schools) and Argentine municipal tender numbers
+context: government
+lang: es
+country_code: ar
+# Found in the open data of the municipality of Mercedes, Buenos Aires (datosabiertos.mercedes.gob.ar,
+# a 2024 snapshot and the portal of 2026; metacrafter-testdata): school lists of the educational
+# survey of 2021 and the lists of works and purchases of 2018.
+rules:
+  arpbaschoolservicebyname:
+    key: ar_pba_school_service
+    name: Buenos Aires Province school designation by field name (SERV. EDUC, servicio_educativo, escuela, establecimiento) with EP N° 1 or JARDÍN 901
+    # EP Nº 1, E.S Nº3 NACIONAL, E.E.S Nº8, EET Nº1, JIRMM Nº1, CFP Nº 401; the offices of the
+    # same list (JEF. REGIONAL, CONSEJO ESCOLAR) fail.
+    rule: (?i)serv(?:icio)?s?[ _.\\]*educ(?:ativos?|\.)?|(?:nombre[ _](?:de[ _](?:la[ _])?)?)?(?:escuela|establecimiento)(?:[ _]educativo)?s?|educ
+    type: field
+    match: regex
+    validator: metacrafterext.rules.ar_country.pba.validate_ar_pba_school_service
+    needs_values: true
+    priority: 1
+  arpbaschoolservicevalue:
+    key: ar_pba_school_service
+    name: Buenos Aires Province school designation by value (EP Nº 1, E.S. N° 7, CEF N° 193, JARDÍN 901)
+    # With the number sign or as JARDÍN: EP 12 alone may be an episode or a page.
+    rule: metacrafterext.rules.ar_country.pba.validate_ar_pba_school_service_value
+    type: data
+    match: func
+    minlen: 5
+    maxlen: 48
+    priority: 1
+  arpbadipregepbyname:
+    key: ar_pba_dipregep_number
+    name: DIPREGEP number of a private school of Buenos Aires Province by field name (N° Diepregep, dipregep, diegep)
+    rule: (?i)(?:n(?:[uú]mero|ro)?[°º]?[ _.]*(?:de[ _])?)?(?:dipregep|diepregep|diegep|dieggep)(?:[ _](?:n(?:[uú]mero|ro)?[°º]?))?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.ar_country.pba.validate_ar_pba_dipregep_number
+    needs_values: true
+    priority: 1
+  arlicitacionnumberbyname:
+    key: ar_licitacion_number
+    name: Argentine tender number by field name (Licitación, nro_licitacion, numero_de_licitacion) with LPub Nº 03/2018 or Licitación Pública N° 12/2021
+    rule: (?i)licitaci[oó]n(?:es)?|(?:n(?:[uú]me)?ro|nro|num|n[º°])[ _.]?(?:de[ _](?:la[ _])?)?licitaci[oó]n|licitaci[oó]n[ _](?:n(?:[uú]me)?ro|nro|num|n[º°])
+    type: field
+    match: regex
+    validator: metacrafterext.rules.ar_country.pba.validate_ar_licitacion_number
+    needs_values: true
+    priority: 1
+  arlicitacionnumbervalue:
+    key: ar_licitacion_number
+    name: Argentine tender number by value (LPub Nº 03/2018, Lpriv Nº 29/2018, Licitación Pública N° 12/2021)
+    rule: metacrafterext.rules.ar_country.pba.validate_ar_licitacion_number
+    type: data
+    match: func
+    minlen: 6
+    maxlen: 48
+    priority: 1

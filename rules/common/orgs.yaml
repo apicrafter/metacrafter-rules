@@ -77,8 +77,8 @@ rules:
     priority: 1
   orgunitbyname:
     key: orgunit
-    name: Organizational unit by field name (gerencia, subgerencia, dependencia, unidad organizativa, org_unit)
-    rule: (?i)(?:sub)?gerencias?(?:[ _](?:solicitante|requirente|responsable|nombre))?|dependencia(?:[ _](?:solicitante|requirente))?|unidad[ _](?:organizativa|org[aá]nica|requirente|solicitante)|repartici[oó]n|org(?:anization(?:al)?|anisation(?:al)?)?[ _]?unit(?:[ _]name)?|business[ _]unit
+    name: Organizational unit by field name (gerencia, subgerencia, dependencia, unidad organizativa, org_unit, secretaria, area solicitante)
+    rule: (?i)(?:sub)?gerencias?(?:[ _](?:solicitante|requirente|responsable|nombre))?|dependencia(?:[ _](?:solicitante|requirente))?|unidad[ _](?:organizativa|org[aá]nica|requirente|solicitante)|repartici[oó]n|org(?:anization(?:al)?|anisation(?:al)?)?[ _]?unit(?:[ _]name)?|business[ _]unit|(?:sub[ _]?)?secretar[ií]as?|[aá]rea[ _](?:solicitante|requirente|responsable)
     type: field
     match: regex
     validator: metacrafterext.rules.common.generic.validate_orgunit_text
