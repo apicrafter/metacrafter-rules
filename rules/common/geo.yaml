@@ -427,6 +427,17 @@ rules:
     validator: metacrafterext.rules.common.generic.validate_latlon_pair
     needs_values: true
     priority: 1
+  geopointsocratalocationbyname:
+    key: geopoint
+    name: Socrata location column as latitude and longitude text by field name (Location, Location 1, Location_1, GPS, Long/Lat)
+    # Socrata exports a location column to CSV as (-35.318906, 149.132104), named Location,
+    # Location 1 or after the source column; POINT (149.13 -35.31) in the same columns is WKT.
+    rule: (?i)(?:[a-z]+[ _])?location(?:[ _]?\d)?|gps(?:[ _]?(?:location|coordinates|point))?|long?[ _/]?lat|lat[ _/]?long?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.generic.validate_latlon_pair
+    needs_values: true
+    priority: 1
   compasspointbyname:
     key: compass_point
     name: Compass point (16-wind) by field name (aspect, slopeAspect_direction, wind_direction, wind_direction_cardinal)
@@ -633,7 +644,7 @@ rules:
     # Suburbs are the localities of addresses in Australia, New Zealand and South Africa. Without a
     # scan country a suburb is a location, and this universal match covers the Australian
     # au_suburb rule (a South African SUBURB is no au_suburb).
-    rule: (?i)(?:[a-z]+[ _/])*suburbs?(?:[ _/]?(?:name|locality))?
+    rule: (?i)(?:[a-z]+[ _/])*suburbs?(?:[ _/]?(?:name|locality|location))?
     type: field
     match: regex
     validator: metacrafterext.rules.common.generic.validate_place_name

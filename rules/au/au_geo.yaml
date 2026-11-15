@@ -99,7 +99,7 @@ rules:
     name: Australian suburb or locality by field name (Suburb, Suburb/Town, B_Suburb, supplier_suburb, AFS_LIC_ADD_LOCAL)
     # The place before the state and postcode of an Australian address; council and register
     # files call it suburb, suburb/town, town/city or locality (ASIC: _ADD_LOCAL, _LOCALITY).
-    rule: (?i)(?:[a-z]+[ _])*(?:suburb(?:[ _/]?(?:town|name|locality))?|suburbs?[ _]name|town[ _/]?(?:city|suburb)|[a-z]+_add_local)
+    rule: (?i)(?:[a-z]+[ _])*(?:suburb(?:[ _/]?(?:town|name|locality|location))?|suburbs?[ _]name|town[ _/]?(?:city|suburb)|[a-z]+_add_local)
     type: field
     match: regex
     validator: metacrafterext.rules.common.generic.validate_place_name
@@ -201,5 +201,44 @@ rules:
     type: field
     match: regex
     validator: metacrafterext.rules.au.planning.validate_au_council_ward
+    needs_values: true
+    priority: 1
+
+  # ------------------------------------------------------------ ABS geography of the ACT files
+  ausa1codebyname:
+    key: au_sa1_code
+    name: ABS Statistical Area Level 1 code by field name (SA1, sa1_main16, SA1_7DIGITCODE_2011, SA1 code)
+    rule: (?i)(?:[a-z]+[ _])*sa1(?:[ _]?(?:main|code|7digit(?:code)?|maincode|main_code|id|7dig))*(?:[ _]?(?:20)?\d{2})?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.au.act.validate_au_sa1_code
+    needs_values: true
+    priority: 1
+  ausa3codebyname:
+    key: au_sa3_code
+    name: ABS Statistical Area Level 3 code by field name (SA3 Code, sa3_code16, SA3_CODE_2021)
+    rule: (?i)(?:[a-z]+[ _])*sa3(?:[ _]?(?:code|id|main(?:code)?))+(?:[ _]?(?:20)?\d{2})?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.au.act.validate_au_sa3_code
+    needs_values: true
+    priority: 1
+  ausscccodebyname:
+    key: au_ssc_code
+    name: ABS State Suburb or Suburb and Locality code by field name (State Suburb Code, SSC_CODE16, SAL_CODE_2021)
+    rule: (?i)state[ _]suburb[ _]code|(?:ssc|sal)[ _]?code(?:[ _]?(?:20)?\d{2})?|ssc(?:[ _]?(?:20)?\d{2})?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.au.act.validate_au_ssc_code
+    needs_values: true
+    priority: 1
+  aucensuscdcodebyname:
+    key: au_census_cd_code
+    name: ABS Census Collection District code by field name (CD, CD_CODE, CD_2006, Collection District)
+    # The 2006 SEIFA and census tables; seven digits with the state digit first.
+    rule: (?i)(?:census[ _])?(?:cd|collection[ _]district)(?:[ _]?(?:code|id|no|number))?(?:[ _]?(?:19|20)?\d{2})?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.au.act.validate_au_census_cd_code
     needs_values: true
     priority: 1

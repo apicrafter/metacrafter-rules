@@ -52,7 +52,8 @@ rules:
     name: Australian Business Number by field name with ABN in it (AFS_LIC_ABN_ACN, Supplier ABN, CRED_REP_ABN_ACN) and a valid check
     # ASIC writes an ABN or, for a company without one, its ACN in <prefix>_ABN_ACN; AusTender
     # and grant lists name it Supplier ABN.
-    rule: (?i)(?:[a-z]+[ _])*abn(?:[ _](?:acn|number|no))?
+    # TendersACT writes the header ABN: with a colon.
+    rule: (?i)(?:[a-z]+[ _])*abn(?:[ _](?:acn|number|no))?:?
     type: field
     match: regex
     validator: metacrafterext.rules.au.codes.validate_au_abn_or_acn

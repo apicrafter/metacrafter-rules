@@ -214,6 +214,11 @@ def validate_semver(value):
     if _THOUSANDS_GROUPED.match(value):
         return False
 
+    # Reject file numbers that start with a year and a long serial (2014.24010.110, 2018.29133.110,
+    # the ACT Government procurement numbers); calendar versions keep a short minor (2024.1.0).
+    if re.match(r"^(?:19|20)\d{2}\.\d{4,}\.", value):
+        return False
+
     # SemVer pattern: major.minor.patch[-prerelease][+build]
     semver_pattern = r'^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$'
     return bool(re.match(semver_pattern, value))

@@ -110,3 +110,22 @@ def validate_vernacular_with_scientific(value):
     text = " ".join(str(value).split())
     m = _WITH_SCIENTIFIC.match(text)
     return bool(m) and validate_vernacular_name(m.group(1))
+
+
+# Threat categories in words: the IUCN Red List categories, the EPBC Act 1999 (Conservation
+# Dependent), Queensland (Special Least Concern) and the ACT Nature Conservation Act 2014
+# (Regionally Conservation Dependent). The abbreviations (CR, EN, VU) are iucn_red_list_category.
+CONSERVATION_STATUSES = frozenset(
+    s.lower()
+    for s in (
+        "Extinct", "Extinct in the Wild", "Critically Endangered", "Critically Endangered (Possibly Extinct)",
+        "Endangered", "Vulnerable", "Near Threatened", "Least Concern", "Data Deficient", "Not Evaluated",
+        "Conservation Dependent", "Regionally Conservation Dependent", "Special Least Concern", "Rare",
+    )
+)
+
+
+def validate_conservation_status(value):
+    """A conservation status in words: Critically Endangered, Vulnerable, Regionally Conservation
+    Dependent, Least concern (not VU, Bird or Current)."""
+    return " ".join(str(value).strip().split()).lower() in CONSERVATION_STATUSES

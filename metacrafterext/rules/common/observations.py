@@ -208,3 +208,9 @@ def validate_eui64(value):
     if not _EUI64.match(text):
         return False
     return set(re.sub(r"[:-]", "", text)) != {"0"}
+
+
+def validate_bearing(value):
+    """A bearing or heading in degrees clockwise from true north, 0 to 360, as a number: 126.87, 0,
+    270 (not a compass point such as NE, or 361)."""
+    return _in(value, 0, 360, ("°", "deg", "degrees"))

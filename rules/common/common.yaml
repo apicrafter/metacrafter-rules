@@ -232,7 +232,9 @@ rules:
   colourbyfield:
     key: color
     name: Colour by field name (colour, color, vehicle_colour) and colour names (Transparent, light blue)
-    rule: (?i)(?:[a-z]+[ _])?colou?rs?(?:[ _](?:name|code))?
+    # Map layers write the fill and stroke colours as hex triplets in shortened shapefile names
+    # (fill_colou, stroke_col: #f6b2ff).
+    rule: (?i)(?:[a-z]+[ _])?colou?rs?(?:[ _](?:name|code))?|(?:fill|stroke|line|outline|text|font|route|background|bg)[ _]?(?:colou?r?|col)
     type: field
     match: regex
     validator: metacrafterext.rules.common.generic.validate_colour_name

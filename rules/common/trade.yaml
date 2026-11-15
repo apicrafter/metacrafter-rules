@@ -17,6 +17,10 @@ rules:
     type: field
     match: regex
     priority: 1
+    # A tariff code of a parking lot (Free_1_hr, SS06_2P: ACT smart parking) is no HS code: the
+    # values must be digits.
+    validator: metacrafterext.rules.common.identifiers.validate_hs_code_digits
+    needs_values: true
     rule: >-
       (?i)(?:hsn?|hts)(?:[ _.-]?(?:code|cd)(?:[ _.-]?(?:2|4|6|8|10))?|[ _.-]?(?:2|4|6|8|10)(?:[ _.-]?(?:code|digits?))?|[ _.-]?(?:chapter|heading|sub[ _.-]?heading))|(?:customs[ _.-]?)?tariff[ _.-]?(?:code|line|number|no)|cmd[ _.-]?code|harmoni[sz]ed[ _.-]?(?:system[ _.-]?)?code
   hscodebyvalue:

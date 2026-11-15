@@ -6,11 +6,11 @@ country_code: au
 rules:
   auanzsicbyname:
     key: au_anzsic_code
-    name: ANZSIC industry code by field name (primary_anzsic_class_code, anzsic_code) or ATO industry field (Fine industry, Finer industry, Broad industry)
+    name: ANZSIC industry code by field name (primary_anzsic_class_code, anzsic_code, ANZSIC Subdivision Code) or ATO industry field (Fine industry, Finer industry, Broad industry)
     # The ATO taxation statistics give the industry as the code with its title (011 Nursery and
     # Floriculture Production, A.Agriculture, Forestry and Fishing); a field named for ANZSIC may
     # hold bare codes.
-    rule: (?i)(?:[a-z]+_)*anzsic(?:_\w+)?|(?:broad|fine|finer)[ _]+industry\d*
+    rule: (?i)(?:[a-z]+[ _])*anzsic(?:[ _]\w+)*|(?:broad|fine|finer)[ _]+industry\d*
     type: field
     match: regex
     validator: metacrafterext.rules.au.codes.validate_au_anzsic_code
