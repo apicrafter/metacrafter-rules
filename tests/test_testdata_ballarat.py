@@ -204,3 +204,14 @@ def test_other_ids_are_no_imei_gln_or_french_plate():
         assert not validate_gln(value), value
     for value in ("2559", "2549"):
         assert not validate_fr_vehicle_plate(value), value
+
+
+def test_a_legal_form_after_an_article_is_no_company_name():
+    # With Not applicable an empty value, TrustSchoolFlag (name) of the GIAS register holds only Supported
+    # by a trust and Not supported by a trust.
+    from metacrafterext.rules.en.orgs import is_uk_orgname, is_us_orgname
+    for value in ("Supported by a trust", "Not supported by a trust", "Run by a company"):
+        assert not is_uk_orgname(value), value
+        assert not is_us_orgname(value), value
+    for value in ("TARMAC TRADING LIMITED", "The National Trust", "Ballarat Child Care Cooperative", "ACME Company"):
+        assert is_uk_orgname(value) or is_us_orgname(value), value

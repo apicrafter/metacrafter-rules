@@ -206,6 +206,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `device_id` and `equipment_id` are an `imei` only when the values are IMEIs (sensor ids lst25275720,
   ems-b879); `location_id` and `location_number` are a `gln` only with GLN values (1, 2, 16 were); `plaque`
   is a `fr_vehicle_plate` only with French plates (memorial plaque numbers 2559 were).
+- A legal form after an article is not a company name (`encompanyname`): Supported by a trust and Not
+  supported by a trust of the GIAS schools register, which were the only values left once metacrafter took
+  Not applicable for an empty value.
 
 - The Australian LGA rules no longer take the Nigerian LGA codes and names of the GRID3 settlement
   data (`Lga Code` 19001, `Lga` Birnin Gwari): an ABS LGA code ends in 0 or is an unincorporated, no
