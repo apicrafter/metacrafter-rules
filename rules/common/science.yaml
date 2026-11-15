@@ -323,7 +323,7 @@ rules:
     name: Academic discipline by field name (disciplina, discipline, field_of_research, área de conocimiento)
     # A bare area or field is a surface or a form field: the name must say discipline or
     # research. disciplinary_action and disciplina_deportiva (a sport) are left out.
-    rule: '(?i)(?:[a-z0-9]+[ _.-]){0,2}(?:disciplin[ae]s?(?:[ _.-]?(?:otr[ao]s?|other|principal|secundaria|main|primary|secondary|acad[ée]mica|cient[ií]fica|scientifique|name|nombre))?|academic[ _]discipline|fields?[ _]of[ _](?:research|science|study)|research[ _](?:fields?|areas?|disciplines?)|[aá]reas?[ _]de[ _](?:conocimiento|investigaci[oó]n)|campo[ _]disciplinar|fachgebiet|fachrichtung|wissenschaftsgebiet|domaines?[ _]de[ _]recherche|ford|fos)'
+    rule: '(?i)(?:[a-z0-9]+[ _.-]){0,2}(?:disciplin[ae]s?(?:[ _.-]?(?:otr[ao]s?|other|principal|secundaria|main|primary|secondary|desc|descripcion|acad[ée]mica|cient[ií]fica|scientifique|name|nombre))?|academic[ _]discipline|fields?[ _]of[ _](?:research|science|study)|research[ _](?:fields?|areas?|disciplines?)|[aá]reas?[ _]de[ _](?:conocimiento|investigaci[oó]n)|campo[ _]disciplinar|(?:gran_)?area_desc(?:ripcion)?|fachgebiet|fachrichtung|wissenschaftsgebiet|domaines?[ _]de[ _]recherche|ford|fos)'
     type: field
     match: regex
     validator: metacrafterext.rules.common.survey.validate_discipline_name

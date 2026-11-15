@@ -1,0 +1,73 @@
+name: ar-science
+description: Argentine science and technology codes (ANPCyT and CONICET project codes, ANPCyT funds, Sistemas Nacionales equipment, CONICET staff categories)
+context: science
+lang: es
+country_code: ar
+# Found in the SICYTAR data of the Argentine science ministry (datasets.datos.mincyt.gob.ar, a 2024
+# snapshot; metacrafter-testdata): the projects list mixes the codes of the ANPCyT and of CONICET in
+# one codigo_identificacion column.
+rules:
+  aranpcytprojectcodevalue:
+    key: ar_anpcyt_project_code
+    name: Argentine ANPCyT project code by value (PICT-2015-1234, ANR 600 NA093/08, CF BA 001/07)
+    rule: metacrafterext.rules.ar_country.science.validate_ar_anpcyt_project_code
+    type: data
+    match: func
+    minlen: 5
+    maxlen: 40
+    priority: 1
+  arconicetprojectcodevalue:
+    key: ar_conicet_project_code
+    name: Argentine CONICET project code by value (11220150100433CO)
+    rule: metacrafterext.rules.ar_country.science.validate_ar_conicet_project_code
+    type: data
+    match: func
+    minlen: 16
+    maxlen: 16
+    priority: 1
+  arcytprojectcodevalue:
+    key: grant_number
+    name: Project code of an Argentine research funder by value in a project code field (codigo_identificacion)
+    # A column of ANPCyT and CONICET codes: neither code type holds most of the values, the guarded
+    # rule matches them all and outweighs the unguarded code rules.
+    rule: metacrafterext.rules.ar_country.science.validate_ar_cyt_project_code
+    type: data
+    match: func
+    minlen: 5
+    maxlen: 40
+    fieldregex: '(?i)^(?:cod(?:igo)?_?(?:de_)?(?:identificacion|proyecto|project)|(?:proyecto|project)_?cod(?:e|igo)?|grant(?:_?(?:number|id|code))?|award_?(?:number|id))$'
+    priority: 1
+  aranpcytfundvalue:
+    key: ar_anpcyt_fund
+    name: Argentine ANPCyT fund by value (FONCYT, FONTAR, FONSOFT, FONARSEC)
+    rule: FONCYT,FONTAR,FONSOFT,FONARSEC,FONCyT
+    type: data
+    match: text
+    priority: 1
+  armincytequipmentidvalue:
+    key: ar_mincyt_equipment_id
+    name: Equipment code of the Argentine Sistemas Nacionales by value (SNM-826, SNCAD-483, SINALA-1021)
+    rule: metacrafterext.rules.ar_country.science.validate_ar_mincyt_equipment_id
+    type: data
+    match: func
+    minlen: 5
+    maxlen: 12
+    priority: 1
+  arconicetcategoryvalue:
+    key: ar_conicet_category
+    name: CONICET staff category by value (Investigador adjunto, Becario doctoral, Personal de apoyo)
+    rule: metacrafterext.rules.ar_country.science.validate_ar_conicet_category
+    type: data
+    match: func
+    minlen: 6
+    maxlen: 40
+    priority: 1
+  arconicetcategorybyname:
+    key: ar_conicet_category
+    name: CONICET staff category by field name (categoria_conicet, categoria_conicet_descripcion)
+    rule: (?i)(?:[a-z]+_)*categor[ií]a_conicet(?:_(?:desc|descripcion|nombre))?|conicet_categor[ií]a
+    type: field
+    match: regex
+    validator: metacrafterext.rules.ar_country.science.validate_ar_conicet_category_name
+    needs_values: true
+    priority: 1

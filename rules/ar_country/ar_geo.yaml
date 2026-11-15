@@ -15,7 +15,8 @@ rules:
     name: Argentine INDEC province code by field name (provincia_id, id_provincia_indec, cod_prov)
     # jurisdiccion_id is left out: budget data number their jurisdictions (Poder Legislativo 1,
     # Ministerio del Interior 30) with numbers that are partly province codes.
-    rule: (?i)(?:[a-z]+_)*(?:provincia|prov)(?:_(?:indec|residencia|nacimiento|inscripcion))?_?id|(?:id|cod|codigo)_?(?:provincia|prov)(?:_(?:indec|residencia|nacimiento))?|jurisdicci[oó]n_(?:de_)?residencia_id
+    # dpt_codigo of SICYTAR: the división política territorial, a province.
+    rule: (?i)(?:[a-z]+_)*(?:provincia|prov)(?:_(?:indec|residencia|nacimiento|inscripcion))?_?id|(?:id|cod|codigo)_?(?:provincia|prov)(?:_(?:indec|residencia|nacimiento))?|jurisdicci[oó]n_(?:de_)?residencia_id|dpt_cod(?:igo)?
     type: field
     match: regex
     validator: metacrafterext.rules.ar_country.codes.validate_ar_indec_province_code
@@ -48,6 +49,29 @@ rules:
     validator: metacrafterext.rules.ar_country.codes.validate_ar_indec_locality_code
     needs_values: true
     priority: 1
+  arbahracodebyname:
+    key: ar_bahra_code
+    name: Argentine BAHRA settlement code by field name (cod_bahra, codigo_bahra, bahra_id)
+    # Eleven digits: an INDEC census locality code and three digits for the settlement
+    # (02000010000, 06441030015). Without the field name they look like any eleven-digit number
+    # (a CUIT of a company starts with 30, the INDEC code of Entre Ríos).
+    rule: (?i)(?:cod(?:igo)?|id)_?bahra|bahra_?(?:id|cod(?:igo)?)?|cod(?:igo)?_asentamiento_bahra
+    type: field
+    match: regex
+    validator: metacrafterext.rules.ar_country.science.validate_ar_bahra_code
+    needs_values: true
+    priority: 1
+  arbahradepartmentpartbyname:
+    key: ar_indec_department_code
+    name: Department part of a BAHRA code by field name (dpa__codigo, dpa_codigo of SICYTAR)
+    # The división político-administrativa beside dpt_codigo (the province) and localidad_codigo:
+    # BAHRA counts the City of Buenos Aires as one department, 000.
+    rule: (?i)dpa_{1,2}cod(?:igo)?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.ar_country.science.validate_ar_bahra_department_part
+    needs_values: true
+    priority: 1
   arindecstreetcodebyname:
     key: ar_indec_street_code
     name: Argentine INDEC street code by field name (calle_id, calle_a_id)
@@ -78,7 +102,7 @@ rules:
   arprovincebyname:
     key: ar_province
     name: Argentine province name by field name (provincia, PROVINCIA, provincia_nombre, jurisdiccion)
-    rule: (?i)(?!(?:cod|codigo|id|in|nro|num)_)(?:[a-z]+_)*(?:provincia|prov|jurisdicci[oó]n)(?:_(?:nombre|desc|descripcion|residencia|nacimiento|origen|destino))?|(?:nombre|desc)_(?:provincia|prov)
+    rule: (?i)(?!(?:cod|codigo|id|in|nro|num)_)(?:[a-z]+_)*(?:provincia|prov|jurisdicci[oó]n)(?:_(?:nombre|desc|descripcion|residencia|nacimiento|origen|destino))?|(?:nombre|desc)_(?:provincia|prov)|dpt_desc(?:ripcion)?
     type: field
     match: regex
     validator: metacrafterext.rules.ar_country.codes.validate_ar_province
