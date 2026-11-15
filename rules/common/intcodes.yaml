@@ -149,7 +149,7 @@ rules:
     priority: 1
     match: text
     type: data
-    fieldrule: iso,iso3,iso_3,iso-3,iso 3,iso_code,isocode,iso code,iso3_code,iso_3_code,iso3code,iso_alpha3,iso_alpha_3,isoalpha3,iso3166,iso_3166,iso3166_1,iso_3166_1,iso3166-1,iso_3166_1_alpha_3,alpha3,alpha_3,alpha-3,alpha3_code,iso_a3,adm0_a3,gu_a3,spatialdimvaluecode,geography,iso_country_code
+    fieldrule: iso,iso3,iso_3,iso-3,iso 3,iso_code,isocode,iso code,iso3_code,iso_3_code,iso3code,iso_alpha3,iso_alpha_3,isoalpha3,iso3166,iso_3166,iso3166_1,iso_3166_1,iso3166-1,iso_3166_1_alpha_3,alpha3,alpha_3,alpha-3,alpha3_code,iso_a3,adm0_a3,gu_a3,spatialdimvaluecode,geography,iso_country_code,codigo_iso3,codigo_iso_3,cod_iso3,pais_codigo_iso3,pais_iso3,iso3_pais
     fieldrulematch: text
   iso3166alpha2byisofield:
     key: countrycode_alpha2

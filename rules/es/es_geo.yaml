@@ -115,9 +115,9 @@ rules:
   esstreetnamebyname:
     key: street
     is_pii: true
-    name: Street name by Spanish field name (calle2, calle_cruce, cruce, calle_1, calles, nomoficial, entre_calle)
+    name: Street name by Spanish field name (calle2, calle_cruce, cruce, calle_1, calles, nomoficial, entre_calle, direccion_calle)
     # A cruce of two streets (DEHEZA@PINTO) is a street_intersection.
-    rule: '(?i)calle[ _]?[12ab]|calle[ _](?:cruce|nombre|normalizada|ofic(?:ial)?|desde|hasta|esquina)|calles|cruce|nom[ _]?oficial|nom[ _]calle|[1-4][ _]calle|(?:entre|y)[ _]calle[ _]?\d?|callenormalizada'
+    rule: '(?i)calle[ _]?[12ab]|calle[ _](?:cruce|nombre|normalizada|ofic(?:ial)?|desde|hasta|esquina)|calles|cruce|nom[ _]?oficial|nom[ _]calle|[1-4][ _]calle|(?:entre|y)[ _]calle[ _]?\d?|callenormalizada|direcci[oó]n_calle'
     type: field
     match: regex
     validator: metacrafterext.rules.common.urban.validate_street_name
