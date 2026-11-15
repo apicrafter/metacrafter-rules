@@ -48,3 +48,24 @@ rules:
     # highly ambiguous. Marked imprecise so it is ignored unless
     # --include-imprecise.
     imprecise: 1
+  # Found in the consultations by specialty of the health centres of Mercedes, Buenos Aires
+  # (datosabiertos.mercedes.gob.ar, metacrafter-testdata).
+  esmedicalspecialtybyname:
+    key: medical_specialty
+    name: Medical specialty by field name (especialidad, especialidad_medica, specialty) with specialties
+    # CARDIOLOGÍA, CLÍNICA MÉDICA, PEDIATRÍA. An especialidad of a school (Técnica, Bachiller) fails.
+    rule: (?i)especialidad(?:es)?(?:[ _](?:m[eé]dicas?|del?[ _]profesional|medico))?|(?:medical[ _])?special(?:i)?ty|specialisation|specialization
+    type: field
+    match: regex
+    validator: metacrafterext.rules.es.vocab.validate_medical_specialty
+    needs_values: true
+    priority: 1
+  esmedicalspecialtyvalue:
+    key: medical_specialty
+    name: Medical specialty by value (CARDIOLOGÍA, Clínica Médica, Pediatría, Cardiology)
+    rule: metacrafterext.rules.es.vocab.validate_medical_specialty
+    type: data
+    match: func
+    minlen: 4
+    maxlen: 40
+    priority: 1
