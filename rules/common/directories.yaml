@@ -90,7 +90,7 @@ rules:
     name: Level of education by field name (nivel, nivel_educativo, education_level, highest_educational_attainment_of_wife, schooling_stage) with level names
     # Grado, Pregrado, Posgrado, Secundario completo. Nivel is any level: the values must be
     # levels of education.
-    rule: '(?i)nivel(?:[ _](?:educativo|educacional|de[ _]estudios?|de[ _](?:la[ _])?educaci[oó]n|de[ _]instrucci[oó]n|acad[eé]mico|de[ _]formaci[oó]n|del[ _]t[ií]tulo|de[ _]ense[ñn]anza|m[aá]ximo[ _](?:de[ _])?(?:estudios|educativo|alcanzado)))?|niv[ _]?educ|(?:highest[ _])?education(?:al)?[ _]?level(?:[ _]of[ _][a-z]+)?|(?:highest[ _])?level[ _]of[ _]education|(?:highest[ _])?education(?:al)?[ _]attainment(?:[ _]of[ _][a-z]+)?|schooling[ _]stage|niveau[ _](?:d[ _]?)?(?:[ée]tudes|formation|dipl[oô]me)'
+    rule: '(?i)nivel(?:[ _](?:educativo|educacional|de[ _]estudios?|de[ _](?:la[ _])?educaci[oó]n|de[ _]instrucci[oó]n|acad[eé]mico|de[ _]formaci[oó]n|del[ _]t[ií]tulo|de[ _]ense[ñn]anza|m[aá]ximo[ _](?:de[ _])?(?:estudios|educativo|alcanzado)))?|niv[ _]?educ|(?:highest[ _])?education(?:al)?[ _]?level(?:[ _]of[ _][a-z]+)?|(?:highest[ _])?level[ _]of[ _]education|(?:highest[ _])?education(?:al)?[ _]attainment(?:[ _]of[ _][a-z]+)?|schooling[ _]stage|q\d{1,3}[a-z]?[ _]education|niveau[ _](?:d[ _]?)?(?:[ée]tudes|formation|dipl[oô]me)'
     type: field
     match: regex
     validator: metacrafterext.rules.common.directories.validate_education_level

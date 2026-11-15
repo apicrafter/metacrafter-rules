@@ -133,12 +133,16 @@ _CARDINAL_DIRECTION = re.compile(
     rf"^(?:{_CARDINAL_WORD}(?:[ -]?{_CARDINAL_WORD})?(?:[ -]{_CARDINAL_WORD}(?:[ -]?{_CARDINAL_WORD})?)?"
     rf"|(?:north|south)(?:[ -]?(?:east|west))?(?:bound|ward|erly)|(?:east|west)(?:bound|ward|erly))$", re.I)
 _OPPOSITE = ({"north", "south"}, {"east", "west"})
+# NB, SB, EB, WB: northbound to westbound, as traffic counts and speed surveys abbreviate them.
+_BOUND_ABBREVIATIONS = frozenset(("NB", "SB", "EB", "WB"))
 
 
 def validate_cardinal_direction(value):
     """A direction in words: North, Northeast, North-East, south west, North-northeast, Northbound,
-    Westward (not N or NE, which are compass points, not North-South or Northern)."""
+    Westward, and the traffic abbreviations NB, SB, EB, WB (not N or NE, which are compass points, not North-South or Northern)."""
     text = " ".join(str(value).split())
+    if text.upper() in _BOUND_ABBREVIATIONS:
+        return True
     if not _CARDINAL_DIRECTION.match(text):
         return False
     words = re.findall(r"north|south|east|west", text.lower())

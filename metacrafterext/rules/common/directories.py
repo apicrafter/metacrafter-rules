@@ -184,16 +184,21 @@ _EDUCATION_WORDS = _EDUCATION_CORE | frozenset((
     "el", "y", "o", "no", "sin", "instruccion", "upper", "lower", "school", "high", "education", "level",
     "degree", "or", "equivalent", "non-tertiary", "short-cycle", "cycle", "short", "of", "s",
     "read", "write", "only", "above", "studies", "and", "&",
+    # Edmonton Insight Community surveys (data.edmonton.ca): College / technical school graduate,
+    # Post-graduate degree, Professional school graduate, Some university, Graduated high school.
+    "post", "technical", "professional", "grade", "graduated", "completed", "some", "community", "trade",
+    "certificate", "apprenticeship", "less", "than",
 ))
+_EXAMPLES_IN_PARENTHESES = re.compile(r"\s*\((?:e\.g\.|i\.e\.|such as|for example)[^()]*\)?$", re.I)
 
 
 def validate_education_level(value):
     """A level of education in words: Grado, Pregrado, Posgrado, Secundario completo, Primaria,
     Universitario incompleto, upper secondary, Bachelor's or equivalent, Illiterate / Read Only, Above
-    Secondary / Diploma, and in Arabic (ابتدائي, فوق الثانوي / دبلوم: validate_ar_education_level)."""
+    Secondary / Diploma, College / technical school graduate, Post-graduate degree (e.g. Masters, PhD), and in Arabic (ابتدائي, فوق الثانوي / دبلوم: validate_ar_education_level)."""
     if has_arabic(value):
         return validate_ar_education_level(value)
-    return _all_words_in(value, _EDUCATION_WORDS, core=_EDUCATION_CORE)
+    return _all_words_in(_EXAMPLES_IN_PARENTHESES.sub("", str(value)), _EDUCATION_WORDS, core=_EDUCATION_CORE)
 
 
 # --- socioeconomic level ----------------------------------------------------------------------
