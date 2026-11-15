@@ -1,0 +1,165 @@
+name: ch-codes
+description: Swiss register identifiers, public transport ids and classifications
+context: identifiers
+lang: de
+country_code: ch
+# Found in the 2024 snapshots of six Swiss open data portals of the Dateno catalogue: the cantons of
+# Basel-Landschaft (data.bl.ch, cdi00000340), Basel-Stadt (data.bs.ch, cdi00000341) and Schwyz
+# (data.sz.ch, cdi00000344), the Swiss Federal Railways (data.sbb.ch, cdi00000342), the City of Zurich
+# (data.stadt-zuerich.ch, cdi00000343) and the Geneva public transport (opendata.tpg.ch, cdi00000346);
+# metacrafter-testdata.
+rules:
+  # ------------------------------------------------------------ Register of Buildings and Dwellings (GWR)
+  # Building, dwelling and energy tables of the cantons key their rows by the identifiers of the federal
+  # register: EGID of the building, EDID of the entrance, EWID of the dwelling, ESID of the street.
+  chegidbyname:
+    key: ch_egid
+    name: Swiss federal building identifier by field name (egid, EGID, eidgenoessischer_gebaeudeidentifikator) with 2347546
+    rule: (?i)(?:gwr[ _]?)?egid(?:[ _]?(?:nr|nummer|gwr))?|eidg(?:\.|en(?:oe|ö)ssischer)?[ _]?geb(?:ae|ä)udeidentifikator
+    type: field
+    match: regex
+    validator: metacrafterext.rules.ch.codes.validate_ch_egid
+    needs_values: true
+    priority: 1
+  chewidbyname:
+    key: ch_ewid
+    name: Swiss federal dwelling identifier by field name (ewid, EWID, eidgenoessischer_wohnungsidentifikator) with 1 to 900
+    rule: (?i)ewid|eidg(?:\.|en(?:oe|ö)ssischer)?[ _]?wohnungsidentifikator
+    type: field
+    match: regex
+    validator: metacrafterext.rules.ch.codes.validate_ch_ewid
+    needs_values: true
+    priority: 1
+  chedidbyname:
+    key: ch_edid
+    name: Swiss federal entrance identifier by field name (edid, EDID, eidgenoessischer_eingangsidentifikator) with 0 to 90
+    rule: (?i)edid|eidg(?:\.|en(?:oe|ö)ssischer)?[ _]?eingangsidentifikator
+    type: field
+    match: regex
+    validator: metacrafterext.rules.ch.codes.validate_ch_edid
+    needs_values: true
+    priority: 1
+  chesidbyname:
+    key: ch_esid
+    name: Swiss federal street identifier by field name (esid, ESID, eidgenoessischer_strassenidentifikator) with 10063517
+    rule: (?i)esid|eidg(?:\.|en(?:oe|ö)ssischer)?[ _]?strassenidentifikator
+    type: field
+    match: regex
+    validator: metacrafterext.rules.ch.codes.validate_ch_esid
+    needs_values: true
+    priority: 1
+  # ------------------------------------------------------------ land register
+  # CH and 12 digits with two check digits (CH352961700877): the check makes the value rule safe
+  # without a field name; a Swiss IBAN has 21 characters.
+  chegridbyname:
+    key: ch_egrid
+    name: Swiss federal property identifier by field name (egrid, E-GRID) with CH352961700877
+    rule: (?i)e[ _-]?grid(?:[ _]?(?:nr|nummer))?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.ch.codes.validate_ch_egrid
+    needs_values: true
+    priority: 1
+  chegridvalue:
+    key: ch_egrid
+    name: Swiss federal property identifier by value (CH787701897777) with its check digits
+    rule: metacrafterext.rules.ch.codes.validate_ch_egrid
+    type: data
+    match: func
+    minlen: 14
+    maxlen: 14
+    priority: 1
+  # ------------------------------------------------------------ public transport (DiDok, atlas)
+  # The stop and platform tables of the SBB portal key stops and boarding edges by the Swiss Location
+  # ID (sloid, kanten_sloid, parentsloid: ch:1:sloid:3871::50) and transport companies by the Swiss
+  # Business Organisation ID (sboid: ch:1:sboid:100619).
+  chsloidvalue:
+    key: ch_sloid
+    name: Swiss Location ID by value (ch:1:sloid:7000, ch:1:sloid:76193:1:2)
+    rule: metacrafterext.rules.ch.codes.validate_ch_sloid
+    type: data
+    match: func
+    minlen: 12
+    maxlen: 128
+    priority: 1
+  chsboidvalue:
+    key: ch_sboid
+    name: Swiss Business Organisation ID by value (ch:1:sboid:100141)
+    rule: metacrafterext.rules.ch.codes.validate_ch_sboid
+    type: data
+    match: func
+    minlen: 12
+    maxlen: 32
+    priority: 1
+  # didok and dst_id of the station tables hold the service point number without the country code
+  # (3000 for Zürich HB); with 85 in front (bpuic, didok_code) it is a UIC station code. The stop list of
+  # Basel-Stadt names it hst_nr.
+  chdidoknumberbyname:
+    key: ch_didok_number
+    name: Swiss service point number by field name (didok, didok_nr, dst_id, dst_nr, hst_nr) with 3000
+    rule: (?i)didok(?:[ _]?(?:nr|nummer|number|no))?|dst[ _]?(?:id|nr|nummer)|dienststellen?[ _]?(?:nr|nummer|id)|hst[ _]?nr
+    type: field
+    match: regex
+    validator: metacrafterext.rules.ch.codes.validate_ch_didok_number
+    needs_values: true
+    priority: 1
+  # ------------------------------------------------------------ NOGA
+  # The commercial register extract of Basel-Landschaft gives the activity of a firm as NOGA 2008
+  # codes of three levels (noga_abschnitt_code G, noga2008_abteilung_code 46, noga2008_code 702200).
+  chnogabyname:
+    key: ch_noga
+    name: Swiss NOGA code by field name (noga_code, noga2008_code, noga_abschnitt_code, noga2008_abteilung_code) with 702200, 46, G
+    rule: (?i)noga(?:[ _]?(?:20)?(?:02|08|25))?(?:[ _]?(?:abschnitt|abteilung|gruppe|klasse|art|section|division))?(?:[ _]?(?:code|nr|nummer|id))?|code[ _]?noga
+    type: field
+    match: regex
+    validator: metacrafterext.rules.ch.codes.validate_ch_noga
+    needs_values: true
+    priority: 1
+  # ------------------------------------------------------------ HRM2 chart of accounts
+  # The state accounts of Schwyz and the municipal accounts of Basel-Landschaft classify every amount by
+  # the HRM2 account groups (kontenklasse 3 Aufwand, 2_stellige_kontengruppe 31 Sach- und übriger
+  # Betriebsaufwand, konto 3000002 Sitzungsgelder, kontenart_nr 3010). The values must begin with an
+  # account class: a bank account under Konto does not.
+  chhrm2accountbyname:
+    key: ch_hrm2_account
+    name: Swiss HRM2 account group by field name (konto, kontenart_nr, sachgruppe, kontenklasse, 3_stellige_kontengruppe) with 3010, 3 Aufwand
+    rule: (?i)konto(?:[ _]?(?:nr|nummer))?|sachkonto|kontenart(?:[ _](?:nr|aggregiert))?|sachgruppe(?:[ _]?(?:nr|code))?|kontenklasse|(?:\d[ _-]?stellige[ _])?kontengruppe|artengliederung
+    type: field
+    match: regex
+    validator: metacrafterext.rules.ch.codes.validate_ch_hrm2_account
+    needs_values: true
+    priority: 1
+  # ------------------------------------------------------------ enterprise identification number
+  # The commercial register of Basel-Landschaft writes the UID without separators (uid: CHE456200346),
+  # which also has the shape of an ISRC; the value rule guarded by the field name keeps isrc off.
+  chuidbyname:
+    key: chuid
+    name: Swiss UID by field name (uid, uid_nr, che, unternehmens_id) with CHE456200346 or CHE-116.281.710
+    rule: (?i)uid(?:[ _]?(?:nr|nummer|number|ch))?|che(?:[ _]?(?:nr|nummer))?|unternehmens[ _-]?id(?:entifikationsnummer)?|firmen[ _]?uid|ide
+    type: field
+    match: regex
+    validator: metacrafterext.rules.ch.codes.validate_ch_uid
+    needs_values: true
+    priority: 1
+  chuidcheckedvalue:
+    key: chuid
+    name: Swiss UID by value with its check digit in a field named for it (uid CHE456200346)
+    rule: metacrafterext.rules.ch.codes.validate_ch_uid
+    type: data
+    match: func
+    minlen: 12
+    maxlen: 20
+    fieldregex: (?i)^(?:uid(?:[ _]?(?:nr|nummer|number|ch))?|che(?:[ _]?(?:nr|nummer))?|unternehmens[ _-]?id(?:entifikationsnummer)?|firmen[ _]?uid|ide)$
+    priority: 1
+  # ------------------------------------------------------------ elections
+  # Election results of the cantons name the party of a candidate or a list (partei, parteibezeichnung,
+  # parteikurzbezeichnung, candidate_party, list_name: SP, FDP.Die Liberalen, Schweizerische Volkspartei).
+  chpoliticalpartybyname:
+    key: political_party
+    name: Political party by German field name (partei, parteibezeichnung, parteikurzbezeichnung, listenbezeichnung, candidate_party, list_name) with Swiss parties
+    rule: (?i)partei(?:[ _]?(?:bezeichnung|kurzbezeichnung|name|kname|kurz|k(?:ue|ü)rzel))?|parteizugeh(?:oe|ö)rigkeit|listenbezeichnung|candidate[ _]party|list[ _]name|parti(?:[ _]politique)?|partito
+    type: field
+    match: regex
+    validator: metacrafterext.rules.ch.codes.validate_ch_political_party
+    needs_values: true
+    priority: 1

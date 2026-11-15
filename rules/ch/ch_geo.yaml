@@ -22,3 +22,57 @@ rules:
     fieldrule: bezkid,bezirksnummer,bezirk_nr,bezirknr,bfs_bezirk,bezirks_nr,bezirk_id,bezirk_bfs
     fieldrulematch: text
     priority: 1
+  # ------------------------------------------------------------ 2024 snapshots of Swiss portals
+  # (data.bl.ch, data.bs.ch, data.sz.ch, data.sbb.ch; metacrafter-testdata)
+  # bfs_nummer, gemeinde_nummer and bfs of the cantonal tables hold the municipality number; the values
+  # must be numbers up to 6810 (a German Gemeindenummer has eight digits).
+  chbfsgemeindebyname:
+    key: ch_bfs_gemeinde
+    name: Swiss municipality number by field name (bfs_nummer, bfs, gemeinde_nummer, gemeindenummer, bfs_id) with 2761
+    rule: (?i)bfs(?:[ _-]?(?:nummer|nr\.?|id|code|no))?|gemeinde[ _-]?(?:nummer|nr\.?)|gemeindenummer|no[ _]?ofs|ofs[ _]?(?:id|nr|no)
+    type: field
+    match: regex
+    validator: metacrafterext.rules.ch.codes.validate_ch_bfs_gemeinde
+    needs_values: true
+    priority: 1
+  # kanton, kantonskuerzel, georegion and cantoncode hold the two letters of a canton (BS, SZ);
+  # kanton and kantonsname hold its name (Zürich, Vaud).
+  chcantoncodebyname:
+    key: ch_canton_code
+    name: Swiss canton abbreviation by field name (kanton, kantonskuerzel, canton, cantoncode, kt, georegion) with ZH, BS
+    rule: (?i)kanton(?:s?k(?:ue|ü)rzel|[ _]?(?:code|abk(?:uerzung|ürzung)?|kurz))?|canton(?:[ _]?(?:code|abbr(?:eviation)?))?|kt|georegion
+    type: field
+    match: regex
+    validator: metacrafterext.rules.ch.codes.validate_ch_canton_code
+    needs_values: true
+    priority: 1
+  chcantonnamebyname:
+    key: ch_canton
+    name: Swiss canton by field name (kanton, kantonsname, canton, cantone) with Zürich, Vaud, Basel-Stadt
+    rule: (?i)kanton(?:s?name|[ _]name)?|canton(?:[ _]?name)?|cantone|wohnkanton|standortkanton
+    type: field
+    match: regex
+    validator: metacrafterext.rules.ch.codes.validate_ch_canton_name
+    needs_values: true
+    priority: 1
+  # The GWR names the coordinates of a building GKODE and GKODN and those of an entrance DKODE and
+  # DKODN; the cantons also write e_eingangskoordinate and n_eingangskoordinate, the SBB tables e and
+  # n. The values must lie in the LV95 grid.
+  chlv95eastingbyname:
+    key: easting
+    name: Easting of the Swiss LV95 grid by field name (gkode, dkode, e_eingangskoordinate, e_koordinate, e, lv95_e) with 2614422.628
+    rule: (?i)[gd]kode|e[ _]?(?:eingangs|geb(?:ae|ä)ude)?koordinate|koordinate[ _]?e|e|ost|lv95[ _]?e|e[ _]?lv95|lv95[ _]?x|x[ _]?lv95|ch1903\+?[ _]?[ex]
+    type: field
+    match: regex
+    validator: metacrafterext.rules.ch.codes.validate_ch_lv95_easting
+    needs_values: true
+    priority: 1
+  chlv95northingbyname:
+    key: northing
+    name: Northing of the Swiss LV95 grid by field name (gkodn, dkodn, n_eingangskoordinate, n_koordinate, n, lv95_n) with 1266752.134
+    rule: (?i)[gd]kodn|n[ _]?(?:eingangs|geb(?:ae|ä)ude)?koordinate|koordinate[ _]?n|n|nord|lv95[ _]?n|n[ _]?lv95|lv95[ _]?y|y[ _]?lv95|ch1903\+?[ _]?[ny]
+    type: field
+    match: regex
+    validator: metacrafterext.rules.ch.codes.validate_ch_lv95_northing
+    needs_values: true
+    priority: 1

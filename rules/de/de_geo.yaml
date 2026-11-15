@@ -81,3 +81,14 @@ rules:
     match: regex
     validator: metacrafterext.rules.common.generic.validate_bundestag_wahlkreis
     priority: 1
+  # Opendatasoft portals of Swiss cantons and of the SBB name the point of a record geopos,
+  # koordinaten or geometrisches_zentrum (47.5474120550501, 7.589562790156525).
+  degeopointbyname:
+    key: geopoint
+    name: Point as latitude and longitude text by German field name (geopos, koordinaten, eingang_koordinaten, geoposition, geometrisches_zentrum)
+    rule: (?i)geopos(?:ition)?|(?:[a-zäöü]+[ _])?koordinaten?|geo[ _]?koordinaten|geometrisches[ _]zentrum
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.generic.validate_latlon_pair
+    needs_values: true
+    priority: 1
