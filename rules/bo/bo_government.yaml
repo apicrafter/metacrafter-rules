@@ -1,0 +1,38 @@
+name: bo-government
+description: Bolivian public investment project codes (SISIN) and school codes (SIE)
+context: government
+lang: es
+country_code: bo
+# Found in the irrigation and drinking water investment layers of the GeoNode of SIARH (Ministry of
+# Environment and Water) and the school layer of the Katari basin of the GeoNode of the Institute of
+# Geography of UMSA (metacrafter-testdata).
+rules:
+  bosisincodebyname:
+    key: bo_sisin_code
+    name: Bolivian SISIN public investment project code by field name (SISIN, cod_sisin, codigo_sisin)
+    rule: (?i)(?:cod(?:igo)?[ _]?)?sisin(?:[ _]?(?:web|cod(?:igo)?))?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.bo.codes.validate_bo_sisin_code
+    needs_values: true
+    priority: 1
+  bosisincodevalue:
+    key: bo_sisin_code
+    name: Bolivian SISIN public investment project code by value (0287-30477-00000)
+    rule: '\d{3,4}-\d{5}-\d{4,5}'
+    type: data
+    match: regex
+    validator: metacrafterext.rules.bo.codes.validate_bo_sisin_code_by_value
+    minlen: 14
+    maxlen: 16
+    priority: 2
+  bosiecodebyname:
+    key: bo_sie_code
+    name: Bolivian SIE school code by field name (cod_ue, codigo_sie, cod_sie, rue, codigo_ue)
+    # cod_ue of the Katari basin layer: 50710004, 80660071.
+    rule: (?i)cod(?:igo)?[ _]?(?:ue|sie|rue|unidad[ _]educativa)|sie|rue|sie[ _]?(?:ue|cod(?:igo)?)
+    type: field
+    match: regex
+    validator: metacrafterext.rules.bo.codes.validate_bo_sie_code
+    needs_values: true
+    priority: 1

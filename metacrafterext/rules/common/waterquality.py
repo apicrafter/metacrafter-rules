@@ -44,3 +44,29 @@ def validate_energy_amount(value):
     if not m:
         return False
     return (m.group(2) or "").strip().lower() in _ENERGY_UNITS
+
+
+# Laboratory parameters of water quality monitoring: the biochemical oxygen demand in five days (BOD5,
+# DBO5 in Spanish), the chemical oxygen demand (COD, DQO) and the total suspended solids (TSS, SST).
+# Found in the water quality sampling layers of the GeoNode of SIARH (Bolivia; metacrafter-testdata):
+# DBO5_mgO2, DQO_mgO2, SST_mg_L.
+_DEMAND_UNITS = frozenset(("", "mg/l", "mgo2/l", "mg o2/l", "mg/l o2", "ppm"))
+_SOLIDS_UNITS = frozenset(("", "mg/l", "ppm"))
+_BELOW = re.compile(r"^\s*<\s*")
+
+
+def _lab_reading(value, units, upper):
+    """A laboratory reading, a value below the detection limit included (<2, < 0.5 mg/L)."""
+    return _reading(_BELOW.sub("", str(value)), units, upper)
+
+
+def validate_oxygen_demand(value):
+    """A biochemical or chemical oxygen demand in mg O2/L, 0 to 100 000: 5, 18.5, 2,1, 250 mg/L, <2
+    (not -1, 2022-03-16 or Alto)."""
+    return _lab_reading(value, _DEMAND_UNITS, 100000)
+
+
+def validate_suspended_solids(value):
+    """A total suspended solids concentration in mg/L, 0 to 100 000: 25, 0.5, 1 200 mg/L written 1200,
+    <5 (not -3 or N/D)."""
+    return _lab_reading(value, _SOLIDS_UNITS, 100000)

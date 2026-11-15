@@ -158,6 +158,16 @@ rules:
     validator: metacrafterext.rules.common.waterquality.validate_dissolved_oxygen
     needs_values: true
     priority: 1
+  dissolvedoxygenspanishbyname:
+    key: dissolved_oxygen
+    name: Dissolved oxygen by Spanish field name (oxigeno_disuelto, OD_mg_L, OD (%), od_porc)
+    # A bare OD is also an origin-destination pair: only with a unit or in words.
+    rule: (?i)ox[ií]geno[ _-]?disuelto(?:[ _-]?(?:mg[ _/]?l|mgl|ppm|%|porc|porcentaje|sat(?:uraci[oó]n)?|\(mg/l\)|\(%\)))?|od[ _-]?(?:mg[ _/]?l|mgl|ppm|%|porc|sat|\(mg/l\)|\(%\))
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.waterquality.validate_dissolved_oxygen
+    needs_values: true
+    priority: 1
   # The plain names (turbidity, conductivity, salinity, TDS_mg_L) are the reading rules of the
   # Ballarat round in observations.yaml; these take the names of sensor payloads only.
   turbiditybysensorname:

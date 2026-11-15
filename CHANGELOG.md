@@ -9,6 +9,43 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Rules for the Bolivian files of metacrafter-testdata** (2024 snapshots of three catalogues of the Dateno
+  catalogue: the GeoNode of SIARH, the water information system of the Ministry of Environment and Water,
+  cdi00000167; the GeoNode of the Institute of Geography of the Universidad Mayor de San Andrés, cdi00000170;
+  and datos.gob.bo, cdi00000177; validators in the new `metacrafterext.rules.bo.geo`,
+  `metacrafterext.rules.bo.codes` and `metacrafterext.rules.common.hydrology`, rules in the new
+  `rules/bo/bo_geo.yaml` and `rules/bo/bo_government.yaml`):
+  - the nine departments (`bo_department`: La Paz, POTOSI, PotosÃ­, Potos?, 09.PANDO, LPZ) in `DEPARTAMEN`,
+    `DEPTO`, `departamento`, `nombre_dep`, `NOMDEPT`, `DEP_`; the 112 provinces (`bo_province`: Murillo, Sud
+    Yungas, Andrés Ibáñez, ZUDAÃ\x91EZ, Muńecas, General Jose Balliv cut at 20 characters) in `PROVINCIA`,
+    `NOM_PROV`, `nombre_pro`; the 339 municipalities of the Censo 2012 with the other names of their seats
+    (`bo_municipality`: El Alto, Nuestra Señora de La Paz, Soracachi (Paria), Muyupampa, ENTRE RIOS CBBA) in
+    `MUNICIPIO`, `MUNI`, `NOM_MUN`, `nombre_m_1` (a universal `city` rule covers `municipio`, as it covers
+    `fr_commune`); the validators repair UTF-8 read as cp1252 or latin-1 and let a lost character (?, �, ń)
+    stand for one letter;
+  - INE codes: departments (`bo_department_code`: 02, 9) in `COD_DEPTO`, `CODDEPTO`, `codigo_dep`; provinces
+    (`bo_province_code`: 0201, 201) in `COD_PROV`, `codigo_pro`; municipalities (`bo_municipality_code`: 020105,
+    20105) in `COD_MUN`, `MUNICOD`, `codigo_ine`, and in a bare `codigo` when the values are codes of the 339
+    municipalities (a Peruvian ubigeo has the same form); communities (`bo_community_code`: 02010501001) in
+    `COD_COM`, `cod_com`, `COD_INE`;
+  - SISIN codes of public investment projects (`bo_sisin_code`: 0287-30477-00000, 086-60061-00000,
+    2873912800000) in `SISIN` and by value; SIE codes of schools (`bo_sie_code`: 50710004) in `cod_ue`,
+    `codigo_sie`, `rue`;
+  - Pfafstetter basin codes (`pfafstetter_code`: 8589929, 85899 - Rio Guadalquivir, 01592) in `COD_UH`,
+    `COD_SBC_N5`, `pfaf_id`, `cobacia` and in the level fields `NIVEL_5`, `NIVEL3` with three digits or more;
+  - water quality laboratories: biochemical and chemical oxygen demand (`biochemical_oxygen_demand`,
+    `chemical_oxygen_demand`) in `DBO5_mgO2`, `bod5`, `DQO_mgO2`, `cod_mg_l`; total suspended solids
+    (`total_suspended_solids`) in `SST_mg_L`, `tss_mg_l`; the Spanish names of conductivity (`ce_us_cm`,
+    `conductividad`), turbidity (`turbidez`), dissolved solids (`SDT_mg_L`) and dissolved oxygen
+    (`oxigeno_disuelto`, `OD_mg_L`); values below a detection limit (<2) pass;
+  - Spanish names of UTM positions (`easting`, `northing`: `ESTE`, `NORTE`, `UTM_ESTE`, `UTM_NOR`, `Coord_X`) and
+    zones (`utm_zone`: `Zona_UTM`, `huso`), of elevations (`elevation`: `ALTITUD`, `COTA_COR`, `msnm`), of areas
+    with a unit (`area`: `SUP_KM2`, `SUP_HA`, `area_has`, ArcGIS `Hectares`) and the Bolivian year of
+    administration (`year`: `GESTION` with years as numbers or in a text, `validate_year_in_text`; Nueva gestión
+    of the Buenos Aires public works fails);
+  - positions in degrees, minutes and seconds with the hemisphere (18° 24' 5,758" S, 66° 53' 41,622" W) are
+    latitudes and longitudes, also in a field named `LONG`.
+
 - **Rules for the files of the Bahrain Open Data Portal in metacrafter-testdata** (a 2024 snapshot of
   data.gov.bh, Opendatasoft, Dateno source cdi00000161; validators in the new `metacrafterext.rules.bh.geo`,
   `metacrafterext.rules.ar.persons`, `metacrafterext.rules.ar.dates` and
@@ -506,6 +543,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `area`.
 
 ### Fixed
+
+- From the Bolivian round: an Argentine INDEC department part is not written with two digits and a zero (01 to
+  09 are Bolivian INE department codes); a Mendoza resource account needs a name after the hyphen (the INE
+  census key 2838530907-D is none); a title such as Inventario de Presas 2010 is no species name (de, del, la
+  are no epithets); Existente y en operacion, F/Problemas and the telemetry and project statuses of the SIARH
+  layers (DATOS ACTUALIZADOS, ENT DEFINITIVA, VALIDADA) are no `state`; a projected coordinate may have up to
+  eight decimals (576899.428379).
 
 - From the Australian Opendatasoft round: an ACT section or block number needs a separator before No or
   Number (`sectionnumber` of the NSW cadastre, `blockno` of the Greater Geelong road registers were
