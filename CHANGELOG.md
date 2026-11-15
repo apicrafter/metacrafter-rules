@@ -9,6 +9,42 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Rules for the SICYTAR files of metacrafter-testdata** (a 2024 snapshot of datasets.datos.mincyt.gob.ar,
+  the open data portal of the Argentine science ministry, Dateno source cdi00000024; validators in the new
+  `metacrafterext.rules.ar_country.science` and `metacrafterext.rules.common.research`, rules in the new
+  `rules/ar_country/ar_science.yaml` and `rules/common/research.yaml`):
+  - project codes of the ANPCyT (`ar_anpcyt_project_code`: PICT-2015-1234, PICTO-2009-0012, PID-2011-0002,
+    ANR 600 NA093/08, CF BA 001/07, CRE+CO 0062/12) and of CONICET (`ar_conicet_project_code`:
+    11220150100433CO) by value, and a column that mixes them (`codigo_identificacion`) as a grant number
+    (`grant_number`, also `grant_number`, `award_number` and `numero_de_subsidio` by name); the guarded
+    rule outweighs the code rules that hold part of the values;
+  - ANPCyT funds (`ar_anpcyt_fund`: FONCYT, FONTAR, FONSOFT, FONARSEC), equipment codes of the Sistemas
+    Nacionales of the science ministry (`ar_mincyt_equipment_id`: SNM-826, SNCAD-483, SINALA-1021) and
+    CONICET staff categories (`ar_conicet_category`: Investigador adjunto, Becario doctoral, Personal de
+    apoyo by value; a bare class such as principal only in `categoria_conicet`);
+  - eleven-digit BAHRA settlement codes in `cod_bahra` (`ar_bahra_code`: 02000010000, 06441030015), the
+    department part of a BAHRA code in `dpa__codigo` (000 for the City of Buenos Aires), the province
+    code in `dpt_codigo`, the locality part in `localidad_codigo`, province, department and locality
+    names in `dpt_descripcion`, `dpa_descripcion` (Capital Federal is the City of Buenos Aires as one
+    department) and `localidad_descripcion`, street names in `direccion_calle`, ISO 3166-1 alpha-3 codes
+    in `codigo_ISO3` and `pais_codigo_ISO3`, Spanish country names in `pais_desc` and
+    `pais_descripcion`;
+  - OECD FORD codes (`oecd_ford_code`: 1, 1.1, 2.11, 1.1.0, 1.5.10) in `disciplina_codigo`,
+    `area_codigo` and `gran_area_codigo`, where the guarded rule outweighs the semantic version and OID
+    detectors, and discipline names in `disciplina_descripcion` and `area_descripcion`;
+  - bibliographic fields: journal titles (`journal_title`: `revista`, `journal`, `source title`),
+    volumes (`journal_volume`: 43, 12A, XXXV in `volumen`, `volume`), first and last pages
+    (`page_number`: `pagina_inicial`, `pagina_final`, `start_page`, `spage`), SJR and JCR quartiles
+    (`journal_quartile`: Q1 to Q4 and NO INDEXADO in `revista_sjr`, `quartile`, `cuartil`, outweighing
+    the Wikidata id detector), titles of books, articles and projects (`title`: `titulo_libro`,
+    `book_title`; a bare `titulo` is left out), publishers (`dc_publisher`: `editorial`, `publisher`);
+  - registry types that had no rules: keywords (`keyword`: `palabras_clave`, `keywords`, lists separated
+    by semicolons, pipes or commas), abstracts (`abstract`: `resumen`, `abstract`, with No publicable as
+    a missing value) and ISIC Rev. 4 codes (`isicrev4`: A, 01, 011, 0111 in `codigo_rev4`, `ciiu`,
+    `isic_rev4`);
+  - the sex of a person named by a role after sexo (`gender`: `sexo_director`), and no informado and no
+    publicable as missing-value texts.
+
 - **Rules for the Buenos Aires files of metacrafter-testdata** (a 2024 snapshot of data.buenosaires.gob.ar,
   the open data portal of the City of Buenos Aires, Dateno source cdi00000023; validators in
   `metacrafterext.rules.ar_country.caba`, `metacrafterext.rules.es.periods` and

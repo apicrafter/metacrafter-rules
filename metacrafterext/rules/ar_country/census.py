@@ -619,6 +619,10 @@ _ABBREVIATIONS = {
 _PREFIX = re.compile(r"^(?:departamento|depto|dpto|partido(?: de)?|comuna)\s+")
 
 
+# The City of Buenos Aires as one department, as BAHRA (department 000) and older tables name it.
+_CITY_AS_DEPARTMENT = frozenset({"capital federal", "ciudad autonoma de buenos aires", "ciudad de buenos aires"})
+
+
 def validate_ar_department_name(value):
     """The name of an Argentine department, as written in national and provincial tables:
     Calamuchita, RIO CUARTO, Gral. San Martín, Pte. Roque S. Peña, Departamento Capital, Comuna 1
@@ -626,7 +630,7 @@ def validate_ar_department_name(value):
     words = _norm(value)
     if not words or words.isdigit():
         return False
-    if words in DEPARTMENT_NAMES:
+    if words in DEPARTMENT_NAMES or words in _CITY_AS_DEPARTMENT:
         return True
     stripped = words if words.startswith("comuna ") else _PREFIX.sub("", words)
     tokens = [_ABBREVIATIONS.get(t, t) for t in stripped.split()]
