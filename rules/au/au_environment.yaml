@@ -106,3 +106,25 @@ rules:
     minlen: 70
     maxlen: 80
     priority: 1
+
+  # ------------------------------------------------------------ Camden Council (data.camden.nsw.gov.au)
+  aualgaealertlevelbyname:
+    key: au_algae_alert_level
+    name: Blue-green algae alert level by field name (alert_status, current_new_alert_status, previous_alert_status) with Green alert, Amber alert, Red alert
+    # An alert field of weather warnings or child abduction alerts holds other words (Yellow warning):
+    # the values must name an algae alert level with the word alert or level.
+    rule: (?i)(?:[a-z]+[ _]){0,3}alert(?:[ _]?(?:status|level))?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.au.planning.validate_au_algae_alert_level
+    needs_values: true
+    priority: 1
+  aualgaealertcolourbyname:
+    key: au_algae_alert_level
+    name: Blue-green algae alert level by a field named for algae (bga_alert, algae_status, algal_alert_level, cyanobacteria_level) with Green, Amber, Red
+    rule: (?i)(?:blue[ _-]?green[ _]?)?(?:bga|algae|algal|cyano(?:bacteria)?)(?:[ _](?:bloom|alert))?(?:[ _](?:status|level|alert|warning))?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.au.planning.validate_au_algae_alert_colour
+    needs_values: true
+    priority: 1

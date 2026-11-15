@@ -126,6 +126,25 @@ def validate_compass_point(value):
     return str(value).strip().upper() in _COMPASS_POINTS
 
 
+# North, Northeast, North-East, north east, North-northeast, Northbound, Eastward; the words of a
+# direction, as the aspect of a nest box (Camden Council) or the direction of a traffic count.
+_CARDINAL_WORD = r"(?:north|south|east|west)"
+_CARDINAL_DIRECTION = re.compile(
+    rf"^(?:{_CARDINAL_WORD}(?:[ -]?{_CARDINAL_WORD})?(?:[ -]{_CARDINAL_WORD}(?:[ -]?{_CARDINAL_WORD})?)?"
+    rf"|(?:north|south)(?:[ -]?(?:east|west))?(?:bound|ward|erly)|(?:east|west)(?:bound|ward|erly))$", re.I)
+_OPPOSITE = ({"north", "south"}, {"east", "west"})
+
+
+def validate_cardinal_direction(value):
+    """A direction in words: North, Northeast, North-East, south west, North-northeast, Northbound,
+    Westward (not N or NE, which are compass points, not North-South or Northern)."""
+    text = " ".join(str(value).split())
+    if not _CARDINAL_DIRECTION.match(text):
+        return False
+    words = re.findall(r"north|south|east|west", text.lower())
+    return not any(pair <= set(words[:2]) for pair in _OPPOSITE)
+
+
 _UTM_ZONE = re.compile(r"^(?:zone ?)?([1-9]|[1-5]\d|60) ?([C-HJ-NP-X])?$", re.I)
 
 

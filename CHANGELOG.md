@@ -9,6 +9,43 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Rules for the Camden Council files of metacrafter-testdata** (a 2024 snapshot of
+  data.camden.nsw.gov.au, the Opendatasoft portal of Camden Council, New South Wales, Dateno source
+  cdi00000091; validators in the new `metacrafterext.rules.au.planning` and
+  `metacrafterext.rules.common.waterquality`):
+  - council wards (`au_council_ward`: North Ward, Central Ward, Ward 2, A Ward, Division 3) in `ward`,
+    `ward_name` and the map label `tag`; the UK ward name rule refuses them (ONS names have no Ward
+    after them);
+  - the NSW planning system: environmental planning instruments (`au_nsw_epi`: Camden Local
+    Environmental Plan 2010, Camden LEP 2010, SEPP (Precincts—Western Parkland City) 2021, by value and
+    in `epi`, `EPI_NAME`; the abbreviations CLEP2010, SEPP2021 in `iteminst`), development control
+    plans (`au_nsw_dcp`: Camden DCP 2019, Oran Park DCP, by value and in `dcp1` to `dcp4`), heritage
+    item numbers of an LEP schedule (`au_nsw_heritage_item_number`: I38, I90A in `item_no`, `H_ID`) and
+    heritage significance levels (`au_heritage_significance`: Local, State in `itemsig`, `SIG`);
+  - blue-green algae alert levels (`au_algae_alert_level`: Green alert, Amber alert, Red alert, No alert
+    in alert fields; bare colours only in fields named for algae);
+  - water quality readings by field name with the values checked (`dissolved_oxygen`, `turbidity`,
+    `electrical_conductivity`, `salinity`, `total_dissolved_solids`), the names of The Things Network
+    and ChirpStack payloads included (`payload_fields_optod_oxygen_mg`, `payload_fields_ntu_turbidityntu`,
+    `payload_fields_c4e_conductivity_us_cm`, `payload_fields_c4e_tdskcl_ppm`), and pH and temperature
+    under those names (`payload_fields_ph`, `payload_fields_optod_temperature`); a bare oxygen, EC,
+    cond or TDS stays out (SpO2, enzyme numbers, the tax deducted at source);
+  - amounts of energy (`energy_amount`: `energy_generated` in kWh of the council solar systems,
+    `energy_kwh`, `kwh_consumed`, `electricity_consumption_kwh`);
+  - common names of species (`vernacular_name`: `vernacularName`, `fish_species`, `bird_species`,
+    `tree_common_name`; a `species` field of common names with the scientific name in brackets,
+    australian magpie (cracticus tibicen));
+  - registry types that had no rules: directions in words (`cardinal_direction`: East, Northeast,
+    Northbound in `aspect_of_installation`, `direction`, `orientation`, `facing`; the 16-wind
+    abbreviations stay `compass_point`); more names of types with rules: the Opendatasoft point
+    fields `geolocation` and `geo_location` (`geopoint`, latitude and longitude text), MGA coordinates
+    in `xcord` / `ycord` (`easting`, `northing`, checked as projected metres), upper case LGA names
+    (CAMDEN, WARRUMBUNGLE of the NSW Planning Portal) in `lganame`;
+  - GeoJSON geometries longer than 100 000 characters (`geojsongeometrylongtext`: the geo_shape of the
+    Camden LGA boundary is one polygon of 200 202 characters). metacrafter before
+    apicrafter/metacrafter#127 refuses a maxlen above 100 000 and skips this rule with a diagnostic;
+    the 100 000 rule still covers the shorter geometries.
+
 - **Rules for the Buenos Aires files of metacrafter-testdata** (a 2024 snapshot of data.buenosaires.gob.ar,
   the open data portal of the City of Buenos Aires, Dateno source cdi00000023; validators in
   `metacrafterext.rules.ar_country.caba`, `metacrafterext.rules.es.periods` and
@@ -180,6 +217,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- A bare `device_id`, `mobile_device_id` or `equipment_id` is an IMEI only with 15-digit IMEIs
+  that pass the Luhn check: the LoRaWAN sensors of Camden Council are snla1k512.
 - The Australian LGA rules no longer take the Nigerian LGA codes and names of the GRID3 settlement
   data (`Lga Code` 19001, `Lga` Birnin Gwari): an ABS LGA code ends in 0 or is an unincorporated, no
   usual address or migratory code (19399, 19499, 89399), and a plain LGA name is not a Nigerian LGA.

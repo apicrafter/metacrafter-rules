@@ -178,3 +178,17 @@ rules:
     validator: metacrafterext.rules.au.codes.validate_au_federal_electoral_division
     needs_values: true
     priority: 1
+
+  # ------------------------------------------------------------ Camden Council (data.camden.nsw.gov.au)
+  aucouncilwardbyname:
+    key: au_council_ward
+    name: Australian council ward by field name (ward, ward_name, wardname, tag) with ward names (North Ward, Ward 2)
+    # Camden Council names its three wards North Ward, Central Ward and South Ward; the ward boundary
+    # files of Opendatasoft keep them in ward, ward_name and the map label tag (which holds suburbs in
+    # the suburb layer, so the values decide).
+    rule: (?i)(?:[a-z]+[ _])?(?:ward(?:[ _]?(?:name|nm|label))?|wardname|tag)
+    type: field
+    match: regex
+    validator: metacrafterext.rules.au.planning.validate_au_council_ward
+    needs_values: true
+    priority: 1

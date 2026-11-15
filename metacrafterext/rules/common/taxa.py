@@ -79,3 +79,34 @@ def validate_life_stage(value):
     if text in LIFE_STAGES or text in ("young of year", "young of the year"):
         return True
     return text.rstrip(".") in LIFE_STAGES
+
+
+# Common names of species: one to six words of letters, with the scientific name in brackets after
+# them as wildlife reports write it (australian magpie (cracticus tibicen); masked lapwing - plover
+# (vanellus miles)). Swooping bird reports and fishing surveys of Camden Council (New South Wales).
+_VERNACULAR_WORD = r"[^\W\d_][^\W\d_'’.-]*(?:['’-][^\W\d_]+)*\.?"
+_VERNACULAR_NAME = re.compile(rf"^{_VERNACULAR_WORD}(?:(?: | - | / |/|-){_VERNACULAR_WORD}){{0,5}}$")
+_WITH_SCIENTIFIC = re.compile(rf"^(.+?) \(([A-Za-z][a-z]+ (?:x )?[a-z][a-z-]+(?: [a-z][a-z-]+)?)\)$")
+
+
+def validate_vernacular_name(value):
+    """A common name of a taxon, alone or with the scientific name in brackets: European Carp,
+    Australian Bass, noisy miner, masked lapwing - plover (vanellus miles), London plane (not 1234,
+    a sentence of seven words or more, or Animalia)."""
+    text = " ".join(str(value).split())
+    if not 2 <= len(text) <= 100:
+        return False
+    m = _WITH_SCIENTIFIC.match(text)
+    if m:
+        text = m.group(1)
+    if text in HIGHER_TAXA:
+        return False
+    return bool(_VERNACULAR_NAME.match(text))
+
+
+def validate_vernacular_with_scientific(value):
+    """A common name followed by the scientific name in brackets: australian magpie (cracticus tibicen),
+    Noisy Miner (Manorina melanocephala) (not Manorina melanocephala or noisy miner alone)."""
+    text = " ".join(str(value).split())
+    m = _WITH_SCIENTIFIC.match(text)
+    return bool(m) and validate_vernacular_name(m.group(1))

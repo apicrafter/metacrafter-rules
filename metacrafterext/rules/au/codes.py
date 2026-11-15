@@ -119,6 +119,9 @@ _LGA_STATUS = r"(?:A|AC|B|C|CGC|DC|IS|M|R|RC|RegC|RDC|S|SC|T|TC)"
 _AU_LGA_NAME = re.compile(
     rf"^[A-Z][A-Za-z'’.\- ]+ \({_LGA_STATUS}\)(?: \((?:NSW|Vic\.|Qld|SA|WA|Tas\.|NT|ACT|OT)\))?$")
 _PLACE_NAME = re.compile(r"^[A-Z][A-Za-z'’.\- ]*[a-z][A-Za-z'’.\- ]*(?: \((?:[A-Za-z.]{1,4})\))*$")
+# Upper case names of the NSW Planning Portal layers and the Camden ward layer (LGA_NAME, lganame:
+# CAMDEN, WARRUMBUNGLE, UPPER HUNTER); four letters at least, so state codes (NSW, QLD) stay out.
+_PLACE_NAME_UPPER = re.compile(r"^[A-Z][A-Z'’.\-]{3,}(?: [A-Z][A-Z'’.\-]*){0,4}$")
 
 
 def validate_au_lga_name(value):
@@ -134,7 +137,8 @@ def validate_au_lga_name_plain(value):
     text = str(value).strip()
     if _AU_LGA_NAME.match(text):
         return True
-    return bool(_PLACE_NAME.match(text) and not text.lower().startswith(("division", "ward"))
+    return bool((_PLACE_NAME.match(text) or _PLACE_NAME_UPPER.match(text))
+                and not text.lower().startswith(("division", "ward")) and not text.lower().endswith(" ward")
                 and not validate_ng_lga(text))
 
 

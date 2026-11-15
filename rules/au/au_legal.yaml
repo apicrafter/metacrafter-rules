@@ -34,3 +34,64 @@ rules:
     validator: metacrafterext.rules.au.codes.validate_au_trademark_number
     needs_values: true
     priority: 1
+
+  # ------------------------------------------------------------ NSW planning (Camden Council, NSW Planning Portal)
+  # The planning instruments map of Camden Council (epi, dcp1 to dcp4) and its heritage items
+  # (item_no, itemsig, iteminst); the NSW Planning Portal layers name them EPI_NAME, H_ID and SIG.
+  ausnwepibyname:
+    key: au_nsw_epi
+    name: NSW environmental planning instrument by field name (epi, EPI_NAME, iteminst, planning_instrument) with LEP and SEPP titles
+    # dcp_epi of the Camden map joins the suburb, the EPI and the DCPs in one cell.
+    rule: (?i)(?!dcp[ _])(?:[a-z]+[ _])?epi(?:[ _]?(?:name|title))?|item[ _]?inst|(?:environmental[ _])?planning[ _]instrument(?:[ _]name)?|lep[ _]?name
+    type: field
+    match: regex
+    validator: metacrafterext.rules.au.planning.validate_au_nsw_epi_or_abbreviation
+    needs_values: true
+    priority: 1
+  ausnwepivalue:
+    key: au_nsw_epi
+    name: NSW environmental planning instrument by value (Camden Local Environmental Plan 2010, SEPP (Precincts—Western Parkland City) 2021)
+    rule: metacrafterext.rules.au.planning.validate_au_nsw_epi
+    type: data
+    match: func
+    minlen: 8
+    maxlen: 250
+    priority: 1
+  ausnwdcpbyname:
+    key: au_nsw_dcp
+    name: NSW development control plan by field name (dcp, dcp1 to dcp4, dcp_name) with DCP titles
+    rule: (?i)dcp[ _]?\d?|dcp[ _]?(?:name|title)|development[ _]control[ _]plan
+    type: field
+    match: regex
+    validator: metacrafterext.rules.au.planning.validate_au_nsw_dcp
+    needs_values: true
+    priority: 1
+  ausnwdcpvalue:
+    key: au_nsw_dcp
+    name: NSW development control plan by value (Camden DCP 2019, Hornsby Development Control Plan 2013)
+    # DCP alone is an acronym of anything: the value needs the words of a plan before it.
+    rule: metacrafterext.rules.au.planning.validate_au_nsw_dcp
+    type: data
+    match: func
+    minlen: 8
+    maxlen: 250
+    priority: 1
+  ausnwheritageitemnumberbyname:
+    key: au_nsw_heritage_item_number
+    name: NSW LEP heritage item number by field name (item_no, H_ID, heritage_item_no) with I38, I90A
+    rule: (?i)(?:heritage[ _])?item[ _]?(?:no|num|number|id)|h[ _]id|heritage[ _](?:id|no|number)
+    type: field
+    match: regex
+    validator: metacrafterext.rules.au.planning.validate_au_nsw_heritage_item_number
+    needs_values: true
+    priority: 1
+  auheritagesignificancebyname:
+    key: au_heritage_significance
+    name: Heritage significance level by field name (itemsig, SIG, significance, heritage_significance) with Local, State, National
+    # Local and State alone are common words: only by field name.
+    rule: (?i)item[ _]?sig|sig|(?:heritage[ _])?significance(?:[ _]level)?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.au.planning.validate_au_heritage_significance
+    needs_values: true
+    priority: 1

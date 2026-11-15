@@ -14,6 +14,19 @@ rules:
     minlen: 30
     maxlen: 100000
     priority: 1
+  geojsongeometrylongtext:
+    key: geojson
+    name: GeoJSON geometry of more than 100 000 characters written as text in a table cell
+    # The boundary of a whole council area: the geo_shape of the Camden LGA boundary (Opendatasoft)
+    # is one polygon of 200 202 characters. The validator reads only the first characters and the
+    # last 200. metacrafter before apicrafter/metacrafter#127 refuses a maxlen above 100 000 and
+    # skips this rule with a diagnostic; the rule above still covers the shorter geometries.
+    rule: metacrafterext.rules.common.generic.validate_geojson_geometry_text
+    type: data
+    match: func
+    minlen: 100001
+    maxlen: 10000000
+    priority: 1
   kmlcoordinatestext:
     key: kml_coordinates
     name: KML coordinates written as text in a table cell (-68.968,-81.147,0.0 -72.557,-79.672,0.0)
