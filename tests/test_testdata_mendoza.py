@@ -25,7 +25,12 @@ from metacrafterext.rules.ar_country.mendoza import (
     validate_ar_mendoza_school_number,
 )
 from metacrafterext.rules.common.directories import validate_periodicity
-from metacrafterext.rules.common.rates import validate_interest_rate, validate_interest_rate_reference
+from metacrafterext.rules.common.rates import (
+    validate_es_amount,
+    validate_interest_rate,
+    validate_interest_rate_reference,
+    validate_marked_amount,
+)
 from metacrafterext.rules.common.tourism import validate_accommodation_star_rating, validate_accommodation_type
 from metacrafterext.rules.common.urban import validate_building_number, validate_urban_rural_class
 from metacrafterext.rules.es.periods import validate_es_duration_words
@@ -92,6 +97,8 @@ VALIDATORS = [
     (validate_ar_gde_number_known_ecosystem, ["EX-2023-00006308- -GDEMZA-FTYC", "EX-2018-01621874-GDEMZA-DPA#SAYOT",
                                               "EX 2018-00345266-GDEMZA-DPA#SAYOT (Expte. 1234-D-2017-03834)"],
      ["EX-2018-1-XYZ", "4259-D-2015-03834"]),
+    (validate_es_amount, ["6.613.703,03", "0,00", "0", "-136.786,75", "$ 298.278.261,30", "-"], ["2018/01", "abc", "4,509,343.45"]),
+    (validate_marked_amount, ["$ 298.278.261,30", "ARS 3.662,50", "USD 44,59", "1.234,50 €", "$ 0,00"], ["$5", "USD", "298.278.261,30", "Pesos"]),
     (validate_za_economic_classification_value, ["Goods and services", "Compensation of employees"], ["CAPITAL", "Capital", "Current"]),
 ]
 
@@ -148,8 +155,9 @@ FIELDS = [
     ("common/directories.yaml", "periodicitybyname", ["Frecuencia / Frequency", "frecuencia_de_pago", "payment_frequency"],
      ["frecuencia", "Frequency"]),
     ("common/directories.yaml", "legislationnumberbyname", ["resolucion", "RESOL.", "RES.", "reolucion", "numero_resolucion",
-                                                            "resolucion_inscripcion_agencia", "numero_resolucion_inscripción"],
-     ["resoluciones_x", "resolver"]),
+                                                            "resolucion_inscripcion_agencia", "numero_resolucion_inscripción",
+                                                            "decreto_provincial_numero", "resolucion_epas_numero"],
+     ["resoluciones_x", "resolver", "resolucion_epas_anio", "decreto_provincial_anio"]),
     ("es/es_common.yaml", "esphonebyname", ["telefono_agencia", "telefono_de_contacto_fijo_profesional_turismo", "oficina_telefono",
                                            "contacto_telefono_numero_fijo_abonado", "telefono_escuela", "telefono_destacamento_policial"],
      ["telefonista", "cod_tel"]),
@@ -169,6 +177,15 @@ FIELDS = [
     ("es/es_geo.yaml", "esfloorbycompoundname", ["domicilio_piso", "piso_domicilio_agencia", "oficina_domicilio_piso", "delegacion_piso",
                                                  "piso_domicilio_local_gastronomico"],
      ["piso", "pisos"]),
+    ("es/es_budget.yaml", "esbudgetstageamountbyname", ["votado", "presupuesto_devengado", "ejecucion presupuesto_autorizado",
+                                                       "presupuesto_mandado a pagar", "credito_vigente", "calculado_ingresos",
+                                                       "sancion_total_impuesta", "acreditado_usuarios", "en_procesos_acreditacion_usuarios",
+                                                       "acreditado_cuenta_ acumulacion"],
+     ["ingresos", "votacion", "saldo_inicial_x"]),
+    ("es/es_budget.yaml", "esejercicioyearbyname", ["ejercicio", "id_ejercicio", "ejercicio_fiscal"], ["ejercicio_mes", "ejercicios"]),
+    ("common/values.yaml", "temperaturebyname", ["hi_temp", "low_temp", "temo_out", "dew_point", "in_dew", "wind_chill", "heat_index",
+                                                 "thw_index", "in_temp", "temperatura_grados_centigrados_momento_medicion"],
+     ["heat", "dew", "temp"]),
     ("es/es_datetime.yaml", "esdurationwordsbyname", ["demora_desde_solicitud_tickets", "horas_demora_desde_solicitud", "duracion",
                                                      "Horas de demora desde que se asignó"],
      ["demoras_x1", "hora"]),
@@ -194,6 +211,7 @@ VALUES = [
     ("common/rates.yaml", "interestratereferencevalue", ["Badlar + 2%", "Libor + 3,70%"], ["6,00%", "Uva"]),
     ("common/geo.yaml", "urbanruralvalue", ["Urbano marginal", "städtisches Gebiet"], ["Centro"]),
     ("es/es_datetime.yaml", "esdurationwordsvalue", ["1 días, 13 horas, 20 minutos"], ["13:20"]),
+    ("es/es_budget.yaml", "esmarkedamountvalue", ["$ 298.278.261,30", "ARS 3.662,50"], ["298.278.261,30"]),
 ]
 
 

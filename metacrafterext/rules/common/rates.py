@@ -50,3 +50,30 @@ def validate_interest_rate(value):
     if "/" in text and all(validate_interest_rate(part) for part in text.split("/") if part.strip()):
         return True
     return len(text) <= 80 and bool(_IN_WORDS.search(text)) and bool(_RATE_WORDS.search(text))
+
+
+# ---------------------------------------------------------------- amounts
+# Amounts written with dots as thousands separators and a decimal comma, as Spanish, Argentine
+# and other European tables write them (6.613.703,03, -136.786,75, 0,00, 0), optionally after a
+# currency sign or code ($ 298.278.261,30, ARS 3.662,50, USD 44,59).
+_CURRENCY_MARK = r"(?:\$|ARS|USD|U\$S|US\$|EUR|€)"
+_EUROPEAN_NUMBER = r"-?(?:\d{1,3}(?:\.\d{3})+|\d+)(?:,\d{1,4})?"
+_AMOUNT = re.compile(r"^(?:" + _CURRENCY_MARK + r"\s?)?" + _EUROPEAN_NUMBER + r"$")
+_MARKED_AMOUNT = re.compile(r"^" + _CURRENCY_MARK + r"\s?" + _EUROPEAN_NUMBER + r"$|^" + _EUROPEAN_NUMBER + r"\s?" + r"(?:€|EUR)$")
+
+
+def validate_es_amount(value):
+    """An amount in a field named for a stage of a budget: 6.613.703,03, 0,00, 0, -136.786,75,
+    $ 298.278.261,30, a dash for none (not 2018/01, a date or text)."""
+    text = str(value).strip()
+    return text in ("-", "—") or bool(_AMOUNT.match(text))
+
+
+def validate_marked_amount(value):
+    """An amount with a currency sign or code and dots as thousands separators or a decimal comma:
+    $ 298.278.261,30, ARS 3.662,50, USD 44,59, 1.234,50 € (for value rules on any field; $5 or
+    USD alone are not one)."""
+    text = " ".join(str(value).split())
+    if not _MARKED_AMOUNT.match(text):
+        return False
+    return "," in text or "." in text

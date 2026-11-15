@@ -45,7 +45,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     wind direction in `hi_dir`, streets, house numbers and floors of split addresses
     (`oficina_domicilio_calle`, `numero_domicilio_agencia`, `piso_domicilio_agencia`), house numbers on
     a route kilometre (KM.6,5), GDE numbers of the Mendoza ecosystem (GDEMZA) by value and written with
-    a space or a file number in parentheses (EX 2018-00345266-GDEMZA-DPA#SAYOT (Expte. ...)).
+    a space or a file number in parentheses (EX 2018-00345266-GDEMZA-DPA#SAYOT (Expte. ...));
+  - amounts of a budget execution in Spanish (`money`: `votado`, `preventivo`, `devengado`, `pagado`,
+    `presupuesto_saldo`, `credito_vigente`, the sanctions and credits of the EPRE quality tables, with
+    6.613.703,03 or $ 298.278.261,30; validator `metacrafterext.rules.common.rates.validate_es_amount`,
+    rules in `rules/es/es_budget.yaml`), amounts with a currency sign or code and a decimal comma by value
+    ($ 298.278.261,30, ARS 3.662,50, USD 44,59), budget years in `ejercicio`, temperatures in the columns
+    of a Davis weather station export (`hi_temp`, `low_temp`, `dew_point`, `wind_chill`, `heat_index`,
+    `thw_index`, `in_temp`) and in `temperatura_...`, legislation numbers in `decreto_provincial_numero`
+    (and no longer in `resolucion_epas_anio`, a year).
 
 - **Rules for the Buenos Aires files of metacrafter-testdata** (a 2024 snapshot of data.buenosaires.gob.ar,
   the open data portal of the City of Buenos Aires, Dateno source cdi00000023; validators in

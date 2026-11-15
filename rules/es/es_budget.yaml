@@ -1,0 +1,38 @@
+name: es-budget
+description: Amounts of the stages of a budget execution in Spanish (votado, preventivo, devengado, pagado) and amounts with a currency sign and a decimal comma
+context: finances
+lang: es
+country_code: es
+# Found in the budget execution tables of the province of Mendoza (Contaduría General de la
+# Provincia, Fondo para la Transformación y el Crecimiento) and the quality sanctions of its
+# electricity regulator (datosabiertos.mendoza.gov.ar; metacrafter-testdata).
+rules:
+  esbudgetstageamountbyname:
+    key: money
+    name: Amount of a stage of a budget execution by Spanish field name (votado, preventivo, definitivo, devengado, pagado, credito_vigente, presupuesto_saldo)
+    # 6.613.703,03, 0,00, $ 298.278.261,30. A bare ingresos is a count of visits as often and is
+    # left out.
+    rule: '(?i)(?:(?:ejecucio?n[ _]+)?presupuesto[ _]+)?(?:votado|vigente|preventivo|compromiso|comprometido|definitivo|devengado|liquidado|pagado|mandado[ _]a[ _]pagar|saldo|autorizado|ampliaci[oó]n|disminuci[oó]n(?:es)?|aumentos?|reservas?|modificaciones|cr[eé]dito[ _](?:vigente|l[ií]quido|original|inicial))|(?:calculado|aumentos|disminuciones)[ _]ingresos|presupuesto|sanci[oó]n[ _]total[ _](?:impuesta|calculada)|(?:en[ _]procesos?[ _](?:de[ _])?)?acreditado?[ _](?:a[ _])?(?:usuarios|fondo[ _]compensador|cuenta[ _]+acumulaci[oó]n)|(?:en[ _]procesos?|pendiente)[ _](?:de[ _])?acreditaci[oó]n[ _](?:a[ _])?(?:usuarios|fondo[ _]compensador|cuenta[ _]+acumulaci[oó]n)'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.rates.validate_es_amount
+    needs_values: true
+    priority: 1
+  esmarkedamountvalue:
+    key: money
+    name: Amount with a currency sign or code and a decimal comma by value ($ 298.278.261,30, ARS 3.662,50, USD 44,59)
+    rule: metacrafterext.rules.common.rates.validate_marked_amount
+    type: data
+    match: func
+    minlen: 4
+    maxlen: 30
+    priority: 1
+  esejercicioyearbyname:
+    key: year
+    name: Budget year by Spanish field name (ejercicio, id_ejercicio, ejercicio_fiscal) with years
+    rule: '(?i)(?:id[ _])?ejercicio(?:[ _](?:fiscal|presupuestario|financiero|contable))?'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.urban.validate_calendar_year
+    needs_values: true
+    priority: 1
