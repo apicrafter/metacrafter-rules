@@ -73,3 +73,15 @@ rules:
     match: regex
     validator: metacrafterext.rules.common.generic.validate_id_value
     priority: 1
+  # Found in the penalty shootouts of football competitions of the Universidad de Chile (datos.uchile.cl, a
+  # 2024 snapshot, Dateno source cdi00000365; metacrafter-testdata): homeTeam and awayTeam (Bayern München,
+  # River Plate). A bare team is also a project team or a department.
+  sportsteambyname:
+    key: sports_team
+    name: Sports team by the field names of the two sides of a match (homeTeam, awayTeam, home_team, away_team_name, equipo_local, equipo_visitante)
+    rule: (?i)(?:home|away|host|guest|visiting|opposing|opponent)[ _.-]?team(?:[ _.-]?name)?|team[ _.-]?(?:home|away)|equipo[ _](?:local|visitante|rival)|(?:local|visitante)[ _]equipo
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.generic.validate_name_text
+    needs_values: true
+    priority: 1

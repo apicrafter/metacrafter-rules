@@ -488,3 +488,85 @@ rules:
     validator: metacrafterext.rules.common.fieldwork.validate_scientific_name
     needs_values: true
     priority: 1
+  # ------------------------------------------------------------ codon usage and differential expression
+  # Found in the transcriptomes of eight Antarctic yeasts of the Universidad de Chile (datos.uchile.cl, a 2024
+  # snapshot, Dateno source cdi00000365; metacrafter-testdata): codon usage by gene (Seq, AmAcid, Codon,
+  # Fraction), KEGG annotation (K0s: K00128) and differential expression (Differential Expression Log2 Ratio,
+  # Differential Expression p-value).
+  aminoacidbyname:
+    key: amino_acid
+    name: Amino acid by field name (AmAcid, amino_acid, aminoacid, residue, aa_code) with three-letter codes (Arg, Leu, Ser)
+    rule: (?i)am(?:ino)?[ _.]?acids?(?:[ _](?:code|name|3))?|aminoacid(?:o|os)?|amino[aá]cidos?|residue(?:[ _]?name)?|aa(?:[ _]?(?:name|code|3))?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.omics.validate_amino_acid_or_stop
+    needs_values: true
+    priority: 1
+  aminoacidvalue:
+    key: amino_acid
+    name: Amino acid by value, the twenty of the standard genetic code (Ala, Arg, Asn, Asp, Cys)
+    # Sec is also a secondary school (LEVEL of a school directory): the rare codes are read by field name only.
+    rule: metacrafterext.rules.common.omics.validate_standard_amino_acid
+    type: data
+    match: func
+    minlen: 3
+    maxlen: 3
+    priority: 2
+  codonbyname:
+    key: codon
+    name: Codon by field name (Codon, codons, ref_codon, start_codon, triplet) with nucleotide triplets (GCG, ATG, UAA)
+    rule: (?i)(?:(?:ref|alt|wt|mut|start|stop|anti|new|old)[ _]?)?codons?(?:[ _]?(?:seq|ref|alt|wt|mut))?|triplets?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.omics.validate_codon
+    needs_values: true
+    priority: 1
+  codonvalue:
+    key: codon
+    name: Codon by value in a field named for codons (GCG, GCA, AGG)
+    # Three letters of A, C, G and T are also initials and codes (CAT, TAG, GGT): the field must name codons.
+    rule: '(?:[ACGT]{3}|[ACGU]{3})'
+    type: data
+    match: regex
+    minlen: 3
+    maxlen: 3
+    fieldregex: (?i)codon|triplet
+    priority: 1
+  keggorthologyidbyname:
+    key: kegg_orthology_id
+    name: KEGG Orthology identifier by field name (K0s, KO, ko_id, KEGG_ko, kegg_orthology) with K numbers (K00128)
+    rule: (?i)k0s?|kos?|ko[ _]?(?:ids?|numbers?|terms?)|kegg[ _]?(?:kos?|orthology|orthologs?)(?:[ _]?ids?)?|orthology(?:[ _]?ids?)?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.omics.validate_kegg_orthology_id
+    needs_values: true
+    priority: 1
+  keggorthologyidvalue:
+    key: kegg_orthology_id
+    name: KEGG Orthology identifier by value in a field named for it (K00128, K01689)
+    # K and five digits is also a catalogue or a part number: the field must name KEGG or KO.
+    rule: '(?:ko:)?K\d{5}'
+    type: data
+    match: regex
+    minlen: 6
+    maxlen: 9
+    fieldregex: (?i)^k0s?$|^kos?$|^ko[ _]|kegg|orthol
+    priority: 1
+  pvaluebyname:
+    key: p_value
+    name: p-value by field name (p-value, pvalue, p.value, pval, padj, FDR, q-value, Differential Expression p-value) with numbers from 0 to 1
+    rule: (?i)(?:[a-z0-9]+[ _.-]){0,4}(?:p[ _.-]?val(?:ue|or)?s?|valor[ _]?p|p[ _.]?adj(?:usted)?|adj(?:usted)?[ _.]?p(?:[ _.-]?val(?:ue)?)?|fdr|q[ _.-]?val(?:ue)?s?)(?:[ _.-][a-z0-9]+){0,2}
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.omics.validate_p_value
+    needs_values: true
+    priority: 1
+  log2foldchangebyname:
+    key: log2_fold_change
+    name: Log2 fold change by field name (log2FoldChange, logFC, log2FC, Log2 Ratio, Differential Expression Log2 Ratio) with signed decimals
+    rule: (?i)(?:[a-z0-9]+[ _.-]){0,4}(?:log[ _]?2[ _.-]?(?:fold[ _.-]?change|fc|ratio)|log[ _.-]?fc|l2fc|lfc)(?:[ _.-][a-z0-9]+){0,2}
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.omics.validate_log2_fold_change
+    needs_values: true
+    priority: 1

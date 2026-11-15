@@ -1,0 +1,31 @@
+name: cl-persons
+description: Chilean personal attributes - the indigenous people a respondent belongs to
+context: persons
+lang: es
+country_code: cl
+rules:
+  # Found in the NEMS-P-Ch pilot survey of the food environment of the Universidad de Chile (datos.uchile.cl,
+  # a 2024 snapshot, Dateno source cdi00000365; metacrafter-testdata): 04. ¿Usted se considera perteneciente a
+  # algún pueblo originario? with mapuche, diaguitas, quechua and ninguna_no_sabe. The repository shortens the
+  # question to 04Ustedseconsideraperten.
+  clindigenouspeoplebyname:
+    key: cl_indigenous_people
+    is_pii: True
+    name: Indigenous people of Chile by field name (pueblo_originario, pueblo_indigena, pertenencia_indigena, 04Ustedseconsideraperten) with Mapuche, Aymara, Rapa Nui, Diaguita
+    rule: (?i)(?:[a-z0-9]+[ _]){0,3}(?:pueblos?[ _]?(?:originarios?|ind[ií]genas?)|pertenencia[ _](?:a[ _])?(?:pueblos?[ _])?(?:originarios?|ind[ií]genas?|[ée]tnica))(?:[ _][a-z0-9]+){0,2}|\d{0,3}[a-z]*consideraperten[a-z]*
+    type: field
+    match: regex
+    validator: metacrafterext.rules.cl.persons.validate_cl_indigenous_people_answer
+    needs_values: true
+    priority: 1
+  clindigenouspeoplevalue:
+    key: cl_indigenous_people
+    is_pii: True
+    name: Indigenous people of Chile by value in a field named for peoples (Mapuche, Aymara, Rapa Nui, Atacameño, Diaguita)
+    rule: metacrafterext.rules.cl.persons.validate_cl_indigenous_people
+    type: data
+    match: func
+    minlen: 3
+    maxlen: 60
+    fieldregex: (?i)pueblos?[ _]?(?:originario|ind[ií]gena)|pertenencia[ _](?:a[ _])?(?:pueblo|ind[ií]gena|[ée]tnica)|consideraperten|etnia
+    priority: 1

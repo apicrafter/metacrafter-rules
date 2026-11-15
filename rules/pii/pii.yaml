@@ -176,7 +176,7 @@ rules:
     is_pii: True
     name: Marital status by field name (estado_civil, estado_civil_1, marital_status, situacion_conyugal) with status words
     # Soltero/a, Casado/a, Divorciado/a de matrimonio, Viudo/a; single, married, widowed.
-    rule: (?i)(?:[a-z]+[ _])*(?:estado[ _]?civil|est[ _]civil|situaci[oó]n[ _]conyugal|marital[ _]?status|civil[ _]status|[ée]tat[ _]civil|familienstand)(?:[ _][a-z0-9]+)?
+    rule: (?i)(?:[a-z]+[ _])*(?:estado[ _]?civil|est[ _]civil|situaci[oó]n[ _]conyugal|marital[ _]?status|civil[ _]status|[ée]tat[ _]civil|familienstand)(?:[ _][a-z0-9]+)?|\d{0,3}[a-z]*estadocivil
     type: field
     match: regex
     validator: metacrafterext.rules.es.periods.validate_marital_status

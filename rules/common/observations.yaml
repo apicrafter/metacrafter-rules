@@ -285,3 +285,17 @@ rules:
     validator: metacrafterext.rules.common.observations.validate_eui64
     needs_values: true
     priority: 1
+  # Found in the seismicity catalogues of the Universidad de Chile (the IPOC catalogue of northern Chile and
+  # the aftershocks of the 2015 Illapel earthquake, datos.uchile.cl, a 2024 snapshot, Dateno source
+  # cdi00000365; metacrafter-testdata): latitude, longitude, depth(km), magnitude(Mw), date, time.
+  earthquakemagnitudebyname:
+    key: earthquake_magnitude
+    name: Earthquake magnitude by field name (magnitude, mag, magnitud, magnitude(Mw), mag_ml, local_magnitude) with numbers from -3 to 10
+    # The scale names alone (ML, Mw, Ms) are also millilitres, megawatts and milliseconds: not here. A
+    # magnitude of stars or of a vector has other values and fails.
+    rule: (?i)(?:[a-z]+[ _.-])?mag(?:nitud[eo]?)?s?(?:[ _.-]?\(?m[wlbsdcj][a-z]{0,2}\)?)?|(?:m[wlbsd]|local|moment|preferred|event|eq|earthquake)[ _.-]?mag(?:nitud[eo]?)?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.seismology.validate_earthquake_magnitude
+    needs_values: true
+    priority: 1
