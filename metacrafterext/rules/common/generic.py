@@ -319,15 +319,30 @@ _TAXON = re.compile(r"^[A-Z][a-zë]{2,39}$")
 _CLASS_ORDER = re.compile(r"(?:a|ae|es|ia|ida|ptera|formes|ales|opsida|phyceae|mycetes|ata|oda|ina|ea)$")
 
 
+# Upper case names of the higher ranks, with a Latin ending of a kingdom, phylum, class, order or
+# family (ANIMALIA, CHORDATA, CHIROPTERA, MOLOSSIDAE in the bat records of the City of Melbourne): an
+# upper case word of a family column without such an ending is a surname (SMITH).
+_TAXON_UPPER_ENDING = re.compile(
+    r"(?:IDAE|ACEAE|INAE|INI|OIDEA|ALES|PTERA|FORMES|OPSIDA|PHYCEAE|MYCETES|MYCOTA|PHYTA|ATA|ODA|IA|EA|AE|A)$")
+
+
+def _taxon_word(text):
+    if text.isupper() and _TAXON_UPPER_ENDING.search(text):
+        return text.capitalize()
+    return text
+
+
 def validate_taxon_name(value):
     """The scientific name of a taxon above the species rank: one capitalized Latin word
-    (Animalia, Formicidae, Tetramorium). A binomial (Solenopsis geminata) is a species."""
-    return bool(_TAXON.match(str(value).strip()))
+    (Animalia, Formicidae, Tetramorium), or in upper case with a Latin ending of a higher rank
+    (ANIMALIA, MOLOSSIDAE; not SMITH). A binomial (Solenopsis geminata) is a species."""
+    return bool(_TAXON.match(_taxon_word(str(value).strip())))
 
 
 def validate_class_or_order_name(value):
-    """The name of a class or an order: a taxon name with a Latin ending of these ranks."""
-    text = str(value).strip()
+    """The name of a class or an order: a taxon name with a Latin ending of these ranks (also in
+    upper case: CHIROPTERA)."""
+    text = _taxon_word(str(value).strip())
     return bool(_TAXON.match(text) and _CLASS_ORDER.search(text))
 
 

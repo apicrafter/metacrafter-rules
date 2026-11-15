@@ -370,3 +370,23 @@ rules:
     validator: metacrafterext.rules.common.taxa.validate_conservation_status
     needs_values: true
     priority: 1
+  vernacularnamecommonnamebyname:
+    key: vernacular_name
+    name: Common name of a taxon by field name of a biodiversity table (Common Name, common_nam, Common name(s)) with names of animals and plants
+    # Bat records, bird atlases and plant lists of the City of Melbourne and the City of Greater Geelong
+    # name it Common Name alone; the values must be names of taxa, not drugs or companies.
+    rule: (?i)common[ _]?nam(?:e(?:[ _]?\(?s\)?)?)?|common[ _]?names
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.taxa.validate_vernacular_name
+    needs_values: true
+    priority: 1
+  speciesscientificbyname:
+    key: species
+    name: Scientific name of a species by short field names (scientific, sci_name, vegspecies, tree_scientific_name)
+    rule: (?i)(?:[a-z]+[ _])?scientific(?:[ _]?name)?|sci[ _]?name|veg[ _]?species
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.fieldwork.validate_scientific_name
+    needs_values: true
+    priority: 1

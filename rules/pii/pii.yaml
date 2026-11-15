@@ -130,6 +130,9 @@ rules:
     rule: creditcard,credit_card
     type: field
     match: text
+    # A creditcard field of Yes and No says whether a car park takes cards (City of Melbourne).
+    validator: metacrafterext.rules.common.identifiers.validate_card_number_text
+    needs_values: true
     priority: 1
   usernamebyknown:
     key: username

@@ -1,0 +1,154 @@
+name: au-council
+description: Australian council, land title and planning codes (CLUE small areas, NSW lots and plans, NSW and Victorian zones, application numbers, parking restrictions, Geoscape PIDs)
+context: geo
+lang: en
+country_code: au
+# Found in the Opendatasoft portals of the City of Melbourne, the City of Greater Geelong, Liverpool City
+# Council and Peclet (2024 snapshots of metacrafter-testdata, Dateno sources cdi00000100 to cdi00000117).
+rules:
+  aucluesmallareabyname:
+    key: au_clue_small_area
+    name: CLUE small area of the City of Melbourne by field name (clue_small_area, CLUE area, small_area, geography) with Melbourne (CBD), Docklands
+    # Most CLUE areas are suburbs too: only the names of the CLUE tables, and values of the 13 areas.
+    rule: (?i)(?:clue[ _]?)?small[ _]?area(?:[ _]?name)?|clue[ _]?(?:area|small[ _]?area)(?:[ _]?name)?|featurenam|geography
+    type: field
+    match: regex
+    validator: metacrafterext.rules.au.council.validate_au_clue_small_area
+    needs_values: true
+    priority: 1
+  aunswlotidbyname:
+    key: au_nsw_lot_id
+    name: NSW lot identifier by field name (lotidstring, lot_id_string, lot_dp) with 23/O/DP1417
+    rule: (?i)lot[ _]?id[ _]?(?:string|str|text)?|lot[ _]?(?:dp|plan|section[ _]?plan)|lot[ _/]?sec(?:tion)?[ _/]?(?:dp|plan)
+    type: field
+    match: regex
+    validator: metacrafterext.rules.au.council.validate_au_nsw_lot_id
+    needs_values: true
+    priority: 1
+  aunswlotidvalue:
+    key: au_nsw_lot_id
+    name: NSW lot identifier by value (23/O/DP1417, 1//DP225807, //SP37549)
+    rule: metacrafterext.rules.au.council.validate_au_nsw_lot_id
+    type: data
+    match: func
+    minlen: 5
+    maxlen: 22
+    priority: 1
+  ausurveyplannumberbyname:
+    key: au_survey_plan_number
+    name: Australian survey plan number by field name (planlabel, plan_label, Plan No, DP Number) with DP1417, SP37549, PS612345R
+    # The digits alone (plannumber: 1417) are not the plan number without the plan type, and SP2 is
+    # also an NSW zone: no rule by value.
+    rule: (?i)plan[ _]?(?:label|no\.?|number|num|ref(?:erence)?)|(?:dp|sp|ps|rp)[ _]?(?:no\.?|number|num)|deposited[ _]?plan(?:[ _]?(?:no|number))?|survey[ _]?plan(?:[ _]?(?:no|number))?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.au.council.validate_au_survey_plan_number
+    needs_values: true
+    priority: 1
+  aunswlandzonebyname:
+    key: au_nsw_land_zone
+    name: NSW land use zone by field name (SYM_CODE, zone_code, Land Zone, LZN_CODE) with R2, RU1, SP2, B4
+    # The Land Zoning Map of the NSW Planning Portal keeps the code in SYM_CODE; the values tell the NSW
+    # Standard Instrument codes from the Victorian zones of the same field names.
+    rule: (?i)(?:land[ _]?)?zon(?:e|ing)(?:[ _]?(?:code|class|cd|id))?|sym[ _]?code|lzn[ _]?code|zone[ _]?(?:symbol|sym)
+    type: field
+    match: regex
+    validator: metacrafterext.rules.au.council.validate_au_nsw_land_zone
+    needs_values: true
+    priority: 1
+  auvicplanningzonebyname:
+    key: au_vic_planning_zone
+    name: Victorian planning scheme zone by field name (ZONE_CODE, zone, planning_zone) with GRZ1, UGZ3, IN1Z, FZ
+    rule: (?i)(?:planning[ _]?)?zon(?:e|ing)(?:[ _]?(?:code|class|cd|id))?|zone[ _]?(?:symbol|sym)
+    type: field
+    match: regex
+    validator: metacrafterext.rules.au.council.validate_au_vic_planning_zone
+    needs_values: true
+    priority: 1
+  auplanningapplicationnumberbyname:
+    key: au_planning_application_number
+    name: Council planning or building application number by field name (formatted_application_number, DA Number, permit_num, council_ref, town_planning_application)
+    rule: (?i)(?:formatted[ _])?(?:development[ _]|planning[ _]|town[ _]planning[ _]|building[ _]|da[ _])?(?:application|permit|approval)(?:[ _]?(?:no\.?|number|num|ref|id))?|da[ _]?(?:no\.?|number|num|id|ref)|council[ _]?ref(?:erence)?|dat[ _]?id|tp[ _]?(?:no|number)
+    type: field
+    match: regex
+    validator: metacrafterext.rules.au.council.validate_au_planning_application_number
+    needs_values: true
+    priority: 1
+  auplanningapplicationnumbervalue:
+    key: au_planning_application_number
+    name: Council planning or building application number by value (DA-404/2015, D/2008/940, TP-2014-43/A, BP-2014-1813/1)
+    rule: metacrafterext.rules.au.council.validate_au_planning_application_number
+    type: data
+    match: func
+    minlen: 7
+    maxlen: 24
+    priority: 1
+  auparkingrestrictionbyname:
+    key: au_parking_restriction
+    name: Australian parking restriction by field name (restriction_display, TypeDesc1, Description1, parking_limit, baytype) with 2P, 1/2P Meter, LZ15
+    # Description1 to Description6 of the City of Melbourne bay restrictions write the sign in full
+    # (2P MTR M-SAT 7:30-18:30); other description fields fail the values.
+    rule: (?i)(?:[a-z]+[ _])*restriction(?:s)?(?:[ _]?(?:and[ _]payment[ _])?(?:display|type|desc(?:ription)?|code|sign))?(?:[ _]?\d)?|type[ _]?desc[ _]?\d?|description[ _]?\d|parking[ _]?(?:limit|restriction|type|time[ _]?limit|sign)|bay[ _]?type|time[ _]?limit|limitation
+    type: field
+    match: regex
+    validator: metacrafterext.rules.au.council.validate_au_parking_restriction
+    needs_values: true
+    priority: 1
+  augeoscapepidbyname:
+    key: au_geoscape_pid
+    name: Geoscape (PSMA) persistent identifier by field name (LGA_PID, LG_PLY_PID, ADDRESS_DETAIL_PID, loc_pid)
+    rule: (?i)(?:[a-z]+[ _])*pid|persistent[ _]?id(?:entifier)?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.au.council.validate_au_geoscape_pid
+    needs_values: true
+    priority: 1
+  augeoscapepidvalue:
+    key: au_geoscape_pid
+    name: Geoscape (PSMA) persistent identifier by value (lga94484cf6e0e2, lgpa9f1f9d86a5e, GANSW704411427)
+    rule: metacrafterext.rules.au.council.validate_au_geoscape_pid
+    type: data
+    match: func
+    minlen: 14
+    maxlen: 15
+    priority: 1
+  auanzsicdivisionnamebyname:
+    key: au_anzsic_division_name
+    name: ANZSIC division title by field name (industry_label, a1_description, Industry Division Title, anzsic_indusrty) with Agriculture, Forestry and Fishing
+    # Mining, Manufacturing and Construction alone are common words: no rule by value. A bare industry
+    # or industry_description field may hold another list that shares half of the titles (the CLUE
+    # industries of the City of Melbourne and Greater Geelong: Business Services, Vacant Space).
+    rule: (?i)(?:[a-z0-9]+[ _])*(?:anzsic(?:[ _](?:division|indus?rty|industry))?|industry[ _](?:division|label|title)|division)(?:[ _](?:label|title|name|desc(?:ription)?))?|a1[ _]?desc(?:ription)?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.au.council.validate_au_anzsic_division_name
+    needs_values: true
+    priority: 1
+  auvbataxonidbyname:
+    key: au_vba_taxon_id
+    name: Victorian Biodiversity Atlas taxon id by field name (Victorian Biodiversity Atlas Code, VBA_TAXON_ID, vba_code)
+    rule: (?i)(?:victorian[ _]biodiversity[ _]atlas|vba)(?:[ _]?(?:code|id|no|number|taxon(?:[ _]?(?:id|code))?))?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.au.council.validate_au_vba_taxon_id
+    needs_values: true
+    priority: 1
+  audcacodebyname:
+    key: au_dca_code
+    name: Road crash DCA code by field name (DCA, dca_code, DCA_DESCRIPTION) with 132 Vehicles in same lane/ right rear, 110
+    # A number and words is also a street address (150 Main Road): no rule by value.
+    rule: (?i)dca(?:[ _]?(?:code|no|number|desc(?:ription)?|group))?|definitions?[ _]for[ _]classifying[ _]accidents
+    type: field
+    match: regex
+    validator: metacrafterext.rules.au.council.validate_au_dca_code
+    needs_values: true
+    priority: 1
+  austatenamebyname:
+    key: au_state
+    name: Australian state or territory name by field name (STATE_NAME_2021, State_name_2020, official_name_state, STE_NAME21) with New South Wales, Victoria
+    rule: (?i)(?:[a-z]+[ _])*(?:state|ste)[ _]?name(?:[ _]?(?:20)?\d{2})?|official[ _]name[ _]state|state[ _/]?(?:or[ _])?territory(?:[ _]name)?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.au.council.validate_au_state_name
+    needs_values: true
+    priority: 1

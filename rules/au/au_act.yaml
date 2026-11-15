@@ -23,7 +23,9 @@ rules:
     name: ACT section number by field name (Section_Notified, Section_Current, Section No.)
     # A bare Section or Block is a part of a document, a block of flats (the Sofia address
     # register) or a census block elsewhere: only the names of ACT registers.
-    rule: (?i)section[ _]?(?:no\.?|number|num|notified|current)
+    # The NSW Spatial Services cadastre has sectionnumber (O, H, 16: the section of a deposited plan)
+    # and the Greater Geelong road and kerb registers blockno: without a separator they are not ACT land.
+    rule: (?i)section[ _](?:no\.?|number|num)|section[ _]?(?:notified|current)
     type: field
     match: regex
     validator: metacrafterext.rules.au.act.validate_au_act_section
@@ -32,7 +34,7 @@ rules:
   auactblockbyname:
     key: au_act_block
     name: ACT block number by field name (Block_Notified, Block_Current, Block No.)
-    rule: (?i)block[ _]?(?:no\.?|number|num|notified|current)
+    rule: (?i)block[ _](?:no\.?|number|num)|block[ _]?(?:notified|current)
     type: field
     match: regex
     validator: metacrafterext.rules.au.act.validate_au_act_block

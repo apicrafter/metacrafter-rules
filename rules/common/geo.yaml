@@ -441,7 +441,7 @@ rules:
   compasspointbyname:
     key: compass_point
     name: Compass point (16-wind) by field name (aspect, slopeAspect_direction, wind_direction, wind_direction_cardinal)
-    rule: (?i)(?:slope_?|site_?)?aspect(?:_?(?:direction|orientation|text|compass))?|(?:hi_?|lo_?|max_?|min_?|gust_?)?wind_?dir(?:ection)?(?:_?(?:text|compass|cardinal|point|name))?|(?:hi|lo|max|gust)_?dir|direction|orientation
+    rule: (?i)(?:slope_?|site_?)?aspect(?:_?(?:direction|orientation|text|compass))?|(?:hi_?|lo_?|max_?|min_?|gust_?)?wind_?dir(?:ection)?(?:_?(?:text|compass|cardinal|point|name))?|(?:hi|lo|max|gust)_?dir|direction|orientation|s[ _]?direction|sign[ _]?direction
     type: field
     match: regex
     validator: metacrafterext.rules.common.fieldwork.validate_compass_point
@@ -744,4 +744,35 @@ rules:
     match: func
     minlen: 5
     maxlen: 80
+    priority: 1
+  geopointcoordinatesbyname:
+    key: geopoint
+    name: Point as latitude and longitude text by field name (co_ordinates, coordinatelocation, latlong_text, geo, centroid) as Opendatasoft exports a geo_point field
+    # The City of Melbourne, Liverpool City Council and Peclet name the geo_point fields of their
+    # tables after the content (Co-ordinates, CoordinateLocation, Geo); the values must be pairs of degrees.
+    rule: (?i)co[ _-]?ordinates?|coordinate[ _]?location|lat[ _]?long?[ _]?text|geo|centroid|geometry|geo[ _]?point
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.generic.validate_latlon_pair
+    needs_values: true
+    priority: 1
+  streetbyname:
+    key: street
+    is_pii: true
+    name: Street name by field name (str_name, street_nam, StreetFrom, between_street_1, onstreet, road_name, fromstreet)
+    rule: (?i)(?:on|from|to|between)[ _]?street(?:[ _]?\d)?|street[ _]?(?:from|to|fro|nam)|str[ _]name|(?:road|rd)[ _]?name|(?:from|to)[ _]?road[ _]?name
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.generic.validate_name_text
+    needs_values: true
+    priority: 1
+  addressbyplacename:
+    key: address
+    is_pii: true
+    name: Address by field name of the place it locates (building_address, venue_address, development_address, address_point, address_pnt)
+    rule: (?i)(?:building|venue|development|site|property|premises|facility|station|business|street)[ _]?address|address[ _]?p(?:oi)?n?t
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.generic.has_letters
+    needs_values: true
     priority: 1
