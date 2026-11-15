@@ -1,0 +1,88 @@
+name: de-persons
+description: German field names for persons, forms of address and addresses
+context: persons
+lang: de
+country_code: de
+# Found in the 2024 snapshots of the Swiss open data portals of the Dateno catalogue (data.bl.ch,
+# cdi00000340; data.bs.ch, cdi00000341; data.sbb.ch, cdi00000342; data.sz.ch, cdi00000344): election
+# candidates, members of parliaments and commissions, directories of institutions; metacrafter-testdata.
+rules:
+  devornamebyname:
+    key: person_firstname
+    is_pii: true
+    name: Person first name by German field name (vorname, vornamen, rufname)
+    rule: (?i)(?!(?:nach)?name[ _,]+vorname)(?:\w+[ _])?vornamen?|rufname
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.generic.validate_person_name_part
+    priority: 1
+  denachnamebyname:
+    key: person_surname
+    is_pii: true
+    name: Person surname by German field name (nachname, familienname, zuname) and candidate_family_name
+    rule: (?i)(?!vor(?:name)?[ _,]+(?:und[ _])?nachname)(?:\w+[ _])?(?:nachname|familienname|zuname)|candidate[ _]family[ _]name
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.generic.validate_person_name_part
+    priority: 1
+  defullnamebyname:
+    key: person_fullname
+    is_pii: true
+    name: Person full name by German field name (name_vorname, vorname_name, ganzer_name, name_ganz, vor_und_nachname)
+    rule: (?i)name[ _,]*vorname|vorname[ _,]*(?:nach)?name|ganzer[ _]name|name[ _]ganz|vor[ _-]?und[ _]?nachname|vollst(?:ae|ä)ndiger[ _]name
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.generic.validate_person_fullname_not_place
+    priority: 1
+  deanredebyname:
+    key: honorificprefix
+    name: Form of address by German field name (anrede) with Herr, Frau
+    rule: (?i)anrede|briefanrede
+    type: field
+    match: regex
+    validator: metacrafterext.rules.de.persons.validate_de_salutation
+    needs_values: true
+    priority: 1
+  dejahrgangbyname:
+    key: birth_year
+    is_pii: true
+    name: Year of birth by German field name (jahrgang, jahrgang_num, geburtsjahr) with 1968
+    rule: (?i)jahrgang(?:[ _]num)?|geburtsjahr|candidate[ _]year[ _]of[ _]birth
+    type: field
+    match: regex
+    validator: metacrafterext.rules.de.persons.validate_birth_year
+    needs_values: true
+    priority: 1
+  dewochentagbyname:
+    key: dayofweek
+    name: Day of the week by German field name (wochentag, wochentage) with Montag, Mo, 4 Mittwoch
+    rule: (?i)(?:\w+)?wochentag(?:e|[ _]name)?|tag[ _]der[ _]woche
+    type: field
+    match: regex
+    validator: metacrafterext.rules.de.persons.validate_de_weekday
+    needs_values: true
+    priority: 1
+  # Directories of institutions and building registers give the street with the house number last
+  # (adresse, post_adresse, gwr_adresse, strasse_nr: Hardstrasse 71).
+  destreetaddressbyname:
+    key: street_address
+    is_pii: true
+    name: Street address by German field name (adresse, post_adresse, gwr_adresse, domiziladresse, strasse_nr, strasse_hausnummer) with Hardstrasse 71
+    rule: (?i)(?:\w+[ _])?[a-zäöü]*adresse|stra(?:ss|ß)e[ _]?(?:nr|und[ _]hausnummer|hausnummer|hausnr)|strassenr
+    type: field
+    match: regex
+    validator: metacrafterext.rules.de.persons.validate_de_street_address
+    needs_values: true
+    priority: 1
+  # Timetable exports write dates as 11.12.16; three numbers with dots are also a semantic version.
+  # The value rule guarded by the field name keeps semver off the date columns.
+  dedatedmyyvalue:
+    key: date
+    name: Date as dd.mm.yy by value in a field named for dates (datum, betriebsdatum, datum_von)
+    rule: metacrafterext.rules.de.persons.validate_de_date_dmyy
+    type: data
+    match: func
+    minlen: 8
+    maxlen: 8
+    fieldregex: (?i)^(?:\w+[ _]?)?datum(?:[ _]\w+)?$
+    priority: 1
