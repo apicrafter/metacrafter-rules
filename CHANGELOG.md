@@ -47,6 +47,40 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - a field named url, website or uri whose values have no letters is not a `url`: the uri of a table of
     penalty shootouts holds row numbers (1, 2, 3).
 
+- **Rules for the Swiss files of metacrafter-testdata** (2024 snapshots of six Swiss open data portals of the
+  Dateno catalogue: the cantons of Basel-Landschaft, data.bl.ch, cdi00000340, Basel-Stadt, data.bs.ch, cdi00000341,
+  and Schwyz, data.sz.ch, cdi00000344, the Swiss Federal Railways, data.sbb.ch, cdi00000342, the City of Zurich,
+  data.stadt-zuerich.ch, cdi00000343, and the Geneva public transport, opendata.tpg.ch, cdi00000346; validators in
+  the new `metacrafterext.rules.ch.codes` and `metacrafterext.rules.de.persons`, rules in the new
+  `rules/ch/ch_codes.yaml` and `rules/de/de_persons.yaml` and in `rules/ch/ch_geo.yaml`, `rules/de/de_geo.yaml`
+  and `rules/common/objects.yaml`):
+  - the Federal Register of Buildings and Dwellings: the building, dwelling, entrance and street identifiers
+    (`ch_egid`: egid 2347546; `ch_ewid`: ewid; `ch_edid`: edid, eidgenoessischer_eingangsidentifikator;
+    `ch_esid`: esid 10063517), by field name with the value ranges of the register;
+  - the land register: the federal property identifier (`ch_egrid`: CH352961700877) by value with its two check
+    digits, and by field name (egrid);
+  - public transport: the Swiss Location ID (`ch_sloid`: ch:1:sloid:3871::50) and the Swiss Business
+    Organisation ID (`ch_sboid`: ch:1:sboid:100619) by value, and the DiDok service point number
+    (`ch_didok_number`: didok, dst_id, hst_nr 3000);
+  - classifications: NOGA codes (`ch_noga`: noga2008_code 702200, noga2008_abteilung_code 46,
+    noga_abschnitt_code G) and the account groups of the HRM2 chart of accounts (`ch_hrm2_account`: konto,
+    kontenart_nr, kontenklasse, 3_stellige_kontengruppe, alone or with the label: 3010, 3 Aufwand);
+  - `chuid` without separators (uid: CHE456200346) with its check digit; metacrafter labelled the column `isrc`,
+    a value rule guarded by the field name keeps it off;
+  - `ch_bfs_gemeinde` in bfs_nummer, bfs, gemeinde_nummer and gemeindenummer with numbers up to 6810,
+    `ch_canton_code` in kanton, kantonskuerzel, kt, georegion and cantoncode, `ch_canton` in kanton and
+    kantonsname with the names, `easting` and `northing` in the LV95 columns of the register (gkode, gkodn,
+    dkode, dkodn, e_eingangskoordinate, n_eingangskoordinate, e, n) with values inside the grid;
+  - `political_party` in German field names (partei, parteibezeichnung, parteikurzbezeichnung,
+    listenbezeichnung, candidate_party, list_name) with the Swiss parties (SP, FDP.Die Liberalen, Die Mitte);
+  - German field names: `person_firstname` (vorname), `person_surname` (nachname, familienname,
+    candidate_family_name), `person_fullname` (name_vorname, ganzer_name, name_ganz), `honorificprefix` (anrede:
+    Herr, Frau), `birth_year` (jahrgang, geburtsjahr, candidate_year_of_birth), `dayofweek` (wochentag: Montag,
+    Mo, Mo-Fr), `street_address` (adresse, post_adresse, gwr_adresse, domiziladresse, strasse_nr: Hardstrasse 71,
+    not a post office box), `geopoint` (geopos, koordinaten, geometrisches_zentrum);
+  - `date` written dd.mm.yy in fields named for dates (betriebsdatum, datum_von: 11.12.16): three numbers with
+    dots were labelled `semver`, a value rule guarded by the field name keeps it off.
+
 - **Rules for the Canadian files of metacrafter-testdata** (2024 snapshots of the Dateno catalogue: the Canadian
   Watershed Information Network, canwinmap.ad.umanitoba.ca, cdi00000267, and the open data portals of the City
   of Calgary, data.calgary.ca, cdi00000286, and the City of Edmonton, data.edmonton.ca, cdi00000289; validators
@@ -683,6 +717,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- `wikidataid` by field name (entity_id, q_id) needs Q ids in the values: entity_id of the OneGov election
+  exports of the Swiss cantons holds municipality numbers (2761).
 - From the Bolivian round: an Argentine INDEC department part is not written with two digits and a zero (01 to
   09 are Bolivian INE department codes); a Mendoza resource account needs a name after the hyphen (the INE
   census key 2838530907-D is none); a title such as Inventario de Presas 2010 is no species name (de, del, la

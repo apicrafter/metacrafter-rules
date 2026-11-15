@@ -229,6 +229,8 @@ rules:
     rule: wikidata_id,wikidataid,q_id,entity_id,wikidata_entity
     match: text
     type: field
+    # entity_id of the OneGov election exports is a municipality number (2761): the values must be Q ids
+    validator: metacrafterext.rules.common.identifiers.validate_wikidata_qid
     priority: 1
   wikidataidvalue:
     key: wikidataid
