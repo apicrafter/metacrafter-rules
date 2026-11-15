@@ -228,7 +228,7 @@ rules:
     rule: metacrafterext.rules.common.generic.validate_place_name
     minlen: 2
     maxlen: 60
-    fieldrule: pays,pays_de_deces,pays_deces,pays de décès,pays_de_naissance,pays_naissance,pays de naissance,pays_residence,pays de résidence,nom_pays,nom du pays,país,pais,pais_origen,país de origen,pais_nacimiento,país de nacimiento,paese,paese_nascita,nazione,kraj_urodzenia,państwo,страна,страна рождения,наименование страны,країна,ülke,valsts,šalis,ország,χώρα,國家,国家,국가,država,země
+    fieldrule: pays,pays_de_deces,pays_deces,pays de décès,pays_de_naissance,pays_naissance,pays de naissance,pays_residence,pays de résidence,nom_pays,nom du pays,país,pais,pais_desc,pais_descripcion,descripcion_pais,pais_nombre,pais_origen,país de origen,pais_nacimiento,país de nacimiento,paese,paese_nascita,nazione,kraj_urodzenia,państwo,страна,страна рождения,наименование страны,країна,ülke,valsts,šalis,ország,χώρα,國家,国家,국가,država,země
     fieldrulematch: text
     priority: 1
   countrygeobyknown:
@@ -430,7 +430,7 @@ rules:
   compasspointbyname:
     key: compass_point
     name: Compass point (16-wind) by field name (aspect, slopeAspect_direction, wind_direction, wind_direction_cardinal)
-    rule: (?i)(?:slope_?|site_?)?aspect(?:_?(?:direction|orientation|text|compass))?|wind_?dir(?:ection)?(?:_?(?:text|compass|cardinal|point|name))?|direction|orientation
+    rule: (?i)(?:slope_?|site_?)?aspect(?:_?(?:direction|orientation|text|compass))?|(?:hi_?|lo_?|max_?|min_?|gust_?)?wind_?dir(?:ection)?(?:_?(?:text|compass|cardinal|point|name))?|(?:hi|lo|max|gust)_?dir|direction|orientation
     type: field
     match: regex
     validator: metacrafterext.rules.common.fieldwork.validate_compass_point
@@ -669,4 +669,24 @@ rules:
     match: regex
     validator: metacrafterext.rules.common.urban.validate_street_intersection
     needs_values: true
+    priority: 1
+  # Found in the school directories of Mendoza (ámbito: Urbano, Urbano marginal, Rural;
+  # datosabiertos.mendoza.gov.ar; metacrafter-testdata).
+  urbanruralbyname:
+    key: urban_rural_class
+    name: Urban or rural class by field name (ambito, ámbito, urban_rural, UrbanRural (name), station setting name)
+    rule: '(?i)[aá]mbito(?:[ _](?:urbano[ _]rural|geogr[aá]fico|escuela|establecimiento))?|urban[ _/-]?rural(?:[ _]\(?(?:name|desc(?:ription)?|class(?:ification)?)\)?)?|rural[ _/-]?urban(?:[ _]class(?:ification)?)?|(?:station[ _])?setting[ _]name|gebietstyp|zone[ _](?:urbaine|rurale)'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.urban.validate_urban_rural_class
+    needs_values: true
+    priority: 1
+  urbanruralvalue:
+    key: urban_rural_class
+    name: Urban or rural class by value (Urbano, Rural, Urbano marginal, städtisches Gebiet, Rural town and fringe)
+    rule: metacrafterext.rules.common.urban.validate_urban_rural_class
+    type: data
+    match: func
+    minlen: 5
+    maxlen: 80
     priority: 1

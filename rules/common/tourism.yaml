@@ -1,0 +1,47 @@
+name: commontourism
+description: Tourist accommodation (type of establishment, star rating)
+context: common
+lang: common
+country_code: xx
+# Found in the register of tourist accommodation of Mendoza (Dirección de Calidad y Servicios
+# Turísticos, datosabiertos.mendoza.gov.ar; metacrafter-testdata).
+rules:
+  accommodationtypebyname:
+    key: accommodation_type
+    name: Type of tourist accommodation by field name (clase, rubro, tipo_alojamiento, accommodation_type, type_hebergement)
+    # HOTEL, APART-HOTEL, CABAÑAS, Hostería. A clase or rubro of other things (RESTAURANTE, Clase 5)
+    # fails.
+    rule: '(?i)clase(?:[ _](?:de[ _])?(?:alojamiento|establecimiento))?|rubro|tipo[ _](?:de[ _])?(?:alojamiento|establecimiento[ _]hotelero)|accommodation[ _]type|type[ _](?:of[ _])?accommodation|type[ _]d[e'']?[ _]?h[eé]bergement|unterkunftsart|art[ _]der[ _]unterkunft'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.tourism.validate_accommodation_type
+    needs_values: true
+    priority: 1
+  accommodationtypevalue:
+    key: accommodation_type
+    name: Type of tourist accommodation by value (HOTEL, APART-HOTEL, Hostería, Camping, chambre d'hôtes)
+    rule: metacrafterext.rules.common.tourism.validate_accommodation_type
+    type: data
+    match: func
+    minlen: 3
+    maxlen: 60
+    priority: 1
+  accommodationstarsbyname:
+    key: accommodation_star_rating
+    name: Star rating of an accommodation by field name (categoria, estrellas, star_rating, classement, Sterne)
+    rule: '(?i)categor[ií]a(?:[ _](?:del?[ _])?(?:alojamiento|hotel|establecimiento))?|estrellas|stars?(?:[ _]rating)?|hotel[ _](?:class|rating|stars)|classement|cat[eé]gorie[ _](?:de[ _]l[ _'']?)?(?:h[oô]tel|classement)|sterne|klassifizierung'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.tourism.validate_accommodation_star_rating
+    needs_values: true
+    priority: 1
+  accommodationstarsvalue:
+    key: accommodation_star_rating
+    name: Star rating of an accommodation by value (3 ESTRELLAS, 4 étoiles, 5 stars; asterisks alone only by field name)
+    # ** fills empty cells of a Moroccan grants table (منجزات الجمعية of metacrafter-testdata).
+    rule: metacrafterext.rules.common.tourism.validate_accommodation_star_rating_value
+    type: data
+    match: func
+    minlen: 2
+    maxlen: 30
+    priority: 1

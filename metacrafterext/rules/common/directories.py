@@ -150,7 +150,8 @@ _PERIODICITY_CORE = frozenset((
     "semestriel", "semestrielle", "jahrlich", "monatlich", "wochentlich", "taglich", "vierteljahrlich",
     "halbjahrlich", "annuale", "mensile", "settimanale", "giornaliero", "trimestrale", "semestrale",
 ))
-_PERIODICITY_WORDS = _PERIODICITY_CORE | frozenset(("cada", "dos", "tres", "anos", "ano", "vez", "por",
+_PERIODICITY_CORE = _PERIODICITY_CORE | frozenset(("annual",))
+_PERIODICITY_WORDS = _PERIODICITY_CORE | frozenset(("semi", "cada", "dos", "tres", "anos", "ano", "vez", "por",
                                                      "every", "year", "years", "update", "2", "3"))
 
 

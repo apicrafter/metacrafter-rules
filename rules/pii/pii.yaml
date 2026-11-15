@@ -36,7 +36,8 @@ rules:
     # optionally followed by code or id, the year of a survey (SEX_2016) or a bracketed note
     # (Sexo (catálogo), Gender (name)). The values are words, letters or small codes: the V-Dem
     # women's political empowerment index v2x_gender (0.912) is no sex column.
-    rule: '(?i)(?:[a-z0-9]+[ _.-]){0,2}(?:sex|gender|geschlecht|geschl|sexe|sexo|sesso|sugu)(?:[ _.-](?:code|id|cd|\d{2,4})|[ _]\((?:name|code|cat[aá]logo)\))?|пол'
+    # A role after Spanish sexo (sexo_director of the SICYTAR projects) names whose sex it is.
+    rule: '(?i)(?:[a-z0-9]+[ _.-]){0,2}(?:sex|gender|geschlecht|geschl|sexe|sexo|sesso|sugu)(?:[ _.-](?:code|id|cd|\d{2,4})|[ _]\((?:name|code|cat[aá]logo)\)|_(?:del_|de_la_)?(?:director|directora|responsable|titular|jefe|jefa|investigador|investigadora))?|пол'
     type: field
     match: regex
     validator: metacrafterext.rules.common.survey.validate_gender_code

@@ -79,7 +79,7 @@ rules:
     name: Periodicity by field name (periodicidad, periodicity, frecuencia de actualización, accrual_periodicity)
     # Anual, Bianual, Mensual, monthly, ANNUAL. Survey items on how often (Nunca, A veces) are
     # likert_response and fail.
-    rule: '(?i)periodicidad(?:[ _](?:de[ _])?(?:actualizaci[oó]n|publicaci[oó]n|realizaci[oó]n|edici[oó]n))?|periodicity|p[eé]riodicit[eé]|periodicit[aà]|frecuencia[ _]de[ _](?:actualizaci[oó]n|publicaci[oó]n|realizaci[oó]n|edici[oó]n)|(?:update|publication|release)[ _]frequency|accrual[ _]?periodicity|fr[eé]quence[ _]de[ _](?:mise[ _][àa][ _]jour|publication)'
+    rule: '(?i)periodicidad(?:[ _](?:de[ _])?(?:actualizaci[oó]n|publicaci[oó]n|realizaci[oó]n|edici[oó]n))?|periodicity|p[eé]riodicit[eé]|periodicit[aà]|frecuencia[ _]de[ _](?:actualizaci[oó]n|publicaci[oó]n|realizaci[oó]n|edici[oó]n)|(?:update|publication|release)[ _]frequency|accrual[ _]?periodicity|frecuencia[ _]*/[ _]*frequency|frecuencia[ _](?:de[ _])?(?:pagos?|amortizaci[oó]n|cup[oó]n|servicios?|vencimientos?)|(?:payment|coupon|interest)[ _]frequency|fr[eé]quence[ _]de[ _](?:mise[ _][àa][ _]jour|publication)'
     type: field
     match: regex
     validator: metacrafterext.rules.common.directories.validate_periodicity
@@ -119,7 +119,7 @@ rules:
     key: legislation_number
     name: Number of a law, decree or resolution by field name (numero_de_decreto_o_ley, nro_decreto, numero_ley)
     # 325, 24.262, 1172/2003. The ids of records (norma_id) are left out.
-    rule: '(?i)(?:n(?:[uú]me)?ro|nro|num|n[º°])[ _.]?(?:de[ _](?:la[ _])?)?(?:decreto|ley|resoluci[oó]n|norma|ordenanza|disposici[oó]n|dnu)(?:[ _]o[ _](?:ley|decreto|resoluci[oó]n))?|(?:decreto|ley|norma|resoluci[oó]n|ordenanza|disposici[oó]n)[ _](?:n(?:[uú]me)?ro|nro|num)|(?:law|act|decree|ordinance)[ _](?:number|no)'
+    rule: '(?i)(?:n(?:[uú]me)?ro|nro|num|n[º°])[ _.]?(?:de[ _](?:la[ _])?)?(?:decreto|ley|resoluci[oó]n|norma|ordenanza|disposici[oó]n|dnu)(?:[ _]o[ _](?:ley|decreto|resoluci[oó]n))?|(?:decreto|ley|norma|resoluci[oó]n|ordenanza|disposici[oó]n)[ _](?:n(?:[uú]me)?ro|nro|num)|(?:law|act|decree|ordinance)[ _](?:number|no)|(?!.*_(?:anio|ano|año|fecha)$)(?:[a-záéíóúñü]+_)*(?:resoluci[oó]n|reolucion)(?:_[a-záéíóúñü]+)*|(?:decreto|ley|resoluci[oó]n|ordenanza|disposici[oó]n)(?:_[a-záéíóúñü]+)?_(?:n[uú]mero|numero|nro|num)|res\.?|resol\.?(?:[ _]?reinscrip)?|(?:n[uú]mero|numero|nro)_resoluci[oó]n(?:_[a-záéíóúñü]+)*|resoluci[oó]n[ _](?:de[ _])?(?:inscripci[oó]n|reinscripci[oó]n|alta)'
     type: field
     match: regex
     validator: metacrafterext.rules.common.directories.validate_legislation_number
