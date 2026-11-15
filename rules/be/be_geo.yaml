@@ -1,0 +1,79 @@
+name: be-geo
+description: Belgian geography (NIS codes, statistical sectors, arrondissements, ICAR street and address identifiers)
+context: geo
+lang: common
+country_code: be
+rules:
+  # Statbel names the municipalities, arrondissements, provinces and regions by NIS (REFNIS) code; the
+  # open data of Wallonia call the column ins, code_ins, nsi or niscode (Belgian NIS = INS in French).
+  # A bare five-digit number is a postcode or an INE code elsewhere: the values must be NIS codes.
+  benisbyname:
+    key: be_nis_code
+    name: Belgian NIS (REFNIS) code by field name (ins, code_ins, nsi, niscode, refnis, cd_munty_refnis, co_ins_commune, code_arrondissement)
+    rule: (?i)(?:code[ _]?)?(?:ins|nis|nsi)(?:[ _]?(?:code|commune|gemeente|5))?|code[ _]arrondissement(?:[ _]administratif)?|arrondissement[ _]code|niscode|nis[ _]?code|co[ _]ins[ _](?:commune|comm)|(?:cd[ _](?:munty|dstr|prov|rgn)[ _])?refnis(?:[ _]code)?|code[ _]ins[ _]commune
+    type: field
+    match: regex
+    validator: metacrafterext.rules.be.codes.validate_be_nis_code
+    needs_values: true
+    priority: 1
+  bestatisticalsectorbyname:
+    key: be_statistical_sector
+    name: Statbel statistical sector by field name (code_secteur_statistique, code_secte, cd_sector, cs102001)
+    # CS102001 is the column of the sector code in the Statbel and IWEPS tables of the Liège metropolitan
+    # area; Opendatasoft cuts shapefile names to ten characters (code_secte).
+    rule: (?i)(?:code|cd|id)[ _]?(?:secteur|secte|sector|sect)(?:[ _]?stat(?:istique|istical)?)?|secteur[ _]stat(?:istique)?|statisti(?:cal|sche)[ _]sector|cs102001|sector[ _]?(?:id|code)
+    type: field
+    match: regex
+    validator: metacrafterext.rules.be.codes.validate_be_statistical_sector
+    needs_values: true
+    priority: 1
+  bestatisticalsectorvalue:
+    key: be_statistical_sector
+    name: Statbel statistical sector by value (21004A00-, 62063A012, 61072F3MN)
+    rule: metacrafterext.rules.be.codes.validate_be_statistical_sector
+    type: data
+    match: func
+    minlen: 9
+    maxlen: 9
+    priority: 2
+  # The 43 administrative arrondissements: ARES, the FWB register of schools and the BEP tables give
+  # the arrondissement of a school, campus or company by name (arrondissement_administratif,
+  # te_arrond_adm, arrondissement_name_french, 62 - LIEGE).
+  bearrondissementbyname:
+    key: be_arrondissement
+    name: Belgian administrative arrondissement by field name (arrondissement, arrondissement_administratif, te_arrond_adm)
+    rule: (?i)(?!.*(?:judiciaire|judicia|gerechtelijk|code|_id$|_nr$))(?:[a-z]+[ _]?)?arrond(?:issements?)?(?:[ _][a-z_]+)?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.be.codes.validate_be_arrondissement
+    needs_values: true
+    priority: 1
+  bejudicialarrondissementbyname:
+    key: be_judicial_arrondissement
+    name: Belgian judicial arrondissement by field name (arrondissement_judiciaire, gerechtelijk_arrondissement)
+    rule: (?i)arrondissement[ _]judiciaire(?:[ _][a-z_]+)?|gerechtelijk[ _]arrondissement|judicial[ _]arrondissement|arr[ _]jud
+    type: field
+    match: regex
+    validator: metacrafterext.rules.be.codes.validate_be_judicial_arrondissement
+    needs_values: true
+    priority: 1
+  # ICAR, the Walloon register of streets and addresses: the City of Liège links each point to it
+  # (icar_street_id, icar_address_id; icar_id of the annual fairs is a street).
+  beicarstreetidbyname:
+    key: be_icar_street_id
+    name: ICAR street identifier by field name (icar_street_id, icar_id, icar_rue)
+    rule: (?i)icar(?:[ _](?:street|rue|voie))?(?:[ _]id)?|id[ _]icar(?:[ _]rue)?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.be.codes.validate_be_icar_id
+    needs_values: true
+    priority: 1
+  beicaraddressidbyname:
+    key: be_icar_address_id
+    name: ICAR address identifier by field name (icar_address_id, icar_adresse)
+    rule: (?i)icar[ _](?:address|adresse|addr)(?:[ _]id)?|id[ _]icar[ _]adresse
+    type: field
+    match: regex
+    validator: metacrafterext.rules.be.codes.validate_be_icar_id
+    needs_values: true
+    priority: 1

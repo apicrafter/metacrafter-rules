@@ -34,3 +34,16 @@ rules:
     minlen: 7
     maxlen: 38
     priority: 1
+
+  # ------------------------------------------------------------ Strasbourg (data.strasbourg.eu), Belgian round
+  # The low-emission zone of Strasbourg gives the least clean Crit'Air class allowed for each kind of
+  # vehicle (vp_critair, pl_critair, deux_rm_critair: V2 to V5).
+  frcritairbyname:
+    key: fr_critair
+    name: Crit'Air class by field name (critair, crit_air, vp_critair, vignette_critair, classe_critair)
+    rule: (?i)(?:[a-z_]+[ _])?crit[ _']?air(?:[ _][a-z_]+)?|vignette[ _]crit[ _']?air
+    type: field
+    match: regex
+    validator: metacrafterext.rules.fr.codes.validate_fr_critair
+    needs_values: true
+    priority: 1

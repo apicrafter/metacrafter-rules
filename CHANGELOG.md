@@ -9,6 +9,49 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Rules for the Belgian files of metacrafter-testdata** (2024 snapshots of nine portals of the Dateno
+  catalogue: the Opendatasoft portals of ARES, BEP, the City of Liège, the Digital Wallonia connectivity
+  and mobility platforms and of Strasbourg, cdi00000140 to cdi00000149, and the Dataverse repositories of
+  UCLouvain, KU Leuven and SODHA, cdi00000152 to cdi00000154; validators in the new
+  `metacrafterext.rules.be.codes`, `metacrafterext.rules.common.education`,
+  `metacrafterext.rules.common.genomics` and `metacrafterext.rules.common.archives`, rules in the new
+  `rules/be/be_geo.yaml`, `rules/be/be_education.yaml`, `rules/be/be_companies.yaml`,
+  `rules/pii/be/be_pii.yaml`, `rules/common/education.yaml` and `rules/common/archives.yaml`):
+  - Belgian geography: NIS (REFNIS) codes (`be_nis_code`, which had no rule: 62063, 03000, 57096.0, 71022E)
+    in `ins`, `code_ins`, `nsi`, `niscode`, `co_ins_commune`, `refnis`, `code_arrondissement`; Statbel
+    statistical sectors (`be_statistical_sector`: 21004A00-, 62063A012, 61072F3MN) in
+    `code_secteur_statistique`, `code_secte`, `cs102001` and by value; the 43 administrative
+    arrondissements in French, Dutch and German (`be_arrondissement`: Charleroi, Halle-Vilvoorde,
+    Tournai-Mouscron, 62 - LIEGE) in `arrondissement_administratif`, `te_arrond_adm`,
+    `arrondissement_name_french`; the twelve judicial arrondissements (`be_judicial_arrondissement`)
+    in `arrondissement_judiciaire_*`; ICAR street and address identifiers of Wallonia
+    (`be_icar_street_id`, `be_icar_address_id`) in `icar_street_id`, `icar_id`, `icar_address_id`;
+  - FASE numbers of the Fédération Wallonie-Bruxelles (`be_fase_number`: 5224, 95080, 5224.0) in
+    `ndegfase_etablissement`, `numero_fase`, `ndeg_fase_du_p_o`, `N° FASE`;
+  - KBO/BCE numbers with their mod 97 check: enterprise numbers (`be_vat`: 0415.580.365, 207310774 without
+    its leading 0) in `ndeg_bce_du_p_o`, `numero_bce`, `ondernemingsnummer`, and establishment unit
+    numbers (`be_establishment_unit_number`: 2167228636) in `numero_bce_de_l_etablissement`;
+  - Belgian phone numbers in the national format (`phone`: 083/68.80.83, 042219117, 0478 688 898) in
+    `telephone_de_la_structure`, `phone_numbers`, `gsm`, `telefoon`;
+  - education: ISCED 2011 three-digit programme and attainment codes (`isced2011_programme_code`: 645,
+    747) in `code_grade_generique_cite`, `isced_2011`; ISCED-F 2013 fields (`isced_f_2013`, which had no
+    rule: 04, 041, 0413) in `code_grand_domaine`, `code_domaine_specialise`, `code_domaine_detaille`,
+    `code_domaine_cite`; ETER identifiers (`eter_id`: BE0041, FR0149) in `eter_id`, `identifiant_eter`;
+  - folios of manuscripts and registers (`manuscript_folio`: 1r, 16v, fol. 12v) in `Folio`, `Folio(mss)`,
+    `Folio/pagina` (the SODHA databases of the registers of Bruges and Leuven);
+  - genomics (the ARA-PEPs repository of KU Leuven, the featureCounts tables of UCLouvain): nucleotide
+    sequences (`dna_sequence`) and amino-acid sequences (`protein_sequence`) by name and by value,
+    chromosomes (`chromosome`: 1, Mt, chrX) in `Chr`, `BC_Chr`, `chrom`; genomic regions
+    (`genomic_region`: 1:78181-78321) by name and by value; Arabidopsis AGI codes (`tair_locus_id`:
+    AT1G01115.1, lists of them) by value and in `Matching Proteins`; Ensembl gene ids (`ensemblgeneid`,
+    which had no rule: ENSG00000000003) by value;
+  - Strasbourg: BAN interoperability keys (`fr_ban_cle_interop`: 67519_0940_00015) in `cle_interop`,
+    `cle_ban` and by value; RIVOLI codes (`fr_rivoli`, which had no rule: 4460J) in `code_rivoli`;
+    cadastral parcels (`frcadastral`: 67482000NY0079, 670482000ET0399) in `idu`, `cad_parcelles`;
+    Crit'Air classes (`fr_critair`: V2 to V5, Crit'Air 3, E) in `vp_critair`, `pl_critair`.
+- More names for types with rules: school years in `annee_academique`, `academiejaar`; points as
+  latitude, longitude text in `point_geographique`, `geo_impl`, `position`, `gelocalisation`,
+  `station_geoposition` (an address base's `position` of bâtiment, entrée fails).
 - **Rules for the ACT files of metacrafter-testdata** (a 2024 snapshot of www.data.act.gov.au, the Socrata
   portal of the Australian Capital Territory Government, Dateno source cdi00000095; validators in the new
   `metacrafterext.rules.au.act` and `metacrafterext.rules.common.politics`, rules in the new

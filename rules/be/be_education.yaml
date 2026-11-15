@@ -1,0 +1,18 @@
+name: be-education
+description: Education registers of the Fédération Wallonie-Bruxelles (FASE numbers)
+context: education
+lang: fr
+country_code: be
+rules:
+  # FASE numbers of establishments, sites (implantations), campuses and organising authorities (P.O.)
+  # in the files of ARES and of the FWB register of schools: N° FASE written ndegfase_etablissement,
+  # ndeg_fase_de_l_etablissement, numero_fase, fase.
+  befasenumberbyname:
+    key: be_fase_number
+    name: FASE number by field name (fase, numero_fase, ndegfase_etablissement, ndeg_fase_du_p_o)
+    rule: (?i)(?:n(?:deg|o|°|º|um(?:ero)?|r)?\.?[ _]?)?fase(?:[ _](?:number|nr|no|id|code))?(?:[ _][a-z_]+)?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.be.codes.validate_be_fase_number
+    needs_values: true
+    priority: 1

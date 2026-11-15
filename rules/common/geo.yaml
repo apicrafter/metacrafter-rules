@@ -695,6 +695,19 @@ rules:
     validator: metacrafterext.rules.common.generic.validate_latlon_pair
     needs_values: true
     priority: 1
+  # ------------------------------------------------------------ Belgian round (ARES, BEP, Liège, Digital Wallonia)
+  geopointfrenchbyname:
+    key: geopoint
+    name: Point as latitude and longitude text by French and Opendatasoft field names (point_geographique, geo_impl, position, station_geoposition)
+    # The ARES lists of establishments and sites name the geo_point point_geographique and geo_impl,
+    # the BEP directories position, the Liège birdhouses gelocalisation, the Cambio stations
+    # station_geoposition (50.62443525, 5.56565707); position of an address base is bâtiment or entrée.
+    rule: (?i)point[ _]g[ée]ographique|geo[ _]?impl(?:antation)?|ge?o?localisation|(?:[a-z]+[ _])?geo[ _-]?position|position|jsondatas[ _]location[ _]value[ _]coordinates
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.generic.validate_latlon_pair
+    needs_values: true
+    priority: 1
   cardinaldirectionbyname:
     key: cardinal_direction
     name: Direction in words by field name (aspect, aspect_of_installation, direction, orientation, facing) with North, Northeast, Northbound

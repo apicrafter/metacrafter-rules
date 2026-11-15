@@ -370,3 +370,100 @@ rules:
     validator: metacrafterext.rules.common.taxa.validate_conservation_status
     needs_values: true
     priority: 1
+
+  # ------------------------------------------------------------ genomics (ARA-PEPs of KU Leuven, UCLouvain)
+  # The ARA-PEPs repository of small peptides of Arabidopsis gives the nucleotide and amino-acid
+  # sequence of each ORF (nucleotide, Nucleotide, Peptide, Peptide sequence, preproprotein,
+  # signalpeptide, proprotein), its chromosome (Chr, BC_Chr) and region (pos 1:78181-78321), and
+  # the AGI codes of the matching proteins (AT1G13480.1); featureCounts tables of UCLouvain the
+  # Ensembl gene of each count (Geneid ENSG00000000003).
+  dnasequencebyname:
+    key: dna_sequence
+    name: Nucleotide sequence by field name (nucleotide, sequence, dna_sequence, nt_seq, salk tiling probe)
+    rule: (?i)(?:[a-z]+[ _])?(?:nucleotides?|nucl|nt|dna|rna|cdna|seq(?:uence)?|probe[ _]?seq(?:uence)?)(?:[ _]?seq(?:uence)?)?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.genomics.validate_dna_sequence
+    needs_values: true
+    priority: 1
+  dnasequencevalue:
+    key: dna_sequence
+    name: Nucleotide sequence by value (40 or more IUPAC nucleotide letters)
+    rule: metacrafterext.rules.common.genomics.validate_dna_sequence
+    type: data
+    match: func
+    minlen: 40
+    maxlen: 10000000
+    priority: 2
+  proteinsequencebyname:
+    key: protein_sequence
+    name: Amino-acid sequence by field name (Peptide, Peptide sequence, protein_sequence, preproprotein, signalpeptide, proprotein, aa_seq)
+    rule: (?i)(?:[a-z]+[ _])?(?:peptides?|(?:pre)?(?:pro)?protein|signal[ _]?peptide|aa|amino[ _]?acid|prot)(?:[ _]?seq(?:uence)?)?|(?:peptide|protein)[ _]?seq(?:uence)?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.genomics.validate_protein_sequence
+    needs_values: true
+    priority: 1
+  proteinsequencevalue:
+    key: protein_sequence
+    name: Amino-acid sequence by value (30 or more residues in capitals, a stop * at the end)
+    rule: metacrafterext.rules.common.genomics.validate_protein_sequence
+    type: data
+    match: func
+    minlen: 30
+    maxlen: 100000
+    priority: 2
+  chromosomebyname:
+    key: chromosome
+    name: Chromosome by field name (Chr, chrom, chromosome, seqname, BC_Chr, chr_name)
+    rule: (?i)(?:[a-z]{1,4}[ _])?(?:chr|chrom|chromosome|seqname|seqid)(?:[ _]?(?:name|id|nr|no))?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.genomics.validate_chromosome
+    needs_values: true
+    priority: 1
+  genomicregionbyname:
+    key: genomic_region
+    name: Genomic region by field name (pos, position, region, locus, coordinates, genomic_location)
+    rule: (?i)(?:genomic[ _]?)?(?:pos|position|region|locus|loc|coords?|coordinates|location|interval)(?:[ _]?(?:hg19|hg38|grch3[78]|tair1?0?))?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.genomics.validate_genomic_region
+    needs_values: true
+    priority: 1
+  genomicregionvalue:
+    key: genomic_region
+    name: Genomic region by value (1:78181-78321, chrX:155000000-155100000)
+    rule: metacrafterext.rules.common.genomics.validate_genomic_region
+    type: data
+    match: func
+    minlen: 7
+    maxlen: 40
+    priority: 2
+  tairlocusidvalue:
+    key: tair_locus_id
+    name: Arabidopsis AGI locus code by value (AT1G01115.1, ATCG00490, lists of them)
+    rule: metacrafterext.rules.common.genomics.validate_tair_locus_id
+    type: data
+    match: func
+    minlen: 9
+    maxlen: 2000
+    priority: 1
+  tairlocusidbyname:
+    key: tair_locus_id
+    name: Arabidopsis AGI locus code by field name (agi, agi_code, tair_id, locus_id, Matching Proteins)
+    rule: (?i)agi(?:[ _]?(?:code|id|locus))?|tair(?:[ _]?(?:id|locus|accession))?|locus[ _]?(?:id|tag)|matching[ _]proteins?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.genomics.validate_tair_locus_id
+    needs_values: true
+    priority: 1
+  ensemblgeneidvalue:
+    key: ensemblgeneid
+    name: Ensembl gene identifier by value (ENSG00000000003, ENSMUSG00000064370.1)
+    rule: metacrafterext.rules.common.genomics.validate_ensembl_gene_id
+    type: data
+    match: func
+    minlen: 15
+    maxlen: 24
+    priority: 1

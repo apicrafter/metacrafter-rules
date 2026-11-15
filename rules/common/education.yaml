@@ -1,0 +1,36 @@
+name: educationcommon
+description: Education classifications and registers (ISCED 2011 programme codes, ISCED-F 2013 fields, ETER identifiers)
+context: education
+lang: common
+country_code: xx
+rules:
+  # ARES (Fédération Wallonie-Bruxelles) classifies studies by ISCED-F 2013, in French CITE 2013:
+  # code_grand_domaine (broad field 04), code_domaine_specialise (narrow 041), code_domaine_detaille
+  # and code_domaine_cite (detailed 0413).
+  iscedf2013byname:
+    key: isced_f_2013
+    name: ISCED-F 2013 field of education by field name (code_grand_domaine, code_domaine_cite, isced_f, field_of_education_code)
+    rule: (?i)(?:code[ _])?(?:grand[ _]domaine|domaine[ _](?:specialise|sp[ée]cialis[ée]|detaille|d[ée]taill[ée]|cite|isced)|domaine[ _]d[ _]etudes[ _]cite)|isced[ _-]?f(?:[ _-]?2013)?(?:[ _-]?(?:code|broad|narrow|detailed)(?:[ _-]field)?)?|(?:cite|isced)[ _-]?2013(?:[ _-]?code)?|field[ _]of[ _]education(?:[ _]and[ _]training)?[ _]code
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.education.validate_isced_f_2013
+    needs_values: true
+    priority: 1
+  isced2011programmecodebyname:
+    key: isced2011_programme_code
+    name: ISCED 2011 three-digit programme or attainment code by field name (code_grade_generique_cite, isced_2011, isced_p, isced_a)
+    rule: (?i)(?:code[ _])?(?:grade|niveau|level|programme|program)(?:[ _][a-z]+)?[ _](?:cite|isced)(?:[ _]?2011)?|(?:cite|isced)[ _-]?(?:2011|p|a)(?:[ _-]?(?:code|level|niveau))?|isced[ _-]?(?:2011[ _-]?)?(?:programme|attainment)[ _-]?code
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.education.validate_isced2011_programme_code
+    needs_values: true
+    priority: 1
+  eteridbyname:
+    key: eter_id
+    name: ETER identifier by field name (eter_id, identifiant_eter, eter)
+    rule: (?i)(?:identifiant|code|id|num(?:ero)?)?[ _]?eter(?:[ _]?(?:id|code|identifier))?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.education.validate_eter_id
+    needs_values: true
+    priority: 1
