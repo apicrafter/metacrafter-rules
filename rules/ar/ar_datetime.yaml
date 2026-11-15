@@ -40,3 +40,34 @@ rules:
     type: data
     match: text
     priority: 1
+  # Found in the Bahrain Open Data Portal (data.gov.bh, a 2024 snapshot; metacrafter-testdata):
+  # the Opendatasoft field names of the Arabic columns are the transliterated labels, الشهر ->
+  # lshhr, الربع -> lrb, and the trade tables write the month after its number (03 مارس).
+  armonthbytransliteratedname:
+    key: ar_month
+    name: Arabic month name by transliterated field name (lshhr, shhr) with month names, also numbered (03 مارس)
+    rule: '(?i)(?:l|al)?shhr'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.ar.dates.validate_ar_month
+    needs_values: true
+    priority: 1
+  armonthnumberedvalue:
+    key: ar_month
+    name: Arabic month name after the month number (01 يناير, 03 مارس)
+    rule: '(?:0?[1-9]|1[0-2])\s*[-.:)]?\s*[؀-ۿ ]{3,14}'
+    type: data
+    match: regex
+    validator: metacrafterext.rules.ar.dates.validate_ar_month
+    minlen: 5
+    maxlen: 20
+    priority: 1
+  arquarterbytransliteratedname:
+    key: quarter
+    name: Quarter by transliterated Arabic field name (lrb for الربع) with quarters (الربع الأول, Q1)
+    rule: '(?i)(?:l|al)rb'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.generic.validate_quarter_value
+    needs_values: true
+    priority: 1

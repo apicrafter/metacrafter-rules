@@ -45,6 +45,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - positions in degrees, minutes and seconds with the hemisphere (18° 24' 5,758" S, 66° 53' 41,622" W) are
     latitudes and longitudes, also in a field named `LONG`.
 
+- **Rules for the files of the Bahrain Open Data Portal in metacrafter-testdata** (a 2024 snapshot of
+  data.gov.bh, Opendatasoft, Dateno source cdi00000161; validators in the new `metacrafterext.rules.bh.geo`,
+  `metacrafterext.rules.ar.persons`, `metacrafterext.rules.ar.dates` and
+  `metacrafterext.rules.common.classifications`, rules in the new `rules/bh/bh_geo.yaml`,
+  `rules/bh/bh_trade.yaml` and `rules/common/classifications.yaml`):
+  - Bahraini governorates (`bh_governorate`: Capital, Muharraq, Northern, Southern, the former Central, in
+    English and Arabic) in `governorate`, `lmhfz` (المحافظة) and by value (not the bare English Capital,
+    Northern, Southern, Central: other countries have them); address block numbers
+    (`bh_block`: 101 to 1299, also 305.0) in `Block`; GCC Common Customs Tariff codes
+    (`gcc_customs_tariff_code`: 95030090) in `Commodity No`;
+  - Arabic person attributes under the Arabic labels and the transliterated Opendatasoft names: sex (`ljns`,
+    الجنس; ذكر, أنثى, also by value), nationality (`arnationality`: بحريني, غير بحريني, سعودية, خليجي in
+    `ljnsy`, `jnsy_lzwj`, `mjmw_t_ljnsy` and by value), marital status (`lhl_lzwjy`; متزوج, لم يسبق له الزواج,
+    also by value), religion (`ldyn`; مسلم, أخرى), level of education (`l_mw_hl_lmy`, `l_thsyl_lmy_llzwj`;
+    ابتدائي, فوق الثانوي / دبلوم), age bands (`fy_t_lsn`; 65 سنة فأكثر), Arabic months (`lshhr`, `shhr`, and
+    by value after the month number: 03 مارس) and quarters (`lrb`; الربع الأول);
+  - religion by the English field name (`religion`: Muslim, Others); the type had no rule;
+  - generic: ISIC Rev. 4 section titles in English and Arabic (`isicrev4_section_name`: Manufacturing,
+    Mining & Quarrying, الصناعة التحويلية) in `isic`, `lnsht`, `sector`, `industry` and by value (a title of one
+    word only by name, as Mining or Education also name national accounts activities and institution types, and
+    not the ANZSIC titles that end in Services); ICD-10 chapters
+    (`icd10_chapter`: D50 - D89, C00 - D49, Diseases of the Circulatory System, الأورام) in
+    `international_disease_code`, `cause_of_death`, `sbb_lwf` (سبب الوفاة) and by value; COICOP codes
+    (`coicop`: 01.1.7, 10.4; the type had no rule) in `coicop_code`; units of trade tables (KG, NO, CUM, SQM)
+    in the short field name `UM`; ISO alpha-2 codes in `UN code`; Arabic names of places (`name`) in `l_sm`
+    (الأسم) and `name_arabic`.
 - **Rules for the Belgian files of metacrafter-testdata** (2024 snapshots of nine portals of the Dateno
   catalogue: the Opendatasoft portals of ARES, BEP, the City of Liège, the Digital Wallonia connectivity
   and mobility platforms and of Strasbourg, cdi00000140 to cdi00000149, and the Dataverse repositories of
@@ -499,6 +525,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     a bare number there is not a code, as the BEV round decided).
 
 ### Changed
+
+- Age bands: `age_group_of_mother`, `age_groups_of_husband` (two words after the band word) are age band
+  fields, and the bands `65 Years & Above`, `12 & Above`, `Less than 50`, `65 سنة فأكثر` and `أقل من 15`
+  are age bands. Levels of education: `highest_educational_attainment_of_wife`,
+  `highest_education_attainment_of_wife`, `highest_educational_level` and `schooling_stage` are education
+  level fields, and `Illiterate / Read Only`, `Read & Write`, `Preparatory`, `Intermediate`, `Above Secondary /
+  Diploma`, `High Diploma`, `Graduate Studies` and the Arabic levels are levels (the Bahrain census and
+  Ministry of Justice tables).
 
 - `soil_horizon` takes the Soviet notation of transitional horizons (B2C1, A2B, B1C, CD) and the
   dBase-truncated `Horizon_in` (Horizon_index); `epsg_code` values may name the system before the code
