@@ -68,7 +68,7 @@ rules:
     name: Attendance mode by field name (modalidad, attendance_mode, course_mode) with in-person or online values
     # Presencial, Virtual, Bimodal, Mixta, A distancia. The modalidad of a procurement procedure
     # (Licitación pública) fails.
-    rule: '(?i)modalidad(?:[ _](?:de[ _])?(?:cursada|dictado|realizaci[oó]n|evento|participaci[oó]n|asistencia|ense[ñn]anza|estudio))?|(?:event[ _]?)?attendance[ _]?mode|course[ _]?mode|delivery[ _]?mode|mode[ _]of[ _](?:delivery|attendance|study)|modalit[eé](?:[ _]d[ _]?enseignement)?'
+    rule: '(?i)modalidad(?:[ _](?:de[ _])?(?:cursada|dictado|realizaci[oó]n|evento|participaci[oó]n|asistencia|ense[ñn]anza|estudio))?|metodolog[ií]a(?:[ _](?:de[ _])?(?:estudio|ense[ñn]anza|del[ _]programa))?|(?:event[ _]?)?attendance[ _]?mode|course[ _]?mode|delivery[ _]?mode|mode[ _]of[ _](?:delivery|attendance|study)|modalit[eé](?:[ _]d[ _]?enseignement)?'
     type: field
     match: regex
     validator: metacrafterext.rules.common.directories.validate_attendance_mode
@@ -90,7 +90,7 @@ rules:
     name: Level of education by field name (nivel, nivel_educativo, education_level, highest_educational_attainment_of_wife, schooling_stage) with level names
     # Grado, Pregrado, Posgrado, Secundario completo. Nivel is any level: the values must be
     # levels of education.
-    rule: '(?i)nivel(?:[ _](?:educativo|educacional|de[ _]estudios?|de[ _](?:la[ _])?educaci[oó]n|de[ _]instrucci[oó]n|acad[eé]mico|de[ _]formaci[oó]n|del[ _]t[ií]tulo|de[ _]ense[ñn]anza|m[aá]ximo[ _](?:de[ _])?(?:estudios|educativo|alcanzado)))?|niv[ _]?educ|(?:highest[ _])?education(?:al)?[ _]?level(?:[ _]of[ _][a-z]+)?|(?:highest[ _])?level[ _]of[ _]education|(?:highest[ _])?education(?:al)?[ _]attainment(?:[ _]of[ _][a-z]+)?|schooling[ _]stage|q\d{1,3}[a-z]?[ _]education|niveau[ _](?:d[ _]?)?(?:[ée]tudes|formation|dipl[oô]me)|\d{0,3}[a-z]*(?:niveleducacional|niveleducativo|ducacionalalcanzado)[a-z]*'
+    rule: '(?i)formaci[oó]n[ _]acad[eé]mica|escolaridad|nivel(?:[ _](?:educativo|educacional|de[ _]estudios?|de[ _](?:la[ _])?educaci[oó]n|de[ _]instrucci[oó]n|acad[eé]mico|de[ _]formaci[oó]n|del[ _]t[ií]tulo|de[ _]ense[ñn]anza|m[aá]ximo[ _](?:de[ _])?(?:estudios|educativo|alcanzado)))?|niv[ _]?educ|(?:highest[ _])?education(?:al)?[ _]?level(?:[ _]of[ _][a-z]+)?|(?:highest[ _])?level[ _]of[ _]education|(?:highest[ _])?education(?:al)?[ _]attainment(?:[ _]of[ _][a-z]+)?|schooling[ _]stage|q\d{1,3}[a-z]?[ _]education|niveau[ _](?:d[ _]?)?(?:[ée]tudes|formation|dipl[oô]me)|\d{0,3}[a-z]*(?:niveleducacional|niveleducativo|ducacionalalcanzado)[a-z]*'
     type: field
     match: regex
     validator: metacrafterext.rules.common.directories.validate_education_level

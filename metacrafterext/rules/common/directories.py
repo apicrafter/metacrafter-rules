@@ -131,7 +131,7 @@ _ATTENDANCE_CORE = frozenset((
     "offline", "hybrid", "blended", "distance", "person", "in-person", "inperson",
     "offlineeventattendancemode", "onlineeventattendancemode", "mixedeventattendancemode",
 ))
-_ATTENDANCE_WORDS = _ATTENDANCE_CORE | frozenset(("a", "en", "in", "y", "o", "and", "or", "learning"))
+_ATTENDANCE_WORDS = _ATTENDANCE_CORE | frozenset(("a", "en", "in", "y", "o", "and", "or", "learning", "tradicional"))
 
 
 def validate_attendance_mode(value):

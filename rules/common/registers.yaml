@@ -1,0 +1,65 @@
+name: registers
+description: Small vocabularies of administrative registers - school shifts, hazard and risk levels in words, the medium of a record, languages by Spanish name, budget years
+context: common
+lang: common
+country_code: xx
+# Found in a May 2024 snapshot of Datos Abiertos Colombia (www.datos.gov.co, Dateno source cdi00000385;
+# metacrafter-testdata). The fields hold a few words of a small vocabulary, so the names are guarded
+# by the values (metacrafterext.rules.common.registers).
+rules:
+  # School and university registers give the shift of a school, a programme or a student: JORNADA with
+  # DIURNA, NOCTURNA, Fin de semana, MIXTA; turno in Argentina and Brazil.
+  schoolshiftbyname:
+    key: school_shift
+    name: School shift by field name (jornada, JORNADA, jornada_academica, turno, school_shift) with Diurna, Nocturna, Mañana, Tarde
+    rule: '(?i)(?:(?:est|estu|prog|sede|inst)[ _])?jornadas?(?:[ _](?:acad[eé]mica|escolar|de[ _]estudio|del[ _]programa|de[ _]la[ _]sede))?|turnos?(?:[ _](?:escolar|de[ _]cursada))?|school[ _]?shift'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.registers.validate_school_shift
+    needs_values: true
+    priority: 1
+  # Risk management and land-use plans class every polygon of a hazard, vulnerability or risk layer:
+  # AMENAZA, RIESGO, VULNERABILIDAD, TORRENCIAL, CAT_VULNER, Cat_F_Soci (fragility), Cat_Resili of the
+  # layers of the CAR and of Cundinamarca hold Alta, Media, Baja. The indices beside them are numbers.
+  risklevelbyname:
+    key: risk_level
+    name: Hazard, vulnerability or risk level by field name (AMENAZA, RIESGO, VULNERABILIDAD, CAT_VULNER, hazard_level, risk_level) with Alta, Media, Baja
+    rule: '(?i)(?:(?:cat(?:eg(?:or[ií]a)?)?|nivel|grado|clase|tipo|ind|zonificaci[oó]n)[ _](?:de[ _])?)?(?:amenazas?|amen|riesgos?|ries|vulnerabilidad|vulnerabil|vulenrabil|vulner?a?|vuln|torrencial|susceptibilidad|suscept|fragilidad|fragil?|resiliencia|resil[ei]\w*|inundaci[oó]n|remoci[oó]n(?:[ _]en[ _]masa)?)(?:[ _][a-z0-9]+){0,3}|cat[ _]f[ _][a-z]+(?:[ _]\d)?|cat[ _]fra(?:g)?[ _][a-z]+|(?:hazard|risk|vulnerability|threat)[ _]?(?:level|class|category|rating)'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.registers.validate_risk_level
+    needs_values: true
+    priority: 1
+  # The registers of information assets and the indices of classified information that Colombian
+  # public bodies publish under Ley 1712 de 2014 name the carrier of each record: Medio de conservación
+  # y/o soporte with Físico, Electrónico, Digital, Físico / Electrónico.
+  recordmediumbyname:
+    key: record_medium
+    name: Medium of a record by field name (Medio de conservación y/o soporte, medio_soporte, soporte, record_medium) with Físico, Electrónico, Digital
+    rule: '(?i)medios?[ _]de[ _]conservaci[oó]n(?:[ _]?(?:y[ _]?/[ _]?o|y|o|/)[ _]?(?:de[ _])?soporte)?:?|medio[ _](?:de[ _])?soporte|(?:tipo[ _]de[ _])?soporte(?:[ _]documental)?|medio[ _]de[ _]almacenamiento|documento\(papel o digital\)|(?:record|storage)[ _]?medium'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.registers.validate_record_medium
+    needs_values: true
+    priority: 1
+  # The same registers give the language of each record: Idioma with Español, Castellano, Español - Ingles.
+  languagenamebyspanishname:
+    key: language
+    name: Language by Spanish name in a field named for it (idioma, IDIOMA, idioma_original, lengua) with Español, Castellano, Inglés
+    rule: '(?i)idiomas?(?:[ _](?:de[ _]la[ _]informaci[oó]n|del[ _]documento|original|principal|de[ _]publicaci[oó]n))?:?|lenguas?(?:[ _]materna)?'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.registers.validate_language_name_es
+    needs_values: true
+    priority: 1
+  # Vigencia is the fiscal year of a Colombian budget, contract or tax: 2021. Semesters (2019-1) and
+  # dates of expiry in the same column name fail.
+  budgetyearbyname:
+    key: year
+    name: Year of a budget by field name (vigencia, VIGENCIA, vigencia_fiscal, año_vigencia) with four digits
+    rule: '(?i)(?:a[nñ]o[ _])?vigencia(?:[ _](?:fiscal|presupuestal))?'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.registers.validate_budget_year
+    needs_values: true
+    priority: 1

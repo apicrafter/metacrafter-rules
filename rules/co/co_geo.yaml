@@ -15,3 +15,78 @@ rules:
     fieldrule: divipola,cod_divipola,codigo_divipola,cod_mpio,codigo_municipio,cod_municipio,cod_dane,codigo_dane,cod_dane_municipio,mpio_cdpmp,municipio_prestador,municipiosede
     fieldrulematch: text
     priority: 1
+  # Found in a May 2024 snapshot of Datos Abiertos Colombia (www.datos.gov.co, Dateno source
+  # cdi00000385; metacrafter-testdata). The tables of ministries, departments and municipalities name
+  # the department and the municipality of a record and give their DIVIPOLA codes under many names:
+  # Código Departamento, COD_DEPTO, CodigoDaneDepartamento, ID_DEPARTAMENTO; Cod_Municipio,
+  # CodigoDaneMunicipio, muni_codigo, ID_MUNICIPIO, CODDANE. Spreadsheets drop the leading zero (5, 5001).
+  codepartmentbyname:
+    key: co_department
+    name: Colombian department by field name (DEPARTAMENTO, Departamento, DEPARTAMEN, depto, DESC_DEPARTAMENTO, Depa_Resi, Departamento de residencia)
+    # The department rules of Argentina, Bolivia and Uruguay take the same names; the values decide.
+    rule: (?i)(?:(?:nom(?:bre)?|desc)[ _]?(?:del?[ _])?)?(?:departamentos?|departamen|departam|depto|dpto|depa|dep)(?:[ _.][a-zñáéíóú]+){0,4}
+    type: field
+    match: regex
+    validator: metacrafterext.rules.co.codes.validate_co_department
+    needs_values: true
+    priority: 1
+  codepartmentcodebyname:
+    key: co_department_code
+    name: Colombian DIVIPOLA department code by field name (Código Departamento, COD_DEPTO, COD_DEPART, CodigoDaneDepartamento, ID_DEPARTAMENTO, depa_codigo) with 05, 25, 76
+    rule: (?i)(?:cod(?:igo)?|c[oó]digo|id)[ _.]?(?:dane[ _]?)?(?:del?[ _])?(?:departamento|departamen|depart|depto|dpto|dep)|depa[ _]codigo
+    type: field
+    match: regex
+    validator: metacrafterext.rules.co.codes.validate_co_department_code
+    needs_values: true
+    priority: 1
+  codivipolabyname:
+    key: co_divipola
+    name: Colombian DIVIPOLA municipality code by field name (Cod_Municipio, CodigoDaneMunicipio, ID_MUNICIPIO, muni_codigo, CODDANE, Código DANE de Municipio) with 05001, 76001, 5001
+    rule: (?i)(?:cod(?:igo)?|c[oó]digo|id)[ _.]?(?:dane[ _]?)?(?:del?[ _])?(?:municipios?|munici|muni|mpio|mun)|muni[ _]codigo|(?:cod(?:igo)?|c[oó]digo)[ _]?dane(?:[ _](?:del?[ _])?(?:municipio|mpio))?|(?:cod(?:igo)?[ _])?divipola(?:[ _](?:municipio|mpio))?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.co.codes.validate_co_divipola
+    needs_values: true
+    priority: 1
+  # Municipal tables locate a record by the comuna (4, 21, Comuna 5, 17. MUTIS, SEIS). The comunas of
+  # Buenos Aires take the same field name and the numbers 1 to 15.
+  cocomunabyname:
+    key: co_comuna
+    name: Comuna of a Colombian municipality by field name (comuna, COMUNA, Comuna/Corregimiento, identificador comuna o corregimiento) with 1 to 22, Comuna 5 or 17. MUTIS
+    rule: (?i)(?:[a-z]+[ _])*comunas?(?:[ _/]+[a-z0-9]+){0,3}
+    type: field
+    match: regex
+    validator: metacrafterext.rules.co.codes.validate_co_comuna
+    needs_values: true
+    priority: 1
+  # Written with the word, also by value in the fields named for comunas or for a location (Comuna 5
+  # in UBICACIÓN). The value rule for the comunas of Buenos Aires reads the same words in any field;
+  # this one keeps to these names, so it adds nothing to the geo_desc of the Buenos Aires budget.
+  cocomunavalue:
+    key: co_comuna
+    name: Comuna of a Colombian municipality by value in a field named for comunas or locations (Comuna 5, COMUNA 11)
+    rule: metacrafterext.rules.co.codes.validate_co_comuna_name
+    type: data
+    match: func
+    minlen: 8
+    maxlen: 12
+    fieldregex: (?i)^(?:(?:[a-z]+[ _])*comunas?(?:[ _/]+[a-z0-9]+){0,3}|ubicaci[oó]n|localizaci[oó]n)$
+    priority: 1
+  cocorregimientobyname:
+    key: co_corregimiento
+    name: Corregimiento of a Colombian municipality by field name (Corregimiento, Nombre Corregimiento) with names
+    rule: (?i)(?:nom(?:bre)?[ _])?corregimientos?(?:[ _]/[ _]name[ _]corregimiento)?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.co.codes.validate_co_place_name
+    needs_values: true
+    priority: 1
+  coveredabyname:
+    key: co_vereda
+    name: Vereda by field name (VEREDA, vereda, nombre_vereda, NOM_VEREDA) with names
+    rule: (?i)(?:nom(?:bre)?[ _]?)?veredas?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.co.codes.validate_co_place_name
+    needs_values: true
+    priority: 1
