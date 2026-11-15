@@ -35,6 +35,16 @@ rules:
     match: text
     type: data
     priority: 2
+  booleansimnao:
+    key: boolean
+    name: Boolean value sim/não (Portuguese)
+    # Sim and Não (SIM, NAO, Nao) of the Brazilian tables: the publication bases of the Fiocruz articles
+    # (Base Scielo), the violence notifications of Minas Gerais (VIOL_FISIC) and the innovation flag of
+    # the BNDES operations.
+    rule: sim,não,nao
+    match: text
+    type: data
+    priority: 2
   participleprefixrule:
     key: boolean
     name: Boolean with number of common prefixes and integer

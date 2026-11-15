@@ -14,6 +14,15 @@ and the Governo Aberto of the State of São Paulo):
   institution codes, the 49 CAPES evaluation areas and the CAPES grades (1 to 7, A);
 - the size class (porte) of a company: MICRO, PEQUENA, MÉDIA, GRANDE, ME, EPP;
 - the six biomes (Amazônia, Cerrado, Mata Atlântica), alone or listed.
+
+From the second Brazilian round (2024 snapshots of dados.mg.gov.br, dados.recife.pe.gov.br, dados.rs.gov.br
+and the Dataverse repositories Arca Dados of Fiocruz, SciELO Data, CIDACS and FGV):
+
+- the six-digit IBGE municipality code of DATASUS (355030), the two-digit IBGE code of a state (35), the
+  15-digit census tract code (355030801000001, also 3.55030801000001E14), all also as spreadsheet floats;
+- the INEP code of a school (26175347) and the CNES number of a health establishment (2446480, 0000957);
+- the race or colour categories of IBGE (Branca, Parda, Indígena) and ICD-10 codes as DATASUS writes them
+  (C159, W788).
 """
 import re
 import unicodedata
@@ -214,6 +223,87 @@ def validate_br_municipality_code(value):
     if not re.fullmatch(r"\d{7}", text) or text[:2] not in _IBGE_UF:
         return False
     return text in _IBGE_DV_EXCEPTIONS or _ibge_dv(text[:6]) == text[6]
+
+
+def _spreadsheet_integer(value):
+    """The digits of an integer written by a spreadsheet or a statistics package: 355030, 355030.0,
+    3.55030801000001E14 (Dataverse and SPSS exports of codes saved as numbers). None for anything else."""
+    text = str(value).strip()
+    if re.fullmatch(r"\d+", text):
+        return text
+    if re.fullmatch(r"\d+\.0+", text):
+        return text.split(".")[0]
+    match = re.fullmatch(r"(\d)\.(\d+)[eE]\+?(\d{1,2})", text)
+    if match:
+        digits, exponent = match.group(1) + match.group(2), int(match.group(3))
+        if len(digits) - 1 <= exponent:
+            return digits + "0" * (exponent - len(digits) + 1)
+    return None
+
+
+def validate_br_municipality_code_6(value):
+    """The six-digit IBGE code of a municipality without its check digit, as DATASUS writes it: the IBGE
+    code of its state and four digits (355030 São Paulo, 310620 Belo Horizonte); also 355030.0. Seven
+    digits (3550308) and 999999 fail."""
+    text = _spreadsheet_integer(value)
+    return bool(text) and len(text) == 6 and text[:2] in _IBGE_UF
+
+
+def validate_br_state_ibge_code(value):
+    """The two-digit IBGE code of one of the 27 federative units (11 Rondônia, 35 São Paulo, 53 Distrito
+    Federal); also 35.0. 34, 99 and SP fail."""
+    text = _spreadsheet_integer(value)
+    return text in _IBGE_UF
+
+
+def validate_br_census_tract_code(value):
+    """The 15-digit IBGE code of a census tract: a municipality code with its check digit, two digits of
+    the district, two of the subdistrict and four of the tract (355030801000001); also as a float of a
+    spreadsheet export (3.55030801000001E14)."""
+    text = _spreadsheet_integer(value)
+    return bool(text) and len(text) == 15 and validate_br_municipality_code(text[:7])
+
+
+def validate_br_inep_school_code(value):
+    """The eight-digit INEP code of a school, which begins with the IBGE code of its state (26175347 a school
+    of Recife, Pernambuco); also 26175347.0. Eight digits after a state code fit CAPES institution codes
+    too (33003017): the field name tells them apart."""
+    text = _spreadsheet_integer(value)
+    return bool(text) and len(text) == 8 and text[:2] in _IBGE_UF
+
+
+def validate_br_cnes(value):
+    """The seven-digit CNES number of a health establishment (2446480, 0000957); a spreadsheet drops the
+    leading zeros (957, 2446480.0). Fewer than three significant digits (1, 2, 98) and 0000000 fail."""
+    text = _spreadsheet_integer(value)
+    if not text or len(text) > 7:
+        return False
+    return len(text.lstrip("0")) >= 3
+
+
+# --- health and persons -------------------------------------------------------------------------------
+
+# The race or colour (raça/cor) categories of IBGE and of the health information systems, with the
+# markers of an unknown value they add (SIM, SINAN: Ignorado).
+_RACE_COLOUR = {"branca", "branco", "preta", "preto", "parda", "pardo", "amarela", "amarelo", "indigena",
+                "negra", "negro", "ignorado", "ignorada", "nao declarado", "nao declarada", "sem declaracao",
+                "nao informado", "nao informada"}
+
+
+def validate_br_race_colour(value):
+    """A race or colour category of IBGE: Branca, Preta, Parda, Amarela, Indígena (also in upper case and in
+    the masculine), or Ignorado and Não declarado of the health records; codes (1 to 5) fail."""
+    return _fold(value) in _RACE_COLOUR
+
+
+_ICD10_DATASUS = re.compile(r"[A-Z]\d{2}(?:\.?\d|X|-)?")
+
+
+def validate_icd10_datasus(value):
+    """An ICD-10 (CID-10) code as the Brazilian health information systems write it: a letter, two digits
+    and a subcategory digit without the dot (C159, W788, I209), the category alone (C20), with an X for a
+    category without subcategories (I10X) or with the dot (C15.9)."""
+    return bool(_ICD10_DATASUS.fullmatch(str(value).strip().upper()))
 
 
 def validate_br_postcode(value):

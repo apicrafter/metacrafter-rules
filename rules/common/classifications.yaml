@@ -31,9 +31,9 @@ rules:
     priority: 2
   icd10chapterbyname:
     key: icd10_chapter
-    name: ICD-10 chapter by field name (international_disease_code, cause_of_death, سبب الوفاة) with chapter ranges or titles
+    name: ICD-10 chapter by field name (international_disease_code, cause_of_death, سبب الوفاة, capitulo_cid_causa_basica) with chapter ranges or titles
     # The tables by chapter end with a row of the other causes (Others, أخرى).
-    rule: '(?i)(?:international[ _])?disease[ _](?:code|chapter|group)s?|icd[ _.-]?10[ _.-]?(?:chapter|group|range)s?|(?:underlying[ _])?causes?[ _]of[ _]death|sbb_?lwf[a-z]*|سبب[ _]الوفا[ةه]|أسباب[ _]الوفا[ةه]'
+    rule: '(?i)(?:international[ _])?disease[ _](?:code|chapter|group)s?|icd[ _.-]?10[ _.-]?(?:chapter|group|range)s?|(?:underlying[ _])?causes?[ _]of[ _]death|sbb_?lwf[a-z]*|سبب[ _]الوفا[ةه]|أسباب[ _]الوفا[ةه]|cap[ií]tulo[ _](?:da[ _])?cid(?:[ _]?10)?(?:[ _][a-z_]+)?|cid[ _]?10[ _]cap[ií]tulo'
     type: field
     match: regex
     validator: metacrafterext.rules.common.classifications.validate_icd10_chapter_or_other

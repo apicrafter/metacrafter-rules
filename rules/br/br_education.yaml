@@ -64,3 +64,27 @@ rules:
     validator: metacrafterext.rules.br.codes.validate_br_capes_grade
     needs_values: true
     priority: 1
+  # INEP school codes of the school census (CO_ENTIDADE) and of the education departments (inep_escola of
+  # the Recife school census 2009: 26175347). CAPES and e-MEC codes of higher education have rules of
+  # their own (CD_ENTIDADE_CAPES, CD_ENTIDADE_EMEC are not read here).
+  brinepschoolcodebyname:
+    key: br_inep_school_code
+    name: INEP school code by field name (inep_escola, co_entidade, codigo_inep, cod_inep)
+    rule: (?i)(?:(?:c[oó]d(?:igo)?|cd|co|nu|id)[ _]?)?inep(?:[ _](?:escola|da[ _]escola|entidade))?|(?:co|cod|codigo)[ _]entidade|c[oó]d(?:igo)?[ _]escola[ _]inep
+    type: field
+    match: regex
+    validator: metacrafterext.rules.br.codes.validate_br_inep_school_code
+    needs_values: true
+    priority: 1
+  # Eight-digit codes pass the check digit of the Czech IČO; a value rule guarded by the field name keeps
+  # cz_ico off the INEP columns, as for the CAPES codes.
+  brinepschoolcodevalue:
+    key: br_inep_school_code
+    name: INEP school code by value in a field named for it (inep_escola, co_entidade)
+    rule: metacrafterext.rules.br.codes.validate_br_inep_school_code
+    type: data
+    match: func
+    minlen: 8
+    maxlen: 10
+    fieldregex: (?i)(?:(?:c[oó]d(?:igo)?|cd|co|nu|id)[ _]?)?inep(?:[ _](?:escola|da[ _]escola|entidade))?|(?:co|cod|codigo)[ _]entidade|c[oó]d(?:igo)?[ _]escola[ _]inep
+    priority: 1

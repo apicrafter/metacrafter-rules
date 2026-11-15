@@ -80,18 +80,20 @@ rules:
     priority: 2
   brregionbyname:
     key: br_region
-    name: Region of Brazil (Norte, Nordeste, Sudeste, Sul, Centro-Oeste) by field name (regiao, nm_regiao, nm_regiao_ies_estudo)
-    rule: (?i)(?:(?:nm|nome|ds|sg)[ _])?regi[aã]o(?:[ _][a-z_]+)?|(?:[a-z_]+[ _])regi[aã]o
+    name: Region of Brazil (Norte, Nordeste, Sudeste, Sul, Centro-Oeste) by field name (regiao, nm_regiao, NMREGIAO, nm_regiao_ies_estudo)
+    rule: (?i)(?:(?:nm|nome|ds|sg)[ _]?)?regi[aã]o(?:[ _][a-z_]+)?|(?:[a-z_]+[ _])regi[aã]o
     type: field
     match: regex
     validator: metacrafterext.rules.br.codes.validate_br_region
     needs_values: true
     priority: 1
-  # IBGE municipality codes (municipio_codigo of the BNDES operations: 3550308) have a check digit.
+  # IBGE municipality codes (municipio_codigo of the BNDES operations: 3550308) have a check digit. The names
+  # of the DATASUS microdata and the research tables saved through a spreadsheet also: codmunres,
+  # CODMUNI_A, CODIGOMUNICIPIODOOBITO, CODCIDADE, municipio_cod, Cód.IBGE (3550308.0).
   brmunicipalitycodebyname:
     key: br_municipality_code
     name: IBGE municipality code by field name and check digit (municipio_codigo, cod_municipio, codigo_ibge, cd_mun)
-    rule: (?i)(?:[a-z_]+[ _])?(?:c[oó]d(?:igo)?|cd|co|id)[ _]?(?:do[ _])?(?:munic[ií]pio|mun|ibge)(?:[ _][a-z_]+)?|munic[ií]pio[ _](?:c[oó]digo|cod|ibge)|(?:c[oó]d(?:igo)?[ _])?ibge(?:[ _]code)?|geoc[oó]digo
+    rule: (?i)(?:[a-z_]+[ _])?(?:c[oó]d(?:igo)?|cd|co|id)[ _]?(?:do[ _])?(?:munic[ií]pio|mun|ibge)(?:[ _][a-z_]+)?|(?:c[oó]d(?:igo)?|cd)[ _]?(?:do[ _])?mun(?:ic(?:[ií]pio)?)?[a-z0-9_]*|munic[ií]pio[ _]?(?:c[oó]d(?:igo)?|ibge)|(?:c[oó]d(?:igo)?[ _.]?)?ibge(?:[ _]code)?|geoc[oó]digo|c[oó]d(?:igo)?[ _]?(?:da[ _])?cidade
     type: field
     match: regex
     validator: metacrafterext.rules.br.codes.validate_br_municipality_code
@@ -136,3 +138,50 @@ rules:
     minlen: 13
     maxlen: 16
     priority: 2
+  # The six-digit form without the check digit, as DATASUS writes it (SIM, SINASC, SINAN: codmunres,
+  # codmunocor: 354990.0) and the crime statistics of Minas Gerais (municipio_cod, cod_municipio: 310620);
+  # also codmun6 of CIDACS, Cod6d and the IBGE column of the PMAQ surveys (120001.0). The validators tell
+  # it from the seven-digit code in fields of the same names.
+  brmunicipalitycode6byname:
+    key: br_municipality_code_6
+    name: IBGE municipality code without the check digit by field name (municipio_cod, codmunres, codmun6, Cod6d, IBGE)
+    rule: (?i)(?:[a-z_]+[ _])?(?:c[oó]d(?:igo)?|cd|co|id)[ _]?(?:do[ _])?(?:munic[ií]pio|mun|ibge)(?:[ _][a-z_]+)?|(?:c[oó]d(?:igo)?|cd)[ _]?(?:do[ _])?mun(?:ic(?:[ií]pio)?)?[a-z0-9_]*|munic[ií]pio[ _]?(?:c[oó]d(?:igo)?|ibge)|(?:c[oó]d(?:igo)?[ _.]?)?ibge(?:[ _]code)?|geoc[oó]digo|c[oó]d(?:igo)?[ _]?(?:da[ _])?cidade|c[oó]d[ _]?6d?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.br.codes.validate_br_municipality_code_6
+    needs_values: true
+    priority: 1
+  # The two-digit IBGE code of a state (uf, UF_Cod, coduf, CDUF, CODUF, UF(cod): 11 to 53, also 35.0); the
+  # letters (SP) are br_state_code.
+  brstateibgecodebyname:
+    key: br_state_ibge_code
+    name: IBGE code of a federative unit by field name (uf, cod_uf, coduf, CDUF, UF_Cod, UF(cod))
+    rule: (?i)(?:(?:c[oó]d(?:igo)?|cd|co|id)[ _]?(?:da[ _])?)?uf(?:[ _]?\(?(?:c[oó]d(?:igo)?|ibge)\)?)?|c[oó]d(?:igo)?[ _]?(?:do[ _])?estado
+    type: field
+    match: regex
+    validator: metacrafterext.rules.br.codes.validate_br_state_ibge_code
+    needs_values: true
+    priority: 1
+  # Census tract codes of IBGE (Codsetor of the day-care study in SciELO Data: 3.55030801000001E14, the
+  # 15 digits saved as a float), CD_SETOR and CD_GEOCODI of the census tables.
+  brcensustractcodebyname:
+    key: br_census_tract_code
+    name: IBGE census tract code by field name (Codsetor, cd_setor, CD_GEOCODI, setor_censitario)
+    rule: (?i)(?:c[oó]d(?:igo)?|cd|co|id)[ _]?(?:do[ _])?setor(?:[ _]?censit[aá]rio)?|setor[ _]censit[aá]rio|cd[ _]?geocodi|geoc[oó]digo[ _]setor
+    type: field
+    match: regex
+    validator: metacrafterext.rules.br.codes.validate_br_census_tract_code
+    needs_values: true
+    priority: 1
+  # The float of a spreadsheet export has 15 digits and fits the IMSI pattern; a value rule guarded by the
+  # field name keeps imsi off the census tract columns.
+  brcensustractcodevalue:
+    key: br_census_tract_code
+    name: IBGE census tract code by value in a field named for it (Codsetor, cd_setor)
+    rule: metacrafterext.rules.br.codes.validate_br_census_tract_code
+    type: data
+    match: func
+    minlen: 15
+    maxlen: 20
+    fieldregex: (?i)(?:c[oó]d(?:igo)?|cd|co|id)[ _]?(?:do[ _])?setor(?:[ _]?censit[aá]rio)?|setor[ _]censit[aá]rio|cd[ _]?geocodi|geoc[oó]digo[ _]setor
+    priority: 1
