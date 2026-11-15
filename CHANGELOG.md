@@ -44,7 +44,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     (CAMDEN, WARRUMBUNGLE of the NSW Planning Portal) in `lganame`;
   - GeoJSON geometries longer than 100 000 characters (`geojsongeometrylongtext`: the geo_shape of the
     Camden LGA boundary is one polygon of 200 202 characters). metacrafter before
-    apicrafter/metacrafter#127 refuses a maxlen above 100 000 and skips this rule with a diagnostic;
+    apicrafter/metacrafter#128 refuses a maxlen above 100 000 and skips this rule with a diagnostic;
     the 100 000 rule still covers the shorter geometries.
 - **Rules for the Ballarat files of metacrafter-testdata** (a 2024 snapshot of the City of Ballarat Data
   Exchange, data.ballarat.vic.gov.au, an Opendatasoft portal of Victoria, Australia, Dateno source cdi00000089;
