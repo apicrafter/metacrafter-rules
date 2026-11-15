@@ -21,7 +21,9 @@ rules:
     match: func
     type: data
     priority: 1
-    rule: metacrafterext.rules.common.generic.has_letters
+    # Australian council wards named Ward (North Ward, Ward 2 of the Camden Council ward_name) are
+    # au_council_ward: ONS names have no Ward after them.
+    rule: metacrafterext.rules.au.planning.validate_not_au_council_ward
     minlen: 1
     maxlen: 200
     # A bare Ward is any country's ward (Kenyan wards, #61); ONS names it WDyyNM.

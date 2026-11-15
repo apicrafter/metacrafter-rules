@@ -62,3 +62,25 @@ rules:
     validator: metacrafterext.rules.common.fieldwork.validate_temperature_value
     needs_values: true
     priority: 1
+  temperaturebysensorname:
+    key: temperature
+    name: Temperature by the field name of a sensor payload (payload_fields_optod_temperature, uplink_message_decoded_payload_temp, object_temperature)
+    # The probes of the Camden Council stormwater sensors (pheht, optod, ntu, c4e) each report the
+    # water temperature next to their reading.
+    rule: (?i)(?:(?:uplink_message_)?(?:decoded_)?payload(?:_fields)?|object)[._](?:[a-z0-9]{2,8}[._])?(?:temperature|temp)(?:[._]?(?:c|degc|celsius))?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.fieldwork.validate_temperature_value
+    needs_values: true
+    priority: 1
+  energyamountbyname:
+    key: energy_amount
+    name: Amount of energy by field name (energy_generated, energy_kwh, kwh_consumed, electricity_consumption_kwh) with numbers
+    # energy_generated of the Camden Council solar systems is in kWh; energy_rating, energy_class and
+    # energy_source are no amounts (the names stop at the unit or a verb).
+    rule: (?i)(?:(?:total|net|daily|monthly|annual|hourly|solar|pv|grid|site|electrical|electric|electricity)[ _])?(?:energy(?:[ _](?:generated|generation|produced|production|consumed|consumption|used|usage|exported|imported|export|import|output|yield|delivered|total))?(?:[ _]?(?:kwh|wh|mwh|gwh|gj|mj|kj|\(kwh\)|\(mwh\)|\(kj\)|\(gj\)))?|(?:kwh|mwh|gwh)(?:[ _](?:generated|produced|consumed|used|exported|imported|total))?|(?:electricity|power)[ _](?:generated|generation|consumption|consumed|used|usage|exported|imported)(?:[ _]?(?:kwh|mwh|gwh|\(kwh\)))?)
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.waterquality.validate_energy_amount
+    needs_values: true
+    priority: 1

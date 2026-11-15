@@ -338,3 +338,23 @@ rules:
     validator: metacrafterext.rules.common.periods.validate_upov_code
     needs_values: true
     priority: 1
+  vernacularnamebyname:
+    key: vernacular_name
+    name: Common name of a taxon by field name (vernacularName, species_common_name, fish_species, bird_name, tree_common_name) with names
+    # A bare common_name is also the common name of a drug, a chemical or a company: only with the
+    # kind of organism or the Darwin Core term.
+    rule: (?i)(?:dwc:)?vernacular[ _]?name|(?:species|taxon)[ _]?common[ _]?name|common[ _]?(?:species|taxon)[ _]?name|(?:fish|bird|animal|tree|plant|mammal|reptile|frog|insect|other[ _]fish|other[ _]bird)[ _](?:species|common[ _]?name|name)
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.taxa.validate_vernacular_name
+    needs_values: true
+    priority: 1
+  vernacularnamewithscientificbyspecies:
+    key: vernacular_name
+    name: Common name with the scientific name in brackets in a species field (australian magpie (cracticus tibicen))
+    rule: (?i)(?:[a-z]+[ _])?species(?:[ _]?name)?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.taxa.validate_vernacular_with_scientific
+    needs_values: true
+    priority: 1

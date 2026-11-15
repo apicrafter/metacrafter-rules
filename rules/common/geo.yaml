@@ -670,6 +670,50 @@ rules:
     validator: metacrafterext.rules.common.urban.validate_street_intersection
     needs_values: true
     priority: 1
+
+  # ------------------------------------------------------------ Camden Council (data.camden.nsw.gov.au)
+  geopointgeolocationbyname:
+    key: geopoint
+    name: Point as latitude and longitude text by the Opendatasoft field names geolocation, geo_location, geoloc
+    # Opendatasoft geo_point fields other than geo_point_2d keep the name of the source column:
+    # geolocation (-34.0140068793519, 150.756087881438) of the Camden solar, water quality, nest box
+    # and algae alert files.
+    rule: (?i)geo[ _-]?location|geo[ _-]?loc|geolocali[sz]ation|geo[ _-]?position
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.generic.validate_latlon_pair
+    needs_values: true
+    priority: 1
+  cardinaldirectionbyname:
+    key: cardinal_direction
+    name: Direction in words by field name (aspect, aspect_of_installation, direction, orientation, facing) with North, Northeast, Northbound
+    # The 16-wind abbreviations (N, NNE, SW) of the same fields are compass_point.
+    rule: (?i)(?:[a-z]+[ _]){0,2}(?:aspect|direction|orientation|facing|heading)(?:[ _](?:of[ _][a-z]+|text|name))?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.fieldwork.validate_cardinal_direction
+    needs_values: true
+    priority: 1
+  eastingbyxcoordname:
+    key: easting
+    name: Easting by field name (xcord, x_coord, xcoordinate) with projected coordinates in metres
+    # xcord and ycord of the Camden heritage items are MGA zone 56 coordinates (287536, 6229307); an x
+    # field of longitudes (150.69) fails the check of a projected coordinate.
+    rule: (?i)x[ _-]?(?:cord|coord|coordinate)s?(?:[ _-]?(?:mga|utm|mga56|mga55|gda94|gda2020|m))?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.fieldwork.validate_projected_coordinate
+    needs_values: true
+    priority: 1
+  northingbyycoordname:
+    key: northing
+    name: Northing by field name (ycord, y_coord, ycoordinate) with projected coordinates in metres
+    rule: (?i)y[ _-]?(?:cord|coord|coordinate)s?(?:[ _-]?(?:mga|utm|mga56|mga55|gda94|gda2020|m))?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.fieldwork.validate_projected_coordinate
+    needs_values: true
+    priority: 1
   # Found in the school directories of Mendoza (ámbito: Urbano, Urbano marginal, Rural;
   # datosabiertos.mendoza.gov.ar; metacrafter-testdata).
   urbanruralbyname:

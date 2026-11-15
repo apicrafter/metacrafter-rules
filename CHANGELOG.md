@@ -9,6 +9,44 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Rules for the Camden Council files of metacrafter-testdata** (a 2024 snapshot of
+  data.camden.nsw.gov.au, the Opendatasoft portal of Camden Council, New South Wales, Dateno source
+  cdi00000091; validators in the new `metacrafterext.rules.au.planning` and
+  `metacrafterext.rules.common.waterquality`):
+  - council wards (`au_council_ward`: North Ward, Central Ward, Ward 2, A Ward, Division 3) in `ward`,
+    `ward_name` and the map label `tag`; the UK ward name rule refuses them (ONS names have no Ward
+    after them);
+  - the NSW planning system: environmental planning instruments (`au_nsw_epi`: Camden Local
+    Environmental Plan 2010, Camden LEP 2010, SEPP (Precincts—Western Parkland City) 2021, by value and
+    in `epi`, `EPI_NAME`; the abbreviations CLEP2010, SEPP2021 in `iteminst`), development control
+    plans (`au_nsw_dcp`: Camden DCP 2019, Oran Park DCP, by value and in `dcp1` to `dcp4`), heritage
+    item numbers of an LEP schedule (`au_nsw_heritage_item_number`: I38, I90A in `item_no`, `H_ID`) and
+    heritage significance levels (`au_heritage_significance`: Local, State in `itemsig`, `SIG`);
+  - blue-green algae alert levels (`au_algae_alert_level`: Green alert, Amber alert, Red alert, No alert
+    in alert fields; bare colours only in fields named for algae);
+  - dissolved oxygen (`dissolved_oxygen`: `dissolved_oxygen`, `DO_mg_L`, `DO (%)`, `oxygen_ppm`, the
+    optode readings `payload_fields_optod_oxygen_mg`, `_percent`, `_ppm`; a bare oxygen or O2 stays
+    out, SpO2), and the names of The Things Network and ChirpStack payloads for the water quality
+    readings of the Ballarat round (`payload_fields_ntu_turbidityntu`, `payload_fields_c4e_conductivity_us_cm`,
+    `payload_fields_c4e_tdskcl_ppm`, `payload_fields_c4e_salinity_ppm`, with the Ballarat validators),
+    pH (`payload_fields_ph`; `payload_fields_ph_mv` is the electrode voltage) and temperature
+    (`payload_fields_optod_temperature`);
+  - amounts of energy (`energy_amount`: `energy_generated` in kWh of the council solar systems,
+    `energy_kwh`, `kwh_consumed`, `electricity_consumption_kwh`);
+  - common names of species (`vernacular_name`: `vernacularName`, `fish_species`, `bird_species`,
+    `tree_common_name`; a `species` field of common names with the scientific name in brackets,
+    australian magpie (cracticus tibicen));
+  - registry types that had no rules: directions in words (`cardinal_direction`: East, Northeast,
+    Northbound in `aspect_of_installation`, `direction`, `orientation`, `facing`; the 16-wind
+    abbreviations stay `compass_point`); more names of types with rules: the Opendatasoft point
+    fields `geolocation` and `geo_location` (`geopoint`, latitude and longitude text), MGA coordinates
+    in `xcord` / `ycord` (`easting`, `northing`, checked as projected metres), upper case LGA names
+    (CAMDEN, WARRUMBUNGLE of the NSW Planning Portal) in `lganame`;
+  - GeoJSON geometries longer than 100 000 characters (`geojsongeometrylongtext`: the geo_shape of the
+    Camden LGA boundary is one polygon of 200 202 characters). metacrafter before
+    apicrafter/metacrafter#128 refuses a maxlen above 100 000 and skips this rule with a diagnostic;
+    the 100 000 rule still covers the shorter geometries.
+
 - **Rules for the Mercedes files of metacrafter-testdata** (datosabiertos.mercedes.gob.ar, the open data
   portal of the municipality of Mercedes, Buenos Aires: a 2024 snapshot, Dateno source cdi00000027, and
   the portal of 2026; validators in the new `metacrafterext.rules.ar_country.pba` and
@@ -314,7 +352,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - `device_id` and `equipment_id` are an `imei` only when the values are IMEIs (sensor ids lst25275720,
-  ems-b879); `location_id` and `location_number` are a `gln` only with GLN values (1, 2, 16 were); `plaque`
+  ems-b879; the LoRaWAN sensors of Camden Council, snla1k512);
+  `location_id` and `location_number` are a `gln` only with GLN values (1, 2, 16 were); `plaque`
   is a `fr_vehicle_plate` only with French plates (memorial plaque numbers 2559 were).
 - A legal form after an article is not a company name (`encompanyname`): Supported by a trust and Not
   supported by a trust of the GIAS schools register, which were the only values left once metacrafter took

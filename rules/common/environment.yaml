@@ -130,3 +130,70 @@ rules:
     validator: metacrafterext.rules.common.sensors.validate_sensor_community_value_type
     needs_values: true
     priority: 1
+
+  # ------------------------------------------------------------ water quality probes
+  # The stormwater sensors of Camden Council (New South Wales) report through The Things Network,
+  # whose uplink fields are flattened to payload_fields_<probe>_<reading>: pheht_temperature, ph_mv,
+  # optod_oxygen_mg, ntu_turbidityntu, c4e_conductivity_us_cm, c4e_tdskcl_ppm, c4e_salinity_ppm (TTN v3:
+  # uplink_message_decoded_payload_; ChirpStack: object_). Readings are bare numbers: by field name,
+  # with the values checked.
+  phbysensorname:
+    key: ph_value
+    name: pH by the field name of a sensor payload (payload_fields_ph, uplink_message_decoded_payload_ph, object_ph)
+    # payload_fields_ph_mv is the electrode voltage (-51.71), not a pH: the name ends with ph.
+    rule: (?i)(?:(?:uplink_message_)?(?:decoded_)?payload(?:_fields)?|object)[._](?:[a-z0-9]{2,8}[._])?ph(?:[._]?(?:value|level))?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.fieldwork.validate_ph_value
+    needs_values: true
+    priority: 1
+  dissolvedoxygenbyname:
+    key: dissolved_oxygen
+    name: Dissolved oxygen by field name (dissolved_oxygen, DO_mg_L, DO (%), optod_oxygen_mg, oxygen_ppm) with readings
+    # A bare oxygen or O2 is also the oxygen of a patient (SpO2) or a gas mixture: only with a
+    # concentration unit, the word dissolved, DO with a unit or the name of an oxygen probe.
+    rule: (?i)(?:(?:uplink_message_)?(?:decoded_)?payload(?:_fields)?[._]|object[._])?(?:[a-z0-9]{2,8}[._ ])?(?:dissolved[._ ]?oxygen(?:[._ ]?(?:mg[._ /]?l|mgl|ppm|percent|pct|sat(?:uration)?|%|conc(?:entration)?|\(mg/l\)|\(%\)))?|d\.?o\.?[._ ]?(?:mg[._ /]?l|mgl|ppm|percent|pct|sat(?:uration)?|%|\(mg/l\)|\(%\))|(?:optod|optode|odo)[._]oxygen(?:[._](?:mg|mg[._]l|ppm|percent|pct|sat))?|oxygen[._ ]?(?:mg[._ /]?l|mgl|mg|ppm))
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.waterquality.validate_dissolved_oxygen
+    needs_values: true
+    priority: 1
+  # The plain names (turbidity, conductivity, salinity, TDS_mg_L) are the reading rules of the
+  # Ballarat round in observations.yaml; these take the names of sensor payloads only.
+  turbiditybysensorname:
+    key: turbidity
+    name: Turbidity by the field name of a sensor payload (payload_fields_ntu_turbidityntu, payload_fields_ntu_turbidityfnu, object_turbidity)
+    rule: (?i)(?:(?:uplink_message_)?(?:decoded_)?payload(?:_fields)?|object)[._](?:[a-z0-9]{2,8}[._])?(?:turbidity[._]?(?:ntu|fnu|ftu|fau|mg[._]?l)?|ntu|fnu)
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.observations.validate_turbidity
+    needs_values: true
+    priority: 1
+  conductivitybysensorname:
+    key: electrical_conductivity
+    name: Electrical conductivity by the field name of a sensor payload (payload_fields_c4e_conductivity_us_cm, object_ec_us_cm)
+    rule: (?i)(?:(?:uplink_message_)?(?:decoded_)?payload(?:_fields)?|object)[._](?:[a-z0-9]{2,8}[._])?(?:(?:electrical[._]?)?conductivity(?:[._]?(?:[uµ]s[._]?cm|ms[._]?cm|ds[._]?m|25c))?|spc|(?:ec|cond)[._]?(?:[uµ]s[._]?cm|ms[._]?cm|ds[._]?m))
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.observations.validate_conductivity
+    needs_values: true
+    priority: 1
+  salinitybysensorname:
+    key: salinity
+    name: Salinity by the field name of a sensor payload (payload_fields_c4e_salinity_ppm, object_salinity_psu)
+    rule: (?i)(?:(?:uplink_message_)?(?:decoded_)?payload(?:_fields)?|object)[._](?:[a-z0-9]{2,8}[._])?salinity(?:[._]?(?:psu|ppt|ppm|g[._]?l|mg[._]?l))?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.observations.validate_salinity
+    needs_values: true
+    priority: 1
+  totaldissolvedsolidsbysensorname:
+    key: total_dissolved_solids
+    name: Total dissolved solids by the field name of a sensor payload (payload_fields_c4e_tdskcl_ppm, object_tds_ppm)
+    # A bare TDS is also the tax deducted at source of Indian accounts: only with a unit or a scale.
+    rule: (?i)(?:(?:uplink_message_)?(?:decoded_)?payload(?:_fields)?|object)[._](?:[a-z0-9]{2,8}[._])?(?:total[._]dissolved[._]solids(?:[._]?(?:mg[._]?l|ppm))?|tds[._]?(?:kcl|nacl|442)?[._]?(?:mg[._]?l|ppm|g[._]?l)|tds[._]?(?:kcl|nacl|442))
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.observations.validate_dissolved_solids
+    needs_values: true
+    priority: 1
