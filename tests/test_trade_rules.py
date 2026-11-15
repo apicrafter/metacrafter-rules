@@ -52,6 +52,8 @@ FIELD_CASES = [
     ("unitofmeasurebyfield",
      ["UOM", "unit_of_measure", "Unit of Measurement", "measure_unit", "quantity unit", "qty_unit_code"],
      ["unit", "units", "unit_price", "business_unit", "unit_name"]),
+    # UM of the Bahrain imports and exports (data.gov.bh): the values must be units (KG, NO, CUM).
+    ("unitofmeasurebyshortname", ["UM", "um", "U.M.", "u.m"], ["umbrella", "uom", "sum", "um_code"]),
     ("weightbyfield",
      ["GROSS WEIGHT KG", "NET WEIGHT KG", "net_weight", "grossWeight", "gross_wt", "net mass",
       "weight_kg", "Weight_KG", "body_weight", "chargeable weight"],

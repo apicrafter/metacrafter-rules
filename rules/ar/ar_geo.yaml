@@ -46,3 +46,15 @@ rules:
     minlen: 3
     maxlen: 80
     priority: 1
+  # Found in the Bahrain Open Data Portal (data.gov.bh, a 2024 snapshot; metacrafter-testdata): the
+  # directories of places give the Arabic name in a column whose Opendatasoft name is the
+  # transliterated label الأسم (l_sm) or name_arabic, beside the English name.
+  arnamebytransliteratedname:
+    key: name
+    name: Name in Arabic by transliterated field name (l_sm for الأسم, l_sm_bl_rby, name_arabic, name_ar) with Arabic text
+    rule: '(?i)l_?sm(?:_bl_rby)?|name[ _](?:arabic|ar)|arabic[ _]name'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.ar.countries.has_arabic
+    needs_values: true
+    priority: 1

@@ -36,10 +36,12 @@ def validate_age_value(value):
 
 _AGE_RANGE = re.compile(
     r"(?:\d{1,3}\s*(?:-|–|—|bis|to|a|à|до)\s*\d{1,3}|\d{1,3}\s*\+|[<>≤≥]=?\s*\d{1,3}|"
-    r"\d{1,3}\s*(?:(?:jahre?|years?|ans|años|anos|anios)\s*)?(?:und|and|et|y|e|o|ou|or|и)\s*(?:älter|mehr|over|older|plus|más|mas|mais|plus|старше)|"
+    r"\d{1,3}\s*(?:(?:jahre?|years?|ans|años|anos|anios)\s*)?(?:und|and|&|et|y|e|o|ou|or|и)\s*(?:älter|mehr|over|older|above|plus|más|mas|mais|plus|старше)|"
     r"(?:unter|under|bis|up to|moins de|menos de|menor(?:es)? (?:a|de)|mayor(?:es)? (?:a|de)|más de|"
-    r"over|above|до)\s*\d{1,3}|\d{1,3}\s*(?:und|and)\s*(?:jünger|younger))"
-    r"(?:\s*(?:jahre?|years?|yrs|ans|años|anos|anios|anni|лет|j\.?))?",
+    r"over|above|less than|до)\s*\d{1,3}|\d{1,3}\s*(?:und|and)\s*(?:jünger|younger)|"
+    # Arabic: 65 سنة فأكثر (65 and over), 45 فما فوق, أقل من 15 (under 15).
+    r"\d{1,3}\s*(?:(?:سنة|سنه|عام|سنوات)\s*)?(?:فأكثر|فاكثر|وأكثر|واكثر|فما فوق)|(?:أقل من|اقل من|دون)\s*\d{1,3})"
+    r"(?:\s*(?:jahre?|years?|yrs|ans|años|anos|anios|anni|лет|j\.?|سنة|سنه|سنوات))?",
     re.IGNORECASE,
 )
 

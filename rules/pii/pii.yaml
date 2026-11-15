@@ -70,8 +70,8 @@ rules:
   agerangebyname:
     key: age_range
     is_pii: True
-    name: Age band by field name (age_group, AGE_CAT, alter_gr, Altersgruppen, grupo de edad, franja_etaria)
-    rule: '(?i)(?:[a-z0-9]+[ _.-]){0,2}(?:age|alter|edad|vanus|âge)[ _.-]?(?:gr(?:oups?|uppen?|p)?|ranges?|bands?|cat(?:egor(?:y|ies|ie|ien))?|class(?:es)?|klassen?|kl|brackets?|intervals?|kat(?:egorien?)?)(?:[ _.-][a-z0-9]+)?|alters(?:gruppen?|klassen?|kategorien?|kat)(?:[ _.-][a-z0-9]+)?|(?:grupo|rango|tramo|franja)s?[ _](?:de[ _])?edad|(?:grupo|rango|franja|tramo)[ _]etari[oa]|(?:tranche|classe)s?[ _](?:d[ _'']?)?[aâ]ge'
+    name: Age band by field name (age_group, AGE_CAT, alter_gr, Altersgruppen, grupo de edad, franja_etaria, age_group_of_mother)
+    rule: '(?i)(?:[a-z0-9]+[ _.-]){0,2}(?:age|alter|edad|vanus|âge)[ _.-]?(?:gr(?:oups?|uppen?|p)?|ranges?|bands?|cat(?:egor(?:y|ies|ie|ien))?|class(?:es)?|klassen?|kl|brackets?|intervals?|kat(?:egorien?)?)(?:[ _.-][a-z0-9]+){0,2}|alters(?:gruppen?|klassen?|kategorien?|kat)(?:[ _.-][a-z0-9]+)?|(?:grupo|rango|tramo|franja)s?[ _](?:de[ _])?edad|(?:grupo|rango|franja|tramo)[ _]etari[oa]|(?:tranche|classe)s?[ _](?:d[ _'']?)?[aâ]ge'
     type: field
     match: regex
     validator: metacrafterext.rules.common.survey.validate_age_range_value
@@ -180,6 +180,18 @@ rules:
     type: field
     match: regex
     validator: metacrafterext.rules.es.periods.validate_marital_status
+    needs_values: true
+    priority: 1
+  # Found in the Bahrain Open Data Portal (data.gov.bh, a 2024 snapshot; metacrafter-testdata):
+  # census tables by religion (Muslim, Others) beside the Arabic column (ldyn: مسلم, أخرى).
+  religionbyname:
+    key: religion
+    is_pii: True
+    name: Religion by field name (religion, religion_name, religious_affiliation) with religion words
+    rule: (?i)(?:[a-z]+[ _])?religions?(?:[ _](?:name|en|ar|group|affiliation))?|religious[ _](?:affiliation|denomination|group)|denomination
+    type: field
+    match: regex
+    validator: metacrafterext.rules.ar.persons.validate_religion
     needs_values: true
     priority: 1
   nationalitybyspanishname:

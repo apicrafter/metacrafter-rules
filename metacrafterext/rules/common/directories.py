@@ -11,6 +11,9 @@ so the checks compare the words of a value with that vocabulary after case and a
 import re
 import unicodedata
 
+from metacrafterext.rules.ar.countries import has_arabic
+from metacrafterext.rules.ar.persons import validate_ar_education_level
+
 _NUMBER = re.compile(r"[+-]?\d+(?:[.,]\d+)?")
 
 
@@ -172,17 +175,24 @@ _EDUCATION_CORE = frozenset((
     "primary", "secondary", "tertiary", "undergraduate", "postgraduate", "graduate", "doctoral",
     "doctorate", "bachelor", "bachelors", "master", "masters", "kindergarten", "preschool",
     "elementary", "college", "university", "vocational", "post-secondary", "postsecondary",
+    # Bahrain census and vital statistics (data.gov.bh): Illiterate / Read Only, Read & Write,
+    # Preparatory, Intermediate, Above Secondary / Diploma, High Diploma, Graduate Studies.
+    "illiterate", "literate", "preparatory", "intermediate", "diploma", "doctorates", "write",
 ))
 _EDUCATION_WORDS = _EDUCATION_CORE | frozenset((
     "completo", "completa", "completos", "incompleto", "incompleta", "incompletos", "nivel", "educacion", "ensenanza", "de", "la",
     "el", "y", "o", "no", "sin", "instruccion", "upper", "lower", "school", "high", "education", "level",
     "degree", "or", "equivalent", "non-tertiary", "short-cycle", "cycle", "short", "of", "s",
+    "read", "write", "only", "above", "studies", "and", "&",
 ))
 
 
 def validate_education_level(value):
     """A level of education in words: Grado, Pregrado, Posgrado, Secundario completo, Primaria,
-    Universitario incompleto, upper secondary, Bachelor's or equivalent."""
+    Universitario incompleto, upper secondary, Bachelor's or equivalent, Illiterate / Read Only, Above
+    Secondary / Diploma, and in Arabic (ابتدائي, فوق الثانوي / دبلوم: validate_ar_education_level)."""
+    if has_arabic(value):
+        return validate_ar_education_level(value)
     return _all_words_in(value, _EDUCATION_WORDS, core=_EDUCATION_CORE)
 
 
