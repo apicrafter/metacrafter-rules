@@ -576,6 +576,10 @@ def validate_ar_indec_department_part(value):
     text = _digits(value)
     if not text.isdigit():
         return False
+    # The department part is written with three digits (007) or without the zeros (7); two digits
+    # with a zero (01 to 09) are the department codes of Bolivia (COD_DEPTO of the INE).
+    if len(text) == 2 and text.startswith("0"):
+        return False
     if len(text) <= 3:
         return int(text) in DEPARTMENT_PARTS
     return len(text) in (4, 5) and text.zfill(5) in DEPARTMENT_CODES

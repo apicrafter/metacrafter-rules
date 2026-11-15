@@ -495,6 +495,17 @@ rules:
     validator: metacrafterext.rules.common.fieldwork.validate_elevation_value
     needs_values: true
     priority: 1
+  elevationspanishbyname:
+    key: elevation
+    name: Elevation above sea level in metres by Spanish field name (altitud, ALTITUD, altitud_msnm, cota, COTA_COR, msnm)
+    # The dam inventory of the Bolivian Ministry of Environment and Water gives the altitude of the
+    # site and the elevation of the crest (cota de corona); cota alone is any elevation of a survey.
+    rule: (?i)(?:altitud|cota)(?:[ _-]?(?:cor(?:ona)?|terreno|media|min|max|msnm|m|snm))?(?:[ _-]?(?:msnm|m|snm))?|msnm|alt[ _-]?msnm
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.fieldwork.validate_elevation_value
+    needs_values: true
+    priority: 1
   elevationbygermanname:
     key: elevation
     name: Elevation by German field name (Seehöhe, HOEHE_BODEN, Höhe über Adria)
@@ -553,6 +564,69 @@ rules:
     type: field
     match: text
     validator: metacrafterext.rules.common.fieldwork.validate_projected_coordinate
+    needs_values: true
+    priority: 1
+  # The GeoNode layers of SIARH and UMSA (Bolivia; metacrafter-testdata) give UTM positions in fields
+  # named in Spanish: ESTE, NORTE, UTM_ESTE, UTM_NORTE, UTM_NOR, Coord_X, Coord_Y.
+  eastingspanishbyname:
+    key: easting
+    name: Easting by Spanish field name (este, ESTE, utm_este, coord_este, coordenada_este, x_este) with projected coordinates in metres
+    # Este is also the east of a boundary description: only numbers of a projected coordinate.
+    rule: (?i)(?:(?:utm|coord(?:enada)?s?|x|coord[ _-]?x)[ _-]?)?este(?:[ _-]?(?:utm|m|x))?|coord[ _-]?x
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.fieldwork.validate_projected_coordinate
+    needs_values: true
+    priority: 1
+  northingspanishbyname:
+    key: northing
+    name: Northing by Spanish field name (norte, NORTE, utm_norte, UTM_NOR, coord_norte, coordenada_norte, y_norte) with projected coordinates in metres
+    rule: (?i)(?:(?:utm|coord(?:enada)?s?|y|coord[ _-]?y)[ _-]?)?norte(?:[ _-]?(?:utm|m|y))?|utm[ _-]?nor|coord[ _-]?y
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.fieldwork.validate_projected_coordinate
+    needs_values: true
+    priority: 1
+  utmzonespanishbyname:
+    key: utm_zone
+    name: UTM zone by Spanish field name (zona_utm, Zona_UTM, utm_zona, huso, huso_utm) with 19, 20K
+    rule: (?i)zona[ _-]?utm|utm[ _-]?zona|huso(?:[ _-]?utm)?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.fieldwork.validate_utm_zone
+    needs_values: true
+    priority: 1
+  longitudedmsbyname:
+    key: longitude
+    name: Longitude in degrees, minutes and seconds by field name (LONG, long, long_dms, longitud_gms) with E or W
+    # long is also a length: only positions with the degree sign and the hemisphere. The decimal rules
+    # take lon, longitud and longitude, whose validators read degrees, minutes and seconds too; a
+    # universal rule on those names would hide the Spanish longitud rule of rules/es.
+    rule: (?i)long(?:[ _-]?(?:dms|gms|sexagesimal))?|(?:lon|longitud|longitude)[ _-]?(?:dms|gms|sexagesimal)
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.generic.validate_longitude_dms
+    needs_values: true
+    priority: 1
+  pfafstettercodebyname:
+    key: pfafstetter_code
+    name: Pfafstetter basin code by field name (pfafstetter, pfaf_id, cod_pfaf, COD_UH, codigo_uh, COD_SBC_N5, cod_cuenca_pfaf)
+    # Unidades hidrográficas of the Bolivian Ministry of Environment and Water (8589929), HydroBASINS
+    # PFAF_ID (6110), ANA ottobacias (cobacia).
+    rule: (?i)(?:cod(?:igo)?[ _-]?)?(?:pfaf(?:stetter)?|otto(?:bacia|codigo)?)(?:[ _-]?(?:id|cod(?:igo)?|code|\d{1,2}))?|cod(?:igo)?[ _-]?(?:uh|uhg|sbc|cuenca[ _-]?pfaf(?:stetter)?)(?:[ _-]?n(?:ivel)?[ _-]?\d{1,2})?|cobacia
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.hydrology.validate_pfafstetter_code
+    needs_values: true
+    priority: 1
+  pfafstetterlevelbyname:
+    key: pfafstetter_code
+    name: Pfafstetter basin code by the field name of its level (NIVEL_5, NIVEL3, nivel5_pfafstetter, uh_nivel_4) with codes of three or more digits
+    # NIVEL_5 of the SIARH dams writes the code with the name (85899 - Rio Guadalquivir).
+    rule: (?i)(?:uh[ _-]?)?nivel[ _-]?\d{1,2}(?:[ _-]?pfaf(?:stetter)?)?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.hydrology.validate_pfafstetter_code_long
     needs_values: true
     priority: 1
   geocentriccoordinatebyname:

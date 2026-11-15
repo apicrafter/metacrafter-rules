@@ -177,6 +177,66 @@ rules:
     validator: metacrafterext.rules.common.observations.validate_dissolved_solids
     needs_values: true
     priority: 1
+  # The water quality sampling layers of the GeoNode of SIARH (Bolivia; metacrafter-testdata) name
+  # the parameters of the laboratory in Spanish, a unit after the name and cut by the shapefile:
+  # ce_us_cm, OD_mg_L, SDT_mg_L, SST_mg_L, Turb_NTU, DBO5_mgO2, DQO_mgO2.
+  conductivityspanishbyname:
+    key: electrical_conductivity
+    name: Electrical conductivity by Spanish field name (conductividad, conductividad_electrica, ce_us_cm, CE (µS/cm))
+    # A bare CE is a basin (cuenca) or a code: only with a unit.
+    rule: (?i)(?:conductividad(?:[ _-]?el[eé]ctrica)?(?:[ _-]?(?:us[ _/]?cm|µs[ _/]?cm|μs[ _/]?cm|ms[ _/]?cm|ds[ _/]?m|\(µs/cm\)|\(us/cm\)|campo|lab))*|ce[ _-]?(?:us[ _/]?cm|µs[ _/]?cm|μs[ _/]?cm|ms[ _/]?cm|ds[ _/]?m|\(µs/cm\)|\(us/cm\)|\(ds/m\)))
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.observations.validate_conductivity
+    needs_values: true
+    priority: 1
+  turbidityspanishbyname:
+    key: turbidity
+    name: Turbidity by Spanish field name (turbidez, turbiedad, turbidez_ntu, Turb_UNT)
+    rule: (?i)(?:turbidez|turbiedad)(?:[ _-]?(?:ntu|unt|fnu|\(ntu\)|\(unt\)))?|turb[ _-]?unt
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.observations.validate_turbidity
+    needs_values: true
+    priority: 1
+  dissolvedsolidsspanishbyname:
+    key: total_dissolved_solids
+    name: Total dissolved solids by Spanish field name (solidos_disueltos_totales, SDT_mg_L, std_mg_l)
+    rule: (?i)s[oó]lidos[ _-]?disueltos(?:[ _-]?totales)?(?:[ _-]?(?:mg[ _/]?l|ppm|\(mg/l\)))?|(?:sdt|std)[ _-]?(?:mg[ _/]?l|ppm|\(mg/l\))
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.observations.validate_dissolved_solids
+    needs_values: true
+    priority: 1
+  suspendedsolidsbyname:
+    key: total_suspended_solids
+    name: Total suspended solids by field name (total_suspended_solids, tss_mg_l, solidos_suspendidos_totales, SST_mg_L)
+    # A bare SST is also a sea surface temperature, a bare TSS a code: only with a unit or in words.
+    rule: (?i)(?:(?:avg|mean|max|min|water)[ _-]?)?(?:total[ _-]?suspended[ _-]?solids|suspended[ _-]?solids|s[oó]lidos[ _-]?(?:en[ _-]?)?suspensi[oó]n(?:[ _-]?totales)?|s[oó]lidos[ _-]?suspendidos(?:[ _-]?totales)?)(?:[ _-]?(?:mg[ _/]?l|ppm|\(mg/l\)))?|(?:tss|sst)[ _-]?(?:mg[ _/]?l|ppm|\(mg/l\))
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.waterquality.validate_suspended_solids
+    needs_values: true
+    priority: 1
+  biochemicaloxygendemandbyname:
+    key: biochemical_oxygen_demand
+    name: Biochemical oxygen demand by field name (bod, bod5, BOD5_mg_L, dbo5, DBO5_mgO2, demanda_bioquimica_de_oxigeno)
+    rule: (?i)(?:biochemical[ _-]?oxygen[ _-]?demand|demanda[ _-]?bioqu[ií]mica[ _-]?(?:de[ _-]?)?ox[ií]geno|bod|dbo)(?:[ _-]?5)?(?:[ _-]?(?:mg[ _-]?o2(?:[ _/]?l)?|mg[ _/]?l|ppm|\(mg/l\)|\(mgo2/l\)))?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.waterquality.validate_oxygen_demand
+    needs_values: true
+    priority: 1
+  chemicaloxygendemandbyname:
+    key: chemical_oxygen_demand
+    name: Chemical oxygen demand by field name (chemical_oxygen_demand, cod_mg_l, dqo, DQO_mgO2, demanda_quimica_de_oxigeno)
+    # A bare COD is a code (código) in Spanish and Portuguese tables: only with a unit.
+    rule: (?i)(?:chemical[ _-]?oxygen[ _-]?demand|demanda[ _-]?qu[ií]mica[ _-]?(?:de[ _-]?)?ox[ií]geno|dqo)(?:[ _-]?(?:mg[ _-]?o2(?:[ _/]?l)?|mg[ _/]?l|ppm|\(mg/l\)|\(mgo2/l\)))?|cod[ _-]?(?:mg[ _-]?o2(?:[ _/]?l)?|mg[ _/]?l|ppm|\(mg/l\))
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.waterquality.validate_oxygen_demand
+    needs_values: true
+    priority: 1
   treedbhbyname:
     key: tree_dbh
     name: Tree diameter at breast height by field name (dbh, tree_dbh, diameter_breast_height, dbh_cm, trunk_diameter) with numbers or size classes

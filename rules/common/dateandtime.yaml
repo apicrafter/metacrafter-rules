@@ -121,6 +121,17 @@ rules:
     match: text
     validator: metacrafterext.rules.common.generic.validate_year_value
     priority: 1
+  yearbygestionname:
+    key: year
+    name: Year by the Bolivian field name gestión (GESTION, gestion_fiscal, año_gestion)
+    # In Bolivia a gestión is a year of administration (gestión 2015); elsewhere gestión is the
+    # management of a school or a service (Pública, Privada), which fails the check of a year.
+    rule: (?i)gesti[oó]n(?:[ _](?:fiscal|presupuestaria))?|a(?:ñ|n)o[ _]gesti[oó]n
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.generic.validate_year_value
+    needs_values: true
+    priority: 1
   yearknownpat:
     key: year
     name: Year by known name pattern

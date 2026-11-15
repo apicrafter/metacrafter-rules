@@ -1,0 +1,98 @@
+name: bo-geo
+description: Bolivian departments, provinces, municipalities and communities by name and INE code
+context: geo
+lang: es
+country_code: bo
+# Found in 2024 snapshots of the GeoNode of the water information system SIARH of the Ministry of
+# Environment and Water (geo03.siarh.gob.bo), the GeoNode of the Institute of Geography of the
+# Universidad Mayor de San Andrés (geonodeiigeo.umsa.bo) and datos.gob.bo (metacrafter-testdata).
+# Almost every layer names the department, province and municipality of its features and many give
+# the INE codes: 02 La Paz, 0201 Murillo, 020105 El Alto, 02010501001 a community of El Alto.
+rules:
+  bodepartmentbyname:
+    key: bo_department
+    name: Bolivian department by field name (DEPARTAMEN, DEPTO, Depto, departamento, nombre_dep, NOMDEPT, DEP_, NombreDepa)
+    # The Argentine department rule takes the same names; a column of Bolivian departments passes it
+    # only where La Paz is the only department (Catamarca and Entre Ríos have a La Paz department).
+    # No rule by value: La Paz, Potosí, Oruro, Tarija, Cochabamba and Santa Cruz are also the
+    # capital municipalities, so a municipality column of capitals would pass.
+    rule: (?i)(?:nom(?:bre)?[ _]?)?(?:departamentos?|departamen(?:to)?|departam|depto|dpto|dept|depa|dep)(?:[ _](?:nombre|nom|desc))?[ _]?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.bo.geo.validate_bo_department
+    needs_values: true
+    priority: 1
+  bodepartmentcodebyname:
+    key: bo_department_code
+    name: Bolivian INE department code by field name (COD_DEPTO, cod_depto, CODDEPTO, codigo_dep, CODDEP, C_DEPTO)
+    # id_departamento of the Mendoza tables numbers the 18 departments of Mendoza (1 to 18): not here.
+    rule: (?i)cod(?:igo)?[ _]?(?:departamento|depto|dpto|dept|dep)|c[ _]depto
+    type: field
+    match: regex
+    validator: metacrafterext.rules.bo.geo.validate_bo_department_code
+    needs_values: true
+    priority: 1
+  boprovincebyname:
+    key: bo_province
+    name: Bolivian province by field name (PROVINCIA, Provincia, NOM_PROV, nombre_pro, NombreProv)
+    # The province names of the INE (Murillo, Andrés Ibáñez, Sud Yungas), cut to 20 characters in
+    # shapefiles (General Jose Balliv).
+    rule: (?i)(?:nom(?:bre)?[ _]?)?prov(?:incias?|inc|in)?(?:[ _](?:nombre|nom|desc))?|nombre[ _]?pro
+    type: field
+    match: regex
+    validator: metacrafterext.rules.bo.geo.validate_bo_province
+    needs_values: true
+    priority: 1
+  boprovincecodebyname:
+    key: bo_province_code
+    name: Bolivian INE province code by field name (COD_PROV, codigo_pro, cod_provincia) with department and province (0201)
+    # C_PROV and CODPRO of some layers hold the province number alone (02, 3): they fail.
+    rule: (?i)cod(?:igo)?[ _]?prov(?:incia)?|codigo[ _]pro|cod[ _]pro|c[ _]prov
+    type: field
+    match: regex
+    validator: metacrafterext.rules.bo.geo.validate_bo_province_code
+    needs_values: true
+    priority: 1
+  bomunicipalitybyname:
+    key: bo_municipality
+    name: Bolivian municipality by field name (MUNICIPIO, Municipio, MUNI, MUN_, NOM_MUN, nombre_m_1, NombreMuni)
+    # The 339 municipalities of the INE with the other names of their seats (Nuestra Señora de La Paz,
+    # Soracachi (Paria), Muyupampa or Villa Vaca Guzmán).
+    rule: (?i)(?:nom(?:bre)?[ _]?)?(?:municipios?|municipi|municip|munic|muni|mun)(?:[ _](?:nombre|nom|desc))?[ _]?|nombre[ _]m[ _]1|nombremuni
+    type: field
+    match: regex
+    validator: metacrafterext.rules.bo.geo.validate_bo_municipality
+    needs_values: true
+    priority: 1
+  bomunicipalitycodebyname:
+    key: bo_municipality_code
+    name: Bolivian INE municipality code by field name (COD_MUN, cod_mun, MUNICOD, codigo_ine, cod_municipio) with department, province and section (020105)
+    # C_MUN and COD_MUN of the investment layers hold the section number alone (01): they fail.
+    rule: (?i)cod(?:igo)?[ _]?mun(?:icipio|icipal|ic|i)?|municod|codigo[ _]ine|cod[ _]ine[ _]mun(?:icipio)?|c[ _]mun
+    type: field
+    match: regex
+    validator: metacrafterext.rules.bo.geo.validate_bo_municipality_code
+    needs_values: true
+    priority: 1
+  bomunicipalitycodebycodename:
+    key: bo_municipality_code
+    name: Bolivian INE municipality code in a field named codigo or Codigo whose values are codes of the 339 municipalities
+    # The COVID-19 table of datos.gob.bo and the dams and irrigation layers of SIARH name the code
+    # Codigo. A Peruvian ubigeo (010101) has the same form: most of them are not Bolivian codes.
+    rule: (?i)codigo|cod|code
+    type: field
+    match: regex
+    validator: metacrafterext.rules.bo.geo.validate_bo_municipality_code_known
+    needs_values: true
+    priority: 2
+  bocommunitycodebyname:
+    key: bo_community_code
+    name: Bolivian INE community code by field name (COD_COM, cod_com, cod_comunidad, cod_localidad, COD_INE) with eleven digits (02010501001)
+    # COD_INE is the community code in the Katari layers of UMSA (02010501701) and a census key with -D in
+    # the SIARH layers (4691333969-D), which fails.
+    rule: (?i)cod(?:igo)?[ _]?com(?:unidad)?|cod(?:igo)?[ _]?localidad|cod[ _]loc|cod(?:igo)?[ _]?ine
+    type: field
+    match: regex
+    validator: metacrafterext.rules.bo.geo.validate_bo_community_code
+    needs_values: true
+    priority: 1
