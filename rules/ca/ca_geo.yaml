@@ -22,13 +22,13 @@ rules:
     rule: AB,BC,MB,NB,NL,NS,NT,NU,ON,PE,QC,SK,YT
     type: data
     match: text
-    fieldrule: province,prov,province_code,province/territory,province_territory,province_or_territory,prov_terr,provterr,province / territoire,province_territoire
+    fieldrule: province,prov,province_code,province/territory,province_territory,province_or_territory,prov_terr,provterr,province / territoire,province_territoire,provcd,provcd_1,provcd_2,provcd_3,provcd_4,prov_cd,prov_code
     fieldrulematch: text
     priority: 1
   cafsabyname:
     key: ca_fsa
-    name: Canadian forward sortation area by field name (fsa, homefsa, postal_fsa)
-    rule: (?i)(?:home|work|school|postal|mailing|res)?_?fsa(?:_?code)?|forward_?sortation_?area|code_rta|rta
+    name: Canadian forward sortation area by field name (fsa, homefsa, postal_fsa, CFSAUID, FORWARD SORTATION AREA)
+    rule: (?i)(?:home|work|school|postal|mailing|res)?_?fsa(?:_?code)?|forward[ _]?sortation[ _]?area|code_rta|rta|cfsauid|postal[ _]code[ _]3
     type: field
     match: regex
     validator: metacrafterext.rules.ca.validators.validate_ca_fsa

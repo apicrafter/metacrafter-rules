@@ -9,6 +9,37 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Rules for the Canadian files of metacrafter-testdata** (2024 snapshots of the Dateno catalogue: the Canadian
+  Watershed Information Network, canwinmap.ad.umanitoba.ca, cdi00000267, and the open data portals of the City
+  of Calgary, data.calgary.ca, cdi00000286, and the City of Edmonton, data.edmonton.ca, cdi00000289; validators
+  in the new `metacrafterext.rules.ca.geo` and `metacrafterext.rules.common.respondents`, rules in the new
+  `rules/ca/ca_codes.yaml` and in `rules/ca/ca_geo.yaml`, `rules/common/survey.yaml`,
+  `rules/common/admin_areas.yaml`, `rules/en/en_common.yaml`, `rules/common/directories.yaml`,
+  `rules/common/geo.yaml` and `rules/pii/pii.yaml`):
+  - hydrometry: the station number of the Water Survey of Canada (`ca_wsc_station_number`: Station Number,
+    STATION_NU, STATION_ID 05BH004; metacrafter labelled these columns `am_vehicle_plate`, a value rule guarded
+    by the field name keeps it off) and the WSC drainage area codes (`ca_wsc_drainage_area_code`: WSCMDA 05,
+    WSCSDA 05L, WSCSSDA 05LJ, FDA, SUB_EC, SUB_4C, SUBBASIN_C, SUBSUBBASI);
+  - Statistics Canada: the DGUID (`ca_dguid`: 2021A000248, 2021S051248112107, read as `vin` before) and the SGC
+    codes of the boundary files (`casgc`: PRUID 48, CDUID 4811, CSDUID);
+  - land and post: Dominion Land Survey land descriptions by value (`ca_dls_land_description`: NE-20-52-25-W4,
+    SE28 21 30 W1), Canadian postal codes by value (`ca_postcode`: T2G 2M2, T5H1E8), more names for the forward
+    sortation area (`ca_fsa`: CFSAUID, FORWARD SORTATION AREA, postal code 3) and for the province code
+    (`caprovincecode`: PROVCD_1);
+  - municipal wards (`municipal_ward`, a universal rule: ward, WARD_NUM, ward_name, Civic Ward with Ward 14, 14,
+    papastew Ward and the twelve Edmonton wards by name alone); it covers `au_council_ward` unless the scan names
+    the country, and the UK ward name rule no longer reads wards written with the word Ward (EPSB Ward A);
+  - respondents and sessions of the Edmonton Insight Community surveys: `device_type` (DeviceType: Desktop,
+    Phone, Tablet), `web_browser` (BrowserType: Google Chrome, Safari), `operating_system` (OSType: Windows, iOS,
+    Mac (OS X)), `housing_tenure` (Q3_Own_Rent: Own, Rent), `language` by English name (Q11_Home_Language,
+    Top_2_language, LANGUAGE: English, Panjabi (Punjabi), Tagalog (Pilipino, Filipino); labelled `ennationality`
+    before), `transport_mode` of a trip (Q14a_Primary_Transportation, Mode of Transportation: Car/truck/Van as
+    DRIVER, Public Transit, Walk), `education_level` in Q16_Education (College / technical school graduate,
+    Post-graduate degree (e.g. Masters, PhD)), `age_range` in Age_Rollup_Detailed, also in the quotes of a
+    spreadsheet export ("35-39");
+  - directions: the traffic abbreviations NB, SB, EB, WB are `cardinal_direction`, and the quadrant of a city
+    (Quadrant: NE, SW) is `compass_point`.
+
 - **Rules for the second round of Brazilian files of metacrafter-testdata** (2024 snapshots of the Dateno
   catalogue: dados.mg.gov.br, cdi00000221, dados.recife.pe.gov.br, cdi00000227, dados.rs.gov.br, cdi00000228,
   and the Dataverse repositories Arca Dados of Fiocruz, cdi00000251, SciELO Data, cdi00000252, CIDACS,

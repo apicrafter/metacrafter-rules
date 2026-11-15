@@ -45,5 +45,38 @@ rules:
     match: text
     priority: 1
 
-
+  # ------------------------------------------------------------ languages and commutes of respondents
+  # Found in the Edmonton Insight Community surveys and the census tables of data.edmonton.ca
+  # (metacrafter-testdata, 2024 snapshot, Dateno source cdi00000289): Q11_Home_Language holds English,
+  # Spanish, Korean, Panjabi (Punjabi), which the nationality rule read as nationalities, and
+  # Q14a_Primary_Transportation holds Car/truck/Van as DRIVER, Public Transit, Walk.
+  enlanguagenamebyname:
+    key: language
+    name: Language by English name in a field named for it (language, Q11_Home_Language, home_language, mother_tongue, Top_2_language, LANGUAGE1)
+    rule: (?i)(?:q\d{1,3}[a-z]?[ _])?(?:(?:home|first|primary|main|preferred|spoken|native|official|top(?:[ _]\d)?|other)[ _])?(?:languages?|mother[ _]?tongue)(?:[ _]?\d|[ _](?:name|spoken|at[ _]home|of[ _][a-z]+))?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.respondents.validate_language_name
+    needs_values: true
+    priority: 1
+  # A value rule guarded by the same names keeps ennationality off the language columns.
+  enlanguagenamevalue:
+    key: language
+    name: Language by English name by value in a field named for languages
+    rule: metacrafterext.rules.common.respondents.validate_language_name
+    type: data
+    match: func
+    minlen: 3
+    maxlen: 40
+    fieldregex: (?i)^(?:q\d{1,3}[a-z]?[ _])?(?:(?:home|first|primary|main|preferred|spoken|native|official|top(?:[ _]\d)?|other)[ _])?(?:languages?|mother[ _]?tongue)(?:[ _]?\d|[ _](?:name|spoken|at[ _]home|of[ _][a-z]+))?$
+    priority: 1
+  entransportmodebyname:
+    key: transport_mode
+    name: Mode of transport of a trip by field name (Q14a_Primary_Transportation, mode_of_transportation, MAIN_MODE_OF_TRANSPORTATION_FROM_HOME_TO_WORK, travel_mode, commute_mode) with Car, Public Transit, Walk
+    rule: (?i)(?:q\d{1,3}[a-z]?[ _])?(?:(?:primary|secondary|main|usual|preferred)[ _])?(?:mode[ _]of[ _](?:transport(?:ation)?|travel|commut(?:e|ing))(?:[ _][a-z]+){0,5}|transport(?:ation)?(?:[ _]mode)?|(?:travel|commut(?:e|ing)|trip|transport(?:ation)?)[ _]mode)
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.respondents.validate_transport_mode_word
+    needs_values: true
+    priority: 1
 

@@ -67,3 +67,46 @@ rules:
     minlen: 2
     maxlen: 60
     priority: 1
+
+  # ------------------------------------------------------------ respondents and their sessions
+  # Found in the Edmonton Insight Community surveys and the census tables of data.edmonton.ca and
+  # data.calgary.ca (metacrafter-testdata, 2024 snapshots, Dateno sources cdi00000289 and
+  # cdi00000286): the survey platform exports DeviceType, BrowserType and OSType of every response,
+  # and the profiling questionnaire asks Q3_Own_Rent.
+  devicetypebyname:
+    key: device_type
+    name: Device type by field name (DeviceType, device_category, device_class) with Desktop, Phone, Tablet
+    rule: (?i)(?:[a-z]+[ _])?device[ _]?(?:type|category|class|kind|form[ _]?factor)|device
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.respondents.validate_device_type
+    needs_values: true
+    priority: 1
+  webbrowserbyname:
+    key: web_browser
+    name: Web browser by field name (BrowserType, browser, browser_name, user_browser) with Google Chrome, Safari, Firefox
+    rule: (?i)(?:[a-z]+[ _])?browser(?:[ _]?(?:type|name|family))?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.respondents.validate_web_browser
+    needs_values: true
+    priority: 1
+  operatingsystembyname:
+    key: operating_system
+    name: Operating system by field name (OSType, os, os_name, operating_system) with Windows, iOS, Android
+    rule: (?i)(?:[a-z]+[ _])?(?:os|operating[ _]?system)(?:[ _]?(?:type|name|family))?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.respondents.validate_operating_system
+    needs_values: true
+    priority: 1
+  housingtenurebyname:
+    key: housing_tenure
+    name: Housing tenure by field name (Q3_Own_Rent, own_rent, tenure, housing_tenure, tenure_type) with Own, Rent
+    rule: (?i)(?:q\d{1,3}[a-z]?[ _])?(?:own[ _]?(?:or[ _])?rent|(?:housing|dwelling|home)[ _]?tenure(?:[ _]?type)?|tenure(?:[ _]?(?:type|status))?)
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.respondents.validate_housing_tenure
+    needs_values: true
+    priority: 1
+

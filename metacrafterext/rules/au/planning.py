@@ -5,6 +5,8 @@ environmental plan with their significance, and the blue-green algae alert level
 waters."""
 import re
 
+from metacrafterext.rules.common.respondents import validate_municipal_ward
+
 # North Ward, Central Ward, Bass Hill Ward, Ward 1, A Ward, Division 3 (Queensland), Unsubdivided.
 _COUNCIL_WARD = re.compile(
     r"^(?:(?:[A-Z][\w'’.-]*)(?: [A-Z][\w'’.-]*){0,3} Ward|Ward (?:\d{1,2}|[A-Z])|[A-Z] Ward|Division \d{1,2})$", re.I)
@@ -25,6 +27,10 @@ def validate_not_au_council_ward(value):
     Ward End, St Helier pass; North Ward, Ward 2 fail)."""
     text = str(value).strip()
     if not any(ch.isalpha() for ch in text):
+        return False
+    # A ward of any municipality written with the word Ward (EPSB Ward A, papastew Ward) or one of the
+    # Edmonton wards by name alone (Anirniq, O-day'min) is municipal_ward, not an ONS name.
+    if validate_municipal_ward(text):
         return False
     return not (_WARD_WORD.search(text) and validate_au_council_ward(text))
 

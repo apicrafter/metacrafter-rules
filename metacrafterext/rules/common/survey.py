@@ -50,7 +50,7 @@ def validate_age_range_value(value):
     """An age band (16-34, 65+, <18, 20 bis 29 Jahre, 70 und älter, 18 A 29 ANIOS, 65 ANIOS Y MAS
     of the Argentine survey of cultural consumption, which writes años without ñ) or a small code of a band
     (1 to 99) in a column named for age bands."""
-    text = str(value).strip()
+    text = str(value).strip().strip('"').strip()
     if _AGE_RANGE.fullmatch(text):
         return True
     number = _number(text)
@@ -58,9 +58,10 @@ def validate_age_range_value(value):
 
 
 def validate_age_band(value):
-    """An age band written out (45-54, 25 a 34, 65 o más, Menor a 25, 65+), not a code: an age
-    column of a survey holds either ages or the bands, and the bands are age_range."""
-    return bool(_AGE_RANGE.fullmatch(str(value).strip()))
+    """An age band written out (45-54, 25 a 34, 65 o más, Menor a 25, 65+, and "35-39" in the quotes
+    that keep a spreadsheet from reading a date), not a code: an age column of a survey holds either
+    ages or the bands, and the bands are age_range."""
+    return bool(_AGE_RANGE.fullmatch(str(value).strip().strip('"').strip()))
 
 
 def validate_gender_code(value):

@@ -71,7 +71,7 @@ rules:
     key: age_range
     is_pii: True
     name: Age band by field name (age_group, AGE_CAT, alter_gr, Altersgruppen, grupo de edad, franja_etaria, age_group_of_mother)
-    rule: '(?i)(?:[a-z0-9]+[ _.-]){0,2}(?:age|alter|edad|vanus|âge)[ _.-]?(?:gr(?:oups?|uppen?|p)?|ranges?|bands?|cat(?:egor(?:y|ies|ie|ien))?|class(?:es)?|klassen?|kl|brackets?|intervals?|kat(?:egorien?)?)(?:[ _.-][a-z0-9]+){0,2}|alters(?:gruppen?|klassen?|kategorien?|kat)(?:[ _.-][a-z0-9]+)?|(?:grupo|rango|tramo|franja)s?[ _](?:de[ _])?edad|(?:grupo|rango|franja|tramo)[ _]etari[oa]|(?:tranche|classe)s?[ _](?:d[ _'']?)?[aâ]ge'
+    rule: '(?i)(?:[a-z0-9]+[ _.-]){0,2}(?:age|alter|edad|vanus|âge)[ _.-]?(?:gr(?:oups?|uppen?|p)?|ranges?|bands?|cat(?:egor(?:y|ies|ie|ien))?|class(?:es)?|klassen?|kl|brackets?|intervals?|roll[ _]?ups?|kat(?:egorien?)?)(?:[ _.-][a-z0-9]+){0,2}|alters(?:gruppen?|klassen?|kategorien?|kat)(?:[ _.-][a-z0-9]+)?|(?:grupo|rango|tramo|franja)s?[ _](?:de[ _])?edad|(?:grupo|rango|franja|tramo)[ _]etari[oa]|(?:tranche|classe)s?[ _](?:d[ _'']?)?[aâ]ge'
     type: field
     match: regex
     validator: metacrafterext.rules.common.survey.validate_age_range_value

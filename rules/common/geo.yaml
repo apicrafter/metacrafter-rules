@@ -441,7 +441,7 @@ rules:
   compasspointbyname:
     key: compass_point
     name: Compass point (16-wind) by field name (aspect, slopeAspect_direction, wind_direction, wind_direction_cardinal)
-    rule: (?i)(?:slope_?|site_?)?aspect(?:_?(?:direction|orientation|text|compass))?|(?:hi_?|lo_?|max_?|min_?|gust_?)?wind_?dir(?:ection)?(?:_?(?:text|compass|cardinal|point|name))?|(?:hi|lo|max|gust)_?dir|direction|orientation|s[ _]?direction|sign[ _]?direction
+    rule: (?i)(?:slope_?|site_?)?aspect(?:_?(?:direction|orientation|text|compass))?|(?:hi_?|lo_?|max_?|min_?|gust_?)?wind_?dir(?:ection)?(?:_?(?:text|compass|cardinal|point|name))?|(?:hi|lo|max|gust)_?dir|direction|orientation|s[ _]?direction|sign[ _]?direction|(?:city[ _]?)?quadrant
     type: field
     match: regex
     validator: metacrafterext.rules.common.fieldwork.validate_compass_point

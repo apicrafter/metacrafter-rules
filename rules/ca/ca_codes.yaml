@@ -1,0 +1,99 @@
+name: ca-codes
+description: Canadian hydrometric, statistical and land survey codes
+context: geo
+lang: en
+country_code: ca
+# Found in the 2024 snapshots of the Canadian Watershed Information Network (canwinmap.ad.umanitoba.ca,
+# Dateno source cdi00000267) and of the open data portals of the City of Calgary (data.calgary.ca,
+# cdi00000286) and the City of Edmonton (data.edmonton.ca, cdi00000289); metacrafter-testdata.
+rules:
+  # ------------------------------------------------------------ Water Survey of Canada
+  # Station lists of HYDAT and of the provinces key the gauges by the WSC number (Station Number,
+  # STATION_NU, STATION_ID: 05BH004). The values pass the pattern of Armenian vehicle plates (two
+  # digits, two letters, three digits); a value rule guarded by the field name keeps am_vehicle_plate
+  # off the station columns.
+  cawscstationnumberbyname:
+    key: ca_wsc_station_number
+    name: Water Survey of Canada station number by field name (Station Number, STATION_NU, STATION_ID, wsc_station) with 05BH004
+    rule: (?i)(?:(?:wsc|hydat|hydrometric|gauge|gauging)[ _]?)?(?:station|stn)[ _]?(?:number|num|nu|no|nbr|id|code)?|(?:wsc|hydat)[ _]?(?:id|number|no|code)
+    type: field
+    match: regex
+    validator: metacrafterext.rules.ca.geo.validate_ca_wsc_station_number
+    needs_values: true
+    priority: 1
+  cawscstationnumbervalue:
+    key: ca_wsc_station_number
+    name: Water Survey of Canada station number by value in a field named for stations (Station Number, STATION_NU)
+    rule: metacrafterext.rules.ca.geo.validate_ca_wsc_station_number
+    type: data
+    match: func
+    minlen: 7
+    maxlen: 7
+    fieldregex: (?i)^(?:(?:wsc|hydat|hydrometric|gauge|gauging)[ _]?)?(?:station|stn)[ _]?(?:number|num|nu|no|nbr|id|code)?$|^(?:wsc|hydat)[ _]?(?:id|number|no|code)$
+    priority: 1
+  # The National Hydro Network (WSCMDA, WSCSDA, WSCSSDA), the fundamental drainage areas (FDA) and the
+  # AAFC watershed layers (SUB_EC, SUB_4C, SUBBASIN_C, SUBSUBBASI) carry the WSC drainage area codes.
+  cawscdrainageareacodebyname:
+    key: ca_wsc_drainage_area_code
+    name: Water Survey of Canada drainage area code by field name (WSCMDA, WSCSDA, WSCSSDA, FDA, SUB_EC, SUB_4C, SUBSUBBASI) with 05, 05L, 05LJ
+    rule: (?i)wsc(?:m|s|ss)da(?:[ _]?\d)?|fda(?:[ _]?(?:code|id))?|sub[ _]?(?:4c|ec)|sub(?:sub)?basin?[ _]?c(?:ode)?|subsubbasi|(?:major|sub|sub[ _-]?sub)[ _-]?drainage[ _]?area(?:[ _]code)?|drainage[ _]?area[ _]?code
+    type: field
+    match: regex
+    validator: metacrafterext.rules.ca.geo.validate_ca_wsc_drainage_area_code
+    needs_values: true
+    priority: 1
+
+  # ------------------------------------------------------------ Statistics Canada
+  # Census profiles and boundary files of 2016 and 2021 key every area by its DGUID (2021A000248,
+  # 2021S051248112107); a 17-character DGUID of a dissemination area was read as a VIN.
+  cadguidbyname:
+    key: ca_dguid
+    name: Statistics Canada DGUID by field name (DGUID, IDUGD) with 2021A000248
+    rule: (?i)dg[ _]?uid|idugd
+    type: field
+    match: regex
+    validator: metacrafterext.rules.ca.geo.validate_ca_dguid
+    needs_values: true
+    priority: 1
+  cadguidvalue:
+    key: ca_dguid
+    name: Statistics Canada DGUID by value in a field named for it (DGUID)
+    rule: metacrafterext.rules.ca.geo.validate_ca_dguid
+    type: data
+    match: func
+    minlen: 10
+    maxlen: 21
+    fieldregex: (?i)^(?:dg[ _]?uid|idugd)$
+    priority: 1
+  # PRUID, CDUID and CSDUID of the boundary files are the SGC codes of a province, a census division
+  # and a census subdivision.
+  casgcbyname:
+    key: casgc
+    name: Standard Geographical Classification code by field name (PRUID, CDUID, CSDUID, SGC code) with 48, 4806, 4806016
+    rule: (?i)(?:pr|cd|csd)[ _]?uid|sgc(?:[ _]?code)?|code[ _]?sgc|cgt(?:[ _]?code)?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.ca.geo.validate_ca_sgc_code
+    needs_values: true
+    priority: 1
+
+  # ------------------------------------------------------------ land survey and postal codes
+  # Water sampling sites of Manitoba give their location as a quarter section (SE28 21 30 W1).
+  cadlslanddescriptionvalue:
+    key: ca_dls_land_description
+    name: Dominion Land Survey land description by value (NE-20-52-25-W4, SE28 21 30 W1)
+    rule: metacrafterext.rules.ca.geo.validate_ca_dls_land_description
+    type: data
+    match: func
+    minlen: 9
+    maxlen: 20
+    priority: 1
+  capostcodevalue:
+    key: ca_postcode
+    name: Canadian postal code by value (T2G 2M2, T5H1E8)
+    rule: metacrafterext.rules.ca.geo.validate_ca_postcode
+    type: data
+    match: func
+    minlen: 6
+    maxlen: 7
+    priority: 1

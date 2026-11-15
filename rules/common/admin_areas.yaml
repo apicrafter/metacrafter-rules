@@ -90,3 +90,20 @@ rules:
     validator: metacrafterext.rules.common.admin.validate_continent_code
     needs_values: true
     priority: 1
+
+  # ------------------------------------------------------------ municipal wards
+  # Found in the open data portals of the City of Calgary and the City of Edmonton (metacrafter-testdata,
+  # 2024 snapshots, Dateno sources cdi00000286 and cdi00000289): WARD holds WARD 14 or 14, WARD_NUM 7,
+  # ward_name papastew Ward, Civic Ward the Edmonton names alone (Anirniq). A ward numbered or named
+  # with the word Ward belongs to no country, so this universal rule covers the Australian council ward
+  # rule unless the scan names the country.
+  municipalwardbyname:
+    key: municipal_ward
+    name: Municipal ward by field name (ward, WARD_NUM, ward_name, civic_ward, wardname, ward_number) with Ward 14, 14, papastew Ward
+    rule: (?i)(?:[a-z]+[ _])?wards?(?:[ _]?(?:name|nm|label|num(?:ber)?|no|nbr))?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.respondents.validate_municipal_ward
+    needs_values: true
+    priority: 1
+
