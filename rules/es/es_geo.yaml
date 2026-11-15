@@ -144,3 +144,36 @@ rules:
     validator: metacrafterext.rules.common.urban.validate_street_number_large
     needs_values: true
     priority: 1
+  # Found in the registers and directories of Mendoza (datosabiertos.mendoza.gov.ar; metacrafter-testdata):
+  # an address split into street, number, floor and office, the field names made of the column and
+  # the record (numero_domicilio_agencia, oficina_domicilio_calle, piso_domicilio_local_gastronomico).
+  esstreetbycompoundname:
+    key: street
+    is_pii: true
+    name: Street name by a compound Spanish field name (domicilio_calle_escuela, oficina_domicilio_calle, delegacion_calle, direccion_calle)
+    rule: '(?i)(?:[a-z]+_)*(?:domicilio|direccion)_calle(?:_[a-z]+)*|(?:[a-z]+_)+calle'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.urban.validate_street_name
+    needs_values: true
+    priority: 1
+  esbuildingnumberbycompoundname:
+    key: buildingnumber
+    is_pii: true
+    name: House number by a compound Spanish field name (numero_domicilio_agencia, oficina_domicilio_numero, numeracion_domicilio_local, direccion_numero)
+    rule: '(?i)(?:[a-z]+_)*(?:numero|numeracion|nro|num)_(?:de_)?(?:domicilio|direccion)(?:_[a-z]+)*|(?:[a-z]+_)*(?:domicilio|direccion|delegacion|oficina_domicilio)_(?:numero|numer|numeracion|nro)(?:_[a-z]+)*|numero_contacto'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.urban.validate_building_number
+    needs_values: true
+    priority: 1
+  esfloorbycompoundname:
+    key: address_line2
+    is_pii: true
+    name: Floor or office of an address by a compound Spanish field name (domicilio_piso, piso_domicilio_agencia, oficina_domicilio_piso)
+    rule: '(?i)(?:[a-z]+_)*(?:domicilio|direccion|delegacion)_(?:piso|dpto|depto)(?:_[a-z]+)*|piso_(?:de_)?(?:domicilio|direccion)(?:_[a-z]+)*'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.directories.validate_floor
+    needs_values: true
+    priority: 1

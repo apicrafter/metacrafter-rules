@@ -20,7 +20,9 @@ rules:
   zaeconomicclassificationvalue:
     key: za_economic_classification
     name: South African budget economic classification item by value (Compensation of employees, Goods and services)
-    rule: metacrafterext.rules.za.finances.validate_za_economic_classification
+    # Capital and Current alone are common words: a column of the Capital department of Mendoza
+    # (CAPITAL, SAN RAFAEL) matched them; they count under the field names only.
+    rule: metacrafterext.rules.za.finances.validate_za_economic_classification_value
     type: data
     match: func
     minlen: 7

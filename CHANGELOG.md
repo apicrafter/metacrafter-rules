@@ -9,6 +9,44 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Rules for the Mendoza files of metacrafter-testdata** (a 2024 snapshot of datosabiertos.mendoza.gov.ar,
+  the open data portal of the province of Mendoza, Argentina, Dateno source cdi00000026; validators in
+  `metacrafterext.rules.ar_country.mendoza`, `metacrafterext.rules.common.tourism` and
+  `metacrafterext.rules.common.rates`, rules in `rules/ar_country/ar_mendoza.yaml`,
+  `rules/common/tourism.yaml` and `rules/common/rates.yaml`):
+  - the districts of the departments of Mendoza (`ar_mendoza_district`: Rodeo de la Cruz, EL PLUMERILLO,
+    Va. Hipódromo, San José (G), the numbered sections of the Capital) in `distrito` fields, and the school
+    numbers of its Dirección General de Escuelas (`ar_mendoza_school_number`: 4-013, P-131, PS-046, P113)
+    in `ESC`, `numero_escuela` and `numero_establecimiento`;
+  - the classifiers of the provincial budget: the economic classification of expenditure
+    (`ar_mendoza_economic_classification`: 41101 PERSONAL PERMANENTE, 41100 - PERSONAL; by name and by
+    value), the financing sources (`ar_mendoza_financing_source`: 0 Rentas Generales, 000 - Rentas
+    Generales), the resource accounts (`ar_mendoza_resource_account`: 1110100000-IMPUESTO SOBRE LAS
+    ACTIVIDADES, by name and by value) and the accounting units (`ar_mendoza_cuc`: 906-Administración
+    Central);
+  - the administrative files before GDE (`ar_mendoza_expediente_number`: 4259-D-2015-03834,
+    1310/G/07/03834; by value only with the office), the Argentine electricity distributors
+    (`ar_electricity_distributor`: EDEMSA, E.D.E.S.T.E.S.A., Coop. Godoy Cruz, and the cooperatives by
+    their town in `distribuidora` fields) and the categories of hazardous waste of Ley 24.051
+    (`ar_hazardous_waste_category`: Y8-Y9-Y48, Y8, Y9, Y11 with the Basel operations R9, D10);
+  - tourist accommodation: its type (`accommodation_type`: HOTEL, APART-HOTEL, CABAÑAS, Hostería,
+    camping, chambre d'hôtes, Ferienwohnung in `clase`, `rubro` and by value) and its star rating
+    (`accommodation_star_rating`: 3 ESTRELLAS, 4 étoiles, 5 stars, ****, Sin categorizar);
+  - interest rates (`interest_rate`: 6,00%, Badlar + 2%, Libor + 3,70%, tasa fija anual del 21% in
+    `tasa`, `Cupón/Cupon`, `coupon`, `interest_rate`; by value only a reference rate with or without a
+    spread) and the urban or rural class of a place (`urban_rural_class`: Urbano, Urbano marginal, Rural,
+    städtisches Gebiet, Rural town and fringe in `ambito`, `urban_rural` and by value);
+  - registry types that got more rules: durations in Spanish words (`duration`: 1 días, 13 horas, 20
+    minutos in `demora` fields and by value), year and month in `Ejercicio/Mes` (2017/01), periodicity
+    in `Frecuencia / Frequency` (Semi annual), legislation numbers in `resolucion`, `RESOL.`, `RES.`
+    (648/09), phones in compound names (`telefono_agencia`, `oficina_telefono`,
+    `contacto_telefono_numero_fijo_abonado`), postal codes in `C_POSTAL`, departments in compound names
+    (`departamento_centro_de_salud`, `domicilio_departamento`, `C_DEPTO`), CUE in `cue_escuela`, the
+    wind direction in `hi_dir`, streets, house numbers and floors of split addresses
+    (`oficina_domicilio_calle`, `numero_domicilio_agencia`, `piso_domicilio_agencia`), house numbers on
+    a route kilometre (KM.6,5), GDE numbers of the Mendoza ecosystem (GDEMZA) by value and written with
+    a space or a file number in parentheses (EX 2018-00345266-GDEMZA-DPA#SAYOT (Expte. ...)).
+
 - **Rules for the Buenos Aires files of metacrafter-testdata** (a 2024 snapshot of data.buenosaires.gob.ar,
   the open data portal of the City of Buenos Aires, Dateno source cdi00000023; validators in
   `metacrafterext.rules.ar_country.caba`, `metacrafterext.rules.es.periods` and
@@ -180,6 +218,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- `za_economic_classification` by value no longer takes a column of CAPITAL or Current: the level 1
+  words of the South African classification are common words, and the Capital department of Mendoza
+  (CAPITAL, SAN RAFAEL, GUAYMALLEN) got the label in 7 fields; they count under the field names only.
 - The Australian LGA rules no longer take the Nigerian LGA codes and names of the GRID3 settlement
   data (`Lga Code` 19001, `Lga` Birnin Gwari): an ABS LGA code ends in 0 or is an unincorporated, no
   usual address or migratory code (19399, 19499, 89399), and a plain LGA name is not a Nigerian LGA.
