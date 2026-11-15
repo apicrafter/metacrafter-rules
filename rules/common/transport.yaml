@@ -278,8 +278,10 @@ rules:
   # ------------------------------------------------------------ GTFS Realtime (ACT light rail archives)
   gtfstripidbyfield:
     key: gtfs_trip_id
-    name: GTFS trip id by field name (trip_id, tripID)
-    rule: trip_id,tripid
+    name: GTFS trip id by field name (tripID, trip.trip_id of a GTFS Realtime export)
+    # A bare trip_id is also a voyage of a research vessel (the AIMS TRIP_ID), a taxi or a travel
+    # survey trip: only the camel case of the realtime archives and the names of the trip descriptor.
+    rule: tripid,trip.trip_id,trip.tripid,trip_update.trip.trip_id,vehicle.trip.trip_id,trip_update_trip_id,vehicle_trip_trip_id
     type: field
     match: text
     priority: 1

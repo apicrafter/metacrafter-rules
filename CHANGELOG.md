@@ -37,7 +37,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - GTFS Realtime: vehicle stop status (`gtfs_rt_vehicle_stop_status`: STOPPED_AT, IN_TRANSIT_TO) and
     congestion level (`gtfs_rt_congestion_level`: RUNNING_SMOOTHLY) by value and field name, schedule
     relationship (`gtfs_rt_schedule_relationship`) by field name only (SCHEDULED, ADDED are words of
-    any status column), trip ids (`gtfs_trip_id`) in `trip_id`, `tripID`, and bearings in degrees
+    any status column), trip ids (`gtfs_trip_id`) in `tripID` and `trip.trip_id` (a bare `trip_id` is
+    also the voyage of a research vessel, the AIMS `TRIP_ID`), and bearings in degrees
     (`bearing`: 126.87) in `bearing`, `heading`;
   - Socrata location columns as `geopoint`: `Location`, `Location 1`, `Location_1`, `GPS`, `Long/Lat`
     holding (-35.318906, 149.132104); `validate_latlon_pair` accepts the brackets of Socrata.
