@@ -446,6 +446,16 @@ def validate_year_value(value):
     return bool(_YEAR_IN_TEXT.search(text)) or any(ch.isalpha() for ch in text)
 
 
+def validate_year_in_text(value):
+    """A year as a number (2015, 2015.0) or written in a text (Gestión 2015, 2014-2015): the check of the
+    Bolivian gestión, which elsewhere names the management of a service (Nueva gestión, Pública)."""
+    text = str(value).strip()
+    number = _number(text)
+    if number is not None:
+        return number == int(number) and 1000 <= number <= 2999
+    return bool(_YEAR_IN_TEXT.search(text))
+
+
 _SHORT_NUMBER = re.compile(r"^[-+]?\d{1,4}(?:\.0+)?$")
 
 
@@ -582,24 +592,56 @@ _AUTHOR_YEAR = re.compile(r"(?:^|[ (])[A-Z][\w'’.\- &]*?,? ?\d{4}\)?$")
 _AUTHOR_ABBREVIATION = re.compile(r"^\(?[A-Z][\w'’\-]*\.(?:\)? ?(?:ex |& )?[A-Z][\w'’\-]*\.?)*\)?$")
 
 
+# Words that join a Spanish, Portuguese, French or English title are no specific epithets: Inventario
+# de Presas 2010 (the source of a Bolivian dam record) is no species.
+_NOT_EPITHETS = frozenset(("de", "del", "la", "las", "los", "el", "en", "y", "e", "da", "do", "dos", "das", "des",
+                           "du", "di", "of", "the", "and", "und", "der", "von", "van"))
+
+
 def validate_species_name(value):
     """The scientific name of a species with its authorship, as GBIF and Darwin Core
     scientificName write it: Paratrechina longicornis (Latreille, 1802), Monomorium chinense
     Santschi, 1925, Quercus robur L. The authorship (an author and a year, or an abbreviated
-    author name) tells a binomial apart from two other words (metacrafter-rules #69)."""
+    author name) tells a binomial apart from two other words (metacrafter-rules #69); a title
+    such as Inventario de Presas 2010 is not one."""
     text = str(value).strip()
     if len(text) > 120:
         return False
     m = _SPECIES_NAME.match(text)
-    if not m:
+    if not m or text.split()[1] in _NOT_EPITHETS:
         return False
     authorship = m.group("authorship")
     return bool(_AUTHOR_YEAR.search(authorship) or _AUTHOR_ABBREVIATION.match(authorship))
 
 
+# Degrees, minutes and seconds with the hemisphere: 18° 24' 5,758" S, 66°53'41.6"W, 17 42 26.8 S
+# (W, O for oeste and E, N, S); the Bolivian GeoNode layers of SIARH write positions this way.
+_DMS = re.compile(
+    r"^(\d{1,3})\s*(?:°|º|˚|\s)\s*(\d{1,2})\s*(?:'|′|’|\s)\s*(\d{1,2}(?:[.,]\d+)?)\s*(?:\"|″|''|”)?\s*([NSEWO])$",
+    re.I,
+)
+
+
+def _dms_degrees(value, hemispheres="NSEWO"):
+    """A position in degrees, minutes and seconds with its hemisphere (one of ``hemispheres``) as a signed
+    decimal degree, or None."""
+    m = _DMS.match(str(value).strip())
+    if not m or m.group(4).upper() not in hemispheres:
+        return None
+    minutes, seconds = int(m.group(2)), float(m.group(3).replace(",", "."))
+    if minutes >= 60 or seconds >= 60:
+        return None
+    degrees = int(m.group(1)) + minutes / 60 + seconds / 3600
+    return -degrees if m.group(4).upper() in "SWO" else degrees
+
+
 def _coordinate(value, limit):
     """The value as a decimal degree within +-limit, or None. Whole numbers are not taken:
-    a lat or lon field of integers holds ids or grid cells, not positions."""
+    a lat or lon field of integers holds ids or grid cells, not positions. A position in degrees,
+    minutes and seconds with its hemisphere (18° 24' 5,758" S) counts too."""
+    dms = _dms_degrees(value, "NS" if limit == 90.0 else "EWO")
+    if dms is not None:
+        return dms if -limit <= dms <= limit else None
     text = str(value).strip().replace(",", ".")
     if "." not in text or text.endswith(".0") and text[:-2].lstrip("-").isdigit():
         return None
@@ -617,6 +659,14 @@ def validate_latitude_value(value):
 def validate_longitude_value(value):
     """A longitude in decimal degrees: -180 to 180 with decimals (1.921255698, -121.67)."""
     return _coordinate(value, 180.0) is not None
+
+
+def validate_longitude_dms(value):
+    """A longitude in degrees, minutes and seconds with E or W (O, oeste): 66° 53' 41,622" W,
+    68°08'45"O; the check of a field named long, which is also a length."""
+    degrees = _dms_degrees(value, "EWO")
+    return degrees is not None and -180.0 <= degrees <= 180.0
+
 
 
 _GEOJSON_GEOMETRY_TYPES = frozenset(
@@ -691,21 +741,31 @@ _STATUS_FIRST_WORDS = frozenset((
     "clausurado", "clausurada", "clausura", "paralizado", "paralizada", "renovado", "renovada", "inscripcion",
     "inscripto", "inscripta", "vencido", "vencida", "proyectado", "proyectada", "postulado", "postulada",
     "postulados", "postuladas", "ratifico", "se", "ley", "nota", "catalogo", "mensaje", "habilitado",
-    "habilitada", "ocupado", "ocupada", "libre", "bueno", "buena", "regular", "malo", "mala", "covid"))
+    "habilitada", "ocupado", "ocupada", "libre", "bueno", "buena", "regular", "malo", "mala", "covid",
+    # statuses of the Bolivian layers of SIARH: the telemetry of the dams (DATOS ACTUALIZADOS,
+    # VERIFICAR TRANSMISION, ERROR NIVEL), investment projects (ENT DEFINITIVA, EJEC NORMAL) and
+    # irrigation proposals (VALIDADA, PROPUESTA TECNICA, (*) PROPUESTA TECNICA)
+    "datos", "verificar", "error", "ent", "entrega", "ejec", "validado", "validada", "propuesta",
+    "propuesto", "estudio", "proyecto", "programado", "programada", "funcionamiento", "operativo",
+    "operativa", "inconcluso", "inconclusa", "desconocido", "desconocida",
+    # the national dam inventory: Existente y en operacion, Existe y no operable
+    "existente", "existe", "inexistente"))
 
 
 def validate_state_not_status(value):
     """A value of an estado / uf field that is not a status: SP, Jalisco, Rio de Janeiro pass;
     Finalizada, En proceso, Exploración Avanzada, ANULADA do not."""
     text = unicodedata.normalize("NFKD", str(value)).encode("ascii", "ignore").decode().strip().lower()
-    words = text.replace("-", " ").split()
+    words = text.replace("-", " ").replace("(*)", " ").split()
     # RENOVADO 2023 and the status codes 1, 2, 3 are no states either.
     if not words or any(ch.isdigit() for ch in text):
         return False
     # Baja California (Sur): baja alone is the status of a cancelled record.
     if words[:2] == ["baja", "california"]:
         return True
-    return words[0] not in _STATUS_FIRST_WORDS
+    # F/Problemas (con problemas), C/Observaciones: a letter, a slash and a word is a status, not a
+    # state; N/I (no informado) of a column of states stays.
+    return words[0] not in _STATUS_FIRST_WORDS and not re.fullmatch(r"[a-z]/[a-z]{3,}", words[0])
 
 
 _ISO3166_2 = re.compile(r"^[A-Z]{2}-[A-Z0-9]{1,3}$")

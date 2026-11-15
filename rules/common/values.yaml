@@ -36,6 +36,15 @@ rules:
     type: field
     match: regex
     priority: 1
+  areaspanishbyname:
+    key: area
+    name: Area by Spanish field name with a unit (SUP_KM2, Sup_km2, SUP_HA, area_has) and by the ArcGIS field Hectares
+    # The Bolivian GeoNode layers (metacrafter-testdata) cut superficie to SUP; a bare sup or area
+    # names a region, so the unit is part of the name.
+    rule: (?i)sup(?:erf)?[ _-]?(?:km2|km²|ha|has|m2|m²)|area[ _-]?has|hect[aá]re(?:a)?s
+    type: field
+    match: regex
+    priority: 1
   moneyrangebyname:
     key: money_range
     name: Money range by field name (Taxable income range, Total Income 2019/20, Total assets, turnover, grant value) with band values

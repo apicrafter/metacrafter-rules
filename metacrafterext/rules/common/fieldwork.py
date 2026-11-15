@@ -233,10 +233,10 @@ def validate_longitude_degrees(value):
 
 def validate_projected_coordinate(value):
     """A projected easting or northing in metres, 10 km to 10 000 km from the false origin
-    (590583.09, 5345596.28, -98295.75): the check of the short names RW and HW (Rechtswert,
-    Hochwert)."""
+    (590583.09, 5345596.28, -98295.75; 576899.428379 with the micrometres of a GIS export): the check of
+    the short names RW and HW (Rechtswert, Hochwert)."""
     text = str(value).strip()
-    if not re.fullmatch(r"-?\d{5,8}(?:\.\d{1,4})?", text):
+    if not re.fullmatch(r"-?\d{5,8}(?:\.\d{1,8})?", text):
         return False
     return 10000.0 <= abs(float(text)) <= 10000000.0
 

@@ -227,7 +227,8 @@ def validate_ar_mendoza_financing_source(value):
     return bool(_FINANCING.match(str(value).strip()))
 
 
-_RESOURCE = re.compile(r"^(?:\d{5}\s+)?[1-3]\d{9}\s*-\s*[A-Za-zÁÉÍÓÚÑáéíóúñ]")
+# Two letters at least after the hyphen: a Bolivian INE community key (2838530907-D) is no account.
+_RESOURCE = re.compile(r"^(?:\d{5}\s+)?[1-3]\d{9}\s*-\s*[A-Za-zÁÉÍÓÚÑáéíóúñ]{2}")
 
 
 def validate_ar_mendoza_resource_account(value):
