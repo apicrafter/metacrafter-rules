@@ -53,7 +53,10 @@ rules:
     name: Temperature by field name (temperature, Temperatur, air_temperature, temperature_c) with numbers
     # Temperatur is the German and Nordic word and the dBase-truncated Temperature (isotherms of
     # ArmSIS). A bare temp is a temporary value as often.
-    rule: (?i)(?:(?:air|water|soil|sea|surface|mean|avg|average|max|min|maximum|minimum|daily|annual|monthly)[ _-]?)?temperat(?:ure|ur)(?:[ _-]?(?:c|°c|degc|deg_c|celsius|mean|avg|max|min|\(°c\)|\(c\)))?
+    # The columns of a Davis WeatherLink export (hi_temp, low_temp, in_temp, dew_point, wind_chill,
+    # heat_index, thw_index; temo_out of the Mendoza air quality network) and the Spanish
+    # temperatura with its qualifiers (temperatura_grados_centigrados_momento_medicion).
+    rule: (?i)(?:(?:air|water|soil|sea|surface|mean|avg|average|max|min|maximum|minimum|daily|annual|monthly)[ _-]?)?temperat(?:ure|ur)(?:[ _-]?(?:c|°c|degc|deg_c|celsius|mean|avg|max|min|\(°c\)|\(c\)))?|(?:hi|high|low|lo|out|in)_?temp|temp_?(?:out|in|hi|low)|temo_out|dew_?point|in_dew|wind_?chill|heat_?index|in_heat|thw_?index|temperatura(?:[ _]+[a-záéíóú]+)*
     type: field
     match: regex
     validator: metacrafterext.rules.common.fieldwork.validate_temperature_value

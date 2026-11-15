@@ -37,6 +37,75 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     TOTAL IVA INC.); `orgunit` in `secretaria`, `subsecretaría`, `area solicitante`; `phone` in `TEL
     FIJO`, `tel. fijo`; `legislation_number` in a bare `decreto`.
 
+- **Rules for the Ballarat files of metacrafter-testdata** (a 2024 snapshot of the City of Ballarat Data
+  Exchange, data.ballarat.vic.gov.au, an Opendatasoft portal of Victoria, Australia, Dateno source cdi00000089;
+  validators in `metacrafterext.rules.common.observations`, rules in `rules/common/observations.yaml`):
+  - readings of environmental sensors and weather stations by field name, with checks of the numbers: PM1,
+    PM2.5 and PM10 (`pm1_concentration`, `pm25_concentration`, `pm10_concentration`: pm1, pm2_5, PM2.5 (µg/m³)),
+    ozone, nitrogen dioxide and carbon monoxide (`ozone_concentration`, `no2_concentration`, `co_concentration`;
+    a bare `co` is not one), relative humidity (`relative_humidity`, 0 to 100), air and vapour pressure
+    (`atmospheric_pressure` in hPa, kPa or Pa, `vapour_pressure`), precipitation (`precipitation_amount`:
+    precipitation, rainfall, prcp), solar radiation (`solar_radiation`: W/m², MJ/m²), wind speed and gusts
+    (`wind_speed`) and wind direction in degrees (`wind_direction`, 0 to 360), sound level (`sound_pressure_level`:
+    sound_pressure_level_average, LAeq, LAmax), and water quality: electrical conductivity
+    (`electrical_conductivity`: µS/cm, dS/m, conductivity_deciSiemensPerMetre), salinity, turbidity (NTU, FNU) and
+    total dissolved solids;
+  - the diameter of a tree at breast height (`tree_dbh`: dbh, diameter_breast_height, 45 cm or size classes
+    <15cm, 31cm - 60cm, > 90cm), military ranks (`military_rank`: SGT., LT COL. DSO., PTE. Driver in `rank`
+    fields; a decoration alone or a taxon rank is not one), the CRS of a geometry in well-known text (`wkt_crs`:
+    GEOGCS[...], PROJCS[...], GEOGCRS[...] by value and in `json_ogc_wkt_crs`), LoRaWAN EUIs (`eui64`:
+    end_device_ids_dev_eui, dev_eui, join_eui with sixteen hexadecimal digits);
+  - `point` fields of latitude and longitude text as `geopoint` (Opendatasoft names a geo_point field point
+    in 29 of the 95 Ballarat tables), `wind_direction_cardinal` as `compass_point`, `acidity` of water as
+    `ph_value`, council property numbers (`propertyid`: propnum, property_number, with priority 1), full
+    Australian addresses by value (`address`: 16 Cypress Avenue WENDOUREE VIC 3355, with a postcode of the state).
+- **Rules for the Mendoza files of metacrafter-testdata** (a 2024 snapshot of datosabiertos.mendoza.gov.ar,
+  the open data portal of the province of Mendoza, Argentina, Dateno source cdi00000026; validators in
+  `metacrafterext.rules.ar_country.mendoza`, `metacrafterext.rules.common.tourism` and
+  `metacrafterext.rules.common.rates`, rules in `rules/ar_country/ar_mendoza.yaml`,
+  `rules/common/tourism.yaml` and `rules/common/rates.yaml`):
+  - the districts of the departments of Mendoza (`ar_mendoza_district`: Rodeo de la Cruz, EL PLUMERILLO,
+    Va. Hipódromo, San José (G), the numbered sections of the Capital) in `distrito` fields, and the school
+    numbers of its Dirección General de Escuelas (`ar_mendoza_school_number`: 4-013, P-131, PS-046, P113)
+    in `ESC`, `numero_escuela` and `numero_establecimiento`;
+  - the classifiers of the provincial budget: the economic classification of expenditure
+    (`ar_mendoza_economic_classification`: 41101 PERSONAL PERMANENTE, 41100 - PERSONAL; by name and by
+    value), the financing sources (`ar_mendoza_financing_source`: 0 Rentas Generales, 000 - Rentas
+    Generales), the resource accounts (`ar_mendoza_resource_account`: 1110100000-IMPUESTO SOBRE LAS
+    ACTIVIDADES, by name and by value) and the accounting units (`ar_mendoza_cuc`: 906-Administración
+    Central);
+  - the administrative files before GDE (`ar_mendoza_expediente_number`: 4259-D-2015-03834,
+    1310/G/07/03834; by value only with the office), the Argentine electricity distributors
+    (`ar_electricity_distributor`: EDEMSA, E.D.E.S.T.E.S.A., Coop. Godoy Cruz, and the cooperatives by
+    their town in `distribuidora` fields) and the categories of hazardous waste of Ley 24.051
+    (`ar_hazardous_waste_category`: Y8-Y9-Y48, Y8, Y9, Y11 with the Basel operations R9, D10);
+  - tourist accommodation: its type (`accommodation_type`: HOTEL, APART-HOTEL, CABAÑAS, Hostería,
+    camping, chambre d'hôtes, Ferienwohnung in `clase`, `rubro` and by value) and its star rating
+    (`accommodation_star_rating`: 3 ESTRELLAS, 4 étoiles, 5 stars, Sin categorizar; **** in
+    `categoria` fields only, as ** fills the empty cells of other tables);
+  - interest rates (`interest_rate`: 6,00%, Badlar + 2%, Libor + 3,70%, tasa fija anual del 21% in
+    `tasa`, `Cupón/Cupon`, `coupon`, `interest_rate`; by value only a reference rate with or without a
+    spread) and the urban or rural class of a place (`urban_rural_class`: Urbano, Urbano marginal, Rural,
+    städtisches Gebiet, Rural town and fringe in `ambito`, `urban_rural` and by value);
+  - registry types that got more rules: durations in Spanish words (`duration`: 1 días, 13 horas, 20
+    minutos in `demora` fields and by value), year and month in `Ejercicio/Mes` (2017/01), periodicity
+    in `Frecuencia / Frequency` (Semi annual), legislation numbers in `resolucion`, `RESOL.`, `RES.`
+    (648/09), phones in compound names (`telefono_agencia`, `oficina_telefono`,
+    `contacto_telefono_numero_fijo_abonado`), postal codes in `C_POSTAL`, departments in compound names
+    (`departamento_centro_de_salud`, `domicilio_departamento`, `C_DEPTO`), CUE in `cue_escuela`, the
+    wind direction in `hi_dir`, streets, house numbers and floors of split addresses
+    (`oficina_domicilio_calle`, `numero_domicilio_agencia`, `piso_domicilio_agencia`), house numbers on
+    a route kilometre (KM.6,5), GDE numbers of the Mendoza ecosystem (GDEMZA) by value and written with
+    a space or a file number in parentheses (EX 2018-00345266-GDEMZA-DPA#SAYOT (Expte. ...));
+  - amounts of a budget execution in Spanish (`money`: `votado`, `preventivo`, `devengado`, `pagado`,
+    `presupuesto_saldo`, `credito_vigente`, the sanctions and credits of the EPRE quality tables, with
+    6.613.703,03 or $ 298.278.261,30; validator `metacrafterext.rules.common.rates.validate_es_amount`,
+    rules in `rules/es/es_budget.yaml`), amounts with a currency sign or code and a decimal comma by value
+    ($ 298.278.261,30, ARS 3.662,50, USD 44,59), budget years in `ejercicio`, temperatures in the columns
+    of a Davis weather station export (`hi_temp`, `low_temp`, `dew_point`, `wind_chill`, `heat_index`,
+    `thw_index`, `in_temp`) and in `temperatura_...`, legislation numbers in `decreto_provincial_numero`
+    (and no longer in `resolucion_epas_anio`, a year).
+
 - **Rules for the SICYTAR files of metacrafter-testdata** (a 2024 snapshot of datasets.datos.mincyt.gob.ar,
   the open data portal of the Argentine science ministry, Dateno source cdi00000024; validators in the new
   `metacrafterext.rules.ar_country.science` and `metacrafterext.rules.common.research`, rules in the new
@@ -244,6 +313,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- `device_id` and `equipment_id` are an `imei` only when the values are IMEIs (sensor ids lst25275720,
+  ems-b879); `location_id` and `location_number` are a `gln` only with GLN values (1, 2, 16 were); `plaque`
+  is a `fr_vehicle_plate` only with French plates (memorial plaque numbers 2559 were).
+- A legal form after an article is not a company name (`encompanyname`): Supported by a trust and Not
+  supported by a trust of the GIAS schools register, which were the only values left once metacrafter took
+  Not applicable for an empty value.
+
+- `za_economic_classification` by value no longer takes a column of CAPITAL or Current: the level 1
+  words of the South African classification are common words, and the Capital department of Mendoza
+  (CAPITAL, SAN RAFAEL, GUAYMALLEN) got the label in 7 fields; they count under the field names only.
 - The Australian LGA rules no longer take the Nigerian LGA codes and names of the GRID3 settlement
   data (`Lga Code` 19001, `Lga` Birnin Gwari): an ABS LGA code ends in 0 or is an unincorporated, no
   usual address or migratory code (19399, 19499, 89399), and a plain LGA name is not a Nigerian LGA.

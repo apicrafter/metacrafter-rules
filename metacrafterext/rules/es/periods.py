@@ -102,3 +102,16 @@ def validate_marital_status(value):
     if not text or len(text) > 60:
         return False
     return any(text == head or text.startswith(head + "/") or text.startswith(head + " ") for head in _MARITAL_HEADS)
+
+
+# A duration in Spanish words, as the ticket system of the citizen service of Mendoza (148)
+# writes the time a ticket waited: "1 días, 13 horas, 20 minutos", "0 horas, 3 minutos".
+_ES_DURATION_PART = r"\d+\s*(?:a[nñ]os?|meses|mes|semanas?|d[ií]as?|horas?|hs?|minutos?|min|segundos?|seg)"
+_ES_DURATION = re.compile(r"^" + _ES_DURATION_PART + r"(?:\s*(?:,|y)?\s*" + _ES_DURATION_PART + r")*$")
+
+
+def validate_es_duration_words(value):
+    """A duration in Spanish words with numbers: 1 días, 13 horas, 20 minutos; 0 horas, 3 minutos;
+    2 años y 3 meses; 45 minutos (not 13:20, a date or a number alone)."""
+    text = _fold(value)
+    return bool(_ES_DURATION.match(text)) and any(ch.isalpha() for ch in text)

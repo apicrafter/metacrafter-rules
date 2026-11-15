@@ -10,6 +10,10 @@ rules:
     rule: plaque_immatriculation,immatriculation,plaque,license_plate,registration_plate,fr_plate
     type: field
     match: text
+    # plaque is a memorial plaque number in English data (2559 on the Avenue of Honour plaques of
+    # Ballarat): the values must be French plates.
+    validator: metacrafterext.rules.fr.transport.validate_fr_vehicle_plate
+    needs_values: true
     priority: 1
   frvehicleplatevalue:
     key: fr_vehicle_plate

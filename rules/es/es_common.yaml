@@ -28,7 +28,7 @@ rules:
     # Teléfono and the typo Telefóno of the Argentine cultural directories, tel of the book fair
     # list (3874212884), TEL FIJO of the school lists of Mercedes (423384, 426044/430410). The values
     # are numbers of 5 to 15 digits with separators.
-    rule: '(?i)tel[eé]f[oó]nos?(?:[ _.-](?:de[ _])?(?:contacto|fijo|celular|m[oó]vil|particular|laboral|oficina|sede|\d))?|tel(?:[ _.-]?\d|\.?[ _](?:fijo|celular|m[oó]vil))?|celular(?:[ _.-]?\d)?|tel[eé]fono[ _]celular'
+    rule: '(?i)tel[eé]f[oó]nos?(?:[ _.-](?:de[ _])?(?:contacto|fijo|celular|m[oó]vil|particular|laboral|oficina|sede|\d))?|tel(?:[ _.-]?\d|\.?[ _](?:fijo|celular|m[oó]vil))?|celular(?:[ _.-]?\d)?|tel[eé]fono[ _]celular|tel[eé]fonos?(?:_(?:de_)?[a-z]+){1,6}|(?:[a-z]+_){1,4}tel[eé]fonos?(?:_[a-z]+){0,4}'
     type: field
     match: regex
     validator: metacrafterext.rules.common.directories.validate_phone_digits

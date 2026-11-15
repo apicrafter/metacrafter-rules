@@ -72,3 +72,24 @@ rules:
     maxlen: 8
     fieldregex: '(?i)m[aá]quina|unidad_generadora'
     priority: 1
+  # Found in the open data of the electricity regulator of Mendoza (EPRE, datosabiertos.mendoza.gov.ar;
+  # metacrafter-testdata): users, transformer stations, networks and quality of service by distributor.
+  arelectricitydistributorbyname:
+    key: ar_electricity_distributor
+    name: Argentine electricity distributor by field name (distribuidora, distribuidora_nombre, id_distribuidora)
+    # EDEMSA, Coop. Godoy Cruz and the cooperatives of Mendoza by their town alone (ALTO VERDE).
+    rule: '(?i)(?:id[ _]|nombre[ _])?(?:empresa[ _])?distribuidoras?(?:[ _](?:nombre|id|el[eé]ctrica|de[ _]energ[ií]a))?'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.ar_country.mendoza.validate_ar_electricity_distributor_name
+    needs_values: true
+    priority: 1
+  arelectricitydistributorvalue:
+    key: ar_electricity_distributor
+    name: Argentine electricity distributor by value (EDEMSA, EDENOR, E.D.E.S.T.E.S.A., Coop. Popular Rivadavia)
+    rule: metacrafterext.rules.ar_country.mendoza.validate_ar_electricity_distributor
+    type: data
+    match: func
+    minlen: 3
+    maxlen: 80
+    priority: 1
