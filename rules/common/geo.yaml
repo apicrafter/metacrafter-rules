@@ -605,8 +605,8 @@ rules:
   # reports). Long is a length too: only decimal degrees with three or more decimals are taken.
   longitudebylongname:
     key: longitude
-    name: Longitude in a field named Long or Long_ (JHU CSSE COVID-19 data)
-    rule: long,long_
+    name: Longitude in a field named Long, Long_ or x_long (JHU CSSE COVID-19 data, Buenos Aires open data)
+    rule: long,long_,x_long,long_x
     type: field
     match: text
     validator: metacrafterext.rules.common.statcodes.validate_longitude_long_name
@@ -631,5 +631,27 @@ rules:
     type: field
     match: regex
     validator: metacrafterext.rules.common.generic.validate_place_name
+    needs_values: true
+    priority: 1
+  # Found in the open data of the City of Buenos Aires (data.buenosaires.gob.ar, a 2024 snapshot;
+  # metacrafter-testdata).
+  pluscodevalue:
+    key: plus_code
+    name: Plus Code (Open Location Code) by value (8FVC9G8F+6W, 48Q3CJ00+)
+    rule: metacrafterext.rules.common.urban.validate_plus_code
+    type: data
+    match: func
+    minlen: 9
+    maxlen: 16
+    priority: 1
+  streetintersectionbyname:
+    key: street_intersection
+    name: Street intersection by field name (cruce, interseccion, esquina, ubicacion, intersection, cross_streets) with two street names
+    # DEHEZA@PINTO, CORDOBA AV. & JUNIN, Av. San Juan y Chacabuco, Main St & 2nd Ave. A ubicacion of
+    # traffic lights or cameras is a list of corners (GRIVEO Y SAN MARTIN AV.).
+    rule: (?i)(?:[a-z]+[ _])?(?:cruces?|intersecci(?:[oó]n)?(?:es)?|esquinas?|intersections?|cross[ _]?streets?|crossings?)(?:[ _](?:calles|normalizada|nombre|name))?|ubicaci[oó]n
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.urban.validate_street_intersection
     needs_values: true
     priority: 1

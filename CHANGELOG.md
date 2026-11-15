@@ -9,6 +9,45 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Rules for the Buenos Aires files of metacrafter-testdata** (a 2024 snapshot of data.buenosaires.gob.ar,
+  the open data portal of the City of Buenos Aires, Dateno source cdi00000023; validators in
+  `metacrafterext.rules.ar_country.caba`, `metacrafterext.rules.es.periods` and
+  `metacrafterext.rules.common.urban`, rules in `rules/ar_country/ar_caba.yaml`):
+  - the geography of the city: comunas (`ar_caba_comuna`: 1 to 15, 14.0, Comuna 14, COMUNA 04 in comuna
+    fields, Comuna 14 by value) and the 48 barrios (`ar_caba_barrio`: PALERMO, Villa Crespo, NUÑEZ, VILLA
+    GRAL. MITRE, BOCA, several barrios in one cell) in barrio, zona and sector fields;
+  - the cadastre: parcel designations (`ar_caba_smp`: 067-041-003, 067-098-029a, 067-031A-017) in `smp`
+    fields, block designations (`ar_caba_cadastral_block`: 041-005) in `sm`, property tax accounts
+    (`ar_caba_partida`) in `partida` and `partida_matriz`, districts of the planning code
+    (`ar_caba_zoning_district`: R2a II, C3 I, E4 67, APH 51, UP/APH 2) in `distrito` fields;
+  - schools: CUE and CUE-Anexo codes (`ar_cue`, `ar_cue_anexo`: seven and nine digits that start with a
+    jurisdiction, also without the leading zero) and school districts (`ar_caba_school_district`: 1 to 21
+    in `de` and `distrito_e`, DISTRITO 6 in `distrito`);
+  - the Subte: lines (`ar_caba_subte_line`: A to E, H, PREMETRO, LINEA A; bus line numbers fail) and
+    stations (`ar_caba_subte_station`: PLAZA DE MAYO, CALLAO - MAESTRO ALFREDO BRAVO, the Premetro stops);
+  - CUIL numbers (`ar_cuil`: the prefix of a person and a valid check digit) in cuil fields, identity
+    document types (`ar_identity_document_type`: DNI, LE, LC, CI) in `tipo_documento`;
+  - Spanish days of the week by value (`es_dayofweek`: lunes, MIERCOLES, Sábado) and street
+    intersections (`street_intersection`: DEHEZA@PINTO, CORDOBA AV. & JUNIN, Av. San Juan y Chacabuco)
+    in cruce, interseccion, esquina, ubicacion and intersection fields;
+  - registry types that had no rules: year and month in digits (`yearmonth`: 201909, 2019-09, 09/2019
+    in `periodo`, `anio_mes`, `year_month`), quarters (`quarter`: 1 to 4, 1er trimestre, SEGUNDO in
+    `trimestre`), marital status (`marital_status`: Soltero/a, Casado/a, single, married in
+    `estado_civil`, `situacion_conyugal`, `marital_status`), Open Contracting IDs (`ocds_ocid`:
+    ocds-bulbcf-101-0014-CDI19-1 by value), Argentine vehicle plates (`ar_vehicle_plate`: EOI127, AB123CD
+    in `dominio` and `patente`), Plus Codes (`plus_code`: 8FVC9G8F+6W, 48Q3CJ00+ by value), opening hours
+    (`opening_hours`: lunes a viernes de 8 a 20, 9:00 - 16:00, 24 Horas in `horario` fields), house
+    numbers (`buildingnumber`: `calle_altura`, `calle_nro`; a bare `altura` of numbers of three digits
+    or more);
+  - more names and forms of types with rules: quarters with their year in Spanish (`year_quarter`:
+    primer_trimestre_2019, 3 TRIMESTRE 2019, 2006 - 4to. trim.), years in `periodo`, datetimes in the
+    SAS DATETIME format (09DEC2005:00:00:00), times with a.m. / p.m. (10:19:59 a.m.), longitudes in a
+    field named `x_long` (beside `long` of the Africa Data Hub rules), street names in `calle2`,
+    `calle_cruce`, `cruce`, `calles` and `nomoficial`, surnames in `apellido` and full names in
+    `apellido_y_nombre` and `ayn`, nationalities in `nacionalidad`, YouTube video ids in `id_youtube`.
+    Argentine postal codes in `codpost`, street addresses in `direccion_normalizada`, `dom_norma`,
+    `dom_geo`, `dom_edific` and `dom_establ`.
+
 - **Rules for the Africa Data Hub files of metacrafter-testdata** (a 2024 Dateno snapshot of the
   CKAN portal ckan.africadatahub.org: COVID-19, vaccination, inflation and climate tables; validators
   in the new `metacrafterext.rules.common.statcodes`):
@@ -439,6 +478,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- A place name is not a numbered division: `Comuna 14`, `Distrito 6`, `Zona 3`, `Ward 5` fail
+  `validate_place_name`, so a comuna column of the City of Buenos Aires is no longer `city`.
+- `estado` of statuses is no longer `state`: values with a digit (RENOVADO 2023, the codes 1 to 4) and
+  more status words (VACANTE, Normal, CLAUSURADA, Usado, Disponible, INSCRIPCION VENCIDA) fail
+  `validate_state_not_status`; Baja California passes.
+- `horario` is no longer `time` by its name alone: opening hours (lunes a viernes de 8 a 20) are
+  `opening_hours`, and a horario of times of day (10:42:00) is `time` by its values.
+- `hora` and `horas` are `time` by their values: a `HORA` of hour numbers (9, 17) or of datetimes
+  (31MAR2020:15:00:00) is no time of day.
+- A `dpto` column of apartment letters (A, B, C) is no longer `ar_department`: a lone initial is not
+  an abbreviated department name.
 - A bare `serial_number` field is no VIN and no ISSN (smart meter serials 1000247T, 12H0500467).
 - `revision`, `rev` and the other commit hash field names need hexadecimal hashes (Revision 1, R4 of
   building permits are no commit hashes).

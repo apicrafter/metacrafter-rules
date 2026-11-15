@@ -43,3 +43,24 @@ rules:
     minlen: 6
     maxlen: 8
     priority: 1
+  # Found in the open data of the City of Buenos Aires (data.buenosaires.gob.ar, a 2024 snapshot;
+  # metacrafter-testdata).
+  yearmonthbyname:
+    key: yearmonth
+    name: Year and month by field name (periodo, PERIODO, anio_mes, year_month, yyyymm) with 201909, 2019-09 or 09/2019
+    # A periodo of years (2016) or of quarters is not one.
+    rule: (?i)per[ií]odos?(?:[ _](?:liquidaci[oó]n|fiscal|informado|mensual))?|a[ñn]i?o[ _]?mes|mes[ _]?a[ñn]i?o|yyyy[ _-]?mm|year[ _-]?month|month[ _-]?year|anomes
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.urban.validate_yearmonth
+    needs_values: true
+    priority: 1
+  yearbyperiodoname:
+    key: year
+    name: Year in a periodo field (periodo, PERIODO, período) with calendar years
+    rule: (?i)per[ií]odos?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.urban.validate_calendar_year
+    needs_values: true
+    priority: 1

@@ -46,3 +46,60 @@ rules:
     type: field
     priority: 1
     rule: fecha_data,fecha
+  # Found in the open data of the City of Buenos Aires (data.buenosaires.gob.ar, a 2024 snapshot;
+  # metacrafter-testdata).
+  esdayofweekvalue:
+    key: es_dayofweek
+    name: Spanish day of the week by value (lunes, Miércoles, SABADO)
+    rule: metacrafterext.rules.es.periods.validate_es_dayofweek
+    type: data
+    match: func
+    minlen: 5
+    maxlen: 9
+    priority: 1
+  esquarterbyname:
+    key: quarter
+    name: Quarter of a year by Spanish field name (trimestre, TRIMESTRE, trim) with 1 to 4, 1er trimestre, SEGUNDO
+    rule: (?i)(?:(?:nro|n[uú]mero)[ _])?trim(?:estre)?s?_?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.es.periods.validate_es_quarter
+    needs_values: true
+    priority: 1
+  esyearquartervalue:
+    key: year_quarter
+    name: Quarter with its year in Spanish by value (primer_trimestre_2019, 3 TRIMESTRE 2019, 2006 - 4to. trim.)
+    rule: metacrafterext.rules.es.periods.validate_es_year_quarter
+    type: data
+    match: func
+    minlen: 7
+    maxlen: 32
+    priority: 1
+  estimeampmvalue:
+    key: time
+    name: Time of day with a.m. / p.m. by value (10:19:59 a.m., 03:46:02 p.m.)
+    rule: metacrafterext.rules.es.periods.validate_time_ampm_dotted
+    type: data
+    match: func
+    minlen: 6
+    maxlen: 14
+    priority: 1
+  esopeninghoursbyname:
+    key: opening_hours
+    name: Opening hours by Spanish field name (horario, horarios, horario_de_atencion, dias y horario) with days or hour ranges
+    # lunes a viernes de 8 a 20, 9:00 - 16:00, 24 Horas. A horario of single times (10:42:00) is time.
+    rule: (?i)(?:d[ií]as?[ _]y[ _])?horarios?(?:[ _](?:de[ _])?(?:atenci[oó]n|at|funcionamiento|apertura|visitas?|cursada|trabajo|estaci[oó]n|de))?|d[ií]as?[ _]hora(?:rio)?s?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.es.periods.validate_opening_hours
+    needs_values: true
+    priority: 1
+  eshorariotimebyname:
+    key: time
+    name: Time of day in a Spanish horario field (10:42:00, 8:30, 20:00 hs)
+    rule: (?i)horario
+    type: field
+    match: regex
+    validator: metacrafterext.rules.es.periods.validate_time_of_day
+    needs_values: true
+    priority: 1

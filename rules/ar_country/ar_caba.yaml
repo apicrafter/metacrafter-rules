@@ -1,0 +1,166 @@
+name: ar-caba
+description: City of Buenos Aires (comunas, barrios, cadastre, school codes, Subte, planning code) and Argentine CUIL, identity document types and vehicle plates
+context: geo
+lang: es
+country_code: ar
+# Found in the open data of the City of Buenos Aires (data.buenosaires.gob.ar, a 2024 snapshot;
+# metacrafter-testdata). Almost every table of the city has a comuna and a barrio column.
+rules:
+  arcabacomunabyname:
+    key: ar_caba_comuna
+    name: Comuna of the City of Buenos Aires by field name (comuna, COMUNA, domicilio_comuna, comunas) with 1 to 15 or Comuna 14
+    # A Chilean comuna column holds names of municipalities and fails; the comunas of Medellín or
+    # Cali, also numbered, cannot be told apart.
+    rule: (?i)(?:[a-z]+[ _])*comunas?(?:[ _][a-z0-9]+){0,2}|(?:[a-z]+_)?cgpc
+    type: field
+    match: regex
+    validator: metacrafterext.rules.ar_country.caba.validate_ar_caba_comuna
+    needs_values: true
+    priority: 1
+  arcabacomunavalue:
+    key: ar_caba_comuna
+    name: Comuna of the City of Buenos Aires by value (Comuna 14, COMUNA 04)
+    # geo_desc of the city budget, lugar_residencia of the statistics office, departamento of INDEC.
+    rule: metacrafterext.rules.ar_country.caba.validate_ar_caba_comuna_name
+    type: data
+    match: func
+    minlen: 8
+    maxlen: 12
+    priority: 1
+  arcababarriobyname:
+    key: ar_caba_barrio
+    name: Barrio of the City of Buenos Aires by field name (barrio, BARRIO, barrios, domicilio_barrio, zona, sector) with the 48 barrios
+    # PALERMO, Villa Crespo, NUÑEZ, VILLA GRAL. MITRE, BOCA; several barrios of a comuna in one cell
+    # (FLORESTA - MONTE CASTRO). Barrios of other cities fail.
+    rule: (?i)(?:[a-z]+[ _])*barrios?(?:[ _][a-z0-9]+){0,2}|zona|sector|vecindario
+    type: field
+    match: regex
+    validator: metacrafterext.rules.ar_country.caba.validate_ar_caba_barrio
+    needs_values: true
+    priority: 1
+  arcabasmpbyname:
+    key: ar_caba_smp
+    name: Buenos Aires cadastral parcel designation by field name (smp, SMP, smp1, seccion_manzana_parcela)
+    # 067-041-003, 067-098-029a, 067-031A-017. A US phone number has the same hyphens, so the rule
+    # needs the field name.
+    rule: (?i)(?:[a-z]+[ _])?smp\d?|secci[oó]n[ _]manzana[ _]parcela|nomenclatura(?:[ _]catastral)?|nom[ _]catastral
+    type: field
+    match: regex
+    validator: metacrafterext.rules.ar_country.caba.validate_ar_caba_smp
+    needs_values: true
+    priority: 1
+  arcabacadastralblockbyname:
+    key: ar_caba_cadastral_block
+    name: Buenos Aires cadastral block designation by field name (sm, SM, codigo_man) with section-block values
+    rule: (?i)sm|cod(?:igo)?[ _]man(?:zana)?|secci[oó]n[ _]manzana|sec[ _]manz
+    type: field
+    match: regex
+    validator: metacrafterext.rules.ar_country.caba.validate_ar_caba_cadastral_block
+    needs_values: true
+    priority: 1
+  arcabapartidabyname:
+    key: ar_caba_partida
+    name: Buenos Aires property tax account number by field name (partida, PARTIDA, partida_matriz)
+    # A budget partida (3.5.2, or three digits) fails the length.
+    rule: (?i)(?:nro|n[uú]mero)?[ _]?partida(?:[ _](?:matriz|inmobiliaria|inmob|abl|nro|numero))?|pda[ _]?matriz
+    type: field
+    match: regex
+    validator: metacrafterext.rules.ar_country.caba.validate_ar_caba_partida
+    needs_values: true
+    priority: 1
+  arcuebyname:
+    key: ar_cue
+    name: Argentine school establishment code by field name (cue, CUE, codigo_cue) with seven digits starting with a jurisdiction
+    rule: (?i)(?:(?:cod(?:igo)?|nro|id|n[uú]mero)[ _]?)?cue(?:[ _](?:id|cod|codigo|establecimiento|sede))?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.ar_country.caba.validate_ar_cue
+    needs_values: true
+    priority: 1
+  arcueanexobyname:
+    key: ar_cue_anexo
+    name: Argentine school site code by field name (cueanexo, CUE_ANEXO, cue_anexo) with nine digits
+    rule: (?i)(?:(?:cod(?:igo)?|nro|id)[ _]?)?cue[ _-]?anexos?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.ar_country.caba.validate_ar_cue_anexo
+    needs_values: true
+    priority: 1
+  arcabaschooldistrictbyname:
+    key: ar_caba_school_district
+    name: Buenos Aires school district by field name (de, DE, distrito_e, distrito_escolar) with 1 to 21
+    rule: (?i)d[ _.]?e\.?|dist(?:rito)?[ _.]?e(?:sc(?:olar)?)?|distritoescolar|dis[ct]?[ _]esc
+    type: field
+    match: regex
+    validator: metacrafterext.rules.ar_country.caba.validate_ar_caba_school_district
+    needs_values: true
+    priority: 1
+  arcabaschooldistrictbydistrito:
+    key: ar_caba_school_district
+    name: Buenos Aires school district in a distrito field (DISTRITO 6, Distrito Escolar 9)
+    # The enrolment data of the city; a distrito of the planning code (R2a II) is ar_caba_zoning_district.
+    rule: (?i)distrito
+    type: field
+    match: regex
+    validator: metacrafterext.rules.ar_country.caba.validate_ar_caba_school_district_name
+    needs_values: true
+    priority: 1
+  arcabasubtelinebyname:
+    key: ar_caba_subte_line
+    name: Buenos Aires Underground line by field name (linea, LINEA, lineasub, lineas_de_subte, fr1_linea) with A to E, H or Premetro
+    # Bus lines of the same field name are numbers and fail.
+    rule: (?i)(?:[a-z0-9]+_)?l[ií]neas?(?:[ _](?:de[ _])?(?:subte|sub|h))?|lineasub|l[ií]neas_de_|subte
+    type: field
+    match: regex
+    validator: metacrafterext.rules.ar_country.caba.validate_ar_caba_subte_line
+    needs_values: true
+    priority: 1
+  arcabasubtestationbyname:
+    key: ar_caba_subte_station
+    name: Buenos Aires Underground station by field name (estacion, ESTACION, nombre_estacion) with station names
+    # The names of the Subte and Premetro stations; railway and bicycle stations fail.
+    rule: (?i)(?:nombre[ _])?estaci[oó]n(?:es)?(?:[ _](?:nombre|subte))?|(?:desde|hasta|origen|destino)[ _]estaci[oó]n
+    type: field
+    match: regex
+    validator: metacrafterext.rules.ar_country.caba.validate_ar_caba_subte_station
+    needs_values: true
+    priority: 1
+  arcabazoningdistrictbyname:
+    key: ar_caba_zoning_district
+    name: Buenos Aires planning code district by field name (distrito, DISTRITO_1, zonificacion) with R2a II, C3 I, E4 67, APH 51
+    rule: (?i)distrito(?:[ _]?[1-4c])?|zonificaci[oó]n|distrito[ _]cpu
+    type: field
+    match: regex
+    validator: metacrafterext.rules.ar_country.caba.validate_ar_caba_zoning_district
+    needs_values: true
+    priority: 1
+  arcuilbyname:
+    key: ar_cuil
+    is_pii: True
+    name: Argentine CUIL by field name (cuil, CUIL, cuil_beneficiario) with the prefix of a person and a valid check digit
+    # A cuil column of companies (30-...) is still cuit by the CUIT rule.
+    rule: (?i)(?:[a-z]+[ _])*cuil(?:[ _][a-z]+)*
+    type: field
+    match: regex
+    validator: metacrafterext.rules.ar_country.caba.validate_ar_cuil
+    needs_values: true
+    priority: 1
+  aridentitydocumenttypebyname:
+    key: ar_identity_document_type
+    name: Argentine identity document type by field name (tipo_documento, tipo_doc, TipoDoc) with DNI, LE, LC, CI
+    rule: (?i)tipo[ _]?(?:de[ _])?doc(?:umento)?(?:[ _][a-z]+)?|doc(?:umento)?[ _]tipo|tipo[ _]dni
+    type: field
+    match: regex
+    validator: metacrafterext.rules.ar_country.caba.validate_ar_identity_document_type
+    needs_values: true
+    priority: 1
+  arvehicleplatebyname:
+    key: ar_vehicle_plate
+    name: Argentine vehicle plate by field name (dominio, patente, DOMINIO) with ABC123 or AB123CD
+    # dominio is also the domain of a survey (Resto de la Ciudad) and a web domain: both fail.
+    rule: (?i)(?:[a-z]+[ _])*(?:dominio|patente)s?(?:[ _](?:veh[ií]culo|automotor|auto|nro|n[uú]mero))?|(?:nro|n[uú]mero)[ _]?(?:dominio|patente)|chapa[ _]?patente
+    type: field
+    match: regex
+    validator: metacrafterext.rules.ar_country.caba.validate_ar_vehicle_plate
+    needs_values: true
+    priority: 1

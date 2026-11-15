@@ -633,7 +633,8 @@ def validate_ar_department_name(value):
     if " ".join(tokens) in DEPARTMENT_NAMES:
         return True
     # Initials (Pte. Roque S. Peña): a one-letter word stands for any word with that letter.
-    if any(len(t) == 1 for t in tokens):
+    # A lone initial is the letter of an apartment (dpto A, B, C), not an abbreviated department.
+    if any(len(t) == 1 for t in tokens) and any(len(t) > 1 for t in tokens):
         for name in _NAMES_BY_LENGTH.get(len(tokens), ()):
             if all(t == w or (len(t) == 1 and w.startswith(t)) for t, w in zip(tokens, name)):
                 return True

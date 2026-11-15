@@ -25,3 +25,15 @@ rules:
     minlen: 4
     maxlen: 120
     priority: 1
+  # Found in the Buenos Aires Compras OCDS exports (data.buenosaires.gob.ar, metacrafter-testdata).
+  ocdsocidvalue:
+    key: ocds_ocid
+    name: Open Contracting ID by value (ocds-bulbcf-101-0014-CDI19, ocds-213czf-000-00001)
+    # The prefix a publisher registers with the Open Contracting Partnership: ocds- and six
+    # characters, then the publisher's own process id.
+    rule: ocds-[a-z0-9]{6}-[A-Za-z0-9][A-Za-z0-9._/:-]{0,80}
+    type: data
+    match: regex
+    minlen: 13
+    maxlen: 96
+    priority: 1
