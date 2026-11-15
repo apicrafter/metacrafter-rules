@@ -45,3 +45,94 @@ rules:
     fieldrule: cod_mun,codigo_siafi,cod_siafi,siafi,cod_municipio_siafi,codigo_municipio_siafi,cd_municipio_siafi,id_municipio_siafi
     fieldrulematch: text
     priority: 1
+  # The 27 federative units by abbreviation: uf, sg_uf_programa, UNIDADE_FEDERACAO, uf_sede_agente, estado
+  # (the CNCFlora occurrences: ES, BA). The BNDES pads them with a space ( SP).
+  brstatecodebyname:
+    key: br_state_code
+    name: Brazilian federative unit abbreviation (UF) by field name and value (uf, sg_uf, unidade_federacao, estado)
+    rule: (?i)(?:(?:sg|sigla|cod|cd|nm)[ _])?uf(?:[ _][a-z_]+)?|(?:[a-z_]+[ _])uf|unidade[ _]federa(?:cao|ção|tiva)|(?:sg[ _]|sigla[ _])?estado(?:[ _][a-z_]+)?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.br.codes.validate_br_state_code
+    needs_values: true
+    priority: 1
+  brstatebyname:
+    key: br_state
+    name: Brazilian federative unit by name in a field named for it (estado, stateProvince, nm_uf, nome_estado)
+    rule: (?i)(?:nm[ _]|nome[ _](?:da[ _]|do[ _])?)?(?:uf|estado)(?:[ _][a-z_]+)?|state[ _]?province|unidade[ _]federa(?:cao|ção|tiva)
+    type: field
+    match: regex
+    validator: metacrafterext.rules.br.codes.validate_br_state
+    needs_values: true
+    priority: 1
+  # A headerless table of the Banco Central do Brasil (counterfeit notes by state: AMAZONAS) has no field name.
+  # São Paulo and Rio de Janeiro are cities too, and most of the cities of an airline or company list: fields
+  # named for a city, municipality, address or seat are not read.
+  brstatevalue:
+    key: br_state
+    name: Brazilian federative unit by name (São Paulo, MINAS GERAIS, Ceara)
+    rule: metacrafterext.rules.br.codes.validate_br_state
+    type: data
+    match: func
+    minlen: 4
+    maxlen: 19
+    fieldregex: (?i)^(?!.*(?:cidade|munic|city|town|locali|endere|logradouro|bairro|sede|capital|naturalidade|origem|destino|aeroporto|airport))
+    priority: 2
+  brregionbyname:
+    key: br_region
+    name: Region of Brazil (Norte, Nordeste, Sudeste, Sul, Centro-Oeste) by field name (regiao, nm_regiao, nm_regiao_ies_estudo)
+    rule: (?i)(?:(?:nm|nome|ds|sg)[ _])?regi[aã]o(?:[ _][a-z_]+)?|(?:[a-z_]+[ _])regi[aã]o
+    type: field
+    match: regex
+    validator: metacrafterext.rules.br.codes.validate_br_region
+    needs_values: true
+    priority: 1
+  # IBGE municipality codes (municipio_codigo of the BNDES operations: 3550308) have a check digit.
+  brmunicipalitycodebyname:
+    key: br_municipality_code
+    name: IBGE municipality code by field name and check digit (municipio_codigo, cod_municipio, codigo_ibge, cd_mun)
+    rule: (?i)(?:[a-z_]+[ _])?(?:c[oó]d(?:igo)?|cd|co|id)[ _]?(?:do[ _])?(?:munic[ií]pio|mun|ibge)(?:[ _][a-z_]+)?|munic[ií]pio[ _](?:c[oó]digo|cod|ibge)|(?:c[oó]d(?:igo)?[ _])?ibge(?:[ _]code)?|geoc[oó]digo
+    type: field
+    match: regex
+    validator: metacrafterext.rules.br.codes.validate_br_municipality_code
+    needs_values: true
+    priority: 1
+  # CEP postal codes in fields named for them (cep_sede_agente: 89041002; CEP do Arquivo Público: 13469-070),
+  # and by value with the hyphen.
+  brcepbyname:
+    key: br_postcode
+    name: Brazilian CEP by field name (cep, cep_sede_agente, CEP do Arquivo Público, nr_cep)
+    rule: (?i)(?:.*[ _])?cep(?:[ _].*)?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.br.codes.validate_br_postcode
+    needs_values: true
+    priority: 1
+  brcepvalue:
+    key: br_postcode
+    name: Brazilian CEP by value (13469-070)
+    rule: metacrafterext.rules.br.codes.validate_br_postcode_formatted
+    type: data
+    match: func
+    minlen: 9
+    maxlen: 9
+    priority: 2
+  # Phone numbers with the area code (DDD): (19) 3472-9700 in the directory of the public archives of São Paulo.
+  brphonebyname:
+    key: br_phone
+    name: Brazilian phone number in the national format by field name (telefone, Telefone do Arquivo Público, fone)
+    rule: (?i)(?:.*[ _])?(?:telefones?|fone|tel|celular|whatsapp)(?:[ _].*)?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.br.codes.validate_br_phone_national
+    needs_values: true
+    priority: 1
+  brphonevalue:
+    key: br_phone
+    name: Brazilian phone number by value ((19) 3472-9700, (11) 98765-4321)
+    rule: metacrafterext.rules.br.codes.validate_br_phone_formatted
+    type: data
+    match: func
+    minlen: 13
+    maxlen: 16
+    priority: 2

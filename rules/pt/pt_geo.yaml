@@ -46,3 +46,16 @@ rules:
     fieldrule: geocod,geocodigo,geo_cod,codigo_geografico,código geográfico,geocode
     fieldrulematch: text
     priority: 1
+  # Country names in Portuguese: the destination of BNDES export credits (pais_destino_das_exportacoes:
+  # EQUADOR, REPUBLICA DOMINICANA) and the countries of CAPES events and authors (NM_PAIS: BRASIL, ESTADOS
+  # UNIDOS). Spanish tables name the field pais too, and most Latin American countries are written alike in
+  # both languages, so only Portuguese field names are read.
+  ptcountrynamebyname:
+    key: ptcountryname
+    name: Country name in Portuguese by field name (pais, nm_pais, pais_origem, pais_destino_das_exportacoes)
+    rule: (?i)(?:(?:nm|nome)[ _](?:do[ _])?)?pa[ií]s(?:es)?(?:[ _](?:origem|de[ _]origem|destino|de[ _]destino|destino[ _]das[ _]exporta[cç][oõ]es|sede|nascimento|resid[eê]ncia))?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.pt.countries.validate_pt_country_name
+    needs_values: true
+    priority: 1

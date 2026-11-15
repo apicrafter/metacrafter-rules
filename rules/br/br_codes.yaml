@@ -1,0 +1,93 @@
+name: br-codes
+description: Brazilian company, bank and goods codes (CNPJ, CNPJ root, ISPB, COMPE, CNAE, NCM, porte)
+context: finances
+lang: pt
+country_code: br
+rules:
+  # The BNDES and the Banco Central do Brasil give the CNPJ of companies, funds and banks under many field
+  # names (cnpj_do_exportador, cnpj_fabricante, cnpj_do_agente_financeiro, cnpj_consorcio), formatted
+  # (12.917.918/0001-89, 60.701.190.0001-04 with a dot for the slash) or as digits that a spreadsheet stripped
+  # of their leading zeros (5463212000129). The check digits decide.
+  brcnpjbyname:
+    key: cnpj
+    name: Brazilian CNPJ by field name and check digits (cnpj_do_exportador, cnpj_fabricante, cnpj_empresa)
+    rule: (?i)(?:.*[ _])?cnpj(?:[ _].*)?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.br.codes.validate_cnpj
+    needs_values: true
+    priority: 1
+  brcnpjformattedvalue:
+    key: cnpj
+    name: Brazilian CNPJ by value in its printed form (12.917.918/0001-89) with check digits
+    rule: metacrafterext.rules.br.codes.validate_cnpj_formatted
+    type: data
+    match: func
+    minlen: 18
+    maxlen: 18
+    priority: 1
+  # The complaints ranking of the Banco Central do Brasil identifies each bank and consortium administrator
+  # by the eight digits of its CNPJ root (CNPJ IF, CNPJ AC: 23862762, 02658435).
+  brcnpjrootbyname:
+    key: br_cnpj_root
+    name: Brazilian CNPJ root (CNPJ básico, eight digits) by field name (CNPJ IF, CNPJ AC, cnpj_basico)
+    rule: (?i)(?:.*[ _])?cnpj(?:[ _].*)?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.br.codes.validate_br_cnpj_root
+    needs_values: true
+    priority: 1
+  # The list of participants of the STR, the reserve transfer system of the Banco Central do Brasil: ISPB code
+  # (00000000, 00360305) and COMPE number of each bank (Número_Código: 001, 237, n/a).
+  brispbbyname:
+    key: br_ispb
+    name: ISPB code of the Brazilian payment system by field name (ISPB, cod_ispb, ispb_participante)
+    rule: (?i)(?:.*[ _])?ispb(?:[ _].*)?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.br.codes.validate_br_ispb
+    needs_values: true
+    priority: 1
+  brcompecodebyname:
+    key: br_compe_code
+    name: COMPE bank number by field name (Número_Código, codigo_banco, cod_banco, compe)
+    rule: (?i)n[uú]mero[ _]c[oó]digo|(?:c[oó]d(?:igo)?|n[uú]m(?:ero)?|nr|cd|co)[ _](?:do[ _])?banco|banco[ _](?:c[oó]d(?:igo)?|n[uú]mero)|(?:c[oó]d(?:igo)?[ _])?compe|bank[ _]?(?:code|number)
+    type: field
+    match: regex
+    validator: metacrafterext.rules.br.codes.validate_br_compe_code
+    needs_values: true
+    priority: 1
+  # CNAE activity codes: the BNDES operations write the subclass after the letter of its section
+  # (subsetor_cnae_codigo: C1011200, O8411600); registers give 4711-3/02 or 4711302. Columns of activity
+  # names (setor_cnae, subsetor_cnae_nome) fail the validator.
+  brcnaebyname:
+    key: br_cnae
+    name: Brazilian CNAE activity code by field name (cnae, subsetor_cnae_codigo, cnae_fiscal, cd_cnae)
+    rule: (?i)(?:.*[ _])?cnae(?:[ _].*)?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.br.codes.validate_br_cnae
+    needs_values: true
+    priority: 1
+  # NCM goods codes of the FINAME accreditation list of the BNDES (ncm: 84328000) and of the foreign trade
+  # statistics (co_ncm); ncm_desc holds the description and fails the validator.
+  mercosurncmbyname:
+    key: mercosur_ncm
+    name: Mercosur NCM goods code by field name (ncm, co_ncm, cd_ncm, codigo_ncm)
+    rule: (?i)(?:.*[ _])?ncm(?:[ _].*)?|nomenclatura[ _]comum[ _]do[ _]mercosul
+    type: field
+    match: regex
+    validator: metacrafterext.rules.br.codes.validate_mercosur_ncm
+    needs_values: true
+    priority: 1
+  # The size class of a client or exporter in the BNDES operations (porte_do_cliente: MICRO, PEQUENA, MÉDIA,
+  # GRANDE). The size of a municipality (Porte: Pequeno 1, Metrópole) fails the validator.
+  brcompanysizebyname:
+    key: br_company_size
+    name: Size class (porte) of a Brazilian company by field name (porte, porte_do_cliente, porte_empresa)
+    rule: (?i)(?:.*[ _])?porte(?:[ _].*)?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.br.codes.validate_br_company_size
+    needs_values: true
+    priority: 1

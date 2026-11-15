@@ -1,0 +1,63 @@
+name: pt-taxa
+description: Taxonomy in Portuguese (taxon ranks and statuses, field names of taxa, scientific names and authors)
+context: science
+lang: pt
+rules:
+  # The Flora do Brasil checklists of the Jardim Botânico do Rio de Janeiro: Rank (Família, Gênero, Espécie,
+  # FAMILIA, SUB_ESPECIE), Status (Nome aceito, Sinônimo), and the taxa in columns named Família, Gênero,
+  # Divisão, Ordem; the CNCFlora lists: Nome científico, nome aceito, familia aceita, Espécies, Autor. Genero
+  # without the accent is the Spanish word for gender, so only Gênero is read.
+  pttaxonrankvalue:
+    key: dwc_taxon_rank
+    name: Taxon rank in Portuguese (Família, Gênero, Espécie, Variedade, SUB_ESPECIE) in a field named for it
+    rule: reino,sub_reino,subreino,filo,divisão,divisao,subdivisão,subdivisao,classe,subclasse,sub_classe,ordem,subordem,sub_ordem,família,familia,subfamília,subfamilia,sub_familia,tribo,subtribo,gênero,genero,subgênero,subgenero,sub_genero,seção,secao,espécie,especie,subespécie,subespecie,sub_especie,variedade,subvariedade,sub_variedade,forma,subforma,sub_forma
+    type: data
+    match: text
+    fieldrule: rank,taxonrank,taxon_rank,nivel,nível,nivel_taxonomico,nível taxonômico,categoria_taxonomica,categoria taxonômica,rank_taxonomico
+    fieldrulematch: text
+    priority: 1
+  pttaxonomicstatusvalue:
+    key: dwc_taxonomic_status
+    name: Taxonomic status in Portuguese (Nome aceito, Sinônimo) in a field named for it
+    rule: nome aceito,nome_aceito,aceito,aceita,sinônimo,sinonimo,sinônimo heterotípico,sinonimo heterotipico,sinônimo homotípico,sinonimo homotipico,basiônimo,basionimo,nome duvidoso,nome mal aplicado
+    type: data
+    match: text
+    fieldrule: status,taxonomic_status,status_taxonomico,status taxonômico,situação,situacao,situacao_taxonomica,situação taxonômica
+    fieldrulematch: text
+    priority: 1
+  pttaxonnamebyfield:
+    key: taxon_name
+    name: Taxon name above the species in a field named for its rank in Portuguese (Família, Gênero, Ordem, familia aceita)
+    rule: família,familia,famílias,familias,familia aceita,família aceita,gênero,gêneros,genêros,ordem,classe,divisão,divisao,filo,reino,tribo,subfamília,subfamilia
+    type: field
+    match: text
+    validator: metacrafterext.rules.common.generic.validate_taxon_name
+    needs_values: true
+    priority: 1
+  ptspeciesbyfield:
+    key: species
+    name: Scientific name of a species in a field named for it in Portuguese (Nome científico, nome aceito, Espécies, Espécie sem autor)
+    rule: (?i)nomes?[ _]cient[ií]ficos?|nome[ _]aceito|esp[eé]cies?(?:[ _]sem[ _]autor)?|t[aá]xon(?:[ _]completo.*)?|nome[ _]do[ _]t[aá]xon
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.fieldwork.validate_scientific_name
+    needs_values: true
+    priority: 1
+  ptauthorshipbyfield:
+    key: dwc_scientific_name_authorship
+    name: Authorship of a scientific name in a field named for it in Portuguese (Autor, autor do táxon)
+    rule: (?i)autor(?:[ _]do[ _](?:t[aá]xon|nome))?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.fieldwork.validate_scientific_name_authorship
+    needs_values: true
+    priority: 1
+  ptvernacularnamebyfield:
+    key: vernacular_name
+    name: Vernacular name of a taxon in a field named for it in Portuguese (nome popular, NOME POPULAR, nome vulgar)
+    rule: (?i)nomes?[ _](?:popular(?:es)?|vulgar(?:es)?|comu(?:m|ns))
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.taxa.validate_vernacular_name
+    needs_values: true
+    priority: 1

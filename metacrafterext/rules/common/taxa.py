@@ -129,3 +129,34 @@ def validate_conservation_status(value):
     """A conservation status in words: Critically Endangered, Vulnerable, Regionally Conservation
     Dependent, Least concern (not VU, Bird or Current)."""
     return " ".join(str(value).strip().split()).lower() in CONSERVATION_STATUSES
+
+
+# IUCN Red List categories as abbreviations (EX, EW, CR, EN, VU, NT, LC, DD, NE), the lower-risk subcategories
+# of the 1994 version (LR/cd, LR/nt, LR/lc), CR(PEX) of the Brazilian lists for possibly extinct species,
+# and RE (regionally extinct) of national assessments. The CNCFlora files of the Jardim Botânico do Rio de
+# Janeiro give them in a column of their own (Categoria de ameaça: CR, EN, VU).
+_IUCN_CATEGORIES = {"EX", "EW", "RE", "CR", "EN", "VU", "NT", "LC", "DD", "NE", "NA", "LR/CD", "LR/NT", "LR/LC",
+                    "CR(PEX)", "CR (PEX)", "CR(PE)", "CR (PE)", "CR(PEW)"}
+
+
+def validate_iucn_red_list_category(value):
+    """An IUCN Red List category as its abbreviation: CR, EN, VU, NT, LC, DD, EX, EW, also LR/nt and
+    CR(PEX). Words (Vulnerable) are conservation_status."""
+    return " ".join(str(value).split()).upper() in _IUCN_CATEGORIES
+
+
+# IUCN Red List criteria: A to E with their subcriteria, joined by + or ;, as the CNCFlora assessments list
+# them (B1ab(iii), B1ab(i,iii)+2ab(ii,iii), D2, A2c, C2a(i), B2ab(ii,iii,iv,v), and B2(iii,v) without the
+# letters).
+_IUCN_ROMAN = r"\((?:i|ii|iii|iv|v)(?:\s*,\s*(?:i|ii|iii|iv|v))*\)"
+_IUCN_SUB = r"(?:[a-e]+(?:" + _IUCN_ROMAN + r")?|" + _IUCN_ROMAN + r")+"
+_IUCN_CRITERION = r"(?:A[1-4]" + _IUCN_SUB + r"|B[12]" + _IUCN_SUB + r"(?:\+2" + _IUCN_SUB + r")?|C[12]?" \
+    + r"(?:" + _IUCN_SUB + r")?(?:\+2" + _IUCN_SUB + r")?|D[12]?|E)"
+_IUCN_CRITERIA = re.compile(_IUCN_CRITERION + r"(?:\s*[+;]\s*" + _IUCN_CRITERION + r")*")
+
+
+def validate_iucn_red_list_criteria(value):
+    """The IUCN Red List criteria of an assessment: B1ab(iii), B1ab(iii,v)+2ab(iii,v), D2, A2c, C2a(i),
+    A4cd; B2ab(ii,iii)."""
+    text = "".join(str(value).split())
+    return bool(text) and bool(_IUCN_CRITERIA.fullmatch(text)) and text not in {"E"}
