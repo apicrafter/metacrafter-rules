@@ -1,0 +1,44 @@
+name: bh-geo
+description: Bahraini geographic identifiers (governorates, address blocks)
+context: geo
+lang: ar
+country_code: bh
+# Found in the Bahrain Open Data Portal (data.gov.bh, Opendatasoft, a 2024 snapshot;
+# metacrafter-testdata): census and vital statistics by governorate in English and Arabic
+# (governorate, lmhfz for المحافظة) and directories of places (mosques, embassies, banks, petrol
+# stations) with the block of each place.
+rules:
+  bhgovernoratebyname:
+    key: bh_governorate
+    name: Bahrain governorate by field name (governorate, المحافظة, lmhfz, lmhfzt) with the governorates
+    # The validator takes the four governorates and the former Central one in English and Arabic: a
+    # column of the governorates of another country (Cairo, Giza; Amman) does not pass.
+    rule: '(?i)(?:[a-z]+[ _]){0,2}governorates?(?:[ _](?:name|en|ar|english|arabic))?|(?:l|al)?mhfz[t]?|المحافظ[ةه]|محافظ[ةه]'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.bh.geo.validate_bh_governorate
+    needs_values: true
+    priority: 1
+  bhgovernoratevalue:
+    key: bh_governorate
+    name: Bahrain governorate by value (Capital, Muharraq, Northern, Southern, العاصمة, المحرق, الشمالية, الجنوبية)
+    # A column of all four in English, or in Arabic: tables by usual residence of the mother of the
+    # Ministry of Health (usual_residence_of_mother, mkn_qm_l_m_lm_td).
+    rule: metacrafterext.rules.bh.geo.validate_bh_governorate
+    type: data
+    match: func
+    minlen: 5
+    maxlen: 30
+    priority: 2
+  bhblockbyname:
+    key: bh_block
+    name: Bahrain address block number by field name (Block, block_no, رقم المجمع) with numbers 101 to 1299
+    # An address of Bahrain is building, road and block; the block is the postal code (bh_postcode).
+    # The directories of data.gov.bh write it as an integer or a float (305.0). Blocks of other
+    # countries (ACT land blocks of one or two digits, census blocks) mostly fail the range.
+    rule: '(?i)block(?:[ _]?(?:no|number|num|nr))?|رقم[ _]المجمع|المجمع|rqm_?lmjm|lmjm'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.bh.geo.validate_bh_block
+    needs_values: true
+    priority: 1

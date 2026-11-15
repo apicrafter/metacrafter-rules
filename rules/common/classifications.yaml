@@ -1,0 +1,57 @@
+name: classifications
+description: Titles and codes of international statistical classifications (ISIC Rev. 4 sections, ICD-10 chapters, COICOP)
+context: stats
+lang: common
+country_code: xx
+# Found in the Bahrain Open Data Portal (data.gov.bh, a 2024 snapshot; metacrafter-testdata):
+# foreign investment stocks and recruitment by ISIC section in English and Arabic, deaths by ICD-10
+# chapter (D50 - D89, Diseases of the Blood & Blood Forming Organs, أمراض الدم وأعضاء تكوين الدم)
+# and the consumer price index by COICOP division, group and class (01.1.7).
+rules:
+  isicsectionnamebyname:
+    key: isicrev4_section_name
+    name: ISIC Rev. 4 section title by field name (ISIC, industry, sector, economic_activity, النشاط) with section titles
+    # lnsht is النشاط (the activity), lnsht_isic النشاط ISIC, lqt القطاع (the sector).
+    rule: '(?i)(?:isic|nace)(?:[ _.-]?(?:rev[ _.]?4|section|sector|activity|name|title|desc(?:ription)?|en|ar))*|(?:l|al)?nsht(?:_isic)?|(?:l|al)qt|(?:main[ _])?(?:economic[ _])?(?:activit(?:y|ies)|sectors?|industry|industries)(?:[ _](?:name|title|en|ar))?|النشاط(?:[ _]الاقتصادي)?|القطاع'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.classifications.validate_isic_section_name
+    needs_values: true
+    priority: 1
+  isicsectionnamevalue:
+    key: isicrev4_section_name
+    name: ISIC Rev. 4 section title by value (Manufacturing, Mining & Quarrying, الصناعة التحويلية)
+    rule: metacrafterext.rules.common.classifications.validate_isic_section_name
+    type: data
+    match: func
+    minlen: 5
+    maxlen: 160
+    priority: 2
+  icd10chapterbyname:
+    key: icd10_chapter
+    name: ICD-10 chapter by field name (international_disease_code, cause_of_death, سبب الوفاة) with chapter ranges or titles
+    # The tables by chapter end with a row of the other causes (Others, أخرى).
+    rule: '(?i)(?:international[ _])?disease[ _](?:code|chapter|group)s?|icd[ _.-]?10[ _.-]?(?:chapter|group|range)s?|(?:underlying[ _])?causes?[ _]of[ _]death|sbb_?lwf[a-z]*|سبب[ _]الوفا[ةه]|أسباب[ _]الوفا[ةه]'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.classifications.validate_icd10_chapter_or_other
+    needs_values: true
+    priority: 1
+  icd10chaptervalue:
+    key: icd10_chapter
+    name: ICD-10 chapter by value (A00-B99, C00 - D49, Diseases of the Circulatory System, الأورام)
+    rule: metacrafterext.rules.common.classifications.validate_icd10_chapter
+    type: data
+    match: func
+    minlen: 7
+    maxlen: 160
+    priority: 2
+  coicopbyname:
+    key: coicop
+    name: COICOP code by field name (coicop, coicop_code, COICOP Code) with division, group or class codes
+    rule: '(?i)coicop(?:[ _.-]?(?:code|cd|id|no|nr))?'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.classifications.validate_coicop_code
+    needs_values: true
+    priority: 1

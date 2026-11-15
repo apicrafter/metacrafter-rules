@@ -89,6 +89,17 @@ rules:
     priority: 1
     rule: >-
       (?i)(?:unit[ _.-]?of[ _.-]?measure(?:ment)?|uom|measure(?:ment)?[ _.-]?unit|(?:quantity|qty)[ _.-]?unit|単位|单位|單位|ma(?:ß|ss)einheit|einheit|unit[ée] de mesure|unidad de medida|unit[àa] di misura|m[ée]rt[ée]kegys[ée]g|единица(?: измерения)?|одиниця(?: виміру)?|jednostka(?: miary)?|m[ěe]rn[áa] jednotka)(?:[ _.-]?(?:code|name|cd))?
+  unitofmeasurebyshortname:
+    key: unit_of_measure
+    name: Unit of measure by the short field name UM with short unit codes (KG, NO, L, T, CUM, SQM)
+    # The UM column of the Bahrain imports and exports (data.gov.bh, a 2024 snapshot;
+    # metacrafter-testdata). UM is short, so the values must be units of quantity.
+    type: field
+    match: regex
+    rule: (?i)u\.?m\.?
+    validator: metacrafterext.rules.common.classifications.validate_trade_unit_code
+    needs_values: true
+    priority: 1
   unitcodebyvalue:
     key: unece_rec20_unit_code
     name: UN/ECE Recommendation 20 unit code by value in a unit field

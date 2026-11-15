@@ -28,4 +28,101 @@ rules:
     type: field
     match: text
     priority: 1
-
+  # Found in the Bahrain Open Data Portal (data.gov.bh, a 2024 snapshot; metacrafter-testdata). Its
+  # tables give each attribute in English and in Arabic, and the Opendatasoft field name of the
+  # Arabic column is the Arabic label with the letters transliterated and the short vowels and alef
+  # dropped: الجنس -> ljns, الجنسية -> ljnsy, جنسية الزوج -> jnsy_lzwj, الحالة الزواجية -> lhl_lzwjy,
+  # الديانة -> ldyn, فئات السن -> fy_t_lsn, أعلى مؤهل علمي -> l_mw_hl_lmy. The field-name rules take
+  # these names and the Arabic labels; the values must be Arabic words of the attribute.
+  argenderbyname:
+    key: gender
+    is_pii: True
+    name: Sex by Arabic field name (الجنس, ljns, jns) with Arabic sex words
+    rule: '(?i)(?:l|al)?jns|الجنس|جنس|النوع[ _]الاجتماعي'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.ar.persons.validate_ar_gender
+    needs_values: true
+    priority: 1
+  argendervalue:
+    key: gender
+    is_pii: True
+    name: Sex in Arabic by value (ذكر, أنثى, انثى, ذكور, إناث)
+    rule: metacrafterext.rules.ar.persons.validate_ar_gender
+    type: data
+    match: func
+    minlen: 3
+    maxlen: 6
+    priority: 1
+  arnationalitybyname:
+    key: arnationality
+    is_pii: True
+    name: Nationality in Arabic by field name (الجنسية, ljnsy, jnsy_lzwj, mjmw_t_ljnsy)
+    # jnsy_lzwj is جنسية الزوج (of the husband), jnsy_lzwj_lmtlq of the divorced husband, mjmw_t_ljnsy
+    # مجموعات الجنسية (nationality groups: خليجي, عرب آخرون, آسيوي).
+    rule: '(?i)(?:(?:l|al)?jnsy[a-z]?(?:[ _][a-z]+){0,3}|mjmw_?t_l?jnsy)|الجنسي[ةه](?:[ _][^\s_]+){0,3}|جنسي[ةه][ _][^\s_]+(?:[ _][^\s_]+){0,2}|مجموعات[ _]الجنسي[ةه]'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.ar.persons.validate_ar_nationality
+    needs_values: true
+    priority: 1
+  arnationalityvalue:
+    key: arnationality
+    is_pii: True
+    name: Nationality in Arabic by value (بحريني, غير بحريني, سعودية, هندي, خليجي)
+    rule: metacrafterext.rules.ar.persons.validate_ar_nationality_value
+    type: data
+    match: func
+    minlen: 3
+    maxlen: 40
+    priority: 2
+  armaritalstatusbyname:
+    key: marital_status
+    is_pii: True
+    name: Marital status by Arabic field name (الحالة الزواجية, الحالة الاجتماعية, lhl_lzwjy)
+    rule: '(?i)(?:l|al)?hl_?(?:l)?zwjy(?:[ _][a-z]+){0,3}|(?:l|al)?hl_?(?:l)?jtm_?y|الحال[ةه][ _]الزواجي[ةه](?:[ _][^\s_]+){0,3}|الحال[ةه][ _]الاجتماعي[ةه]'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.ar.persons.validate_ar_marital_status
+    needs_values: true
+    priority: 1
+  armaritalstatusvalue:
+    key: marital_status
+    is_pii: True
+    name: Marital status in Arabic by value (أعزب, متزوج, مطلقة, أرمل, لم يسبق له الزواج)
+    rule: metacrafterext.rules.ar.persons.validate_ar_marital_status
+    type: data
+    match: func
+    minlen: 3
+    maxlen: 30
+    priority: 2
+  religionbyarabicname:
+    key: religion
+    is_pii: True
+    name: Religion by Arabic field name (الديانة, الدين, ldyn)
+    rule: '(?i)(?:l|al)?dyn|الديان[ةه]|الدين'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.ar.persons.validate_religion
+    needs_values: true
+    priority: 1
+  areducationlevelbyname:
+    key: education_level
+    name: Level of education by Arabic field name (المؤهل العلمي, أعلى مؤهل علمي, التحصيل العلمي, l_mw_hl_lmy, lmrhl_lt_lymy)
+    # أعلى تحصيل علمي للزوج -> l_thsyl_lmy_llzwj; المرحلة التعليمية -> lmrhl_lt_lymy.
+    rule: '(?i)(?:l_)?(?:mw_?hl|thsyl)(?:_t)?_l?(?:mymy|lmy|t_?lymy)(?:[ _][a-z]+){0,2}|(?:l|al)?mrhl_?l?t_?lymy|(?:l|al)?mstw_?l?t_?lymy|(?:أعلى[ _])?(?:ال)?(?:مؤهل|تحصيل)[ _](?:ال)?(?:علمي|تعليمي|دراسي)(?:[ _][^\s_]+){0,2}|المرحل[ةه][ _]التعليمي[ةه]|المستوى[ _]التعليمي'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.directories.validate_education_level
+    needs_values: true
+    priority: 1
+  aragerangebyname:
+    key: age_range
+    is_pii: True
+    name: Age band by Arabic field name (فئات السن, فئات العمر, الفئة العمرية, fy_t_lsn, fy_t_l_mr)
+    rule: '(?i)fy_?t_l?(?:sn|_?mr)(?:[ _][a-z]+){0,3}|فئ[اة]ت[ _](?:ال)?(?:سن|عمر)(?:[ _][^\s_]+){0,2}|الفئ[ةه][ _]العمري[ةه]|فئ[ةه][ _](?:ال)?(?:سن|عمر)'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.survey.validate_age_range_value
+    needs_values: true
+    priority: 1

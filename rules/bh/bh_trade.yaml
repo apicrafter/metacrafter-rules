@@ -1,0 +1,20 @@
+name: bh-trade
+description: Bahraini foreign trade (GCC Common Customs Tariff codes)
+context: trade
+lang: common
+country_code: bh
+# Found in the Bahrain Open Data Portal (data.gov.bh, a 2024 snapshot; metacrafter-testdata): the
+# imports, exports and re-exports of Bahrain by month, commodity of the GCC Common Customs Tariff
+# (Commodity No 95030090) and country. Bahrain shares the tariff with the other GCC states.
+rules:
+  gcccustomstariffcodebyname:
+    key: gcc_customs_tariff_code
+    name: GCC Common Customs Tariff code by field name (Commodity No, commodity_number, رقم السلعة) with eight digits
+    # Only the commodity number: a bare commodity code is a procurement category in public spending
+    # data (UNSPSC, eight digits too; common/trade.yaml).
+    rule: '(?i)commodity[ _.-]?(?:no|number|num)\.?|رقم[ _]السلع[ةه]|رمز[ _]السلع[ةه]|rqm_?lsl|rmz_?lsl'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.bh.geo.validate_gcc_customs_tariff_code
+    needs_values: true
+    priority: 1
