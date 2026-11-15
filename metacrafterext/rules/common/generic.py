@@ -446,6 +446,16 @@ def validate_year_value(value):
     return bool(_YEAR_IN_TEXT.search(text)) or any(ch.isalpha() for ch in text)
 
 
+def validate_year_in_text(value):
+    """A year as a number (2015, 2015.0) or written in a text (Gestión 2015, 2014-2015): the check of the
+    Bolivian gestión, which elsewhere names the management of a service (Nueva gestión, Pública)."""
+    text = str(value).strip()
+    number = _number(text)
+    if number is not None:
+        return number == int(number) and 1000 <= number <= 2999
+    return bool(_YEAR_IN_TEXT.search(text))
+
+
 _SHORT_NUMBER = re.compile(r"^[-+]?\d{1,4}(?:\.0+)?$")
 
 

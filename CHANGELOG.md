@@ -41,7 +41,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Spanish names of UTM positions (`easting`, `northing`: `ESTE`, `NORTE`, `UTM_ESTE`, `UTM_NOR`, `Coord_X`) and
     zones (`utm_zone`: `Zona_UTM`, `huso`), of elevations (`elevation`: `ALTITUD`, `COTA_COR`, `msnm`), of areas
     with a unit (`area`: `SUP_KM2`, `SUP_HA`, `area_has`, ArcGIS `Hectares`) and the Bolivian year of
-    administration (`year`: `GESTION` with years);
+    administration (`year`: `GESTION` with years as numbers or in a text, `validate_year_in_text`; Nueva gestión
+    of the Buenos Aires public works fails);
   - positions in degrees, minutes and seconds with the hemisphere (18° 24' 5,758" S, 66° 53' 41,622" W) are
     latitudes and longitudes, also in a field named `LONG`.
 

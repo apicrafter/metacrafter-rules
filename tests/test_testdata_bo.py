@@ -33,6 +33,7 @@ from metacrafterext.rules.common.generic import (
     validate_longitude_value,
     validate_species_name,
     validate_state_not_status,
+    validate_year_in_text,
 )
 from metacrafterext.rules.common.hydrology import validate_pfafstetter_code, validate_pfafstetter_code_long
 from metacrafterext.rules.common.waterquality import validate_oxygen_demand, validate_suspended_solids
@@ -82,6 +83,7 @@ VALIDATORS = [
     (validate_state_not_status, ["Jalisco", "Rio de Janeiro", "SP", "Baja California Sur"],
      ["Existente y en operacion", "Existe y no operable", "F/Problemas", "DATOS ACTUALIZADOS", "VERIFICAR TRANSMISION",
       "ERROR NIVEL", "ENT DEFINITIVA", "EJEC NORMAL", "VALIDADA", "(*) PROPUESTA TECNICA", "EN FUNCIONAMIENTO"]),
+    (validate_year_in_text, ["2015", "2005.0", "Gestión 2015", "2014-2015"], ["Nueva gestión", "Pública", "15", "3500", ""]),
     (validate_ar_indec_department_part, ["7", "098", "14098", "06014"], ["01", "02", "09"]),
     (validate_ar_mendoza_resource_account, ["1110100000-IMPUESTO SOBRE LAS ACTIVIDADES", "1120202000 - INT. GANADOS"],
      ["2838530907-D", "2818917271-D", "1110100000"]),
