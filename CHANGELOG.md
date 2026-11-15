@@ -52,6 +52,48 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - More names for types with rules: school years in `annee_academique`, `academiejaar`; points as
   latitude, longitude text in `point_geographique`, `geo_impl`, `position`, `gelocalisation`,
   `station_geoposition` (an address base's `position` of bâtiment, entrée fails).
+- **Rules for the files of four Australian Opendatasoft portals in metacrafter-testdata** (2024 snapshots
+  of data.melbourne.vic.gov.au, City of Melbourne; www.geelongdataexchange.com.au, City of Greater Geelong
+  with the Barwon Water layers; data.liverpool.nsw.gov.au; data.peclet.com.au, Peclet Technology; Dateno
+  sources cdi00000100, cdi00000102, cdi00000104, cdi00000117; validators in the new
+  `metacrafterext.rules.au.council` and `metacrafterext.rules.common.assets`, rules in the new
+  `rules/au/au_council.yaml` and `rules/common/assets.yaml`):
+  - CLUE small areas of the City of Melbourne (`au_clue_small_area`: Melbourne (CBD), West Melbourne
+    (Residential)) in `clue_small_area`, `clue_area`, `small_area`, `geography`;
+  - NSW land titles: lot identifiers (`au_nsw_lot_id`: 23/O/DP1417, 1//DP225807, by name and by value) in
+    `lotidstring`; survey plan numbers (`au_survey_plan_number`: DP1417, SP37549, PS612345R) in `planlabel`,
+    `Plan No`;
+  - planning: NSW Standard Instrument zones (`au_nsw_land_zone`: R2, RU1, SP2, MU1) in `SYM_CODE` and Victorian
+    planning scheme zones (`au_vic_planning_zone`: GRZ1, UGZ3, IN1Z) in `ZONE_CODE`; planning and building
+    application numbers (`au_planning_application_number`: DA-404/2015, D/2008/940, TP-2014-43/A,
+    BP-2014-1813/1, by name and by value);
+  - parking restrictions (`au_parking_restriction`: 2P, 1/2P Meter, 2P MTR M-SAT 7:30-18:30, MP2P, LZ30) in
+    `restriction_display`, `TypeDesc1`-`6`, `Description1`-`6`, `parking_limit`, `BayType`;
+  - Geoscape (PSMA) persistent identifiers (`au_geoscape_pid`: lga94484cf6e0e2, lgp9wJk6uBtcEPS,
+    GANSW704411427) in `LGA_PID`, `LG_PLY_PID` and by value; ANZSIC division titles (`au_anzsic_division_name`)
+    in `industry_label`, `a1_description`, `ANZSIC Division Name` (a bare `industry` or `industry_description`
+    stays out: the CLUE industries share half of the titles); Victorian Biodiversity Atlas taxon ids
+    (`au_vba_taxon_id`); DCA road crash codes (`au_dca_code`: 132 Vehicles in same lane/ right rear) in `dca`;
+    state and territory names (`au_state`: New South Wales, Other Territories) in `STATE_NAME_2021`,
+    `official_name_state`;
+  - generic: pipe materials (`pipe_material`: Ductile Iron Concrete Lined, Vitreous Clay, RCP, DICL) in
+    `pipe_material`, `material`, `mat_desc`; the useful life expectancy (`tree_useful_life_expectancy`: 31-60
+    years, 20+ years) and the age class of trees (`tree_age_class`: Semi-Mature, Over-mature); electric power
+    (`electric_power`: 80W, 350 kW, by name and by value); ISO 8601 repeating intervals
+    (`iso8601_repeating_interval`: R/2015-01-02/P2W, by value); road crash severity (`crash_severity`: Fatal,
+    Property Damage Only) in `severity`, `CRASH_SEVERITY`; Twitter handles with the @ (`twitter_username`) in
+    `twitter`;
+  - more names for types that had rules: ANZSIC codes with the level after the word (`ANZSIC4_CODE`,
+    `industry_anzsic4_code`, `industry_class_code`); LGA names in council fields (`lga_label`, `Council Name`,
+    `NSW_LGA__3`, `official_name_local_government_area`, `abb_name`) and LGA codes in a bare `lga` field; ABS
+    Postal Area codes (`POA_CODE21`); suburbs in `SAL_NAME21`, `suburb_2`; AS 1742 sign codes in
+    `scode`, `svalue`, `a_code`; Australian phones in `business_phone_number`, `contact_ph`, `Phone 2`, `Free
+    Call`; trading names; Opendatasoft geo_point fields named `co_ordinates`, `coordinatelocation`,
+    `latlong_text`, `geo`, `centroid`; street names in `str_name`, `StreetFrom`, `between_street_1`,
+    `road_name`; addresses in `building_address`, `venue_address`, `address_point`; `sdirection` as a compass
+    point; common names of taxa in `common_nam` and `Common name(s)` (a bare `common_name` is also a vaccine or
+    a bus stop); scientific names in `scientific`, `vegspecies`; higher
+    taxa in upper case (ANIMALIA, CHIROPTERA, MOLOSSIDAE).
 - **Rules for the ACT files of metacrafter-testdata** (a 2024 snapshot of www.data.act.gov.au, the Socrata
   portal of the Australian Capital Territory Government, Dateno source cdi00000095; validators in the new
   `metacrafterext.rules.au.act` and `metacrafterext.rules.common.politics`, rules in the new
@@ -431,6 +473,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- From the Australian Opendatasoft round: an ACT section or block number needs a separator before No or
+  Number (`sectionnumber` of the NSW cadastre, `blockno` of the Greater Geelong road registers were
+  `au_act_section` / `au_act_block`); a GRID3 LGA code of Nigeria has at most 44 LGAs a state, so ABS LGA codes
+  (10500, 11250) are no `ng_lga_code`; Households alone is no South African economic classification item by
+  value; a `creditcard` field needs card numbers (Yes / No of the City of Melbourne car parks was `bankcard`).
 - The HS code rule by field name needs digits: the `TariffCode` of the ACT smart parking lots
   (Free_1_hr, SS06_2P) is no HS code.
 - Semantic versions refuse file numbers that start with a year and a serial of four or more digits

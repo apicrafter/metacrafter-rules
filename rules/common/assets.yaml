@@ -1,0 +1,76 @@
+name: assetscommon
+description: Asset registers and observations of councils and utilities (pipe materials, tree life expectancy and age class, electric power, ISO 8601 repeating intervals, road crash severity)
+context: common
+lang: common
+country_code: xx
+# Found in the Opendatasoft portals of the City of Melbourne, the City of Greater Geelong (with the
+# Barwon Water layers), Liverpool City Council and Peclet (2024 snapshots of metacrafter-testdata).
+rules:
+  pipematerialbyname:
+    key: pipe_material
+    name: Pipe material by field name (pipe_material, Material, mat_desc, construction_material_lupvalue) with Ductile Iron Concrete Lined, Vitreous Clay, RCP
+    # The material of other assets is not a pipe material (bus_shelter_material of the City of Ballarat:
+    # Steel, Timber): a bare material field or one of a pipe, main, drain, sewer or fitting.
+    rule: (?i)(?:(?:pipe|main|sewer|water|drain(?:age)?|culvert|fitting|rehab|conduit)[ _]?)?(?:material|mat[ _]?desc|mat[ _]?code|pipe[ _]?mat)(?:[ _](?:desc(?:ription)?|code|type))?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.assets.validate_pipe_material
+    needs_values: true
+    priority: 1
+  treeusefullifeexpectancybyname:
+    key: tree_useful_life_expectancy
+    name: Useful life expectancy of a tree by field name (useful_life_expectency, ULE, life_expectancy) with 31-60 years, 20+ years
+    # useful_life_expectency_value of the City of Melbourne holds the years as a number: the values must
+    # be classes with years.
+    rule: (?i)(?:tree[ _])?(?:s?ule|useful[ _]?life(?:[ _]?expect[a-z]*)?|life[ _]?expect[a-z]*|remaining[ _]?life)(?:[ _](?:class|range|desc(?:ription)?|category))?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.assets.validate_tree_useful_life_expectancy
+    needs_values: true
+    priority: 1
+  treeageclassbyname:
+    key: tree_age_class
+    name: Age class of a tree by field name (age_description, Age, age_class, maturity) with Semi-Mature, Mature, Over-mature
+    rule: (?i)(?:tree[ _])?(?:age(?:[ _]?(?:description|desc|class|category|group|stage))?|maturity(?:[ _]?(?:class|stage))?|life[ _]?stage)
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.assets.validate_tree_age_class
+    needs_values: true
+    priority: 1
+  electricpowerbyname:
+    key: electric_power
+    name: Electric power by field name (nominal_rating_watts, wattage, Charger_capacities, rated_power, power_kw) with 80W, 350 kW
+    rule: (?i)(?:[a-z]+[ _])*(?:watts?|wattage|(?:rated[ _]|nominal[ _]|output[ _])?power(?:[ _](?:rating|output|kw|w))?|charger[ _]?capacit(?:y|ies)|capacity[ _]?kw|kw)
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.assets.validate_electric_power
+    needs_values: true
+    priority: 1
+  electricpowervalue:
+    key: electric_power
+    name: Electric power by value (80W, 150 W, 350 kW, 50 - 350 kW, 1.5 MW)
+    rule: metacrafterext.rules.common.assets.validate_electric_power
+    type: data
+    match: func
+    minlen: 2
+    maxlen: 24
+    priority: 1
+  iso8601repeatingintervalvalue:
+    key: iso8601_repeating_interval
+    name: ISO 8601 repeating interval by value (R/2015-01-02/P2W, R5/2008-03-01T13:00:00Z/P1Y2M10DT2H30M, R/P1Y)
+    rule: metacrafterext.rules.common.assets.validate_iso8601_repeating_interval
+    type: data
+    match: func
+    minlen: 5
+    maxlen: 80
+    priority: 1
+  crashseveritybyname:
+    key: crash_severity
+    name: Road crash severity by field name (severity, CRASH_SEVERITY, accident_severity, injury_level) with Fatal, Serious, Property Damage Only
+    # Fatal, First Aid and Injury are words of medical and workplace records too: no rule by value.
+    rule: (?i)(?:crash|accident|collision|casualty)?[ _]?severity(?:[ _](?:desc(?:ription)?|level|code|name|class))?|(?:crash|accident)[ _](?:severity|outcome|class)
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.assets.validate_crash_severity
+    needs_values: true
+    priority: 1

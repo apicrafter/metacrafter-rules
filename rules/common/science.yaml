@@ -467,3 +467,24 @@ rules:
     minlen: 15
     maxlen: 24
     priority: 1
+  vernacularnamecommonnamebyname:
+    key: vernacular_name
+    name: Common name of a taxon by field names of biodiversity tables (common_nam, Common name(s), common names) with names of animals and plants
+    # The shapefile name common_nam of the Geelong bird atlas and the Common name(s) of the Melbourne
+    # pre-colonial plant list. A bare common_name is also a vaccine (COVID-19 vaccine lists) or a bus
+    # stop (CommonName of TfGM), whose names pass as common names: not here.
+    rule: (?i)common[ _]?nam|common[ _]?name[ _]?\(?s\)?|common[ _]?names
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.taxa.validate_vernacular_name
+    needs_values: true
+    priority: 1
+  speciesscientificbyname:
+    key: species
+    name: Scientific name of a species by short field names (scientific, sci_name, vegspecies, tree_scientific_name)
+    rule: (?i)(?:[a-z]+[ _])?scientific(?:[ _]?name)?|sci[ _]?name|veg[ _]?species
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.fieldwork.validate_scientific_name
+    needs_values: true
+    priority: 1

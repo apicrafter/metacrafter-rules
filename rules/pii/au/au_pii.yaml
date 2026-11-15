@@ -36,4 +36,14 @@ rules:
     type: field
     match: text
     priority: 1
-
+  auphonebyname:
+    key: phone
+    is_pii: True
+    name: Australian phone number by field name (business_phone_number, contact_ph, Phone 2, Free Call) with 02 8798 4412, 1800 858 858
+    # pH is not a phone: only contact_ph of the City of Melbourne childcare centres has the short name.
+    rule: (?i)(?:[a-z]+[ _])*(?:phone|telephone|tel)(?:[ _]?(?:no\.?|number|num|\d))?|contact[ _]ph|free[ _]?call
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.directories.validate_phone_digits
+    needs_values: true
+    priority: 1

@@ -13,3 +13,12 @@ rules:
     validator: metacrafterext.rules.au.act.validate_au_road_sign_code
     needs_values: true
     priority: 1
+  auroadsigncodeshortbyname:
+    key: au_road_sign_code
+    name: AS 1742 traffic sign code by short field names of a road sign register (scode, svalue, a_code) with R1-2, R5-23
+    rule: (?i)s[ _]?code|s[ _]?value|a[ _]code
+    type: field
+    match: regex
+    validator: metacrafterext.rules.au.act.validate_au_road_sign_code
+    needs_values: true
+    priority: 1

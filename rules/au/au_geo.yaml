@@ -242,3 +242,43 @@ rules:
     validator: metacrafterext.rules.au.act.validate_au_census_cd_code
     needs_values: true
     priority: 1
+  aulganamecouncilbyname:
+    key: au_lga_name
+    name: Local government area name by council field names (lga_label, Council Name, councilnam, NSW_LGA__3, official_name_local_government_area, abb_name)
+    # NSW Spatial Services and the ABS write the LGA in fields named after the council or the full
+    # words; LGA_NAME of the NSW boundaries keeps the council (Bogan Shire Council).
+    rule: (?i)(?:[a-z]+[ _])*lga[ _]?(?:label|title)|council[ _]?name|councilnam|council[ _]pre[ _]amalgamation|nsw[ _]lga(?:[ _]+\d)?|(?:long[ _])?official[ _]name[ _]local[ _]government[ _]area|local[ _]government[ _]area(?:[ _]name)?|abb[ _]name
+    type: field
+    match: regex
+    validator: metacrafterext.rules.au.codes.validate_au_lga_name_plain
+    needs_values: true
+    priority: 1
+  aupostalareabyname:
+    key: au_postcode
+    name: ABS Postal Area code by field name (POA_CODE21, POA_NAME21, poa_code_2016) with four-digit codes
+    rule: (?i)poa(?:[ _]?(?:code|name))?(?:[ _]?(?:20)?\d{2})?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.au.codes.validate_au_postcode
+    needs_values: true
+    priority: 1
+  aulocalitybyname:
+    key: au_suburb
+    name: Australian suburb or locality by field name (locality_name, SAL_NAME21, suburb_2) with place names
+    # LOC_NAME is the name of a location of any kind (the child care centres of Toronto): not here.
+    rule: (?i)locality[ _]name|sal[ _]name(?:[ _]?(?:20)?\d{2})?|suburbs?[ _]\d
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.generic.validate_place_name
+    needs_values: true
+    priority: 1
+  aulgacodebarebyname:
+    key: au_lga_code
+    name: ABS LGA code in a bare LGA field (lga of the ABS counts of businesses by LGA) with five-digit codes
+    # A field named LGA holds names in most files and the code in some (59310): the values decide.
+    rule: (?i)lga(?:[ _]?(?:20)?\d{2})?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.au.codes.validate_au_lga_code
+    needs_values: true
+    priority: 1

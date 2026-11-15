@@ -10,7 +10,9 @@ rules:
     # The ATO taxation statistics give the industry as the code with its title (011 Nursery and
     # Floriculture Production, A.Agriculture, Forestry and Fishing); a field named for ANZSIC may
     # hold bare codes.
-    rule: (?i)(?:[a-z]+[ _])*anzsic(?:[ _]\w+)*|(?:broad|fine|finer)[ _]+industry\d*
+    # ANZSIC4_CODE and industry_anzsic4_code (Greater Geelong and City of Melbourne CLUE tables) put
+    # the level after the word; the ANZSIC hierarchy of Peclet names its codes industry_class_code.
+    rule: (?i)(?:[a-z]+[ _])*anzsic\d?(?:[ _]\w+)*|(?:broad|fine|finer)[ _]+industry\d*|industry[ _](?:division|subdivision|group|class)[ _]code
     type: field
     match: regex
     validator: metacrafterext.rules.au.codes.validate_au_anzsic_code
