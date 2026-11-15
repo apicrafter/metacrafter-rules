@@ -175,3 +175,96 @@ def validate_municipal_ward_name(value):
     without a ward name must hold to be read as wards (LABEL: WARD 5)."""
     text = _text(value)
     return bool(_WARD.match(text)) and bool(_WARD_WORDED.search(text))
+
+
+# ------------------------------------------------------------------ health, smoking and work of a respondent
+# Found in the NEMS-P-Ch pilot survey of the food environment of the Universidad de Chile (datos.uchile.cl, a
+# 2024 snapshot, Dateno source cdi00000365; metacrafter-testdata): the form stores the options by their codes
+# (muy_bueno, nunca_he_fumado, trabajo_tiempo_completo__dependiente_o_independiente_).
+from metacrafterext.rules.common.formcodes import form_text  # noqa: E402
+
+_NO_ANSWER_ES = frozenset((
+    "no sabe", "no responde", "no sabe no responde", "ns nr", "ns nc", "no contesta", "prefiere no responder",
+    "prefiero no responder", "sin informacion", "no aplica", "otro", "otra", "don't know", "dont know",
+    "refused", "prefer not to answer", "prefer not to say", "not stated", "unknown", "other", "not applicable",
+))
+_HEALTH = frozenset((
+    "excellent", "very good", "good", "fair", "poor", "bad", "very bad", "very poor", "moderate", "average",
+    "excelente", "muy bueno", "muy buena", "bueno", "buena", "regular", "malo", "mala", "muy malo", "muy mala",
+    "mas o menos", "ni buena ni mala", "ni bueno ni malo",
+    "muito bom", "muito boa", "bom", "boa", "razoavel", "mau", "ma", "ruim", "muito mau", "muito ruim", "pessimo",
+    "tres bon", "tres bonne", "bon", "bonne", "assez bon", "moyen", "mauvais", "tres mauvais",
+    "sehr gut", "gut", "mittelmassig", "schlecht", "sehr schlecht",
+))
+
+
+def validate_self_rated_health(value):
+    """An answer on how a person rates their health, in words: Excellent, Very good, Good, Fair, Poor;
+    excelente, muy_bueno, bueno, regular, malo; Very bad (not 3, Yes or Diabetes)."""
+    text = form_text(_text(value))
+    return bool(text) and (text in _HEALTH or text in _NO_ANSWER_ES)
+
+
+_SMOKING = frozenset((
+    "never", "never smoker", "never smoked", "never smoke", "non smoker", "nonsmoker", "non-smoker", "former",
+    "former smoker", "ex smoker", "ex-smoker", "exsmoker", "past smoker", "quit", "current", "current smoker",
+    "smoker", "daily smoker", "occasional smoker", "current daily smoker", "current occasional smoker",
+    "current every day smoker", "current some day smoker", "every day", "some days", "not at all", "daily",
+    "occasionally", "light smoker", "heavy smoker", "passive smoker",
+    "fumador", "fumadora", "no fumador", "no fumadora", "exfumador", "ex fumador", "exfumadora", "ex fumadora",
+    "fumador actual", "fumador diario", "fumador ocasional", "nunca fumador", "nunca ha fumado", "nunca fumo",
+    "nunca he fumado", "fumo habitualmente", "fumo diariamente", "fumo ocasionalmente", "fumo esporadicamente",
+    "antes fumaba pero lo deje", "antes fumaba", "dejo de fumar", "deje de fumar", "no fuma", "no fumo", "fuma",
+    "fumante", "nao fumante", "ex fumante", "ex-fumante", "fumeur", "non fumeur", "ancien fumeur",
+    "raucher", "nichtraucher", "ex-raucher", "exraucher",
+))
+_SMOKING_KNOWN = frozenset(("esporadicamente", "deje", "dejo", "ocasionalmente", "diariamente"))
+_SMOKING_HEAD = re.compile(
+    r"^(?:fumo (?:habitualmente|diariamente|ocasionalmente|esporadicamente)|antes fumaba|nunca he fumado|"
+    r"(?:current|former|never|ex) smoker)\b")
+
+
+def validate_smoking_status(value):
+    """A smoking status in words: Never smoker, Former smoker, Current smoker, Ex-smoker, Daily; fumo
+    habitualmente, antes fumaba pero lo dejé, nunca_he_fumado, exfumador (not Yes, 10 or Cigarettes).
+    An option with an explanation after it passes by its head (fumo esporádicamente, menos de dos veces
+    por semana)."""
+    text = form_text(_text(value), _SMOKING_KNOWN)
+    plain = _fold(value)
+    return bool(text) and (text in _SMOKING or plain in _SMOKING or text in _NO_ANSWER_ES
+                           or bool(_SMOKING_HEAD.match(text)))
+
+
+_EMPLOYMENT = frozenset((
+    "employed", "unemployed", "self-employed", "self employed", "retired", "student", "homemaker", "housewife",
+    "unable to work", "not in labour force", "not in labor force", "not in the labour force",
+    "not in the labor force", "out of the labour force", "out of work", "inactive", "economically inactive",
+    "employed full-time", "employed part-time", "employed full time", "employed part time", "full-time",
+    "part-time", "full time", "part time", "working", "not working", "looking for work", "employee", "employer",
+    "unpaid family worker", "disabled", "pensioner", "in education", "apprentice", "casual",
+    "ocupado", "ocupada", "desocupado", "desocupada", "desempleado", "desempleada", "inactivo", "inactiva",
+    "empleado", "empleada", "jubilado", "jubilada", "pensionado", "pensionada", "estudiante", "duena de casa",
+    "dueno de casa", "ama de casa", "cesante", "trabajando", "trabaja", "no trabaja", "busca trabajo",
+    "buscando trabajo", "trabajador independiente", "trabajador dependiente", "independiente", "dependiente",
+    "cuenta propia", "trabajador por cuenta propia", "asalariado", "asalariada", "empleador", "patron",
+    "quehaceres del hogar", "trabajo tiempo completo", "trabajo de tiempo completo", "trabajo de medio tiempo",
+    "trabajo medio tiempo", "trabajo domestico no remunerado", "tiempo completo", "medio tiempo",
+    "jornada completa", "media jornada", "jornada parcial",
+    "empregado", "desempregado", "aposentado", "estudante", "ocupe", "chomeur", "retraite", "etudiant",
+    "erwerbstatig", "arbeitslos", "rentner", "student",
+))
+_EMPLOYMENT_KNOWN = frozenset(("domestico", "duena", "dueno", "patron"))
+_EMPLOYMENT_HEAD = re.compile(
+    r"^(?:trabajo (?:de )?(?:tiempo completo|medio tiempo|jornada completa|media jornada)|"
+    r"trabajo domestico no remunerado|desempleado|desempleada|desocupado|desocupada|cesante|jubilado|jubilada|"
+    r"pensionado|pensionada|estudiante|employed|unemployed|retired|self[- ]employed|student|homemaker)\b")
+
+
+def validate_employment_status(value):
+    """An employment status in words: Employed, Unemployed, Retired, Self-employed, Employed full-time,
+    Student; desempleado, jubilada, dueña de casa, trabajo_tiempo_completo__dependiente_o_independiente_
+    (not Yes, 40 or Engineer). An option with an explanation after it passes by its head."""
+    text = form_text(_text(value), _EMPLOYMENT_KNOWN)
+    plain = _fold(value)
+    return bool(text) and (text in _EMPLOYMENT or plain in _EMPLOYMENT or text in _NO_ANSWER_ES
+                           or bool(_EMPLOYMENT_HEAD.match(text)))

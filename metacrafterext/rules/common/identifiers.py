@@ -2434,3 +2434,12 @@ def validate_twitter_at_handle(value):
     """A Twitter (X) handle with its @: @LifelineAust, @TheRMH (not LifelineAust, a profile URL
     https://twitter.com/ASSMStrata or an e-mail address)."""
     return bool(_AT_HANDLE.match(str(value).strip()))
+
+
+_WIKIDATA_QID = re.compile(r"^(?:https?://(?:www\.)?wikidata\.org/(?:wiki|entity)/)?Q[1-9]\d{0,9}$")
+
+
+def validate_wikidata_qid(value):
+    """A Wikidata item id, alone or as its URL: Q42, Q97319041, https://www.wikidata.org/wiki/Q42 (not
+    2761, P771 or Q0)."""
+    return bool(_WIKIDATA_QID.match(str(value).strip()))

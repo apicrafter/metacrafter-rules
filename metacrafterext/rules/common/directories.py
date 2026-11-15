@@ -189,6 +189,13 @@ _EDUCATION_WORDS = _EDUCATION_CORE | frozenset((
     "post", "technical", "professional", "grade", "graduated", "completed", "some", "community", "trade",
     "certificate", "apprenticeship", "less", "than",
 ))
+# Chilean wording of the levels (NEMS-P-Ch pilot survey, datos.uchile.cl): Educación media completa
+# (científico humanista o técnico profesional), 8vo básico o menor, Educación superior incompleta (técnica
+# superior o universitaria).
+_EDUCATION_FORM_WORDS = _EDUCATION_WORDS | frozenset((
+    "cientifico", "humanista", "tecnico", "tecnica", "profesional", "menor", "mayor", "medio", "1ro", "2do",
+    "3ro", "4to", "5to", "6to", "7mo", "8vo", "a", "centro", "formacion", "instituto",
+))
 _EXAMPLES_IN_PARENTHESES = re.compile(r"\s*\((?:e\.g\.|i\.e\.|such as|for example)[^()]*\)?$", re.I)
 
 
@@ -198,6 +205,16 @@ def validate_education_level(value):
     Secondary / Diploma, College / technical school graduate, Post-graduate degree (e.g. Masters, PhD), and in Arabic (ابتدائي, فوق الثانوي / دبلوم: validate_ar_education_level)."""
     if has_arabic(value):
         return validate_ar_education_level(value)
+    if "_" in str(value):
+        # the option code of a survey form: educaci_n_media_completa__cient_fico_humanista_, 8vo_b_sico_o_menor
+        from metacrafterext.rules.common.formcodes import form_words
+
+        words = form_words(value, _EDUCATION_FORM_WORDS)
+        # forms cut long codes (at 40 characters in the Kobo export): the last word may be cut too
+        if len(str(value).strip()) >= 32 and words and words[-1] not in _EDUCATION_FORM_WORDS and any(
+                w.startswith(words[-1]) for w in _EDUCATION_FORM_WORDS):
+            words = words[:-1]
+        return bool(words) and all(w in _EDUCATION_FORM_WORDS for w in words) and any(w in _EDUCATION_CORE for w in words)
     return _all_words_in(_EXAMPLES_IN_PARENTHESES.sub("", str(value)), _EDUCATION_WORDS, core=_EDUCATION_CORE)
 
 

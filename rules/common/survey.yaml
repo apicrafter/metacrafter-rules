@@ -110,3 +110,39 @@ rules:
     needs_values: true
     priority: 1
 
+
+  # ------------------------------------------------------------ health, smoking and work of a respondent
+  # Found in the NEMS-P-Ch pilot survey of the food environment of the Universidad de Chile (datos.uchile.cl,
+  # a 2024 snapshot, Dateno source cdi00000365; metacrafter-testdata). The repository shortens the questions
+  # to names without spaces (45Engeneralcmoesuestadodesalud, 46Ustedfumatabaco,
+  # 06Cmodefiniraacinlaboralactual) and the form stores the options by their codes (muy_bueno,
+  # nunca_he_fumado, desempleado__buscando_trabajo).
+  selfratedhealthbyname:
+    key: self_rated_health
+    name: Self-rated health by field name (self_rated_health, general_health, health_status, estado_de_salud, salud_autopercibida, 45Engeneralcmoesuestadodesalud) with Excellent, Good, Fair, Poor
+    # Coded answers (1 to 5) are not words: they fail and the field stays a category.
+    rule: (?i)(?:[a-z0-9]+[ _.-]){0,3}(?:self[ _.-]?(?:rated|reported|assessed|perceived)[ _.-]?health|general[ _.-]?health|health[ _.-]?status|salud[ _.-]?(?:auto)?percibida|autopercepci[oó]n[ _](?:de[ _])?(?:la[ _])?salud|estado[ _](?:de[ _])?salud(?:[ _]general)?|srh|genhlth)|\d{0,3}[a-z]*estadodesalud[a-z]*
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.respondents.validate_self_rated_health
+    needs_values: true
+    priority: 1
+  smokingstatusbyname:
+    key: smoking_status
+    name: Smoking status by field name (smoking_status, smoking, smoker, tobacco_use, tabaquismo, fuma, 46Ustedfumatabaco) with Never, Former, Current smoker
+    # A yes or no answer fails: it is a boolean.
+    rule: (?i)(?:[a-z0-9]+[ _.-]){0,3}(?:smok(?:ing|ers?|es?)(?:[ _.-]?(?:status|habit|history|category|cat))?|tobacco[ _.-]?(?:use|status)|tabaquismo|h[aá]bito[ _]tab[aá]quico|fuma(?:dor)?|consumo[ _](?:de[ _])?tabaco)|\d{0,3}[a-z]*fumatabaco[a-z]*
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.respondents.validate_smoking_status
+    needs_values: true
+    priority: 1
+  employmentstatusbyname:
+    key: employment_status
+    name: Employment status by field name (employment_status, labour_force_status, work_status, situacion_laboral, condicion_de_actividad, 06Cmodefiniraacinlaboralactual) with Employed, Unemployed, Retired
+    rule: (?i)(?:[a-z0-9]+[ _.-]){0,3}(?:employment[ _.-]?(?:status|situation)|labou?r[ _.-]?force[ _.-]?status|work(?:ing)?[ _.-]?status|job[ _.-]?status|situaci[oó]n[ _]?(?:laboral|ocupacional)|condici[oó]n[ _](?:de[ _])?actividad|estado[ _]laboral|emp[ _]?stat(?:us)?)|\d{0,3}[a-z]*laboralactual[a-z]*
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.respondents.validate_employment_status
+    needs_values: true
+    priority: 1

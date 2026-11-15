@@ -863,3 +863,17 @@ rules:
     validator: metacrafterext.rules.common.generic.has_letters
     needs_values: true
     priority: 1
+  # Country names in Spanish, found in the Chilean files of metacrafter-testdata (the survey of the
+  # Universidad de Chile on research data management in Latin American universities and the country of birth
+  # of the respondents of the NEMS-P-Ch pilot survey, datos.uchile.cl, a 2024 snapshot). Portuguese tables
+  # name the field pais too and write most Latin American countries alike, so only Spanish field names are
+  # read; a bare pais stays country.
+  escountrynamebyname:
+    key: escountryname
+    name: Country name in Spanish by field name (pais_origen, pais_nacimiento, pais_residencia, nombre_pais, pais_desc, pais_descripcion)
+    rule: (?i)(?:nombre[ _](?:del?[ _])?)pa[ií]s|pa[ií]s[ _](?:desc|descripcion|descripción|nombre|origen|de[ _]origen|nacimiento|de[ _]nacimiento|residencia|de[ _]residencia|procedencia|de[ _]procedencia|destino|de[ _]destino|sede|de[ _]la[ _]instituci[oó]n)|descripcion[ _]pais
+    type: field
+    match: regex
+    validator: metacrafterext.rules.es.countries.validate_es_country_name
+    needs_values: true
+    priority: 1
