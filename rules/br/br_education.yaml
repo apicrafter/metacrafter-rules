@@ -1,0 +1,66 @@
+name: br-education
+description: Brazilian higher education codes (CAPES programmes and institutions, e-MEC, CAPES evaluation areas and grades)
+context: education
+lang: pt
+country_code: br
+rules:
+  # The open data of CAPES on graduate programmes: CD_PROGRAMA_IES and CD_PROGRAMA_PPG (33003017040P8),
+  # CD_ENTIDADE_CAPES and CD_IES_ESTUDO (33003017), CD_ENTIDADE_EMEC (699), NM_AREA_AVALIACAO and
+  # CD_CONCEITO_PROGRAMA.
+  brcapesprogramcodevalue:
+    key: br_capes_program_code
+    name: CAPES graduate programme code by value (33003017040P8)
+    rule: metacrafterext.rules.br.codes.validate_br_capes_program_code
+    type: data
+    match: func
+    minlen: 13
+    maxlen: 13
+    priority: 1
+  brcapesinstitutioncodebyname:
+    key: br_capes_institution_code
+    name: CAPES institution code by field name (cd_entidade_capes, cd_ies_estudo, cd_ies)
+    rule: (?i)cd[ _]entidade[ _]capes|cd[ _]ies(?:[ _](?:estudo|capes|origem|destino))?|c[oó]d(?:igo)?[ _]ies[ _]capes
+    type: field
+    match: regex
+    validator: metacrafterext.rules.br.codes.validate_br_capes_institution_code
+    needs_values: true
+    priority: 1
+  # Eight-digit codes pass the check digit of the Czech IČO; a value rule guarded by the field name keeps
+  # cz_ico off the CAPES columns.
+  brcapesinstitutioncodevalue:
+    key: br_capes_institution_code
+    name: CAPES institution code by value in a field named for it (cd_entidade_capes, cd_ies_estudo)
+    rule: metacrafterext.rules.br.codes.validate_br_capes_institution_code
+    type: data
+    match: func
+    minlen: 8
+    maxlen: 10
+    fieldregex: (?i)cd[ _]entidade[ _]capes|cd[ _]ies(?:[ _](?:estudo|capes|origem|destino))?|c[oó]d(?:igo)?[ _]ies[ _]capes
+    priority: 1
+  bremecinstitutioncodebyname:
+    key: br_emec_institution_code
+    name: e-MEC institution code by field name (cd_entidade_emec, co_ies, codigo_emec)
+    rule: (?i)cd[ _]entidade[ _]emec|co[ _]ies|c[oó]d(?:igo)?[ _](?:ies[ _])?e[ _]?mec
+    type: field
+    match: regex
+    validator: metacrafterext.rules.br.codes.validate_br_emec_institution_code
+    needs_values: true
+    priority: 1
+  brcapesevaluationareabyname:
+    key: br_capes_evaluation_area
+    name: CAPES evaluation area by field name (nm_area_avaliacao, nm_area_avaliacao_atual, area_de_avaliacao)
+    rule: (?i)(?:nm|nome|ds)[ _]area[ _](?:de[ _])?avalia[cç][aã]o(?:[ _][a-z_]+)?|[aá]rea[ _]de[ _]avalia[cç][aã]o
+    type: field
+    match: regex
+    validator: metacrafterext.rules.br.codes.validate_br_capes_evaluation_area
+    needs_values: true
+    priority: 1
+  brcapesgradebyname:
+    key: br_capes_grade
+    name: CAPES grade (conceito) of a graduate programme by field name (cd_conceito_programa, conceito_ano, nota_capes)
+    rule: (?i)(?:cd[ _])?conceito(?:[ _](?:programa|ano|curso|capes))?|nota[ _]capes
+    type: field
+    match: regex
+    validator: metacrafterext.rules.br.codes.validate_br_capes_grade
+    needs_values: true
+    priority: 1

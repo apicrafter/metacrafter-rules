@@ -9,6 +9,51 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Rules for the Brazilian files of metacrafter-testdata** (2024 snapshots of five CKAN portals of the Dateno
+  catalogue: the Banco Central do Brasil, cdi00000188, the BNDES, cdi00000189, CAPES, cdi00000190, the
+  Jardim Botânico do Rio de Janeiro, cdi00000187, and Governo Aberto SP, cdi00000186; validators in the new
+  `metacrafterext.rules.br.codes` and `metacrafterext.rules.pt.countries` and in
+  `metacrafterext.rules.common.taxa`, rules in the new `rules/br/br_codes.yaml`, `rules/br/br_government.yaml`,
+  `rules/br/br_education.yaml`, `rules/br/br_ecology.yaml`, `rules/pt/pt_taxa.yaml` and
+  `rules/common/redlist.yaml`, and in `rules/br/br_geo.yaml`, `rules/pt/pt_geo.yaml`, `rules/pt/pt_common.yaml`):
+  - companies and banks: CNPJ numbers by their check digits (`cnpj`, which had only exact field names:
+    12.917.918/0001-89, 60.701.190.0001-04 with a dot for the slash, 5463212000129 without its leading zero,
+    the alphanumeric CNPJ of 2026) in any field named for them (`cnpj_do_exportador`, `cnpj_fabricante`,
+    `cnpj_do_agente_financeiro`) and by value in the printed form; the eight-digit CNPJ root
+    (`br_cnpj_root`: CNPJ IF, CNPJ AC of the complaints ranking of the Banco Central); ISPB codes
+    (`br_ispb`) and COMPE bank numbers (`br_compe_code`: Número_Código) of the participants of the STR;
+    CNAE codes (`br_cnae`: C1011200, 4711-3/02) in `subsetor_cnae_codigo`, `cnae`, `cnae_fiscal`; Mercosur
+    NCM codes (`mercosur_ncm`: 84328000) in `ncm`, `co_ncm`; the size class of a company (`br_company_size`:
+    MICRO, PEQUENA, MÉDIA, GRANDE, ME, EPP) in `porte_do_cliente`, `porte_do_exportador`, and not the size
+    classes of municipalities (Pequeno 1, Metrópole);
+  - geography: federative units by abbreviation (`br_state_code`, which had no rule: uf_sede_agente,
+    UNIDADE_FEDERACAO, SG_UF_PROGRAMA) and by name (`br_state`, which had no rule: stateProvince,
+    estado, and by value outside fields named for a city or an address: AMAZONAS); the five regions
+    (`br_region`: NM_REGIAO); IBGE municipality codes by their check digit (`br_municipality_code`, which had
+    no rule: municipio_codigo, cod_municipio, codigo_ibge); CEP codes (`br_postcode`, which had no value rule:
+    cep_sede_agente 89041002, and 13469-070 by value); phone numbers in the national format (`br_phone`:
+    (19) 3472-9700);
+  - government: the 17-digit NUP protocol number by its check digits (`br_nup`: ped_nu_ptcol
+    99903000615201603, 99903.000615/2016-03, and the part after the unit in Número de Protocolo (NUP):
+    029358/2019-39); a guarded value rule keeps `vin` off the NUP digits; process numbers (`br_tcu_process_number`:
+    TC 005.291/2021-6) and rulings (`br_tcu_ruling`: 2726/2023-Plenário, 13262/2023-1ª Câmara) of the
+    Tribunal de Contas da União;
+  - higher education: CAPES programme codes (`br_capes_program_code`: 33003017040P8) by value; CAPES institution
+    codes (`br_capes_institution_code`: CD_ENTIDADE_CAPES, CD_IES_ESTUDO 33003017), whose guarded value rule
+    keeps `cz_ico` off them (eight digits pass the IČO check one time in eleven); e-MEC codes
+    (`br_emec_institution_code`: CD_ENTIDADE_EMEC); the 49 CAPES evaluation areas (`br_capes_evaluation_area`:
+    NM_AREA_AVALIACAO, ENGENHARIAS III) and the CAPES grades (`br_capes_grade`: CD_CONCEITO_PROGRAMA, 1 to 7, A);
+  - ecology: the six biomes of Brazil (`br_biome`: bioma, Dom. Fitogeográfico; Amazônia, Mata Atlântica,
+    Cerrado), only in fields named for them (cerrado is Spanish for closed); IUCN Red List categories
+    (`iucn_red_list_category`, which had no rule: CR, EN, VU in categoria, Categoria de ameaça) and criteria
+    (`iucn_red_list_criteria`: B1ab(iii), B1ab(i,iii)+2ab(ii,iii), D2) of the CNCFlora assessments;
+  - Portuguese: country names (`ptcountryname`: EQUADOR, REPUBLICA DOMINICANA, ESTADOS UNIDOS, from the CLDR
+    names in Brazilian and European Portuguese and older register names) in Portuguese field names only
+    (pais_destino_das_exportacoes, NM_PAIS; Spanish files name the field pais too), language names
+    (`language`: DS_IDIOMA INGLES, PORTUGUES), and taxonomy: ranks (`dwc_taxon_rank`: Família, Gênero, SUB_ESPECIE
+    in Rank), statuses (`dwc_taxonomic_status`: Nome aceito, Sinônimo in Status), taxa in Família, Gênero,
+    familia aceita, species in Nome científico, nome aceito, Espécies, authors in Autor and vernacular names in
+    NOME POPULAR.
 - **Rules for the Bolivian files of metacrafter-testdata** (2024 snapshots of three catalogues of the Dateno
   catalogue: the GeoNode of SIARH, the water information system of the Ministry of Environment and Water,
   cdi00000167; the GeoNode of the Institute of Geography of the Universidad Mayor de San Andrés, cdi00000170;

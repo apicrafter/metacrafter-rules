@@ -1,0 +1,18 @@
+name: br-ecology
+description: Brazilian biomes
+context: science
+lang: pt
+country_code: br
+rules:
+  # The CNCFlora assessments of the Jardim Botânico do Rio de Janeiro: bioma (Mata Atlântica; Amazônia,
+  # Mata Atlântica, Cerrado); the Flora do Brasil lists: Dom. Fitogeográfico. Cerrado is also a Spanish
+  # word (closed), so only fields named for the biome are read.
+  brbiomebyname:
+    key: br_biome
+    name: Brazilian biome by field name (bioma, biomas, dominio_fitogeografico, Dom. Fitogeográfico)
+    rule: (?i)biomas?|dom(?:[ _.\\]+|[ií]nio[ _])fitogeogr[aá]fico|dominio[ _]fitogeografico
+    type: field
+    match: regex
+    validator: metacrafterext.rules.br.codes.validate_br_biome
+    needs_values: true
+    priority: 1

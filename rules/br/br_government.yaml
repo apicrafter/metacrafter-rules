@@ -1,0 +1,68 @@
+name: br-government
+description: Brazilian government identifiers (NUP protocol numbers, TCU process numbers and rulings)
+context: government
+lang: pt
+country_code: br
+rules:
+  # The Número Único de Protocolo of the federal government: the requests under the access to information
+  # law of the BNDES (ped_nu_ptcol: 99903000615201603) and the classified documents of the Banco Central do
+  # Brasil, which leave out the code of the unit (Número de Protocolo (NUP): 029358/2019-39).
+  brnupbyname:
+    key: br_nup
+    name: Brazilian NUP protocol number by field name (nup, protocolo, ped_nu_ptcol, Número de Protocolo (NUP))
+    rule: (?i)(?:.*[^a-z])?(?:nup|protocolo|ptcol)(?:[^a-z].*)?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.br.codes.validate_br_nup_number
+    needs_values: true
+    priority: 1
+  brnupvalue:
+    key: br_nup
+    name: Brazilian NUP protocol number by value with its check digits (99903.000615/2016-03)
+    rule: metacrafterext.rules.br.codes.validate_br_nup
+    type: data
+    match: func
+    minlen: 20
+    maxlen: 20
+    priority: 2
+  # Seventeen digits pass the VIN check of other rules (ped_nu_ptcol); the check digits of the NUP and a
+  # guard on the field name decide.
+  brnupdigitsvalue:
+    key: br_nup
+    name: Brazilian NUP protocol number as 17 digits in a field named for it (ped_nu_ptcol, nup, protocolo)
+    rule: metacrafterext.rules.br.codes.validate_br_nup
+    type: data
+    match: func
+    minlen: 17
+    maxlen: 17
+    fieldregex: (?i)nup|protocolo|ptcol
+    priority: 1
+  # The rulings of the Tribunal de Contas da União about the BNDES: processo_n_o (TC 005.291/2021-6) and
+  # acordao (2726/2023-Plenário, 13262/2023-1ª Câmara).
+  brtcuprocessbyname:
+    key: br_tcu_process_number
+    name: TCU process number by field name (processo, processo_n_o, n_do_processo_tcu)
+    rule: (?i)(?:[a-z_]+[ _])?processos?(?:[ _][a-z_]+)?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.br.codes.validate_br_tcu_process_number
+    needs_values: true
+    priority: 1
+  brtcuprocessvalue:
+    key: br_tcu_process_number
+    name: TCU process number by value (TC 005.291/2021-6)
+    rule: metacrafterext.rules.br.codes.validate_br_tcu_process_number_tc
+    type: data
+    match: func
+    minlen: 16
+    maxlen: 20
+    priority: 2
+  brtcurulingvalue:
+    key: br_tcu_ruling
+    name: TCU ruling (acórdão) by value (2726/2023-Plenário, 13262/2023-1ª Câmara)
+    rule: metacrafterext.rules.br.codes.validate_br_tcu_ruling
+    type: data
+    match: func
+    minlen: 9
+    maxlen: 60
+    priority: 2

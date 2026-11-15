@@ -1,0 +1,34 @@
+name: redlist
+description: IUCN Red List categories and criteria
+context: science
+lang: common
+rules:
+  # The CNCFlora assessments of the Jardim Botânico do Rio de Janeiro: categoria (CR, EN, VU, NT, LC, DD),
+  # Categoria de ameaça, critério (B1ab(iii), B1ab(i,iii)+2ab(ii,iii), D2).
+  iucnredlistcategorybyname:
+    key: iucn_red_list_category
+    name: IUCN Red List category (CR, EN, VU) by field name (categoria de ameaça, categoria, iucn_category, red_list_category, threat_status)
+    rule: (?i)(?:[\w ]+[ _])?(?:categoria(?:[ _]de)?[ _]amea[cç]a|amea[cç]a|iucn(?:[ _](?:category|status|categoria))?|uicn|red[ _]?list(?:[ _](?:category|status))?|threat[ _](?:status|category))(?:[ _][\w ]+)?|categorias?|category|status[ _](?:iucn|uicn)
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.taxa.validate_iucn_red_list_category
+    needs_values: true
+    priority: 1
+  iucnredlistcriteriabyname:
+    key: iucn_red_list_criteria
+    name: IUCN Red List criteria by field name (critério, criterio, criteria, iucn_criteria)
+    rule: (?i)crit[eé]rios?(?:[ _](?:iucn|uicn|de[ _]avalia[cç][aã]o))?|(?:iucn[ _])?criteri(?:a|on)
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.taxa.validate_iucn_red_list_criteria
+    needs_values: true
+    priority: 1
+  iucnredlistcriteriavalue:
+    key: iucn_red_list_criteria
+    name: IUCN Red List criteria by value (B1ab(iii), B1ab(i,iii)+2ab(ii,iii))
+    rule: metacrafterext.rules.common.taxa.validate_iucn_red_list_criteria
+    type: data
+    match: func
+    minlen: 6
+    maxlen: 120
+    priority: 2

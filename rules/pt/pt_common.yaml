@@ -12,3 +12,14 @@ rules:
     type: field
     priority: 1
     match: text
+  # CAPES gives the language of a publication in Portuguese, in upper case without accents (DS_IDIOMA:
+  # INGLES, PORTUGUES, ESPANHOL).
+  ptlanguagenamevalue:
+    key: language
+    name: Language name in Portuguese in a field named for it (idioma, ds_idioma, língua)
+    rule: português,portugues,inglês,ingles,espanhol,francês,frances,alemão,alemao,italiano,japonês,japones,chinês,chines,mandarim,russo,árabe,arabe,hebraico,latim,grego,holandês,holandes,neerlandês,neerlandes,sueco,norueguês,noruegues,dinamarquês,dinamarques,finlandês,finlandes,polonês,polones,tcheco,checo,húngaro,hungaro,romeno,turco,coreano,hindi,catalão,catalao,galego,basco,esperanto,guarani,tupi,quíchua,quechua,malgaxe,persa,ucraniano,croata,sérvio,servio,búlgaro,bulgaro,indonésio,indonesio,vietnamita,tailandês,tailandes,africâner,suaíli,islandês,irlandês,galês
+    type: data
+    match: text
+    fieldrule: idioma,ds_idioma,nm_idioma,idiomas,língua,lingua,idioma_publicacao,lingua_publicacao,idioma da publicação,língua da publicação
+    fieldrulematch: text
+    priority: 1
