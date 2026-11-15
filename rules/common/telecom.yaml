@@ -11,6 +11,10 @@ rules:
     rule: imei,device_id,mobile_device_id,equipment_id,imei_number,device_imei,imei_code,imei_string,device_imei_number,mobile_imei
     type: field
     match: text
+    # device_id and equipment_id name sensors and gateways too (lst25275720, ems-b879, 014da0 in the IoT
+    # tables of Ballarat): the values must be IMEIs.
+    validator: metacrafterext.rules.common.identifiers.validate_imei
+    needs_values: true
     priority: 1
   imeivalue:
     key: imei

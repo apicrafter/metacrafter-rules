@@ -80,8 +80,10 @@ rules:
     priority: 1
   phbyname:
     key: ph_value
-    name: pH by field name (pH, pH_H2O, pH KCl, pHwater, pHcacl2, phLevel_water) with values from 0 to 14
-    rule: (?i)ph(?:[ _-]?(?:h2o|kcl|cacl2|bacl2|nacl|water|w|value|level|field|lab|in[ _]water|1[:_]?[25](?:\.5)?))?|ph[ _]?level[ _]?(?:water|calcium[ _]?chloride|cacl2|kcl|h2o)|ph[ _-]?(?:водн\w*|солев\w*)|рн(?:[ _-]?(?:водн\w*|солев\w*|kcl|h2o))?
+    name: pH by field name (pH, pH_H2O, pH KCl, pHwater, pHcacl2, phLevel_water, acidity) with values from 0 to 14
+    # acidity is the pH of the water quality sensors of Ballarat (8.771); fixed_acidity and
+    # volatile_acidity of wine are grams per litre and do not match.
+    rule: (?i)(?:water[ _-]?)?acidity(?:[ _-]?ph)?|ph(?:[ _-]?(?:h2o|kcl|cacl2|bacl2|nacl|water|w|value|level|field|lab|in[ _]water|1[:_]?[25](?:\.5)?))?|ph[ _]?level[ _]?(?:water|calcium[ _]?chloride|cacl2|kcl|h2o)|ph[ _-]?(?:водн\w*|солев\w*)|рн(?:[ _-]?(?:водн\w*|солев\w*|kcl|h2o))?
     type: field
     match: regex
     validator: metacrafterext.rules.common.fieldwork.validate_ph_value

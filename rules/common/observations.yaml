@@ -1,0 +1,226 @@
+name: observations
+description: Readings of environmental sensors and weather stations (air pollutants, humidity, pressure, precipitation, solar radiation, wind, sound level, water quality), tree diameters, military ranks, LoRaWAN device EUIs and WKT definitions of coordinate reference systems
+context: environment
+lang: common
+country_code: xx
+# Found in the 2024 snapshot of the City of Ballarat Data Exchange (data.ballarat.vic.gov.au, Victoria,
+# Australia; Dateno source cdi00000089) of metacrafter-testdata: one table per measure of its Internet of
+# Things sensors (date_time;location_description;latitude;longitude;relative_humidity;point), asset and
+# tree registers, and the Avenue of Honour plaques. A number alone does not tell a humidity from a wind
+# speed, so the measures are matched by field name, and the validators of
+# metacrafterext.rules.common.observations drop the names whose values do not fit.
+rules:
+  pm1concentrationbyname:
+    key: pm1_concentration
+    name: PM1 concentration by field name (pm1, pm1_0, PM1.0, pm1_ugm3) with numbers
+    rule: (?i)(?:(?:avg|mean|average|max|min|hourly|daily)[ _-]?)?pm[ _.-]?(?:1|1[ _.,]0|01)(?:[ _-]?(?:conc|concentration|value|avg|average|mean|atm|cf1|ugm3|ug[ _/]?m3|µg[ _/]?m[3³]|μg[ _/]?m[3³]|\(µg/m³\)|\(ug/m3\)|1h|24h|hourly|daily))*
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.observations.validate_concentration
+    needs_values: true
+    priority: 1
+  pm25concentrationbyname:
+    key: pm25_concentration
+    name: PM2.5 concentration by field name (pm25, pm2_5, PM2.5, pm2.5_ugm3, mean_pm25) with numbers
+    rule: (?i)(?:(?:avg|mean|average|max|min|hourly|daily)[ _-]?)?pm[ _.-]?2[ _.,-]?5(?:[ _-]?(?:conc|concentration|value|avg|average|mean|atm|cf1|ugm3|ug[ _/]?m3|µg[ _/]?m[3³]|μg[ _/]?m[3³]|\(µg/m³\)|\(ug/m3\)|1h|24h|hourly|daily))*
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.observations.validate_concentration
+    needs_values: true
+    priority: 1
+  pm10concentrationbyname:
+    key: pm10_concentration
+    name: PM10 concentration by field name (pm10, pm10_0, PM10 (µg/m³), pm10_ugm3) with numbers
+    rule: (?i)(?:(?:avg|mean|average|max|min|hourly|daily)[ _-]?)?pm[ _.-]?10(?:[ _.,]0)?(?:[ _-]?(?:conc|concentration|value|avg|average|mean|atm|cf1|ugm3|ug[ _/]?m3|µg[ _/]?m[3³]|μg[ _/]?m[3³]|\(µg/m³\)|\(ug/m3\)|1h|24h|hourly|daily))*
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.observations.validate_concentration
+    needs_values: true
+    priority: 1
+  ozoneconcentrationbyname:
+    key: ozone_concentration
+    name: Ozone concentration by field name (ozone, o3, o3_ppb, ozone_ugm3) with numbers
+    rule: (?i)(?:(?:avg|mean|average|max|min|hourly|daily)[ _-]?)?(?:ozone|o3)(?:[ _-]?(?:conc|concentration|value|avg|average|mean|ppb|ppm|ugm3|ug[ _/]?m3|µg[ _/]?m[3³]|\(ppb\)|\(µg/m³\)|1h|8h|24h|hourly|daily))*
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.observations.validate_concentration
+    needs_values: true
+    priority: 1
+  no2concentrationbyname:
+    key: no2_concentration
+    name: Nitrogen dioxide concentration by field name (nitrogen_dioxide, no2, no2_ppb) with numbers
+    rule: (?i)(?:(?:avg|mean|average|max|min|hourly|daily)[ _-]?)?(?:nitrogen[ _-]?dioxide|no2)(?:[ _-]?(?:conc|concentration|value|avg|average|mean|ppb|ppm|ugm3|ug[ _/]?m3|µg[ _/]?m[3³]|\(ppb\)|\(µg/m³\)|1h|24h|hourly|daily))*
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.observations.validate_concentration
+    needs_values: true
+    priority: 1
+  coconcentrationbyname:
+    key: co_concentration
+    name: Carbon monoxide concentration by field name (carbon_monoxide, co_ppm, co_mg_m3) with numbers
+    # A bare co is a company, a county or Colorado as often: only with a unit or the full name.
+    rule: (?i)(?:(?:avg|mean|average|max|min|hourly|daily)[ _-]?)?(?:carbon[ _-]?monoxide(?:[ _-]?(?:conc|concentration|value|avg|mean|ppm|ppb|mg[ _/]?m3|µg[ _/]?m[3³]|\(ppm\)|\(mg/m³\)|1h|8h|24h))*|co[ _-]?(?:ppm|ppb|mg[ _/]?m3|µg[ _/]?m[3³]|conc|concentration|\(ppm\)|\(mg/m³\)))
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.observations.validate_concentration
+    needs_values: true
+    priority: 1
+  relativehumiditybyname:
+    key: relative_humidity
+    name: Relative humidity by field name (relative_humidity, humidity, rel_hum, rh, humidity_pct) with numbers from 0 to 100
+    rule: (?i)(?:(?:air|avg|mean|average|max|min|maximum|minimum|daily|hourly|outdoor|indoor)[ _-]?)?(?:relative[ _-]?humidity|rel[ _-]?hum(?:idity)?|humidity|rh)(?:[ _-]?(?:pct|percent|%|\(%\)|avg|average|mean|max|min|value|9am|3pm))*
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.observations.validate_relative_humidity
+    needs_values: true
+    priority: 1
+  atmosphericpressurebyname:
+    key: atmospheric_pressure
+    name: Air pressure by field name (atmospheric_pressure, atmospheric_pressure_hpa, barometric_pressure, mslp, pressure) with hPa, kPa or Pa
+    rule: (?i)(?:(?:avg|mean|average|max|min|daily|hourly)[ _-]?)?(?:(?:atmospheric|barometric|air|station|sea[ _-]?level|mean[ _-]?sea[ _-]?level|msl|surface)[ _-]?pressure|pressure|baro|mslp|qnh|qfe)(?:[ _-]?(?:hpa|kpa|mbar|mb|pa|msl|avg|average|mean|max|min|\(hpa\)|\(kpa\)|\(mbar\)|9am|3pm))*
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.observations.validate_air_pressure
+    needs_values: true
+    priority: 1
+  vapourpressurebyname:
+    key: vapour_pressure
+    name: Water vapour pressure by field name (vapour_pressure, vapor_pressure_hpa) with numbers
+    rule: (?i)(?:(?:avg|mean|average|max|min|daily)[ _-]?)?(?:water[ _-]?)?vapou?r[ _-]?pressure(?:[ _-]?(?:hpa|kpa|mbar|mb|avg|mean|\(hpa\)|9am|3pm))*
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.observations.validate_vapour_pressure
+    needs_values: true
+    priority: 1
+  precipitationbyname:
+    key: precipitation_amount
+    name: Precipitation amount by field name (precipitation, rainfall, rain_mm, prcp, precipitation_cumulative) with numbers
+    rule: (?i)(?:(?:daily|hourly|total|monthly|annual|cumulative|accumulated)[ _-]?)?(?:precipitation|precip|rainfall|rain|prcp)(?:[ _-]?(?:mm|in|amount|total|sum|cumulative|accumulated|daily|hourly|\(mm\)))*
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.observations.validate_precipitation
+    needs_values: true
+    priority: 1
+  solarradiationbyname:
+    key: solar_radiation
+    name: Solar radiation by field name (solar_radiation, irradiance, global_radiation, ghi, insolation) with W/m² or MJ/m²
+    rule: (?i)(?:(?:avg|mean|average|max|min|daily|hourly|global|total)[ _-]?)?(?:solar[ _-]?(?:radiation|irradiance|exposure|rad)|irradiance|global[ _-]?radiation|ghi|insolation|shortwave[ _-]?radiation)(?:[ _-]?(?:w[ _/]?m2|w[ _/]?m²|wm2|mj[ _/]?m2|avg|mean|max|\(w/m²\)|\(w/m2\)))*
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.observations.validate_solar_radiation
+    needs_values: true
+    priority: 1
+  windspeedbyname:
+    key: wind_speed
+    name: Wind speed by field name (average_wind_speed, gust_speed, wind_speed_gust, wspd, wind_gust_kmh) with numbers
+    rule: (?i)(?:(?:average|avg|mean|max|maximum|min|minimum|daily|hourly)[ _-]?)?(?:wind[ _-]?(?:speed|spd|velocity|gust(?:[ _-]?speed)?)(?:[ _-]?(?:average|avg|mean|gust|max|maximum|min))?|gust(?:[ _-]?speed)?|wspd)(?:[ _-]?(?:ms|m[ _/]?s|kmh|km[ _/]?h|kph|kn|kt|knots|mph|\(m/s\)|\(km/h\)|9am|3pm))*
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.observations.validate_wind_speed
+    needs_values: true
+    priority: 1
+  winddirectionbyname:
+    key: wind_direction
+    name: Wind direction in degrees by field name (wind_direction, wind_dir_deg, wdir) with numbers from 0 to 360
+    # wind_direction holds a compass point as often (compasspointbyname): the values decide.
+    rule: (?i)(?:(?:average|avg|mean|gust|max|vector)[ _-]?)?(?:wind[ _-]?(?:dir(?:ection)?|bearing|from)|wdir)(?:[ _-]?(?:deg(?:rees)?|°|avg|average|mean|gust|\(deg\)|\(°\)|9am|3pm))*
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.observations.validate_wind_direction
+    needs_values: true
+    priority: 1
+  soundpressurelevelbyname:
+    key: sound_pressure_level
+    name: Sound pressure level by field name (sound_pressure_level_average, noise_level, laeq, lamax, spl_db) with decibels
+    # A bare noise is a count of noise complaints as often: only with level, a unit or a weighting.
+    rule: (?i)(?:(?:average|avg|mean|peak|max|maximum|min|minimum|hourly)[ _-]?)?(?:sound[ _-]?(?:pressure[ _-]?)?level|noise[ _-]?(?:level|db|dba)|spl|la[ _-]?eq|l[ _-]?a[ _-]?eq|leq|la[ _-]?max|la[ _-]?min|lden|lnight|decibels?)(?:[ _-]?(?:average|avg|mean|peak|max|min|db|dba|db\(a\)|\(db\)|\(dba\)|1h|15min|t))*
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.observations.validate_sound_level
+    needs_values: true
+    priority: 1
+  electricalconductivitybyname:
+    key: electrical_conductivity
+    name: Electrical conductivity by field name (electrical_conductivity, conductivity_uS_cm, ec_ds_m, conductivity_deciSiemensPerMetre, spec_cond) with numbers
+    # A bare ec is an enzyme number, the European Commission or an electoral college: only with a unit.
+    rule: (?i)(?:(?:avg|mean|average|max|min|field|lab|water|soil)[ _-]?)?(?:(?:electrical|electric|specific)[ _-]?)?(?:conductivity|conductance|spec[ _-]?cond)(?:[ _-]?(?:us[ _/]?cm|µs[ _/]?cm|μs[ _/]?cm|ms[ _/]?cm|ds[ _/]?m|s[ _/]?m|(?:deci|micro|milli)?siemens[ _]?per[ _]?(?:centi)?met(?:re|er)|25c|at[ _]?25c?|field|lab|avg|mean|\(µs/cm\)|\(us/cm\)|\(ds/m\)))*|(?:ec|cond)[ _-]?(?:us[ _/]?cm|µs[ _/]?cm|μs[ _/]?cm|ms[ _/]?cm|ds[ _/]?m|25c?|\(µs/cm\)|\(ds/m\))
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.observations.validate_conductivity
+    needs_values: true
+    priority: 1
+  salinitybyname:
+    key: salinity
+    name: Salinity by field name (salinity, salinity_ppt, sal_psu, psal) with numbers
+    rule: (?i)(?:(?:avg|mean|average|max|min|surface|bottom|water)[ _-]?)?(?:salinity(?:[ _-]?(?:ppt|psu|g[ _/]?l|g[ _/]?kg|mg[ _/]?l|‰|practical|avg|mean|\(ppt\)|\(psu\)))*|sal[ _-]?(?:psu|ppt)|psal)
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.observations.validate_salinity
+    needs_values: true
+    priority: 1
+  turbiditybyname:
+    key: turbidity
+    name: Turbidity by field name (turbidity, turbidity_ntu, turbidity_fnu, turb_ntu) with numbers
+    rule: (?i)(?:(?:avg|mean|average|max|min|water)[ _-]?)?(?:turbidity(?:[ _-]?(?:ntu|fnu|ftu|jtu|mg[ _/]?l|avg|mean|\(ntu\)|\(fnu\)))*|turb[ _-]?(?:ntu|fnu|ftu))
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.observations.validate_turbidity
+    needs_values: true
+    priority: 1
+  totaldissolvedsolidsbyname:
+    key: total_dissolved_solids
+    name: Total dissolved solids by field name (total_dissolved_solids, tds, tds_mg_l) with numbers
+    rule: (?i)(?:(?:avg|mean|average|max|min|water)[ _-]?)?(?:total[ _-]?dissolved[ _-]?solids|tds)(?:[ _-]?(?:mg[ _/]?l|ppm|g[ _/]?l|avg|mean|\(mg/l\)|\(ppm\)))*
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.observations.validate_dissolved_solids
+    needs_values: true
+    priority: 1
+  treedbhbyname:
+    key: tree_dbh
+    name: Tree diameter at breast height by field name (dbh, tree_dbh, diameter_breast_height, dbh_cm, trunk_diameter) with numbers or size classes
+    rule: (?i)(?:(?:tree|stem|trunk|mean|avg|max)[ _-]?)?(?:dbh|d\.b\.h\.?|diameter[ _-]?(?:at[ _-]?)?breast[ _-]?height|trunk[ _-]?diameter|stem[ _-]?diameter[ _-]?(?:at[ _-]?)?breast[ _-]?height)(?:[ _-]?(?:cm|mm|in|inches|class|range|band|\(cm\)|\(in\)))*
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.observations.validate_tree_dbh
+    needs_values: true
+    priority: 1
+  militaryrankbyname:
+    key: military_rank
+    name: Military rank by field name (rank, military_rank, service_rank, rank_abbr) with ranks (SGT., LT COL. DSO., PTE. Driver)
+    # rank is a taxon rank (dwctaxonrankvalue) or a position in a ranking as often: the values decide.
+    rule: (?i)(?:(?:military|service|army|naval|navy|air[ _-]?force|final|highest|enlistment|discharge)[ _-]?)?rank(?:[ _-]?(?:title|abbr|abbreviation|name|held|at[ _-]?(?:enlistment|death|discharge)))?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.observations.validate_military_rank
+    needs_values: true
+    priority: 1
+  wktcrsvalue:
+    key: wkt_crs
+    name: Coordinate reference system in well-known text by value (GEOGCS["WGS 84",DATUM[...]], PROJCS[...], GEOGCRS[...])
+    rule: metacrafterext.rules.common.observations.validate_wkt_crs
+    type: data
+    match: func
+    minlen: 20
+    maxlen: 20000
+    priority: 1
+  wktcrsbyname:
+    key: wkt_crs
+    name: Coordinate reference system in well-known text by field name (json_ogc_wkt_crs, crs_wkt, srs_wkt, prj)
+    rule: (?i)(?:json[ _-]?)?(?:ogc[ _-]?)?wkt[ _-]?(?:crs|srs)|(?:crs|srs)[ _-]?wkt|prj|esri[ _-]?wkt
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.observations.validate_wkt_crs
+    needs_values: true
+    priority: 1
+  eui64byname:
+    key: eui64
+    name: EUI-64 by field name (dev_eui, end_device_ids_dev_eui, deveui, join_eui, gateway_eui) with sixteen hexadecimal digits
+    # LoRaWAN networks (The Things Network: end_device_ids.dev_eui) name the device, the join server and
+    # the gateway by their EUI-64.
+    rule: (?i)(?:[a-z0-9]+[ _.])*(?:dev|device|app|application|join|gateway|gw)[ _.-]?eui|deveui|appeui|joineui|eui[ _-]?64
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.observations.validate_eui64
+    needs_values: true
+    priority: 1

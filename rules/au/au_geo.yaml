@@ -83,6 +83,17 @@ rules:
     validator: metacrafterext.rules.au.codes.validate_au_postcode
     needs_values: true
     priority: 1
+  auaddressvalue:
+    key: address
+    name: Full Australian address by value (16 Cypress Avenue WENDOUREE VIC 3355, 7 Eastwood Street, Ballarat Central, Victoria 3350, Australia)
+    # The street, the suburb, the state and a postcode of that state: property_address of the
+    # neighbourhood character study and location of the reserves of the City of Ballarat had no label.
+    rule: metacrafterext.rules.au.codes.validate_au_address
+    type: data
+    match: func
+    minlen: 12
+    maxlen: 200
+    priority: 1
   ausuburbbyname:
     key: au_suburb
     name: Australian suburb or locality by field name (Suburb, Suburb/Town, B_Suburb, supplier_suburb, AFS_LIC_ADD_LOCAL)

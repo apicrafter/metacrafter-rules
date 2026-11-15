@@ -170,6 +170,10 @@ rules:
     rule: gln,global_location_number,location_id,location_number,gln_code
     type: field
     match: text
+    # location_id and location_number are ids of any list as often (1, 2, 3 in the IoT devices of
+    # Ballarat): the values must be GLNs.
+    validator: metacrafterext.rules.common.identifiers.validate_gln
+    needs_values: true
     priority: 1
   glnvalue:
     key: gln
@@ -412,10 +416,21 @@ rules:
     validator: metacrafterext.rules.common.generic.validate_geopoint_text
     needs_values: true
     priority: 1
+  geopointpointbyname:
+    key: geopoint
+    name: Point as latitude and longitude text by field name (point, location_point) as Opendatasoft exports a geo_point field
+    # The City of Ballarat Data Exchange names the geo_point field of 29 of its 95 tables point
+    # (-37.557678, 143.821693); the values must be pairs of degrees.
+    rule: (?i)point|location[ _-]?point|point[ _-]?location
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.generic.validate_latlon_pair
+    needs_values: true
+    priority: 1
   compasspointbyname:
     key: compass_point
-    name: Compass point (16-wind) by field name (aspect, slopeAspect_direction, wind_direction)
-    rule: (?i)(?:slope_?|site_?)?aspect(?:_?(?:direction|orientation|text|compass))?|wind_?dir(?:ection)?(?:_?(?:text|compass))?|direction|orientation
+    name: Compass point (16-wind) by field name (aspect, slopeAspect_direction, wind_direction, wind_direction_cardinal)
+    rule: (?i)(?:slope_?|site_?)?aspect(?:_?(?:direction|orientation|text|compass))?|wind_?dir(?:ection)?(?:_?(?:text|compass|cardinal|point|name))?|direction|orientation
     type: field
     match: regex
     validator: metacrafterext.rules.common.fieldwork.validate_compass_point
