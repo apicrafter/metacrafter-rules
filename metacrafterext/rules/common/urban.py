@@ -3,6 +3,7 @@
 (201909), SAS datetimes (09DEC2005:00:00:00), street intersections (DEHEZA@PINTO), house numbers, Plus
 Codes and YouTube video ids."""
 import re
+import unicodedata
 
 # --- Periods ------------------------------------------------------------------------------------
 
@@ -76,6 +77,9 @@ def validate_building_number(value):
     text = str(value).strip().lower()
     if text in ("s/n", "s/nº", "s/n°", "sn"):
         return True
+    # a kilometre of a route for an address outside towns (Ruta 7 KM.6,5: KM.6,5, KM 32, km1059)
+    if re.match(r"^km\.? ?\d{1,4}(?:[.,]\d{1,3})?$", text):
+        return True
     if text.endswith(".0"):
         text = text[:-2]
     match = re.match(r"^(\d{1,5})(?: ?[/-] ?\d{1,5})?(?: ?bis)?$", text)
@@ -111,6 +115,35 @@ def validate_youtube_video_id(value):
     """A YouTube video id in a field named for it: Jw7w1musWqs, s4q9VS4Dj_Y&feature=youtu.be (not a
     URL or an iframe)."""
     return bool(_YOUTUBE_ID.match(str(value).strip()))
+
+
+# ---------------------------------------------------------------- urban or rural
+# Words of the urban / rural class of a place in Spanish, Portuguese, English, German and French
+# (the ámbito of the schools of Mendoza: Urbano, Urbano marginal, Rural marginal), and the classes
+# of the ONS rural-urban classification of England and Wales (Urban major conurbation, Rural town
+# and fringe, with "(England/Wales)" before them) and of Scotland (Urban: Nearer to a major town).
+URBAN_RURAL = frozenset((
+    "urbano", "urbana", "rural", "urbano marginal", "urbana marginal", "rural marginal", "marginal",
+    "urbano periferico", "rural disperso", "rural dispersa", "rural agrupado", "rural agrupada",
+    "periurbano", "periurbana", "suburbano", "suburbana", "semiurbano", "semiurbana", "semirrural",
+    "urbano rural", "urban", "suburban", "peri urban", "periurban", "semi urban", "semi rural",
+    "urban area", "rural area", "staedtisch", "stadtisch", "laendlich", "landlich", "vorstadtisch",
+    "stadtisches gebiet", "landliches gebiet", "vorstadtisches gebiet", "urbain", "urbaine", "rurale",
+    "periurbain", "periurbaine",
+))
+_URBAN_RURAL_CLASS = re.compile(
+    r"^(?:\((?:england/wales|england|wales|scotland|northern ireland)\)\s*)?(?:urban|rural)(?::|\s)\s*\S.*$")
+
+
+def validate_urban_rural_class(value):
+    """Whether a place is urban or rural, in words: Urbano, Rural, Urbano marginal, urban, suburban,
+    städtisches Gebiet, ländlich, périurbain, (England/Wales) Rural town and fringe (not Urbanización
+    La Esperanza, a code or a zone name)."""
+    raw = unicodedata.normalize("NFKD", str(value).strip().lower())
+    raw = "".join(ch for ch in raw if not unicodedata.combining(ch))
+    text = " ".join(re.sub(r"[^\w/():]+", " ", raw).split())
+    words = " ".join(re.sub(r"[^\w]+", " ", raw).split())
+    return bool(words) and (words in URBAN_RURAL or bool(_URBAN_RURAL_CLASS.match(text)))
 
 
 _PROPERTY_NUMBER = re.compile(r"^(?=.*\d)[A-Za-z0-9][A-Za-z0-9/.\-]{2,19}$")

@@ -1,0 +1,28 @@
+name: commonrates
+description: Interest rates (percentages, reference rates with a spread)
+context: finances
+lang: common
+country_code: xx
+# Found in the public debt profiles and the credit lines of the province of Mendoza
+# (datosabiertos.mendoza.gov.ar; metacrafter-testdata).
+rules:
+  interestratebyname:
+    key: interest_rate
+    name: Interest rate by field name (tasa, tasa_interes, interest_rate, Cupón/Cupon, coupon, taux)
+    # 6,00%, Badlar + 2%, tasa fija anual del 21%. A tasa of a statistic (a rate of unemployment)
+    # is a share without a reference rate and is not named alone.
+    rule: '(?i)(?:[a-z ]+_)?tasas?(?:[ _](?:de[ _])?inter[eé]s(?:[ _](?:anual|nominal|efectiva|vigente))?|[ _]final|[ _]nominal(?:[ _]anual)?|[ _]fija|[ _]variable|[ _]aplicada)?|cup[oó]n(?:[ _]*/[ _]*cup[oó]n)?|coupon(?:[ _]rate)?|interest[ _]rate|rate[ _]of[ _]interest|taux(?:[ _]d[e'']?[ _]?int[eé]r[eê]t)?|zinssatz'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.rates.validate_interest_rate
+    needs_values: true
+    priority: 1
+  interestratereferencevalue:
+    key: interest_rate
+    name: Interest rate by value as a reference rate with a spread (Badlar + 2%, Libor + 3,70%, CER + 0,1%)
+    rule: metacrafterext.rules.common.rates.validate_interest_rate_reference
+    type: data
+    match: func
+    minlen: 3
+    maxlen: 80
+    priority: 1

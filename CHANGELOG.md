@@ -68,6 +68,88 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     in 29 of the 95 Ballarat tables), `wind_direction_cardinal` as `compass_point`, `acidity` of water as
     `ph_value`, council property numbers (`propertyid`: propnum, property_number, with priority 1), full
     Australian addresses by value (`address`: 16 Cypress Avenue WENDOUREE VIC 3355, with a postcode of the state).
+- **Rules for the Mendoza files of metacrafter-testdata** (a 2024 snapshot of datosabiertos.mendoza.gov.ar,
+  the open data portal of the province of Mendoza, Argentina, Dateno source cdi00000026; validators in
+  `metacrafterext.rules.ar_country.mendoza`, `metacrafterext.rules.common.tourism` and
+  `metacrafterext.rules.common.rates`, rules in `rules/ar_country/ar_mendoza.yaml`,
+  `rules/common/tourism.yaml` and `rules/common/rates.yaml`):
+  - the districts of the departments of Mendoza (`ar_mendoza_district`: Rodeo de la Cruz, EL PLUMERILLO,
+    Va. Hipódromo, San José (G), the numbered sections of the Capital) in `distrito` fields, and the school
+    numbers of its Dirección General de Escuelas (`ar_mendoza_school_number`: 4-013, P-131, PS-046, P113)
+    in `ESC`, `numero_escuela` and `numero_establecimiento`;
+  - the classifiers of the provincial budget: the economic classification of expenditure
+    (`ar_mendoza_economic_classification`: 41101 PERSONAL PERMANENTE, 41100 - PERSONAL; by name and by
+    value), the financing sources (`ar_mendoza_financing_source`: 0 Rentas Generales, 000 - Rentas
+    Generales), the resource accounts (`ar_mendoza_resource_account`: 1110100000-IMPUESTO SOBRE LAS
+    ACTIVIDADES, by name and by value) and the accounting units (`ar_mendoza_cuc`: 906-Administración
+    Central);
+  - the administrative files before GDE (`ar_mendoza_expediente_number`: 4259-D-2015-03834,
+    1310/G/07/03834; by value only with the office), the Argentine electricity distributors
+    (`ar_electricity_distributor`: EDEMSA, E.D.E.S.T.E.S.A., Coop. Godoy Cruz, and the cooperatives by
+    their town in `distribuidora` fields) and the categories of hazardous waste of Ley 24.051
+    (`ar_hazardous_waste_category`: Y8-Y9-Y48, Y8, Y9, Y11 with the Basel operations R9, D10);
+  - tourist accommodation: its type (`accommodation_type`: HOTEL, APART-HOTEL, CABAÑAS, Hostería,
+    camping, chambre d'hôtes, Ferienwohnung in `clase`, `rubro` and by value) and its star rating
+    (`accommodation_star_rating`: 3 ESTRELLAS, 4 étoiles, 5 stars, Sin categorizar; **** in
+    `categoria` fields only, as ** fills the empty cells of other tables);
+  - interest rates (`interest_rate`: 6,00%, Badlar + 2%, Libor + 3,70%, tasa fija anual del 21% in
+    `tasa`, `Cupón/Cupon`, `coupon`, `interest_rate`; by value only a reference rate with or without a
+    spread) and the urban or rural class of a place (`urban_rural_class`: Urbano, Urbano marginal, Rural,
+    städtisches Gebiet, Rural town and fringe in `ambito`, `urban_rural` and by value);
+  - registry types that got more rules: durations in Spanish words (`duration`: 1 días, 13 horas, 20
+    minutos in `demora` fields and by value), year and month in `Ejercicio/Mes` (2017/01), periodicity
+    in `Frecuencia / Frequency` (Semi annual), legislation numbers in `resolucion`, `RESOL.`, `RES.`
+    (648/09), phones in compound names (`telefono_agencia`, `oficina_telefono`,
+    `contacto_telefono_numero_fijo_abonado`), postal codes in `C_POSTAL`, departments in compound names
+    (`departamento_centro_de_salud`, `domicilio_departamento`, `C_DEPTO`), CUE in `cue_escuela`, the
+    wind direction in `hi_dir`, streets, house numbers and floors of split addresses
+    (`oficina_domicilio_calle`, `numero_domicilio_agencia`, `piso_domicilio_agencia`), house numbers on
+    a route kilometre (KM.6,5), GDE numbers of the Mendoza ecosystem (GDEMZA) by value and written with
+    a space or a file number in parentheses (EX 2018-00345266-GDEMZA-DPA#SAYOT (Expte. ...));
+  - amounts of a budget execution in Spanish (`money`: `votado`, `preventivo`, `devengado`, `pagado`,
+    `presupuesto_saldo`, `credito_vigente`, the sanctions and credits of the EPRE quality tables, with
+    6.613.703,03 or $ 298.278.261,30; validator `metacrafterext.rules.common.rates.validate_es_amount`,
+    rules in `rules/es/es_budget.yaml`), amounts with a currency sign or code and a decimal comma by value
+    ($ 298.278.261,30, ARS 3.662,50, USD 44,59), budget years in `ejercicio`, temperatures in the columns
+    of a Davis weather station export (`hi_temp`, `low_temp`, `dew_point`, `wind_chill`, `heat_index`,
+    `thw_index`, `in_temp`) and in `temperatura_...`, legislation numbers in `decreto_provincial_numero`
+    (and no longer in `resolucion_epas_anio`, a year).
+
+- **Rules for the SICYTAR files of metacrafter-testdata** (a 2024 snapshot of datasets.datos.mincyt.gob.ar,
+  the open data portal of the Argentine science ministry, Dateno source cdi00000024; validators in the new
+  `metacrafterext.rules.ar_country.science` and `metacrafterext.rules.common.research`, rules in the new
+  `rules/ar_country/ar_science.yaml` and `rules/common/research.yaml`):
+  - project codes of the ANPCyT (`ar_anpcyt_project_code`: PICT-2015-1234, PICTO-2009-0012, PID-2011-0002,
+    ANR 600 NA093/08, CF BA 001/07, CRE+CO 0062/12) and of CONICET (`ar_conicet_project_code`:
+    11220150100433CO) by value, and a column that mixes them (`codigo_identificacion`) as a grant number
+    (`grant_number`, also `grant_number`, `award_number` and `numero_de_subsidio` by name); the guarded
+    rule outweighs the code rules that hold part of the values;
+  - ANPCyT funds (`ar_anpcyt_fund`: FONCYT, FONTAR, FONSOFT, FONARSEC), equipment codes of the Sistemas
+    Nacionales of the science ministry (`ar_mincyt_equipment_id`: SNM-826, SNCAD-483, SINALA-1021) and
+    CONICET staff categories (`ar_conicet_category`: Investigador adjunto, Becario doctoral, Personal de
+    apoyo by value; a bare class such as principal only in `categoria_conicet`);
+  - eleven-digit BAHRA settlement codes in `cod_bahra` (`ar_bahra_code`: 02000010000, 06441030015), the
+    department part of a BAHRA code in `dpa__codigo` (000 for the City of Buenos Aires), the province
+    code in `dpt_codigo`, the locality part in `localidad_codigo`, province, department and locality
+    names in `dpt_descripcion`, `dpa_descripcion` (Capital Federal is the City of Buenos Aires as one
+    department) and `localidad_descripcion`, street names in `direccion_calle`, ISO 3166-1 alpha-3 codes
+    in `codigo_ISO3` and `pais_codigo_ISO3`, Spanish country names in `pais_desc` and
+    `pais_descripcion`;
+  - OECD FORD codes (`oecd_ford_code`: 1, 1.1, 2.11, 1.1.0, 1.5.10) in `disciplina_codigo`,
+    `area_codigo` and `gran_area_codigo`, where the guarded rule outweighs the semantic version and OID
+    detectors, and discipline names in `disciplina_descripcion` and `area_descripcion`;
+  - bibliographic fields: journal titles (`journal_title`: `revista`, `journal`, `source title`),
+    volumes (`journal_volume`: 43, 12A, XXXV in `volumen`, `volume`), first and last pages
+    (`page_number`: `pagina_inicial`, `pagina_final`, `start_page`, `spage`), SJR and JCR quartiles
+    (`journal_quartile`: Q1 to Q4 and NO INDEXADO in `revista_sjr`, `quartile`, `cuartil`, outweighing
+    the Wikidata id detector), titles of books, articles and projects (`title`: `titulo_libro`,
+    `book_title`; a bare `titulo` is left out), publishers (`dc_publisher`: `editorial`, `publisher`);
+  - registry types that had no rules: keywords (`keyword`: `palabras_clave`, `keywords`, lists separated
+    by semicolons, pipes or commas), abstracts (`abstract`: `resumen`, `abstract`, with No publicable as
+    a missing value) and ISIC Rev. 4 codes (`isicrev4`: A, 01, 011, 0111 in `codigo_rev4`, `ciiu`,
+    `isic_rev4`);
+  - the sex of a person named by a role after sexo (`gender`: `sexo_director`), and no informado and no
+    publicable as missing-value texts.
 
 - **Rules for the Buenos Aires files of metacrafter-testdata** (a 2024 snapshot of data.buenosaires.gob.ar,
   the open data portal of the City of Buenos Aires, Dateno source cdi00000023; validators in
@@ -248,6 +330,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   supported by a trust of the GIAS schools register, which were the only values left once metacrafter took
   Not applicable for an empty value.
 
+- `za_economic_classification` by value no longer takes a column of CAPITAL or Current: the level 1
+  words of the South African classification are common words, and the Capital department of Mendoza
+  (CAPITAL, SAN RAFAEL, GUAYMALLEN) got the label in 7 fields; they count under the field names only.
 - The Australian LGA rules no longer take the Nigerian LGA codes and names of the GRID3 settlement
   data (`Lga Code` 19001, `Lga` Birnin Gwari): an ABS LGA code ends in 0 or is an unincorporated, no
   usual address or migratory code (19399, 19499, 89399), and a plain LGA name is not a Nigerian LGA.

@@ -103,3 +103,23 @@ rules:
     validator: metacrafterext.rules.es.periods.validate_time_of_day
     needs_values: true
     priority: 1
+  # Found in the tickets of the citizen service of Mendoza (148, datosabiertos.mendoza.gov.ar;
+  # metacrafter-testdata): how long a ticket waited, "1 días, 13 horas, 20 minutos".
+  esdurationwordsbyname:
+    key: duration
+    name: Duration in Spanish words by field name (demora, demora_desde_solicitud_tickets, horas_demora_desde_solicitud, duracion)
+    rule: '(?i)(?:[a-záéíóúñü]+[ _]+)*(?:demora|duraci[oó]n|tiempo)(?:[ _]+[a-záéíóúñü]+)*'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.es.periods.validate_es_duration_words
+    needs_values: true
+    priority: 1
+  esdurationwordsvalue:
+    key: duration
+    name: Duration in Spanish words by value (1 días, 13 horas, 20 minutos; 0 horas, 3 minutos)
+    rule: metacrafterext.rules.es.periods.validate_es_duration_words
+    type: data
+    match: func
+    minlen: 7
+    maxlen: 60
+    priority: 1

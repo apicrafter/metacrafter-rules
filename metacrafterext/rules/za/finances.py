@@ -52,6 +52,17 @@ def validate_za_economic_classification(value):
     return bool(key) and key in ZA_ECONOMIC_CLASSIFICATION
 
 
+# Level 1 items that are common words: a column of CAPITAL (the Capital department of Mendoza) or
+# Current is not the economic classification without the field name.
+_ZA_LEVEL1_WORDS = frozenset(("capital", "current"))
+
+
+def validate_za_economic_classification_value(value):
+    """An item of the economic classification for value rules on any field: as
+    validate_za_economic_classification, without the bare level 1 words Capital and Current."""
+    return validate_za_economic_classification(value) and _norm(value) not in _ZA_LEVEL1_WORDS
+
+
 def validate_za_vote_number(value):
     """The number of a vote of a South African national or provincial budget: 1 to 59 (not 0 or a
     count of votes such as 152061)."""

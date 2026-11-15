@@ -45,7 +45,8 @@ _MISSING_TEXTS = frozenset(
     non renseigné|non renseigne|non communiqué|non communique|inconnu|sans objet|néant|neant
     non applicable|non disponible|non précisé|non precise|keine angabe|k.a.|k. a.|unbekannt
     entfällt|sin dato|sin datos|s/d|desconocido|no aplica|no disponible|não informado
-    nao informado|sem informação|non disponibile|non specificato|n.d.|нет данных|не указано
+    nao informado|sem informação|no informado|no informada|no publicable|non disponibile|non specificato|n.d.
+    нет данных|не указано
     неизвестно|отсутствует|нет|-|--|—|?
     """.replace("\n", "|").split("|")
     if text.strip()

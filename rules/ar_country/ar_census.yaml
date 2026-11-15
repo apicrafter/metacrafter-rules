@@ -74,7 +74,7 @@ rules:
   arindeclocalitypartbyname:
     key: ar_indec_locality_code
     name: Locality part of an INDEC census locality code by field name (CODLOC 050)
-    rule: (?i)cod(?:igo)?[ _]?loc(?:alidad)?(?:[ _]?censal)?(?:[ _]?(?:19|20)\d{2})?
+    rule: (?i)cod(?:igo)?[ _]?loc(?:alidad)?(?:[ _]?censal)?(?:[ _]?(?:19|20)\d{2})?|localidad_cod(?:igo)?
     type: field
     match: regex
     validator: metacrafterext.rules.ar_country.census.validate_ar_indec_locality_part
@@ -95,7 +95,7 @@ rules:
     # Department names of the georef list, written in capitals without accents (RIO CUARTO) or
     # abbreviated (Gral. San Martín, Pte. Roque S. Peña). A Departamento column of a housing table
     # counts apartments, and departments of Colombia or Uruguay are not on the list.
-    rule: (?i)(?:nom(?:bre)?[ _]?)?(?:departamentos?|depto|dpto\.?|partido)(?:[ _]?(?:nombre|nom|desc))?|(?:departamento|depto|dpto\.?)\s+(?:de\s+)?residencia(?:\s+de\s+la\s+madre)?|departamento_residencia
+    rule: (?i)(?:nom(?:bre)?[ _]?)?(?:departamentos?|depto|dpto\.?|partido)(?:[ _]?(?:nombre|nom|desc))?|(?:departamento|depto|dpto\.?)\s+(?:de\s+)?residencia(?:\s+de\s+la\s+madre)?|departamento_residencia|(?!(?:tipo|cod|codigo)[ _])(?:[a-z]+[ _]+){1,4}(?:departamento|depto|dpto)(?:[ _]+(?!(?:id|cod|codigo)\b)[a-z]+){0,4}|(?:departamento|depto|dpto)(?:[ _]+(?!(?:id|cod|codigo)\b)[a-z]+){1,4}|c[ _]depto|departamen|dpa_desc(?:ripcion)?
     type: field
     match: regex
     validator: metacrafterext.rules.ar_country.census.validate_ar_department_name
@@ -104,7 +104,7 @@ rules:
   arlocalitynamebyname:
     key: city
     name: Argentine locality or local government name by the field names of census lists (NOMLOC, NOM_MUNI1)
-    rule: (?i)nom[ _]?loc(?:alidad)?|nom[ _]?muni(?:cipio)?\d?
+    rule: (?i)nom[ _]?loc(?:alidad)?|nom[ _]?muni(?:cipio)?\d?|localidad_desc(?:ripcion)?
     type: field
     match: regex
     validator: metacrafterext.rules.common.generic.validate_place_name

@@ -91,8 +91,11 @@ def validate_ar_clae(value):
 # GDE (Gestión Documental Electrónica) numbers: document type, year, number, ecosystem (APN,
 # ANSES, GDEBA, GCABA ...), the signing unit and, after #, the ministry. Some exports keep an empty
 # part between two hyphens (EX-2017-28471953-   -APN-DC#ME).
-_GDE = re.compile(r"^([A-Z]{2,8})-((?:19|20)\d{2})-\d{1,9}-(?: *-)?([A-Z]{2,8})(?:-[A-Z0-9]{1,15})?(?:#[A-Z0-9]{1,15})?$")
-GDE_ECOSYSTEMS = frozenset(("APN", "ANSES", "GDEBA", "GCABA"))
+# The Mendoza registers write EX 2018-... with a space and put the old file number after it in
+# parentheses: EX 2018-00345266-GDEMZA-DPA#SAYOT (Expte. 1234-D-2017-03834).
+_GDE = re.compile(r"^([A-Z]{2,8})[- ]((?:19|20)\d{2})-\d{1,9}-(?: *-)?([A-Z]{2,8})(?:-[A-Z0-9]{1,15})?(?:#[A-Z0-9]{1,15})?(?:\s*\(.*)?$")
+# National administration, ANSES, the province and the City of Buenos Aires, and Mendoza (GDEMZA).
+GDE_ECOSYSTEMS = frozenset(("APN", "ANSES", "GDEBA", "GCABA", "GDEMZA"))
 
 
 def validate_ar_gde_number(value):
