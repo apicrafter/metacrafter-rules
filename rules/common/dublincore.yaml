@@ -61,6 +61,18 @@ rules:
     match: text
     priority: 1
 
+  publisherbyname:
+    key: dc_publisher
+    name: Publisher of a book or a journal by field name (editorial, publisher, casa_editorial)
+    # Spanish editorial is the publishing house in the bibliographic tables of SICYTAR (ELSEVIER SCI
+    # LTD, EDITORIAL DE LA UNIVERSIDAD NACIONAL DE RÍO NEGRO).
+    rule: (?i)editorial(?:es)?|casa_editorial|editora|publisher(?:_name)?|nombre_editorial
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.generic.has_letters
+    needs_values: true
+    priority: 1
+
   # Dublin Core Contributor
   dccontributorfield:
     key: dc_contributor

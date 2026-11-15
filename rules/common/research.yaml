@@ -1,0 +1,115 @@
+name: research
+description: Research information (OECD FORD codes, grant numbers, journal titles, volumes, quartiles and page numbers, keywords, abstracts, ISIC codes)
+context: science
+lang: common
+country_code: xx
+# Found in the SICYTAR data of the Argentine science ministry (datasets.datos.mincyt.gob.ar, a 2024
+# snapshot; metacrafter-testdata): publications, projects and the disciplines of the Frascati Manual.
+# The values are numbers and short texts, so most rules need the field name.
+rules:
+  oecdfordcodevalue:
+    key: oecd_ford_code
+    name: OECD FORD code in a discipline code field (disciplina_codigo 1.1.1, area_codigo 1.1, gran_area_codigo 1)
+    # Dotted codes have the shape of a semantic version (1.1.0) and an OID (1.5.10): the guarded
+    # rule outweighs both.
+    rule: metacrafterext.rules.common.research.validate_oecd_ford_code
+    type: data
+    match: func
+    minlen: 1
+    maxlen: 7
+    fieldregex: '(?i)^(?:(?:gran_)?area|disciplina|subdisciplina|campo)_cod(?:igo)?$|^cod(?:igo)?_(?:disciplina|gran_area|area_conocimiento|campo)$|^(?:oecd_)?(?:ford|fos)(?:_cod(?:e|igo)?)?$'
+    priority: 1
+  oecdfordcodebyname:
+    key: oecd_ford_code
+    name: OECD FORD code by field name (area_codigo 1.1, 2.10 read as numbers)
+    # A column of fields alone (1.1, 2.10) is read as numbers, which value rules do not see.
+    rule: (?i)(?:(?:gran_)?area|disciplina|subdisciplina|campo)_cod(?:igo)?|cod(?:igo)?_(?:disciplina|gran_area|area_conocimiento|campo)|(?:oecd_)?(?:ford|fos)(?:_cod(?:e|igo)?)?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.research.validate_oecd_ford_code
+    needs_values: true
+    priority: 1
+  journalquartilevalue:
+    key: journal_quartile
+    name: Journal quartile in a quartile field (revista_sjr Q1, NO INDEXADO; sjr_quartile, cuartil)
+    # Q1 to Q4 have the shape of Wikidata ids: the guarded rule outweighs that detector.
+    rule: metacrafterext.rules.common.research.validate_journal_quartile
+    type: data
+    match: func
+    minlen: 1
+    maxlen: 12
+    fieldregex: '(?i)sjr|jcr|quartile?|quartil|cuartil'
+    priority: 1
+  journaltitlebyname:
+    key: journal_title
+    name: Journal title by field name (revista, journal, journal_title, source_title, nombre_revista)
+    rule: (?i)revista|(?:nombre|titulo|t[ií]tulo)_(?:de_la_)?revista|revista_(?:nombre|titulo)|journal(?:[ _.-]?(?:title|name))?|(?:source|container)[ _]title|periodical(?:[ _]title)?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.research.validate_journal_title
+    needs_values: true
+    priority: 1
+  journalvolumebyname:
+    key: journal_volume
+    name: Journal volume by field name (volumen, journal_volume, vol) with volume numbers
+    rule: (?i)volumen|volume|vol\.?|(?:journal|revista)_vol(?:ume|umen)?|vol(?:ume|umen)?_(?:journal|revista)
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.research.validate_journal_volume
+    needs_values: true
+    priority: 1
+  pagenumberbyname:
+    key: page_number
+    name: First or last page by field name (pagina_inicial, pagina_final, start_page, end_page, spage)
+    rule: (?i)p[aá]g(?:ina)?s?[ _](?:inicial|final|inicio|fin|desde|hasta|start|end|first|last|from|to)|(?:start|end|first|last|begin(?:ning)?|ending)[ _]?page|page[ _](?:start|end|first|last|begin|from|to)|spage|epage
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.research.validate_page_number
+    needs_values: true
+    priority: 1
+  keywordbyname:
+    key: keyword
+    name: Keywords by field name (palabras_clave, keywords, key words, mots clés)
+    rule: (?i)(?:[a-z]+_)?(?:palabras?[ _]claves?|keywords?|key[ _]words?|mots?[ _-]cl[ée]s?|schlagw[oö]rter|schlagworte?|parole[ _]chiave|palavras?[ _]chave)
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.research.validate_keyword_list
+    needs_values: true
+    priority: 1
+  abstractbyname:
+    key: abstract
+    name: Abstract by field name (resumen, abstract, resumo, résumé) with long texts
+    rule: (?i)(?:[a-z]+_)?(?:resumen|abstract|resumo|r[ée]sum[ée]|zusammenfassung)(?:_(?:del_)?(?:proyecto|project|text|texto|es|en))?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.research.validate_abstract_text
+    needs_values: true
+    priority: 1
+  worktitlebyname:
+    key: title
+    name: Title of a book, an article or a project by field name (titulo_libro, titulo_proyecto, book_title)
+    # A bare titulo is as often an academic degree (título de grado) or a heading.
+    rule: (?i)t[ií]tulo_(?:del?_)?(?:libro|obra|art[ií]culo|proyecto|publicaci[oó]n|trabajo|tesis|cap[ií]tulo)|(?:book|article|project|paper|publication|chapter|thesis)[ _]title
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.research.validate_work_title
+    needs_values: true
+    priority: 1
+  grantnumberbyname:
+    key: grant_number
+    name: Grant or award number by field name (grant_number, award_number, numero_subsidio)
+    rule: (?i)(?:grant|award|funding)[ _]?(?:number|no|num|id|code)|n[uú]mero_(?:de_)?(?:subsidio|beca)
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.research.validate_grant_number
+    needs_values: true
+    priority: 1
+  isicrev4byname:
+    key: isicrev4
+    name: ISIC Rev. 4 code by field name (codigo_rev4, ciiu, isic_rev4) with sections and divisions
+    rule: (?i)(?:cod(?:igo)?_)?(?:isic|ciiu)(?:[ _]?rev\.?[ _]?4)?(?:_cod(?:igo)?)?|cod(?:igo)?_rev_?4|rev_?4(?:_cod(?:igo)?)?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.research.validate_isic_rev4
+    needs_values: true
+    priority: 1

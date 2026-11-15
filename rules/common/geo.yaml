@@ -224,7 +224,7 @@ rules:
     rule: metacrafterext.rules.common.generic.validate_place_name
     minlen: 2
     maxlen: 60
-    fieldrule: pays,pays_de_deces,pays_deces,pays de décès,pays_de_naissance,pays_naissance,pays de naissance,pays_residence,pays de résidence,nom_pays,nom du pays,país,pais,pais_origen,país de origen,pais_nacimiento,país de nacimiento,paese,paese_nascita,nazione,kraj_urodzenia,państwo,страна,страна рождения,наименование страны,країна,ülke,valsts,šalis,ország,χώρα,國家,国家,국가,država,země
+    fieldrule: pays,pays_de_deces,pays_deces,pays de décès,pays_de_naissance,pays_naissance,pays de naissance,pays_residence,pays de résidence,nom_pays,nom du pays,país,pais,pais_desc,pais_descripcion,descripcion_pais,pais_nombre,pais_origen,país de origen,pais_nacimiento,país de nacimiento,paese,paese_nascita,nazione,kraj_urodzenia,państwo,страна,страна рождения,наименование страны,країна,ülke,valsts,šalis,ország,χώρα,國家,国家,국가,država,země
     fieldrulematch: text
     priority: 1
   countrygeobyknown:
