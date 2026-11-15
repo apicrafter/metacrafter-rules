@@ -112,6 +112,8 @@ FIELDS = [
      ["lmhfz", "lthsyl"]),
     ("ar/ar_persons.yaml", "aragerangebyname", ["fy_t_lsn", "fy_t_l_mr", "فئات السن", "الفئة العمرية"],
      ["fy_t_l_jr_lshhry_bldynr_lbhryny", "lsn"]),
+    ("ar/ar_geo.yaml", "arnamebytransliteratedname", ["l_sm", "l_sm_bl_rby", "name_arabic", "Name_AR", "arabic_name"],
+     ["name", "l_smh", "name_english", "lsm_lmht"]),
     ("ar/ar_datetime.yaml", "armonthbytransliteratedname", ["lshhr", "shhr"], ["lshh", "shahr_value"]),
     ("ar/ar_datetime.yaml", "arquarterbytransliteratedname", ["lrb", "alrb"], ["rb", "lrbh"]),
     ("pii/pii.yaml", "religionbyname", ["religion", "Religion", "religion_name", "religious_affiliation"],

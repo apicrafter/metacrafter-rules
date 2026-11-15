@@ -31,7 +31,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     (`icd10_chapter`: D50 - D89, C00 - D49, Diseases of the Circulatory System, الأورام) in
     `international_disease_code`, `cause_of_death`, `sbb_lwf` (سبب الوفاة) and by value; COICOP codes
     (`coicop`: 01.1.7, 10.4; the type had no rule) in `coicop_code`; units of trade tables (KG, NO, CUM, SQM)
-    in the short field name `UM`; ISO alpha-2 codes in `UN code`.
+    in the short field name `UM`; ISO alpha-2 codes in `UN code`; Arabic names of places (`name`) in `l_sm`
+    (الأسم) and `name_arabic`.
 - **Rules for the Belgian files of metacrafter-testdata** (2024 snapshots of nine portals of the Dateno
   catalogue: the Opendatasoft portals of ARES, BEP, the City of Liège, the Digital Wallonia connectivity
   and mobility platforms and of Strasbourg, cdi00000140 to cdi00000149, and the Dataverse repositories of
