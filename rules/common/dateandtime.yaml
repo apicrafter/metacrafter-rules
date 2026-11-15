@@ -14,6 +14,50 @@ rules:
     # holds the word positions of "created" (8) (#69).
     validator: metacrafterext.rules.common.generic.validate_date_value
     priority: 1
+  compactdatebyname:
+    key: date
+    name: Date written as eight digits (20171119) by a field name with the word date
+    # loading_date of the Dubai Pulse files. Eight-digit dates pass the check digit of the Czech
+    # IČO now and then; with a date field name they are dates.
+    rule: (?i)(?:[a-z0-9]+[ _-]){0,3}date(?:[ _-][a-z0-9]+){0,2}|[a-z]+_dt
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.generic.validate_compact_date
+    needs_values: true
+    priority: 1
+  compactdatevalue:
+    key: date
+    name: Date written as eight digits (20171119) in a field named for a date
+    # With a value rule of their own, dates outweigh the registry detector of the Czech IČO, whose
+    # check digit some eight-digit dates pass (loading_date of the Dubai Pulse files).
+    rule: metacrafterext.rules.common.generic.validate_compact_date
+    type: data
+    match: func
+    minlen: 8
+    maxlen: 10
+    fieldregex: (?i)(?:^|[ _-])date(?:$|[ _-])|^date|[a-z]_dt$
+    priority: 1
+  quarterbyname:
+    key: quarter
+    name: Quarter of the year by field name (Quarter, quarter_en, qtr, الربع)
+    rule: (?i)quarters?(?:[ _-]*(?:en|ar|name|no|number))?|qtr|calendar[ _-]?quarter|الربع|ربع
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.generic.validate_quarter_value
+    needs_values: true
+    priority: 1
+  quartervalue:
+    key: quarter
+    name: Quarter of the year in a quarter field (Q1 to Q4, Q1-2015)
+    # Q1 to Q4 are also the Wikidata items universe, Earth, life and death: in a quarter column
+    # this guarded rule outweighs the Wikidata id value rule.
+    rule: metacrafterext.rules.common.generic.validate_quarter_value
+    type: data
+    match: func
+    minlen: 1
+    maxlen: 20
+    fieldregex: (?i)quarter|qtr|الربع|ربع
+    priority: 1
   dateknown:
     key: date
     name: Date by known name
@@ -96,8 +140,10 @@ rules:
     rule: timestamp
     type: field
     match: text
-    # A timestamp of milliseconds (1793960864568) is unixtime_ms (unixtimemsvalue, #70).
-    validator: metacrafterext.rules.common.dateandtime.validate_not_unixtime_ms
+    # A timestamp of milliseconds (1793960864568) is unixtime_ms (unixtimemsvalue, #70), and a
+    # written date and time (2021-12-01T00:01:53.614385+00:00 of the sensors.AFRICA archives) is a
+    # datetime: only seconds.
+    validator: metacrafterext.rules.common.dateandtime.validate_unixtime_seconds
     priority: 1
   timestampknownpat:
     key: unixtime
@@ -394,4 +440,15 @@ rules:
     match: func
     minlen: 18
     maxlen: 26
+    priority: 1
+  # A date as eight digits (20200305) in a field named after the format (YYYYMMDD of the South
+  # African COVID-19 repository of DSFSI, date_yyyymmdd); a number alone could be an id.
+  dateymdcompactbyname:
+    key: date_ymd_compact
+    name: Compact date YYYYMMDD by field name (YYYYMMDD, date_yyyymmdd, aaaammjj)
+    rule: (?i)(?:date[ _.-]?)?(?:yyyymmdd|aaaammjj|jjjjmmtt|aaaammdd)(?:[ _.-]?date)?|date[ _.-]?(?:compact|ymd|iso[ _.-]?basic)
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.statcodes.validate_date_ymd_compact
+    needs_values: true
     priority: 1

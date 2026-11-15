@@ -26,3 +26,23 @@ rules:
     match: text
     priority: 1
 
+  arcountrynamebyname:
+    key: arcountryname
+    name: Country name in Arabic by field name (Country(Arabic), Country_AR, country_name_ar, اسم_الدولة)
+    rule: '(?i)countr(?:y|ies)[ _]*(?:name)?[ _]*(?:\(\s*arabic\s*\)|[_ -]+(?:ar|ara|arabic))|(?:country|nation)_?name_?ar|اسم[ _]الدول[ةه]|الدول[ةه]|البلد|الدول'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.ar.countries.validate_ar_country_name
+    needs_values: true
+    priority: 1
+  arcountrynamevalue:
+    key: arcountryname
+    name: Country name in Arabic by value (المملكة العربية السعودية, جمهورية إيران الإسلامية, بنجلاديش)
+    # CLDR and ISO 3166 names in Arabic and common spellings, compared without hamza, vowel
+    # marks, tatweel and spaces (metacrafterext.rules.ar.countries).
+    rule: metacrafterext.rules.ar.countries.validate_ar_country_name
+    type: data
+    match: func
+    minlen: 3
+    maxlen: 80
+    priority: 1

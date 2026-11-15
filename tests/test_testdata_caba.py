@@ -32,7 +32,6 @@ from metacrafterext.rules.common.generic import validate_place_name, validate_st
 from metacrafterext.rules.common.urban import (
     validate_building_number,
     validate_calendar_year,
-    validate_longitude_decimal_degrees,
     validate_plus_code,
     validate_sas_datetime,
     validate_street_intersection,
@@ -119,7 +118,6 @@ VALIDATORS = [
     (validate_calendar_year, ["2016", "1991", "2016.0"], ["201601", "16", "2016-2017", "primer_trimestre_2019"]),
     (validate_building_number, ["2202", "380", "1550.0", "2100/2110", "S/N", "20"], ["0", "5", "12,5", "1.80", "abc", "123456"]),
     (validate_street_number_large, ["2202", "380", "100", "1550.0"], ["20", "99", "12.5", "S/N", "45000"]),
-    (validate_longitude_decimal_degrees, ["-58.4170088", "-58.47881333", "2.3522", "-58,4170"], ["-58.4", "12.5", "300", "-58", "abc"]),
     (validate_plus_code, ["8FVC9G8F+6W", "48Q3CJ00+", "48Q39G00+", "8fvc9g8f+6w", "8FVC9G8F+"], ["9G8F+6W", "48Q3CJ00", "ABCDEFGH+IJ", "+"]),
     (validate_youtube_video_id, ["Jw7w1musWqs", "Iej0fF9KS-k", "_pVaF5n9efU", "s4q9VS4Dj_Y&feature=youtu.be"],
      ["https://www.youtube.com/watch?v=Jw7w1musWqs", "<iframe title=\\YouTube video player\\\"", "abc", "12345"]),

@@ -42,11 +42,155 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - more names and forms of types with rules: quarters with their year in Spanish (`year_quarter`:
     primer_trimestre_2019, 3 TRIMESTRE 2019, 2006 - 4to. trim.), years in `periodo`, datetimes in the
     SAS DATETIME format (09DEC2005:00:00:00), times with a.m. / p.m. (10:19:59 a.m.), longitudes in a
-    field named `long` (decimal degrees of four or more decimals), street names in `calle2`,
+    field named `x_long` (beside `long` of the Africa Data Hub rules), street names in `calle2`,
     `calle_cruce`, `cruce`, `calles` and `nomoficial`, surnames in `apellido` and full names in
     `apellido_y_nombre` and `ayn`, nationalities in `nacionalidad`, YouTube video ids in `id_youtube`.
     Argentine postal codes in `codpost`, street addresses in `direccion_normalizada`, `dom_norma`,
     `dom_geo`, `dom_edific` and `dom_establ`.
+
+- **Rules for the Africa Data Hub files of metacrafter-testdata** (a 2024 Dateno snapshot of the
+  CKAN portal ckan.africadatahub.org: COVID-19, vaccination, inflation and climate tables; validators
+  in the new `metacrafterext.rules.common.statcodes`):
+  - ISO 3166-1 alpha-3 and alpha-2 codes in fields named after ISO rather than country (`iso_code`
+    of Our World in Data, `ISO`, `ISO_2` and `ISO_3`, `iso3`, `SpatialDimValueCode` of the WHO GHO
+    exports, `Geography` of the Wazimap tables), with the full ISO lists (SSD, CUW, XKX);
+  - IMF codes: World Economic Outlook subject codes (`imf_weo_subject_code`: NGDP_R, PCPIPCH, LUR)
+    in subject or series fields, country codes (`imf_country_code`: `WEO Country Code`, `IFS Code`)
+    and indicator codes (`imf_indicator_code`: PCPI_PC_CP_A_PT in `Indicator Code`,
+    `Indicator.Code`), whose first part must be an IMF concept (a WDI or SDG code is not one);
+  - WHO GHO indicator codes (`who_gho_indicator_code`: `IndicatorCode`, MALARIA_EST_DEATHS) and WHO
+    region codes (`who_region_code`: AFR, AMR, SEAR, EUR, EMR, WPR in `ParentLocationCode`);
+  - Our World in Data entity codes (`owid_entity_code`: OWID_AFR, OWID_WRL) and Google Maps place
+    ids (`google_place_id`: ChIJ and 23 characters) by value;
+  - EM-DAT disaster numbers (`emdat_disaster_number`, 1993-0500-CMR) in `Dis No` / `DisNo.` fields
+    and GLIDE numbers (`glide_number`, EQ-2010-000009-HTI) by value: the two types had no rules;
+  - compact dates (`date_ymd_compact`, 20200305) in `YYYYMMDD` fields, and longitudes in `Long` and
+    `Long_` fields (JHU CSSE) with three or more decimals: `Long` is a length too;
+  - South African province codes (`za_province_code`, which had no rules: EC, GP, KZN, and GT of
+    Wazimap) in province and geography fields, in the new `rules/za/za_geo.yaml`;
+  - SARS-CoV-2 Pango lineages (`pango_lineage`: B.1.1.7, P.1, XBB.1.5) and WHO variant labels
+    (`sars_cov_2_variant_label`: Alpha, Delta, Omicron) in lineage or variant fields, and COVID-19
+    vaccine names (`covid19_vaccine`: Pfizer-BioNTech, Oxford-AstraZeneca, Sputnik V, Covaxin) in
+    vaccine and `common_name` fields;
+  - HXL hashtags (`hxl_hashtag`: #country+code, #affected+infected) of the HXL dictionary by value;
+    social media hashtags (#COVID19) are left out.
+- **Rules for the UAE Open Data files of metacrafter-testdata** (an April 2024 Dateno snapshot of
+  opendata.fcsc.gov.ae, the portal of the Federal Competitiveness and Statistics Centre; validators in
+  `metacrafterext.rules.ae.geo` and `metacrafterext.rules.ar.countries`, rules in `rules/ae/` and
+  `rules/ar/ar_geo.yaml`):
+  - emirates (`ae_emirate`) in English and Arabic with the spellings and abbreviations of the federal
+    statistics (Umm Al - Quwain, U.A.Q., R.A.K., أبو ظبي, أم القيوين), by field name (`Emirate_EN`,
+    `Emirates_AR`, `EmirateTitleEn`, `الإمارة`) and by value; a region of Abu Dhabi is no emirate;
+  - regions of the emirate of Abu Dhabi (`ae_abu_dhabi_region`: Abu Dhabi, Al Ain, Al Dhafra, Western
+    Region, العين, الظفرة) by field name (`Region`, `Region_AR`, `المنطقة`) and in region fields, where
+    the guarded rule outweighs the emirate value rule;
+  - Dubai community numbers (`ae_dubai_community_code`: `community`, `community_num`; the 226 codes of
+    the Dubai Statistics Center bulletin of 2021) and names (`ae_dubai_community`: AL DAGHAYA, Al
+    Dhagaya, Al Barsha 2, المطينة, compared by their consonants without the article and with ordinals
+    as digits);
+  - DEWA contract accounts (`ae_dewa_contract_account`: `contract_account`, ten digits, the 20 series
+    with a weighted modulo 11 check digit); in a contract account field the guarded rule outweighs the
+    NHS number and ISBN-10 value rules, whose check the accounts pass;
+  - P.O. Boxes as `aepostcode` by field name (`p_o_box`, `pobox`, `PO Box`, `صندوق البريد`);
+  - UAE city columns (`aecity`) by a value rule guarded by city field names, with the towns that are no
+    emirate capital (Al Ain, Khor Fakkan, خورفكان); `emirate` fields are no longer `aecity`;
+  - country names in Arabic (`arcountryname`): CLDR and ISO 3166 names in Arabic and Gulf spellings
+    (بنجلاديش, نيوزلندا), compared without hamza, vowel marks, tatweel and spaces;
+    `scripts/update_ar_country_names.py` refreshes the list.
+- CAS Registry Numbers (`casrn`) by field name (`CAS No.`, `cas_number`, `CASRN`) and by value, with the
+  check digit.
+- ICD-10 codes and ranges with their titles (C18-C21 Colorectal, C23, C24 Gallbladder) in fields named
+  for a classification (`Primary_Site-ICD_10`).
+- Points as latitude and longitude text by field name (`Coordinates`, `coords`, `latlng`):
+  24.4539° N, 54.3773° E; 25°17'29.7"N 55°30'01.6"E; 25.276987,55.296249.
+- Dates written as eight digits (20171119) in fields named for a date (`loading_date` of the Dubai Pulse
+  files), by field name and by a guarded value rule that outweighs the registry detector of the Czech
+  IČO; quarters (Q1 to Q4, Q1-2015, الربع الأول) by field name and in quarter fields, where they
+  outweigh the Wikidata id value rule.
+- `point_x` / `point_y` and the misspelt `stop_location_longitiude` / `stop_location_latitiude` as
+  longitude and latitude (decimal degrees only).
+- The Arabic month name list has ديسيمبر.
+- **Rules for the openAFRICA files of metacrafter-testdata** (a May 2024 snapshot of open.africa, the
+  pan-African open data portal of Code for Africa, Dateno source cdi00000008; validators in
+  `metacrafterext.rules.ke.geo`, `ng.geo`, `tz.geo`, `za.geo`, `za.finances`, `common.admin` and
+  `common.sensors`):
+  - Kenyan counties (`ke_county`: Mombasa, Taita/Taveta, Nairobi City) by field name (`County`,
+    `NAME_1`) and value, and sub-counties (`ke_subcounty`: Changamwe, Embakasi East) by field name
+    (`Sub county`, `subCounty`), checked against the 47 counties and the sub-county lists of Code for
+    Africa and the Kenya Master Health Facility List;
+  - Nigerian states (`ng_state`: Kaduna, Akwa Ibom, FCT) and local government areas (`ng_lga`: Birnin
+    Gwari, Isiala-Ngwa South, the GADM 2 spellings) by field name (`State`, `Lga`, `NAME_1`, `NAME_2`)
+    and value; the GRID3 / eHealth Africa LGA codes (`ng_lga_code`: 19001) and ward codes
+    (`ng_ward_code`: KD0101) by field name; ISO 3166-2:NG state codes (`iso3166code_part`: KD) in
+    `State Code`;
+  - Sierra Leonean chiefdoms (`sl_chiefdom`) in `CHIEFDOM`; Tanzanian regions (`tz_region`, a registry
+    type without rules until now: Dodoma, Coast, Kaskazini Pemba) and South African provinces
+    (`za_province`, also without rules: KwaZulu-Natal, MPUMALANGA) by field name (`Region`, `Province`,
+    `Government` of a provincial budget) and value;
+  - South African budget data of National Treasury (vulekamali): economic classification items
+    (`za_economic_classification`: Compensation of employees, Goods And Services) in
+    `EconomicClassification1-5`, `Econ1-5`, `econClass_L1-L5` and by value, vote numbers
+    (`za_budget_vote_number`) in `VoteNumber`, `vote_number`, `Vote No#`;
+  - GADM and OCHA division fields: HASC codes (`hasc`, without rules until now: TZ.AS.AS) by field name
+    and value, `NAME_1` / `ADM1_EN` / `Adm1_Name` as `admin_area_1` (without rules until now), `NAME_2`
+    / `Adm2_Name` as `admin_area_2` (likewise), `NAME_3` / `Adm3_Name` as `admin_area_3`, division
+    types (`admin_area_type`: Local Authority, Wilaya, Water body) in `TYPE_2` and `ENGTYPE_2`; OCHA
+    p-codes with an alpha-3 prefix (`hdx_pcode`: SLE03040102) and in `adm1_code` to `adm5_code`;
+  - Open Civic Data division ids (`ocd_division_id`, without rules until now) and ODK geopoints
+    (`odk_geopoint`: 9.140918 7.496761 697.0 4.5, with decimals in latitude and longitude) by value;
+  - OurAirports: aerodrome types (`airport_type`: small_airport, heliport) by value, ICAO codes in
+    `gps_code` and `ident`, IATA airport codes of three letters in `iata_code` and `IATA`, ISO 3166-2
+    codes in `iso_region`, continent codes (`continentcode`, without rules until now) in `continent`;
+  - Sensor.Community / sensors.AFRICA archives: sensor models (`air_sensor_model`: SDS011, pms5003,
+    DHT22, BAM 1020) by field name (`sensor_type`) and value, value types (`sensor_community_value_type`:
+    P1, P2, temperature) by field name (`value_type`);
+  - World Bank project IDs (`wb_project_id`: P099939) and trust fund numbers (`wb_trust_fund_number`:
+    TF053509) by value in fields that name a project or a fund.
+
+- **Rules for the ArmSIS files of metacrafter-testdata** (an April 2024 snapshot of the Armenian Soil
+  Information System, a GeoNode portal of the Armenian National Agrarian University, Dateno source
+  cdi00000013; validators in `metacrafterext.rules.common.soils`, `metacrafterext.rules.common.fieldwork`
+  and `metacrafterext.rules.am.geo`):
+  - soil survey values (`rules/common/soils.yaml`): WRB reference soil groups
+    (`wrb_reference_soil_group`: Chernozems, Castanozems, Haplic Calcisols, Solonetzes-Solonchaks) by
+    value and in WRB fields (`WRB_refere`); soil types of the Soviet classification and those derived
+    from it (`soil_type`: Mountain chernozem, Горно-каштановые, Լեռնային սևահողեր) by value and in soil
+    name fields; texture classes (`soil_texture_class`: loam, sandy loam, суглинистые,
+    супесчано-суглинистые), erosion degrees (`soil_erosion_degree`: slight, moderately and severely
+    eroded, слабоэродированные) and land cover classes (`land_cover_class`: cropland, Tree cover,
+    Built-up) in fields named for them only, because the values are common words;
+  - pH (`ph_value`) in pH fields (pH, pH_H2O, pHwater, phLevel_calciumChloride) with values from 0 to
+    14; IUCN protected area categories (`iucn_protected_area_category`, which had no rule) in IUCN
+    fields (`IUCN_CAT`, the truncated `IUCNCATEGO`), with the category I of before 1994;
+    temperatures (`temperature`) in temperature fields (`Temperatur`) with numbers from -90 to 60;
+  - Armenian provinces (`am_marz`: Gegharkunik, Վայոց Ձոր, Aragatsotn Province, Сюник) by value and in
+    marz, region and province fields; Ararat, Armavir, Lori and Yerevan alone count only by field name;
+  - GML feature ids of WFS CSV exports (`gml_id`: Soil_map0.1) in FID and gml_id fields; EPSG codes
+    with their authority in a bare crs field, also after the name of the system (`WGS 84 EPSG: 4326`;
+    a bare number there is not a code, as the BEV round decided).
+
+### Changed
+
+- `soil_horizon` takes the Soviet notation of transitional horizons (B2C1, A2B, B1C, CD) and the
+  dBase-truncated `Horizon_in` (Horizon_index); `epsg_code` values may name the system before the code
+  and have a space after the colon; `elevation` fields may end in start, end, min, max or mean
+  (`elev_start`, `elev_end` of the river network of ArmSIS); ArcGIS object ids of joined layers
+  (`OBJECTID_2`, `OBJECTID_3`) are `objectid`; `basin_area`, `catchment_area` and `drainage_area` are
+  `area`.
+
+### Fixed
+
+- The Australian LGA rules no longer take the Nigerian LGA codes and names of the GRID3 settlement
+  data (`Lga Code` 19001, `Lga` Birnin Gwari): an ABS LGA code ends in 0 or is an unincorporated, no
+  usual address or migratory code (19399, 19499, 89399), and a plain LGA name is not a Nigerian LGA.
+- The UK parish and ward code rules (`parish`, `ward code`) need GSS codes: Ugandan parish names
+  (Busunga, Railway ward) and Nigerian ward codes (KD0101) are no UK codes.
+- `iata_code` and `icao_code` are an airline or an airport code by the length of the values (two or
+  three letters, three or four), not an airline code by name alone: the OurAirports `iata_code` JMY was
+  an IATA airline code.
+- `fqdn` refuses HASC codes (TZ.AS.AS, ZM.CE.CB of the GADM attribute tables).
+- A field named `timestamp` is `unixtime` only with Unix seconds: the written date and times of the
+  sensors.AFRICA archives (2021-12-01T00:01:53.614385+00:00) are datetimes.
 
 - **Rules for the data.gov.au files of metacrafter-testdata** (a snapshot of the Australian national
   open data portal, Dateno source cdi00000098; validators in `metacrafterext.rules.au.codes` and
@@ -345,7 +489,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   (31MAR2020:15:00:00) is no time of day.
 - A `dpto` column of apartment letters (A, B, C) is no longer `ar_department`: a lone initial is not
   an abbreviated department name.
-
+- A bare `serial_number` field is no VIN and no ISSN (smart meter serials 1000247T, 12H0500467).
+- `revision`, `rev` and the other commit hash field names need hexadecimal hashes (Revision 1, R4 of
+  building permits are no commit hashes).
 - A `month` field of months with their year (Jul-19, 2019-07) is no longer `month`: its values are
   `yearmonth_english` or `yearmonth` (data.gov.au). A `size` field of size classes (Large, Medium,
   Small: the ORIC register) is no longer `datasize`.

@@ -20,7 +20,9 @@ rules:
     key: soil_horizon
     name: Soil horizon designation by field name (soilHorizon, horizon)
     # A1, B21 and Bt are short codes of any table: by field name only.
-    rule: (?i)(?:soil_?)?horizon(?:_?(?:name|designation|code|id|label))?|horizon_?designation
+    # Horizon_in is a dBase-truncated Horizon_index: Russian soil science calls the designation
+    # the index of the horizon (индекс горизонта; soil profile database of ArmSIS).
+    rule: (?i)(?:soil_?)?horizon(?:_?(?:name|designation|code|id|label|in|ind|index))?|horizon_?designation|индекс[ _]горизонта|горизонт
     type: field
     match: regex
     validator: metacrafterext.rules.common.fieldwork.validate_soil_horizon
@@ -42,5 +44,87 @@ rules:
     type: field
     match: regex
     validator: metacrafterext.rules.common.chemistry.validate_polymer_name_or_code
+    needs_values: true
+    priority: 1
+  # EM-DAT disaster numbers: year and a four-digit sequence (2020-0218), with the ISO alpha-3 code
+  # of the affected country in the public table (1993-0500-CMR). Other year-number ids
+  # (case numbers 2021-0034) have the same shape, so the field name must speak of a disaster.
+  emdatdisasternumbervalue:
+    key: emdat_disaster_number
+    name: EM-DAT disaster number (Dis No, DisNo.) by value and field name
+    rule: (?:19|20)\d{2}-\d{4}(?:-[A-Z]{3})?
+    type: data
+    match: regex
+    minlen: 9
+    maxlen: 13
+    fieldregex: dis[ _.-]?no|em[ _-]?dat|disaster
+    priority: 1
+  # DisNo. of the EM-DAT public table ends with a dot, so its short name is empty: by the full name.
+  emdatdisasternumberbyname:
+    key: emdat_disaster_number
+    name: EM-DAT disaster number by field name (Dis No, DisNo.)
+    rule: dis no,disno,disno.,dis no.,dis_no,dis-no,emdat_id,emdat id,em-dat id,emdat_disno
+    type: field
+    match: text
+    validator: metacrafterext.rules.common.statcodes.validate_emdat_disaster_number
+    needs_values: true
+    priority: 1
+  glidenumbervalue:
+    key: glide_number
+    name: GLIDE disaster number (EQ-2010-000009-HTI) by value
+    rule: (?:AC|AV|CE|CW|DR|EC|EP|EQ|ET|FA|FF|FL|FR|HT|IN|LS|MS|OT|SL|SS|ST|TC|TO|TS|VO|VW|WF|WV)-(?:19|20)\d{2}-\d{6}-(?:[A-Z]{3}|---)
+    type: data
+    match: regex
+    minlen: 18
+    maxlen: 18
+    priority: 1
+  phbyname:
+    key: ph_value
+    name: pH by field name (pH, pH_H2O, pH KCl, pHwater, pHcacl2, phLevel_water) with values from 0 to 14
+    rule: (?i)ph(?:[ _-]?(?:h2o|kcl|cacl2|bacl2|nacl|water|w|value|level|field|lab|in[ _]water|1[:_]?[25](?:\.5)?))?|ph[ _]?level[ _]?(?:water|calcium[ _]?chloride|cacl2|kcl|h2o)|ph[ _-]?(?:водн\w*|солев\w*)|рн(?:[ _-]?(?:водн\w*|солев\w*|kcl|h2o))?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.fieldwork.validate_ph_value
+    needs_values: true
+    priority: 1
+  iucnprotectedareacategorybyname:
+    key: iucn_protected_area_category
+    name: IUCN protected area category by field name (IUCN_CAT, IUCNCATEGO, iucn_category) with Ia to VI
+    # IUCNCATEGO is a dBase-truncated IUCNCATEGORY (protected areas of ArmSIS); WDPA calls it IUCN_CAT.
+    rule: (?i)iucn[ _-]?(?:cat\w*|management[ _]category|class)?|iucn[ _]?protected[ _]?area[ _]?category
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.fieldwork.validate_iucn_protected_area_category
+    needs_values: true
+    priority: 1
+  # Sensor.Community (luftdaten) and sensors.AFRICA archives, one row per reading:
+  # sensor_id;sensor_type;location;lat;lon;timestamp;value_type;value (247 files of the openAFRICA
+  # snapshot of metacrafter-testdata).
+  airsensormodelbyname:
+    key: air_sensor_model
+    name: Air quality sensor model by field name (sensor_type, sensor_model) with sensor models (SDS011, DHT22)
+    rule: (?i)sensor[ _]?(?:type|model|name)|sensortype
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.sensors.validate_air_sensor_model
+    needs_values: true
+    priority: 1
+  airsensormodelvalue:
+    key: air_sensor_model
+    name: Air quality sensor model by value (SDS011, pms5003, DHT22, BME280, BAM 1020)
+    rule: metacrafterext.rules.common.sensors.validate_air_sensor_model
+    type: data
+    match: func
+    minlen: 3
+    maxlen: 12
+    priority: 1
+  sensorcommunityvaluetypebyname:
+    key: sensor_community_value_type
+    name: Sensor.Community value type by field name (value_type) with value types (P1, P2, temperature)
+    # P1 and P2 alone are also priorities and parts of a code: only by field name.
+    rule: (?i)value[ _]?type|valuetype|measurement[ _]?type
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.sensors.validate_sensor_community_value_type
     needs_values: true
     priority: 1

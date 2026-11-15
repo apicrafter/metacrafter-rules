@@ -1,10 +1,8 @@
 """Validators for values of city open data, found in the files of the City of Buenos Aires
 (data.buenosaires.gob.ar, a 2024 snapshot; metacrafter-testdata): periods written as a year and a month
 (201909), SAS datetimes (09DEC2005:00:00:00), street intersections (DEHEZA@PINTO), house numbers, Plus
-Codes, YouTube video ids and longitudes in a field named long."""
+Codes and YouTube video ids."""
 import re
-
-from metacrafterext.rules.common.generic import validate_longitude_value
 
 # --- Periods ------------------------------------------------------------------------------------
 
@@ -94,13 +92,6 @@ def validate_street_number_large(value):
 
 
 # --- Coordinates and identifiers ----------------------------------------------------------------
-
-def validate_longitude_decimal_degrees(value):
-    """A longitude with at least four decimals: -58.4170088 (a field named long is also a length,
-    12.5 or 300)."""
-    text = str(value).strip().replace(",", ".")
-    return validate_longitude_value(text) and "." in text and len(text.rsplit(".", 1)[1]) >= 4
-
 
 _PLUS_CODE = re.compile(
     r"^[2-9C][2-9CFGHJMPQRV](?:000000\+|[2-9CFGHJMPQRVWX]{2}(?:0000\+|[2-9CFGHJMPQRVWX]{2}"

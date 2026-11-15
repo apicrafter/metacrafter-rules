@@ -16,3 +16,39 @@ rules:
     maxlen: 7
     minlen: 7
     priority: 2
+  # SARS-CoV-2 lineages in the Pango nomenclature (B.1.1.7, B.1.617.2, P.1, BA.2.86, XBB.1.5) in a
+  # field named after the lineage or the variant: section numbers (A.1, B.2.3) look alike.
+  pangolineagevalue:
+    key: pango_lineage
+    name: Pango lineage of SARS-CoV-2 by value and field name
+    rule: '[AB]|[A-Z]{1,3}(?:\.\d+){1,4}'
+    type: data
+    match: regex
+    minlen: 1
+    maxlen: 20
+    fieldregex: pango|lineage|variant|clade
+    priority: 1
+  # The WHO labels of SARS-CoV-2 variants (Alpha, Delta, Omicron) are words of other data too
+  # (release stages, the NATO alphabet): only fields named after a variant are read.
+  sarscov2variantlabelvalue:
+    key: sars_cov_2_variant_label
+    name: WHO label of a SARS-CoV-2 variant by value and field name
+    rule: alpha,beta,gamma,delta,epsilon,zeta,eta,theta,iota,kappa,lambda,mu,omicron
+    type: data
+    match: text
+    minlen: 2
+    maxlen: 7
+    fieldregex: variant|who[ _.-]?label
+    priority: 1
+  # COVID-19 vaccine names as the vaccination and delivery tables write them (common_name of the
+  # Media Hack tables of the Africa Data Hub, vaccine of Our World in Data).
+  covid19vaccinevalue:
+    key: covid19_vaccine
+    name: COVID-19 vaccine name by value and field name
+    rule: pfizer-biontech,pfizer/biontech,pfizer,biontech,comirnaty,moderna,spikevax,oxford-astrazeneca,oxford/astrazeneca,astrazeneca,vaxzevria,vaxzevira,covishield,johnson & johnson,johnson&johnson,j&j,janssen,sinopharm,sinopharm/beijing,sinopharm-wuhan,sinopharm/wuhan,bbibp-corv,sinovac,coronavac,cansino,convidecia,sputnik v,sputnik light,covaxin,novavax,nuvaxovid,covovax,abdala,soberana 2,soberana 02,soberana plus,epivaccorona,covivac,qazvac,zf2001,zifivax,zycov-d,corbevax,covifenz,medigen,kangtai,turkovac,hayat-vax,coviran barekat,noora,pastu covac,spikogen,skycovione,vla2001,valneva,sanofi/gsk,vidprevtyn,razi cov pars,minhai,cuba abdala
+    type: data
+    match: text
+    minlen: 3
+    maxlen: 20
+    fieldregex: vaccin|common_name|manufacturer|product
+    priority: 1

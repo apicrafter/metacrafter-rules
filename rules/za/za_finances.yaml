@@ -1,0 +1,37 @@
+name: za-finances
+description: South African budget economic classification items and vote numbers (National Treasury, vulekamali)
+context: finances
+lang: en
+country_code: za
+# Found in the openAFRICA snapshot of metacrafter-testdata: the Estimates of National and Provincial
+# Expenditure, the audit outcomes and the in-year spending of vulekamali, with the five levels of the
+# economic classification in EconomicClassification1-5, Econ1-5, econClass_L1-L5 or
+# economic_classification_1-4 and the vote in VoteNumber, vote_number, Vote No# or VoteNo.
+rules:
+  zaeconomicclassificationbyname:
+    key: za_economic_classification
+    name: South African budget economic classification item by field name (EconomicClassification3, Econ2, econClass_L4)
+    rule: (?i)econ(?:omic)?[ _]?class(?:ification)?[ _]?(?:l(?:evel)?[ _]?)?\d|econ\d|iym[ _]?econ[ _]?lowest[ _]?level
+    type: field
+    match: regex
+    validator: metacrafterext.rules.za.finances.validate_za_economic_classification
+    needs_values: true
+    priority: 1
+  zaeconomicclassificationvalue:
+    key: za_economic_classification
+    name: South African budget economic classification item by value (Compensation of employees, Goods and services)
+    rule: metacrafterext.rules.za.finances.validate_za_economic_classification
+    type: data
+    match: func
+    minlen: 7
+    maxlen: 120
+    priority: 1
+  zabudgetvotenumberbyname:
+    key: za_budget_vote_number
+    name: South African budget vote number by field name (VoteNumber, vote_number, Vote No#, VoteNo)
+    rule: (?i)vote[ _]?(?:no|nr|num|number)\.?#?|votenumber|voteno
+    type: field
+    match: regex
+    validator: metacrafterext.rules.za.finances.validate_za_vote_number
+    needs_values: true
+    priority: 1

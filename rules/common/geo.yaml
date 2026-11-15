@@ -319,13 +319,15 @@ rules:
     priority: 1
   hdxpcodevalue:
     key: hdx_pcode
-    name: OCHA place code (GE11) by field name and value
-    rule: '[A-Z]{2}\d{1,12}'
+    name: OCHA place code (GE11, SLE03040102) by field name and value
+    # Older common operational datasets prefix the alpha-3 code of the country (SLE03040102 in
+    # Adm4_Code of the Sierra Leone schools on openAFRICA), newer ones the alpha-2 code (SL0101).
+    rule: '[A-Z]{2,3}\d{1,12}'
     type: data
     match: regex
     minlen: 3
     maxlen: 14
-    fieldrule: adm1_pcode,adm2_pcode,adm3_pcode,adm4_pcode,admin1pcode,admin2pcode,admin3pcode,admin4pcode,admin1_pcode,admin2_pcode,admin3_pcode,admin4_pcode,pcode,p_code,p-code
+    fieldrule: adm1_pcode,adm2_pcode,adm3_pcode,adm4_pcode,adm5_pcode,admin1pcode,admin2pcode,admin3pcode,admin4pcode,admin1_pcode,admin2_pcode,admin3_pcode,admin4_pcode,adm1_code,adm2_code,adm3_code,adm4_code,adm5_code,adm1code,adm2code,adm3code,adm4code,pcode,p_code,p-code
     fieldrulematch: text
     priority: 1
   adminarea3byfield:
@@ -360,7 +362,8 @@ rules:
     key: latitude
     name: Latitude by short field name (lat, geo_point_2d.lat, lat_wgs84)
     # featureLatitude, transectLatitude, decimalLatitude of survey data; latdecimal (TERN).
-    rule: (?i)(?:(?:gps|geo|y|wgs84|point|stop|start|end|centroid|center|centre|feature|transect|decimal|sample|station)[ _-]?)?lat(?:itude)?(?:[ _-]?(?:wgs84|wgs|dd|deg|gps|y|dec|decimal|4326))?
+    # point_y of ArcGIS exports, y latitude, stop_location_latitiude (sic) of the RTA stop lists.
+    rule: (?i)(?:(?:gps|geo|y|wgs84|point|stop|start|end|centroid|center|centre|feature|transect|decimal|sample|station)[ _-]?)?lat(?:itude)?(?:[ _-]?(?:wgs84|wgs|dd|deg|gps|y|dec|decimal|4326))?|point[ _-]?y|(?:[a-z]+[ _-]){0,3}latitiude
     type: field
     match: regex
     validator: metacrafterext.rules.common.generic.validate_latitude_value
@@ -370,7 +373,8 @@ rules:
     key: longitude
     name: Longitude by short field name (lon, lng, geo_point_2d.lon, lon_wgs84)
     # long is also a length (longueur): it is left out.
-    rule: (?i)(?:(?:gps|geo|x|wgs84|point|stop|start|end|centroid|center|centre|feature|transect|decimal|sample|station)[ _-]?)?(?:lon|lng|longitude)(?:[ _-]?(?:wgs84|wgs|dd|deg|gps|x|dec|decimal|4326))?|long[ _-]?decimal
+    # point_x of ArcGIS exports, x longitude, stop_location_longitiude (sic) of the RTA stop lists.
+    rule: (?i)(?:(?:gps|geo|x|wgs84|point|stop|start|end|centroid|center|centre|feature|transect|decimal|sample|station)[ _-]?)?(?:lon|lng|longitude)(?:[ _-]?(?:wgs84|wgs|dd|deg|gps|x|dec|decimal|4326))?|long[ _-]?decimal|point[ _-]?x|(?:[a-z]+[ _-]){0,3}longitiude
     type: field
     match: regex
     validator: metacrafterext.rules.common.generic.validate_longitude_value
@@ -395,6 +399,17 @@ rules:
     type: field
     match: text
     validator: metacrafterext.rules.common.generic.validate_latlon_pair
+    needs_values: true
+    priority: 1
+  geopointtextbyname:
+    key: geopoint
+    name: Point as latitude and longitude text by field name (Coordinates, coords, latlng, الإحداثيات)
+    # The UAE statistics give each emirate its position as text (24.4539° N, 54.3773° E;
+    # 25°17'29.7"N 55°30'01.6"E; 25.276987,55.296249).
+    rule: (?i)coordinates?|coords?|geo[ _-]?coordinates|location[ _-]?coordinates|lat[ _-]?(?:lon|long|lng)|latlng|latlong|الإحداثيات|الاحداثيات|إحداثيات|احداثيات
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.generic.validate_geopoint_text
     needs_values: true
     priority: 1
   compasspointbyname:
@@ -447,7 +462,8 @@ rules:
   elevationbyname:
     key: elevation
     name: Elevation above sea level in metres by field name (elevation, elevation_metres, altitude)
-    rule: (?i)(?:site_?|ground_?|surface_?|plot_?|station_?)?(?:elevation|altitude|elev)(?:[ _]?(?:m|metres?|meters?|masl|amsl|asl|\[metre\]|\(m\)))?|height_?above_?sea_?level
+    # elev_start and elev_end give the source and mouth of a river (river network of ArmSIS).
+    rule: (?i)(?:site_?|ground_?|surface_?|plot_?|station_?)?(?:elevation|altitude|elev)(?:[ _](?:start|end|min|max|mean))?(?:[ _]?(?:m|metres?|meters?|masl|amsl|asl|\[metre\]|\(m\)))?|height_?above_?sea_?level
     type: field
     match: regex
     validator: metacrafterext.rules.common.fieldwork.validate_elevation_value
@@ -541,6 +557,30 @@ rules:
     validator: metacrafterext.rules.common.fieldwork.validate_epsg_code
     needs_values: true
     priority: 1
+  epsgcodebycrs:
+    key: epsg_code
+    name: 'EPSG code with its authority in a field named crs (WGS 84 EPSG: 4326, EPSG:25832)'
+    # A bare crs may hold a system name (WGS 84) or another number, so only codes that name the
+    # authority count, alone or after the name of the system (soil profile database of ArmSIS).
+    rule: (?i)crs|coordinate[ _]reference[ _]system|srs|srs[ _]?name
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.fieldwork.validate_epsg_code_with_authority
+    needs_values: true
+    priority: 1
+  gmlidvalue:
+    key: gml_id
+    name: GML feature id of a WFS export (Soil_map0.1, states.12) by field name (FID, gml_id)
+    # GeoServer names features after the feature type and a number; WFS CSV exports keep the id in
+    # a FID column, ogr2ogr in gml_id. Integer FIDs of shapefiles are objectid.
+    rule: '[A-Za-z_][A-Za-z0-9_-]*\.[1-9]\d{0,9}'
+    type: data
+    match: regex
+    minlen: 3
+    maxlen: 120
+    fieldrule: fid,gml_id,gml:id,feature_id,featureid,@gml:id
+    fieldrulematch: text
+    priority: 1
   wktvalue:
     key: wkt
     name: Geometry in well-known text (POINT (15.41 47.93), MULTIPOLYGON (((...)))) by value
@@ -549,6 +589,28 @@ rules:
     match: func
     minlen: 10
     maxlen: 100000
+    priority: 1
+  # Google Maps place ids of establishments, cities and regions: ChIJ and 23 URL-safe base64
+  # characters (the place_id of the COVID-19 Community Mobility Reports).
+  googleplaceidvalue:
+    key: google_place_id
+    name: Google Maps place ID (ChIJ...) by value
+    rule: ChIJ[A-Za-z0-9_-]{23}
+    type: data
+    match: regex
+    minlen: 27
+    maxlen: 27
+    priority: 1
+  # Lat and Long of the COVID-19 time series of Johns Hopkins University (Long_ in the daily
+  # reports). Long is a length too: only decimal degrees with three or more decimals are taken.
+  longitudebylongname:
+    key: longitude
+    name: Longitude in a field named Long, Long_ or x_long (JHU CSSE COVID-19 data, Buenos Aires open data)
+    rule: long,long_,x_long,long_x
+    type: field
+    match: text
+    validator: metacrafterext.rules.common.statcodes.validate_longitude_long_name
+    needs_values: true
     priority: 1
   suburbbyname:
     key: location
@@ -573,16 +635,6 @@ rules:
     priority: 1
   # Found in the open data of the City of Buenos Aires (data.buenosaires.gob.ar, a 2024 snapshot;
   # metacrafter-testdata).
-  longitudebylongname:
-    key: longitude
-    name: Longitude in a field named long (long, LONG, x_long) with decimal degrees of four or more decimals
-    # long is also a length (longueur, longitud of a pipe): lengths have fewer decimals.
-    rule: (?i)(?:[xy][ _])?long(?:[ _][xy])?
-    type: field
-    match: regex
-    validator: metacrafterext.rules.common.urban.validate_longitude_decimal_degrees
-    needs_values: true
-    priority: 1
   pluscodevalue:
     key: plus_code
     name: Plus Code (Open Location Code) by value (8FVC9G8F+6W, 48Q3CJ00+)

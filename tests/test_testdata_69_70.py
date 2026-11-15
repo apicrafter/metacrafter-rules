@@ -286,8 +286,10 @@ def test_milliseconds_in_timestamp_fields_are_unixtime_ms():
 
 def test_a_timestamp_field_of_milliseconds_is_not_unixtime():
     check = validator_of("common/dateandtime.yaml", "timestampknown")
-    assert check("1471181882") and check("2024-01-05T10:00:00")
+    assert check("1471181882")
     assert not check("1793960864568")
+    # A written date and time in a timestamp field is a datetime, not Unix time (openAFRICA round).
+    assert not check("2024-01-05T10:00:00")
 
 
 @pytest.mark.parametrize("rule_id,name", [("ripemd160hash", "ripemd160"), ("blake2b256hash", "blake2b256"),
