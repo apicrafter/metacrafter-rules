@@ -1,0 +1,31 @@
+name: br-health
+description: Brazilian health identifiers and codes
+context: medical
+lang: pt
+country_code: br
+rules:
+  # CNES numbers of health establishments: CNES, CNESFINAL, CNESADESÃO, NOVOCNES of the PMAQ primary care
+  # surveys (Arca Dados, Fiocruz: 2446480, 957.0 without its leading zeros), CO_CNES of DATASUS. The
+  # columns of the contracting status (CNEScontrat, CNESCONTRATUALIZAÇÃO: 1, 2) are not read.
+  brcnesbyname:
+    key: br_cnes
+    name: CNES number of a health establishment by field name (cnes, co_cnes, cnes_final, CNESADESÃO, novo_cnes)
+    rule: (?i)(?:(?:c[oó]d(?:igo)?|cd|co|nu|id)[ _]?)?cnes(?:[ _]?(?:final|ades[aã]o|estabelecimento|unidade|ubs|hospital|atual))?|novo[ _]?cnes
+    type: field
+    match: regex
+    validator: metacrafterext.rules.br.codes.validate_br_cnes
+    needs_values: true
+    priority: 1
+  # ICD-10 (CID-10) codes as the health information systems write them, without the dot: the underlying
+  # cause of death of the SIM (causabas, CAUSABASICADO: W788, X954; co_cid_causa_basica of the chronic
+  # disease deaths of Minas Gerais: C159), the CID of a notification (RASTREIOCID: I209). Fields named
+  # cid that hold descriptions or chapters fail the validator.
+  bricd10byname:
+    key: icd10code
+    name: ICD-10 (CID-10) code by Portuguese field name (causabas, co_cid_causa_basica, cid10, CAUSABASICADO)
+    rule: (?i)(?:[a-z_]+[ _])?(?:(?:c[oó]d(?:igo)?|cd|co)[ _]?)?cid(?:[ _]?10)?(?:[ _][a-z_]+)?|causa[ _]?b[aá]sica[a-z_]*|causabas[a-z]*|rastreio[ _]?cid
+    type: field
+    match: regex
+    validator: metacrafterext.rules.br.codes.validate_icd10_datasus
+    needs_values: true
+    priority: 1

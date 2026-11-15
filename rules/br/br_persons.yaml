@@ -44,4 +44,16 @@ rules:
     type: field
     match: text
     priority: 1
-
+  # Race or colour (raça/cor) in the categories of IBGE: tp_raca_cor and CS_RACA of the health records of
+  # Minas Gerais, CORRAÇA of the political violence cases (SciELO Data): Branca, Preta, Parda, Amarela,
+  # Indígena, Ignorado. Numeric codes (racacor: 1 to 5) and breeds of animals (raça: Nelore) fail.
+  brracecolourbyname:
+    key: race_ethnicity
+    is_pii: True
+    name: Race or colour (raça/cor) by field name with the IBGE categories (raca_cor, tp_raca_cor, CS_RACA, cor_raca)
+    rule: (?i)(?:[a-z_]+[ _])?ra[cç]a(?:[ _/]?(?:cor|co))?(?:[ _][a-z_]+)?|(?:[a-z_]+[ _])?cor[ _/]?(?:ra[cç]a|da[ _]pele)|racacor
+    type: field
+    match: regex
+    validator: metacrafterext.rules.br.codes.validate_br_race_colour
+    needs_values: true
+    priority: 1

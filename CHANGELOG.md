@@ -9,6 +9,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Rules for the second round of Brazilian files of metacrafter-testdata** (2024 snapshots of the Dateno
+  catalogue: dados.mg.gov.br, cdi00000221, dados.recife.pe.gov.br, cdi00000227, dados.rs.gov.br, cdi00000228,
+  and the Dataverse repositories Arca Dados of Fiocruz, cdi00000251, SciELO Data, cdi00000252, CIDACS,
+  cdi00000254, and FGV, cdi00000255; validators in `metacrafterext.rules.br.codes` and
+  `metacrafterext.rules.common.classifications`, rules in the new `rules/br/br_health.yaml` and in
+  `rules/br/br_geo.yaml`, `rules/br/br_education.yaml`, `rules/br/br_persons.yaml`,
+  `rules/common/boolean.yaml` and `rules/common/classifications.yaml`):
+  - geography: the six-digit IBGE municipality code without its check digit that DATASUS and the crime
+    statistics of Minas Gerais write (`br_municipality_code_6`: municipio_cod 310620, codmunres 354990.0,
+    codmun6, Cod6d, the IBGE column of the PMAQ surveys); the two-digit IBGE code of a state
+    (`br_state_ibge_code`: uf 11 to 53, UF_Cod, coduf, CDUF, UF(cod), also 35.0); the 15-digit census tract
+    code (`br_census_tract_code`: Codsetor 3.55030801000001E14, a float of a spreadsheet export, checked by
+    the municipality code it begins with; metacrafter labelled one such column `imsi`); more names for the
+    seven-digit code (`br_municipality_code`: CODMUNI_A, CODCIDADE, CODIGOMUNICIPIODOOBITO, Cód.IBGE);
+  - education and health: the INEP school code (`br_inep_school_code`: inep_escola 26175347, co_entidade,
+    labelled `cz_ico` before); the CNES number of a health establishment (`br_cnes`: CNES, CNESFINAL,
+    CNESADESÃO, 0000957 and 957.0); ICD-10 codes as the Brazilian health information systems write them,
+    without the dot (`icd10code`: causabas W788, CAUSABASICADO, co_cid_causa_basica C159, RASTREIOCID); the
+    chapters of the Portuguese CID-10 by title and in `capitulo_cid_*` fields (`icd10_chapter`: II.
+    NEOPLASIAS (TUMORES), IX. Doenças do aparelho circulatório);
+  - persons: race or colour in the IBGE categories (`race_ethnicity`, which had no rule: tp_raca_cor, CS_RACA,
+    CORRAÇA: Branca, Parda, Indígena, Ignorado); numeric codes and breeds of animals are not read;
+  - Sim and Não as booleans (`booleansimnao`), as the Spanish sí and no are.
+
 - **Rules for the Brazilian files of metacrafter-testdata** (2024 snapshots of five CKAN portals of the Dateno
   catalogue: the Banco Central do Brasil, cdi00000188, the BNDES, cdi00000189, CAPES, cdi00000190, the
   Jardim Botânico do Rio de Janeiro, cdi00000187, and Governo Aberto SP, cdi00000186; validators in the new

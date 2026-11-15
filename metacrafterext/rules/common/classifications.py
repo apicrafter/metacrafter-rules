@@ -8,6 +8,7 @@ Organs) and the consumer price index by COICOP division, group and class (01.1.7
 reword and misspell the titles, so a title is compared by its words with those of the official one.
 """
 import re
+import unicodedata
 
 from metacrafterext.rules.ar.countries import fold_arabic, has_arabic
 
@@ -157,6 +158,18 @@ _ICD_TITLE_AR = tuple(fold_arabic(w) for w in (
     "البولي التناسلي", "الحمل والولادة", "حول الولادة", "حول موعد الولادة", "التشوهات", "العيوب الخلقية",
     "الأعراض والعلامات", "الإصابات والتسمم", "الأسباب الخارجية", "العوامل المؤثرة",
 ))
+# The chapter titles of the Portuguese CID-10 (DATASUS: II. NEOPLASIAS (TUMORES), IX. Doenças do aparelho
+# circulatório, XX. Causas externas de morbidade e de mortalidade), read without accents.
+_ICD_TITLE_PT = re.compile(
+    r"infecciosas|parasitarias|neoplasias|tumores|doencas do sangue|hematopoeticos|imunitarios|endocrinas"
+    r"|nutricionais|metabolicas|transtornos mentais|comportamentais|sistema nervoso|do olho|do ouvido"
+    r"|mastoide|aparelho circulatorio|aparelho respiratorio|aparelho digestivo|da pele|subcutaneo"
+    r"|osteomuscular|tecido conjuntivo|geniturinario|gravidez|puerperio|perinatal|malformacoes|congenitas"
+    r"|cromossomicas|sintomas|achados anormais|lesoes|envenenamento|causas externas|fatores que influenciam"
+    r"|propositos especiais")
+_ICD_DISEASE_PT = re.compile(
+    r"doencas|transtornos|neoplasias|tumores|anomalias|malformacoes|afeccoes|envenenamento|causas|fatores"
+    r"|sintomas|sinais|lesoes|gravidez|infecciosas|propositos")
 _OTHERS = frozenset(("other", "others", "other causes", "all other causes", "other diseases"))
 _OTHERS_AR = frozenset(fold_arabic(w) for w in ("أخرى", "آخرى", "أسباب أخرى", "أمراض أخرى"))
 
@@ -164,7 +177,8 @@ _OTHERS_AR = frozenset(fold_arabic(w) for w in ("أخرى", "آخرى", "أسب�
 def validate_icd10_chapter(value):
     """An ICD-10 chapter by its code range (A00-B99, C00 - D49, D50-D89; the range must run from the
     first code of a chapter to its last, also as national tables round it) or by its title in English
-    or Arabic (Neoplasms, Diseases of the Circulatory System, Congential Anomalies, أمراض الجهاز الدوري).
+    or Arabic (Neoplasms, Diseases of the Circulatory System, Congential Anomalies, أمراض الجهاز الدوري) or
+    Portuguese (II. NEOPLASIAS (TUMORES), Doenças do aparelho circulatório).
     A block of codes (C18-C21) or a single code (J11) is icd10."""
     text = " ".join(str(value).strip().split())
     if not text or len(text) > 160:
@@ -176,7 +190,10 @@ def validate_icd10_chapter(value):
         folded = fold_arabic(text)
         return any(k in folded for k in _ICD_TITLE_AR)
     lower = text.lower().replace("&", "and")
-    return bool(_ICD_TITLE_EN.search(lower)) and bool(_ICD_DISEASE_EN.search(lower))
+    if _ICD_TITLE_EN.search(lower) and _ICD_DISEASE_EN.search(lower):
+        return True
+    folded = unicodedata.normalize("NFKD", lower).encode("ascii", "ignore").decode()
+    return bool(_ICD_TITLE_PT.search(folded)) and bool(_ICD_DISEASE_PT.search(folded))
 
 
 def validate_icd10_chapter_or_other(value):
