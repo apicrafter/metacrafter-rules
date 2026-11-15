@@ -1,0 +1,17 @@
+name: politics
+description: Political parties in election results and lists of office holders
+context: government
+lang: common
+country_code: xx
+rules:
+  politicalpartybyname:
+    key: political_party
+    name: Political party by field name (Party, Party/Group, party_name, political_party) with party names
+    # An agreement or a contract names its parties too (PartyName: JSC Pty Ltd): the values must
+    # name parties or groups (Labor, Liberal, Greens, Party, Alliance, Independent).
+    rule: (?i)(?:political[ _])?part(?:y|ies)(?:[ _/]?(?:group|name|affiliation|abbreviation|nm))?|party[ _]?/[ _]?group
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.politics.validate_political_party
+    needs_values: true
+    priority: 1

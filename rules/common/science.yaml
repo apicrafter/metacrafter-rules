@@ -358,3 +358,15 @@ rules:
     validator: metacrafterext.rules.common.taxa.validate_vernacular_with_scientific
     needs_values: true
     priority: 1
+  conservationstatusbyname:
+    key: conservation_status
+    name: Conservation status in words by field name (status, sourceStatus, conservation_status, EPBC status, IUCN category)
+    # Threatened species lists name the field status or after the act; the values must be the
+    # categories in words (Critically Endangered, Vulnerable): the IUCN abbreviations are
+    # iucn_red_list_category, other statuses (Current, Expired) fail.
+    rule: (?i)(?:(?:[a-z]+[ _])?(?:conservation|threat(?:ened)?|epbc|iucn|nca|nc[ _]act|source|listing|red[ _]?list|national|state|act)[ _]?)?(?:status|category|listing)(?:[ _]?(?:epbc|iucn|nca|act))?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.taxa.validate_conservation_status
+    needs_values: true
+    priority: 1

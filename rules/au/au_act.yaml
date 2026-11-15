@@ -1,0 +1,69 @@
+name: au-act
+description: Australian Capital Territory land, registers and procurement (districts, sections, blocks, association and RFx numbers)
+context: geo
+lang: en
+country_code: au
+rules:
+  # ACT land is identified by district, division (suburb), section and block. The register of
+  # contaminated sites keeps each part as notified and as current (District_Notified,
+  # Section_Current); the sports grounds write Block No. and Section No.
+  auactdistrictbyname:
+    key: au_act_district
+    name: ACT district by field name (District, District_Notified, District_Current, ACT District, dist) with district names
+    # The district of an address list (Fyshwick, Phillip) is often a suburb: the values must be
+    # districts of the Districts Act 2002 or their four-letter abbreviations (TUGG, BELC).
+    rule: (?i)(?:act[ _])?dist(?:rict)?(?:[ _]?(?:notified|current|name|nm))?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.au.act.validate_au_act_district
+    needs_values: true
+    priority: 1
+  auactsectionbyname:
+    key: au_act_section
+    name: ACT section number by field name (Section_Notified, Section_Current, Section No.)
+    # A bare Section or Block is a part of a document, a block of flats (the Sofia address
+    # register) or a census block elsewhere: only the names of ACT registers.
+    rule: (?i)section[ _]?(?:no\.?|number|num|notified|current)
+    type: field
+    match: regex
+    validator: metacrafterext.rules.au.act.validate_au_act_section
+    needs_values: true
+    priority: 1
+  auactblockbyname:
+    key: au_act_block
+    name: ACT block number by field name (Block_Notified, Block_Current, Block No.)
+    rule: (?i)block[ _]?(?:no\.?|number|num|notified|current)
+    type: field
+    match: regex
+    validator: metacrafterext.rules.au.act.validate_au_act_block
+    needs_values: true
+    priority: 1
+  auactassociationnumberbyname:
+    key: au_act_association_number
+    name: ACT incorporated association number by field name (A_Number, Association Number) with A00336
+    rule: (?i)a[ _]?number|assoc(?:iation)?[ _]?(?:no|number|num|id)|incorporation[ _]?(?:no|number)
+    type: field
+    match: regex
+    validator: metacrafterext.rules.au.act.validate_au_act_association_number
+    needs_values: true
+    priority: 1
+  auactrfxnumberbyname:
+    key: au_act_rfx_number
+    name: ACT Government procurement (RFx) number by field name (RFx No, Rfx Number, RFT No)
+    # Tenders ACT and the ACT contracts register; the values have many forms (50019-RFT-006,
+    # 31106.110, GS001025.110, SL170497).
+    rule: (?i)rf[xtq][ _]?(?:no\.?|number|num|id|ref(?:erence)?)|tender[ _]?(?:no\.?|number|ref(?:erence)?)
+    type: field
+    match: regex
+    validator: metacrafterext.rules.au.act.validate_au_act_rfx_number
+    needs_values: true
+    priority: 1
+  auactrfxnumbervalue:
+    key: au_act_rfx_number
+    name: ACT Government procurement (RFx) number by value (50019-RFT-006, 81492-REOI-001, GGS456-RFT-003)
+    rule: metacrafterext.rules.au.act.validate_au_act_rfx_number_new
+    type: data
+    match: func
+    minlen: 13
+    maxlen: 20
+    priority: 1

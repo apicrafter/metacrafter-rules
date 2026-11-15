@@ -1,0 +1,35 @@
+name: au-education
+description: Australian vocational education and training codes (RTO codes, qualification codes)
+context: education
+lang: en
+country_code: au
+rules:
+  aurtocodebyname:
+    key: au_rto_code
+    name: Registered training organisation code by field name (RTO Code, RTO ID, Training Organisation Code) with four to six digits
+    # The ACT Skilled Capital list keeps the leading zero with an apostrophe ('0101').
+    rule: (?i)rto(?:[ _]?(?:code|id|no|number|num))?|(?:registered[ _])?training[ _]organi[sz]ation[ _]?(?:code|id|number)
+    type: field
+    match: regex
+    validator: metacrafterext.rules.au.act.validate_au_rto_code
+    needs_values: true
+    priority: 1
+  auvetqualificationcodebyname:
+    key: au_vet_qualification_code
+    name: VET qualification or accredited course code by field name (Qual Code, Qualification Code, Course Code, National Code)
+    rule: (?i)(?:qual(?:ification)?|course|national|tp)[ _]?(?:code|id)
+    type: field
+    match: regex
+    validator: metacrafterext.rules.au.act.validate_au_vet_qualification_code
+    needs_values: true
+    priority: 1
+  auvetqualificationcodevalue:
+    key: au_vet_qualification_code
+    name: VET qualification code by value (BSB50120, AUR30212) in a qualification or course field
+    rule: metacrafterext.rules.au.act.validate_au_vet_qualification_code
+    type: data
+    match: func
+    minlen: 8
+    maxlen: 12
+    fieldregex: (?i)qual|course|cert|diploma
+    priority: 1

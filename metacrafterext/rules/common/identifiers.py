@@ -2401,3 +2401,15 @@ def validate_it_cig(value):
     hexadecimal ones, or a SmartCIG starting with X, Y or Z and nine hexadecimal characters
     (Z8012569E5)."""
     return bool(_IT_CIG.match(str(value).strip().upper()))
+
+
+_HS_CODE_DIGITS = re.compile(r"^\d{2}(?:[ .]?\d{2}){0,4}$")
+
+
+def validate_hs_code_digits(value):
+    """An HS code or a national tariff line in a field named for it: 01, 0101, 01.01, 010121,
+    0101.21, 8471300000 (not a parking tariff such as Free_1_hr or SS06_2P)."""
+    text = str(value).strip()
+    if text.endswith(".0"):
+        text = text[:-2]
+    return bool(_HS_CODE_DIGITS.match(text))

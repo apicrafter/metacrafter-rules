@@ -1,0 +1,15 @@
+name: au-transport
+description: Australian traffic control devices (AS 1742 sign codes)
+context: transport
+lang: en
+country_code: au
+rules:
+  auroadsigncodebyname:
+    key: au_road_sign_code
+    name: AS 1742 traffic sign code by field name (SIGN CODE, Sign_Code, Sign Type Code, sign_no) with R1-1, W3-1, G9-21
+    rule: (?i)(?:[a-z]+[ _])*sign[ _]?(?:code|type[ _]?code|no\.?|number|num|designation)
+    type: field
+    match: regex
+    validator: metacrafterext.rules.au.act.validate_au_road_sign_code
+    needs_values: true
+    priority: 1

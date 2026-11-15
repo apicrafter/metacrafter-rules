@@ -9,6 +9,43 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Rules for the ACT files of metacrafter-testdata** (a 2024 snapshot of www.data.act.gov.au, the Socrata
+  portal of the Australian Capital Territory Government, Dateno source cdi00000095; validators in the new
+  `metacrafterext.rules.au.act` and `metacrafterext.rules.common.politics`, rules in the new
+  `rules/au/au_act.yaml`, `rules/au/au_education.yaml`, `rules/au/au_transport.yaml` and
+  `rules/common/politics.yaml`):
+  - ACT land and registers: districts of the Districts Act 2002 (`au_act_district`: Canberra Central,
+    Paddys River, the abbreviations TUGG, BELC) in `District`, `District_Notified`, `ACT District`,
+    `dist`; section and block numbers (`au_act_section`, `au_act_block`: 21, 14+15+16) in
+    `Section_Notified`, `Block_Current`, `Section No.`, `Block No.` (a bare Section or Block stays out);
+    incorporated association numbers (`au_act_association_number`: A00336) in `A_Number`; Tenders ACT RFx
+    numbers (`au_act_rfx_number`: 50019-RFT-006 by value, and 31106.110, GS001025.110, SL170497 in
+    `RFx No`, `Rfx Number`);
+  - ABS geography: SA1 codes (`au_sa1_code`: 80105105102) in `SA1`, `sa1_main16`; SA3 codes
+    (`au_sa3_code`: 80101) in `SA3 Code`; State Suburb and Suburb and Locality codes (`au_ssc_code`:
+    81051) in `State Suburb Code`, `SSC_CODE16`, `SAL_CODE_2021`; 2006 census Collection District codes
+    (`au_census_cd_code`: 8013604) in `CD`, `CD_CODE`;
+  - vocational training: RTO codes (`au_rto_code`: '0101', '91664' with the apostrophe of a spreadsheet)
+    in `RTO Code`; VET qualification and accredited course codes (`au_vet_qualification_code`: BSB50120,
+    AUR30212, 10964NAT) in `Qual Code`, `Course Code` and by value in qualification fields;
+  - AS 1742 traffic sign codes (`au_road_sign_code`: R1-1, W3-1, R4-1(60), R2-3(L), R5-41/4) in
+    `SIGN CODE`, `Sign_Code`;
+  - political parties (`political_party`: Australian Labor Party, Canberra Liberals, The Greens) in
+    `Party`, `Party/Group`, `party_name` (the companies of a `PartyName` fail);
+  - conservation status in words (`conservation_status`: Critically Endangered, Vulnerable, Regionally
+    Conservation Dependent) in `status`, `sourceStatus`, `EPBC status`;
+  - GTFS Realtime: vehicle stop status (`gtfs_rt_vehicle_stop_status`: STOPPED_AT, IN_TRANSIT_TO) and
+    congestion level (`gtfs_rt_congestion_level`: RUNNING_SMOOTHLY) by value and field name, schedule
+    relationship (`gtfs_rt_schedule_relationship`) by field name only (SCHEDULED, ADDED are words of
+    any status column), trip ids (`gtfs_trip_id`) in `tripID` and `trip.trip_id` (a bare `trip_id` is
+    also the voyage of a research vessel, the AIMS `TRIP_ID`), and bearings in degrees
+    (`bearing`: 126.87) in `bearing`, `heading`;
+  - Socrata location columns as `geopoint`: `Location`, `Location 1`, `Location_1`, `GPS`, `Long/Lat`
+    holding (-35.318906, 149.132104); `validate_latlon_pair` accepts the brackets of Socrata.
+- More names for types with rules: GTFS stop ids in `stopID`, ABNs in `ABN:` (TendersACT), suburbs in
+  `SUBURB_LOCATION`, ANZSIC codes in names with spaces (`ANZSIC Subdivision Code`), colours of map
+  layers in `fill_colou`, `stroke_col`, `text_color`, `route_color`.
+
 - **Rules for the Camden Council files of metacrafter-testdata** (a 2024 snapshot of
   data.camden.nsw.gov.au, the Opendatasoft portal of Camden Council, New South Wales, Dateno source
   cdi00000091; validators in the new `metacrafterext.rules.au.planning` and
@@ -351,6 +388,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- The HS code rule by field name needs digits: the `TariffCode` of the ACT smart parking lots
+  (Free_1_hr, SS06_2P) is no HS code.
+- Semantic versions refuse file numbers that start with a year and a serial of four or more digits
+  (2014.24010.110, the panel contract numbers of the ACT contracts register).
 - `device_id` and `equipment_id` are an `imei` only when the values are IMEIs (sensor ids lst25275720,
   ems-b879; the LoRaWAN sensors of Camden Council, snla1k512);
   `location_id` and `location_number` are a `gln` only with GLN values (1, 2, 16 were); `plaque`

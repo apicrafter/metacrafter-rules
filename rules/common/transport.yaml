@@ -245,7 +245,7 @@ rules:
   gtfsstopidbyfield:
     key: gtfs_stop_id
     name: GTFS stop id by stops.txt / stop_times.txt field name
-    rule: stop_id,parent_station,from_stop_id,to_stop_id
+    rule: stop_id,stopid,parent_station,from_stop_id,to_stop_id
     type: field
     match: text
     priority: 1
@@ -273,5 +273,67 @@ rules:
     type: field
     match: regex
     validator: metacrafterext.rules.common.generic.validate_vessel_name
+    needs_values: true
+    priority: 1
+  # ------------------------------------------------------------ GTFS Realtime (ACT light rail archives)
+  gtfstripidbyfield:
+    key: gtfs_trip_id
+    name: GTFS trip id by field name (tripID, trip.trip_id of a GTFS Realtime export)
+    # A bare trip_id is also a voyage of a research vessel (the AIMS TRIP_ID), a taxi or a travel
+    # survey trip: only the camel case of the realtime archives and the names of the trip descriptor.
+    rule: tripid,trip.trip_id,trip.tripid,trip_update.trip.trip_id,vehicle.trip.trip_id,trip_update_trip_id,vehicle_trip_trip_id
+    type: field
+    match: text
+    priority: 1
+  gtfsrtvehiclestopstatusvalue:
+    key: gtfs_rt_vehicle_stop_status
+    name: GTFS Realtime vehicle stop status by value (INCOMING_AT, STOPPED_AT, IN_TRANSIT_TO)
+    rule: incoming_at,stopped_at,in_transit_to
+    type: data
+    match: text
+    minlen: 10
+    maxlen: 13
+    priority: 1
+  gtfsrtvehiclestopstatusbyfield:
+    key: gtfs_rt_vehicle_stop_status
+    name: GTFS Realtime vehicle stop status by field name (current_status, currentStatus)
+    rule: current_status,currentstatus,vehicle_stop_status
+    type: field
+    match: text
+    priority: 1
+  gtfsrtcongestionlevelvalue:
+    key: gtfs_rt_congestion_level
+    name: GTFS Realtime congestion level by value (RUNNING_SMOOTHLY, STOP_AND_GO, SEVERE_CONGESTION)
+    # CONGESTION alone is a word of other tables: the three distinctive names only.
+    rule: unknown_congestion_level,running_smoothly,stop_and_go,severe_congestion
+    type: data
+    match: text
+    minlen: 11
+    maxlen: 24
+    priority: 1
+  gtfsrtcongestionlevelbyfield:
+    key: gtfs_rt_congestion_level
+    name: GTFS Realtime congestion level by field name (congestion_level, congestionLevel)
+    rule: congestion_level,congestionlevel
+    type: field
+    match: text
+    priority: 1
+  gtfsrtschedulerelationshipbyfield:
+    key: gtfs_rt_schedule_relationship
+    name: GTFS Realtime schedule relationship by field name (schedule_relationship, tripScheduleRelationship)
+    # SCHEDULED, ADDED, NEW and DELETED are words of any status column: the field name decides.
+    rule: (?i)(?:trip[ _]?(?:update[ _]?)?|stop[ _]?time[ _]?(?:update[ _]?)?)?schedule[ _]?relationship
+    type: field
+    match: regex
+    priority: 1
+  bearingbyname:
+    key: bearing
+    name: Bearing or heading in degrees by field name (bearing, heading, direction_deg) with numbers from 0 to 360
+    # A Bearing of compass points (N, SE: the TfGM bus stops) is compass_point; the values must be
+    # numbers.
+    rule: (?i)(?:vehicle[ _]?|gps[ _]?|true[ _]?)?(?:bearing|heading)(?:[ _]?(?:deg(?:rees)?|true))?|direction[ _]?(?:deg(?:rees)?|angle)
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.observations.validate_bearing
     needs_values: true
     priority: 1

@@ -701,12 +701,14 @@ def validate_iso3166_2_code(value):
     return bool(_ISO3166_2.match(str(value).strip()))
 
 
-_LATLON_PAIR = re.compile(r"^\s*\[?\s*(-?\d{1,2}(?:\.\d+)?)\s*[,;]\s*(-?\d{1,3}(?:\.\d+)?)\s*\]?\s*$")
+# Opendatasoft writes 48.8566, 2.3522 or [46.51, 6.63]; Socrata exports a location column as
+# (-35.318906, 149.132104).
+_LATLON_PAIR = re.compile(r"^\s*[\[(]?\s*(-?\d{1,2}(?:\.\d+)?)\s*[,;]\s*(-?\d{1,3}(?:\.\d+)?)\s*[\])]?\s*$")
 
 
 def validate_latlon_pair(value):
     """A point written as latitude and longitude separated by a comma, as Opendatasoft exports a
-    geo_point_2d to CSV (48.8566, 2.3522; [46.51, 6.63])."""
+    geo_point_2d to CSV (48.8566, 2.3522; [46.51, 6.63]) and Socrata a location ((-35.3189, 149.1321))."""
     m = _LATLON_PAIR.match(str(value))
     if not m:
         return False
