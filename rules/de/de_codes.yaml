@@ -1,0 +1,169 @@
+name: de-codes
+description: Codes and classifications of German open data portals
+context: government
+lang: de
+country_code: de
+# Found in April 2024 snapshots of German open data portals (Dateno sources cdi00000446 to cdi00000467:
+# Offene Daten Köln, Düsseldorf, Bonn, Münster and Wuppertal, the KDVZ municipalities, Mannheim, Potsdam, the
+# Rhein-Kreis Neuss); metacrafter-testdata.
+rules:
+  # Fine tables of Cologne, Bonn and the KDVZ municipalities: 113140, 141312, 142278.A.
+  detatbestandsnummerbyname:
+    key: de_tatbestandsnummer
+    name: German traffic offence number by field name (Tatbestand, Tatb-Nr., TBNR, Tatbestandsnummer, tatbestandbe_tbnr)
+    rule: (?i)tatb(?:estands?)?(?:[ _.-]*(?:nr\.?|nummer|be_tbnr|tbnr))?\d?|tbnr\d?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.de.codes.validate_de_tatbestandsnummer
+    needs_values: true
+    priority: 1
+  # Residents by nationality of the KDVZ municipalities: staatenkey with 423, 287, 117.
+  destaatenkeybyname:
+    key: de_staatsangehoerigkeitsschluessel
+    name: German nationality and area key by field name (Staatenkey, Staatsangehörigkeitsschlüssel, Staatsschlüssel)
+    rule: (?i)staatenkey|staat(?:en|s)?(?:angeh(?:oe|ö)rigkeits?)?[ _-]?schl(?:ue|ü)ssel|sta[ _]?schl(?:ue|ü)ssel
+    type: field
+    match: regex
+    validator: metacrafterext.rules.de.codes.validate_de_staatsangehoerigkeitsschluessel
+    needs_values: true
+    priority: 1
+  # Kennzeichen of the fine tables of Cologne holds the district code alone: K, BN, SU, LEV.
+  deunterscheidungszeichenbyname:
+    key: de_kfz_unterscheidungszeichen
+    name: German vehicle registration district code by field name (Kennzeichen, Kennzeichen1, Unterscheidungszeichen, Zulassungsbezirk)
+    rule: (?i)(?:kfz[ _-]?)?kennzeichen\d?|unterscheidungszeichen|zulassungsbezirk
+    type: field
+    match: regex
+    validator: metacrafterext.rules.de.codes.validate_de_kfz_unterscheidungszeichen
+    needs_values: true
+    priority: 1
+  # School registers of Bonn, Düsseldorf, Potsdam and Wuppertal: Grundschule, Städt. Gymnasium, GY, G/O/OG.
+  deschulformbyname:
+    key: de_schulform
+    name: German school type by field name (Schulform, Schulart, Schultyp)
+    rule: (?i)schul(?:form|art|typ)(?:en)?(?:[ _]?(?:name|bezeichnung|text|kurz))?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.de.codes.validate_de_schulform
+    needs_values: true
+    priority: 1
+  # Budgets of Bonn, Cologne, Münster, Wuppertal and the Rhein-Kreis Neuss: Innere Verwaltung,
+  # 02 - Sicherheit und Ordnung, 01; Wuppertal numbers the areas as the finance statistics do (11, 12, 21).
+  deproduktbereichbyname:
+    key: de_produktbereich
+    name: Product area of a German municipal budget by field name (Produktbereich, Produktbereich NR, Produktbereichsbezeichnung, PB-Nr.)
+    rule: (?i)produktbereichs?(?:[ _-]?(?:nr\.?|nummer|name|bezeichnung|text))?|pb[ _-]?nr\.?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.de.codes.validate_de_produktbereich
+    needs_values: true
+    priority: 1
+  # Unfallatlas extracts of Cologne and the Rhein-Kreis Neuss: UART, UTYP1 and UKATEGORIE as digits or words.
+  deunfallartbyname:
+    key: de_unfallart
+    name: German road accident kind by field name (UART, Unfallart)
+    rule: (?i)uart|unfallart(?:[ _]?(?:text|bezeichnung|nr))?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.de.codes.validate_de_unfallart
+    needs_values: true
+    priority: 1
+  deunfalltypbyname:
+    key: de_unfalltyp
+    name: German road accident type by field name (UTYP1, Unfalltyp)
+    rule: (?i)utyp1?|unfalltyp(?:[ _]?(?:text|bezeichnung|nr))?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.de.codes.validate_de_unfalltyp
+    needs_values: true
+    priority: 1
+  deunfallkategoriebyname:
+    key: crash_severity
+    name: Road crash severity by German field name (UKATEGORIE, Unfallkategorie) with 1 to 3 or Unfall mit Leichtverletzten
+    rule: (?i)ukategorie|unfallkategorie(?:[ _]?(?:text|bezeichnung))?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.de.codes.validate_de_unfallkategorie
+    needs_values: true
+    priority: 1
+  # Business statistics of Düsseldorf: Klassifikation der Wirtschaftszweige 2008 WZ 2008 with 47.71, 46.18.2.
+  dewz2008byname:
+    key: de_wz2008
+    name: WZ 2008 code by field name (WZ 2008, WZ2008, WZ-Code, Wirtschaftszweig Nr, Klassifikation der Wirtschaftszweige 2008 WZ 2008)
+    rule: (?i)(?:.*[ _])?wz[ _-]?(?:20)?08(?:[ _-]?(?:code|nr\.?|schl(?:ue|ü)ssel))?|wz[ _-]?(?:code|nr\.?|schl(?:ue|ü)ssel)|wirtschaftszweig(?:[ _-]?(?:code|nr\.?|schl(?:ue|ü)ssel))
+    type: field
+    match: regex
+    validator: metacrafterext.rules.de.codes.validate_de_wz2008
+    needs_values: true
+    priority: 1
+  # Election results of the votemanager exports: Wahl with Ratswahl, Europawahl, Wahl des/der Bürgermeisters/in.
+  deelectiontypebyname:
+    key: election_type
+    name: Election type by German field name (Wahl, Wahlart, Wahlbezeichnung, Wahlname)
+    rule: (?i)wahl(?:art|typ|bezeichnung|name)?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.de.codes.validate_de_election_type
+    needs_values: true
+    priority: 1
+  # Stimmbezirk of the results and street directories of Cologne, Bonn, Düsseldorf and Neuss: 10405, 2203,
+  # 371/377. Wahlbezirk is left out: in municipal elections of North Rhine-Westphalia it is a ward.
+  destimmbezirkbyname:
+    key: polling_district
+    name: Polling district by German field name (Stimmbezirk, NR_STIMMBEZIRK800, stimmbezirk_nr, Abstimmbezirk, Briefwahlbezirk)
+    rule: (?i)(?:nr[ _])?(?:ab)?stimmbezirk(?:[ _-]?(?:nr\.?|nummer|bezeichnung))?\d*|briefwahlbezirk(?:[ _-]?(?:nr\.?|nummer))?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.de.codes.validate_de_stimmbezirk
+    needs_values: true
+    priority: 1
+  # Parteien and Fraktion of the council tables of Cologne: CDU, SPD, Bündnis 90/Die Grünen, Die Linke Köln.
+  depoliticalpartybyname:
+    key: political_party
+    name: Political party by German field name (Partei, Parteien, Fraktion, Fraktionszuwendungen) with the parties of German elections
+    rule: (?i)partei(?:en|name|kurzname)?|fraktion(?:en|szuwendungen)?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.de.codes.validate_de_political_party
+    needs_values: true
+    priority: 1
+  # AVV-Abfallart-Nr and AVV-Nr. of the waste statistics of Cologne and Münster: 150106, 20106.
+  deavvbyname:
+    key: eu_waste_code
+    name: European List of Waste code by German field name (AVV-Nr., AVV-Abfallart-Nr, AVV-Abfallarten Nr, Abfallschlüssel, ASN)
+    rule: (?i)avv(?:[ _-]?abfallart(?:en)?)?[ _-]?(?:nr\.?|nummer|schl(?:ue|ü)ssel|code)|abfallschl(?:ue|ü)ssel(?:nummer)?|asn
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.eucodes.validate_eu_waste_code
+    needs_values: true
+    priority: 1
+  # Residents by nationality: nationalitaet with afghanisch, ägyptisch, britisch (BOTC).
+  denationalitybyname:
+    key: de_nationality
+    name: Nationality as a German adjective by field name (Nationalität, Nationalitaet, Staatsangehörigkeit)
+    rule: (?i)nationalit(?:ae|ä)t(?:en)?|(?:\w+[ _])?staatsangeh(?:oe|ö)rigkeit(?:en)?(?:[ _]?\d)?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.de.codes.validate_de_nationality
+    needs_values: true
+    priority: 1
+  # Kommunalwahlbezirk of the street directories and polling station lists of Cologne: 4, 44.
+  dekommunalwahlbezirkbyname:
+    key: municipal_ward
+    name: Municipal ward by German field name (Kommunalwahlbezirk) with 4, 19, 44
+    rule: (?i)kommunalwahlbezirk(?:[ _-]?(?:nr\.?|nummer))?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.respondents.validate_municipal_ward
+    needs_values: true
+    priority: 1
+  # fahrzeugart of the fine tables of Cologne: PKW, LKW, Anhänger ohne Zugfahrzeug.
+  defahrzeugartbyname:
+    key: vehicle_type
+    name: Vehicle type by German field name (Fahrzeugart, Fahrzeugtyp, Fahrzeugklasse) with PKW, LKW, Krad, Anhänger
+    rule: (?i)fahrzeug(?:art|typ|klasse)
+    type: field
+    match: regex
+    validator: metacrafterext.rules.de.codes.validate_de_fahrzeugart
+    needs_values: true
+    priority: 1

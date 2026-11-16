@@ -67,8 +67,8 @@ rules:
   destreetaddressbyname:
     key: street_address
     is_pii: true
-    name: Street address by German field name (adresse, post_adresse, gwr_adresse, domiziladresse, strasse_nr, strasse_hausnummer) with Hardstrasse 71
-    rule: (?i)(?:\w+[ _])?[a-zäöü]*adresse|stra(?:ss|ß)e[ _]?(?:nr|und[ _]hausnummer|hausnummer|hausnr)|strassenr
+    name: Street address by German field name (adresse, post_adresse, gwr_adresse, domiziladresse, strasse_nr, strasse_hausnummer, STRASSE_HsNr, Anschrift) with Hardstrasse 71
+    rule: (?i)(?:\w+[ _])?[a-zäöü]*adresse|stra(?:ss|ß)e[ _]?(?:nr|und[ _]hausnummer|hausnummer|hausnr|hsnr)|strassenr|anschrift
     type: field
     match: regex
     validator: metacrafterext.rules.de.persons.validate_de_street_address
