@@ -12,6 +12,6 @@ rules:
     match: regex
     minlen: 6
     maxlen: 6
-    fieldrule: schulnummer,schul_nr,schulnr,schul_nummer,schulnummer_nrw
+    fieldrule: schulnummer,schul_nr,schulnr,schul_nummer,schulnummer_nrw,schul-nr.,schul-nr,schulnr.,schulnum,schulnum_1,lds-nr.,lds-nr,lds_nr
     fieldrulematch: text
     priority: 1
