@@ -107,3 +107,14 @@ rules:
     match: regex
     validator: metacrafterext.rules.common.generic.validate_phone_area_code
     priority: 1
+  # The registers of mobile base stations and of electromagnetic field measurements of the Department of
+  # Electronic Communications of Cyprus (data.gov.cy; metacrafter-testdata): GSM900, UMTS2100, LTE1800.
+  mobilenetworkbandvalue:
+    key: mobile_network_band
+    name: Mobile network technology and band by value (GSM900, LTE1800, GSM900, UMTS2100, LTE1800, 5G-NR 700)
+    rule: metacrafterext.rules.common.eucodes.validate_mobile_network_band
+    type: data
+    match: func
+    minlen: 5
+    maxlen: 120
+    priority: 1

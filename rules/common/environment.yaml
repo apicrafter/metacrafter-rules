@@ -207,3 +207,15 @@ rules:
     validator: metacrafterext.rules.common.observations.validate_dissolved_solids
     needs_values: true
     priority: 1
+  # The air quality tables of the Department of Labour Inspection of Cyprus (data.gov.cy;
+  # metacrafter-testdata): NO, NO2, NOX, SO2, O3, CO, PM10, PM2.5.
+  airpollutantbyname:
+    key: air_pollutant
+    name: Air pollutant notation by field name (pollutant_code, pollutant, Pollutant Notation, air_pollutant) with PM10, NO2, O3
+    # pollutant_name_en holds the full names (Nitrogen Dioxide), which fail the validator.
+    rule: (?i)(?:air[ _])?pollutants?(?:[ _]?(?:code|notation|id|abbr(?:eviation)?|symbol))?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.eucodes.validate_air_pollutant
+    needs_values: true
+    priority: 1

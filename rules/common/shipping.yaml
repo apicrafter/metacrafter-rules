@@ -132,4 +132,14 @@ rules:
     fieldrule: container_number,container_no,container_id,iso_container_number
     fieldrulematch: text
     priority: 2
-
+  # The list of port facilities and their security officers of the Shipping Deputy Ministry of Cyprus
+  # (data.gov.cy; metacrafter-testdata): CYLMS-0001.
+  imoportfacilitynumbervalue:
+    key: imo_port_facility_number
+    name: IMO port facility number by value (CYLMS-0001, NLRTM-0352)
+    rule: metacrafterext.rules.common.eucodes.validate_imo_port_facility_number
+    type: data
+    match: func
+    minlen: 10
+    maxlen: 10
+    priority: 1

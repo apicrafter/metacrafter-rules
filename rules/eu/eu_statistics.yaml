@@ -1,0 +1,36 @@
+name: eu-statistics
+description: Codes of Eurostat tables (age classes, countries and aggregates)
+context: common
+lang: en
+country_code: eu
+# Found in the asylum and residence permit tables of the Civil Registry and Migration Department in an
+# April 2024 snapshot of the National Open Data Portal of Cyprus (data.gov.cy, Dateno source cdi00000396),
+# which keep the dimensions of the Eurostat datasets (CITIZEN, AGE, SEX, REASON); metacrafter-testdata.
+rules:
+  eurostatageclassbyname:
+    key: eurostat_age_class
+    name: Eurostat age class by field name (AGE, age_class, age_group) with Y18-34, Y_LT14, Y_GE65, TOTAL
+    rule: (?i)age(?:[ _]?(?:class|group|code|cl))?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.eucodes.validate_eurostat_age_class
+    needs_values: true
+    priority: 1
+  eurostatageclassvalue:
+    key: eurostat_age_class
+    name: Eurostat age class by value (Y18-34, Y_LT14, Y_GE65)
+    rule: metacrafterext.rules.common.eucodes.validate_eurostat_age_class_y
+    type: data
+    match: func
+    minlen: 2
+    maxlen: 8
+    priority: 1
+  eurostatgeocodebyname:
+    key: eurostat_geo_code
+    name: Eurostat country or aggregate code by field name (CITIZEN, GEO, c_birth, partner) with CY, EL, EU27_2020, STLS, TOTAL
+    rule: (?i)citizen(?:ship)?(?:[ _]code)?|geo(?:[ _]code)?|c[ _]birth|c[ _]resid|partner
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.eucodes.validate_eurostat_geo_code
+    needs_values: true
+    priority: 1

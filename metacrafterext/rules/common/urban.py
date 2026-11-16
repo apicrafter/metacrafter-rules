@@ -130,6 +130,10 @@ URBAN_RURAL = frozenset((
     "urban area", "rural area", "staedtisch", "stadtisch", "laendlich", "landlich", "vorstadtisch",
     "stadtisches gebiet", "landliches gebiet", "vorstadtisches gebiet", "urbain", "urbaine", "rurale",
     "periurbain", "periurbaine",
+    # Greek, as the registers of base stations and schools of Cyprus write it (data.gov.cy): Αστική,
+    # Αγροτική, Μη αστική, with the accents stripped as the validator strips them.
+    "αστικη", "αστικο", "αστικος", "αγροτικη", "αγροτικο", "αγροτικος", "μη αστικη", "ημιαστικη", "ημιαστικο",
+    "αστικη περιοχη", "αγροτικη περιοχη",
 ))
 _URBAN_RURAL_CLASS = re.compile(
     r"^(?:\((?:england/wales|england|wales|scotland|northern ireland)\)\s*)?(?:urban|rural)(?::|\s)\s*\S.*$")

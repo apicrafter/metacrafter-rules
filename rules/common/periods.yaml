@@ -64,3 +64,24 @@ rules:
     validator: metacrafterext.rules.common.urban.validate_calendar_year
     needs_values: true
     priority: 1
+  # Monthly tables of data.gov.cy name the column Month and fill it with 01/2020 (22 fields of the April
+  # 2024 snapshot; metacrafter-testdata): the month rule refuses a year with a month.
+  yearmonthbymonthname:
+    key: yearmonth
+    name: Year and month in a field named month (Month, MONTH, Μήνας, mes, mois, Monat) with 01/2020 or 2020-01
+    rule: (?i)months?|μ[ηή]νας|mes|mois|monat|maand
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.urban.validate_yearmonth
+    needs_values: true
+    priority: 1
+  # The weekly COVID-19 tables of the Ministry of Health of Cyprus: 2021-W32, 2021-1, 2022 - 16.
+  isoweekbyname:
+    key: iso_week
+    name: ISO week by field name (YearWeekISO, ISO Week, iso_week, year_week, yearweek) with 2021-W32, 2021-1 or 2022 - 16
+    rule: (?i)year[ _-]?week(?:[ _-]?iso)?|iso[ _-]?(?:year[ _-]?)?week|week[ _-]?iso|epi[ _-]?week[ _-]?iso
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.eucodes.validate_iso_week_loose
+    needs_values: true
+    priority: 1
