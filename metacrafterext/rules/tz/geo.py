@@ -28,3 +28,9 @@ def validate_tz_region(value):
     """A Tanzanian region: Dodoma, Dar es Salaam, Coast (Pwani), Kaskazini Pemba, Tabora Region;
     not a district (Kongwa) or Zanzibar alone."""
     return _norm(_REGION_WORD.sub("", str(value).strip())) in _REGION_NAMES
+
+
+def validate_tz_region_by_value(value):
+    """A Tanzanian region by value alone: as ``validate_tz_region``, but a bare Coast, the English name of
+    Pwani, is any coast (the water body types Coast, Open Sea and Estuary of a marine monitoring table)."""
+    return validate_tz_region(value) and _norm(str(value).strip()) != _norm("Coast")

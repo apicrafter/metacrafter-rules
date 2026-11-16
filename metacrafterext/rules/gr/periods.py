@@ -33,6 +33,20 @@ def validate_el_month(value):
     return fold_greek(value) in MONTHS
 
 
+# Abbreviations of the months in tables of the city of Thessaloniki (opendata.thessaloniki.gr): ΙΑΝ, ΦΕΒ,
+# ΜΑΡ, ΑΠΡ, ΜΑΙ, ΙΟΝ, ΙΟΛ, ΑΥΓ, ΣΕΠ, ΟΚΤ, ΝΟΕ, ΔΕΚ, beside the usual ΙΟΥΝ, ΙΟΥΛ and ΣΕΠΤ.
+MONTH_ABBREVIATIONS = frozenset((
+    "ΙΑΝ", "ΦΕΒ", "ΦΕΒΡ", "ΜΑΡ", "ΜΑΡΤ", "ΑΠΡ", "ΑΠΡΙΛ", "ΜΑΙ", "ΙΟΥΝ", "ΙΟΝ", "ΙΟΥΛ", "ΙΟΛ", "ΑΥΓ", "ΣΕΠ", "ΣΕΠΤ",
+    "ΟΚΤ", "ΝΟΕ", "ΝΟΕΜ", "ΔΕΚ",
+))
+
+
+def validate_el_month_abbreviation(value):
+    """A month by its Greek abbreviation or name: ΙΑΝ, Φεβ, ΜΑΙ, ΙΟΥΛ, Σεπτ., Ιανουάριος (not jan or Δευ)."""
+    text = fold_greek(str(value).strip().rstrip("."))
+    return text in MONTH_ABBREVIATIONS or text in MONTHS
+
+
 def validate_el_dayofweek(value):
     """A day of the week by its Greek name: Δευτέρα, Παρασκευή, ΚΥΡΙΑΚΗ (not Δευ or Μάρτιος)."""
     return fold_greek(value) in DAYS

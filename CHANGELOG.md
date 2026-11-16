@@ -9,6 +9,39 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Rules for the Scottish and Greek files of metacrafter-testdata** (2024 snapshots, Dateno sources cdi00000828,
+  Marine Scotland Data; cdi00000831, Stirling Council; cdi00000833, Angus Council; cdi00000862, Thessaloniki; and
+  cdi00000875, CUHK Research Data Repository; validators in the new `metacrafterext.rules.common.marine` and in
+  `metacrafterext.rules.gb.codes`, rules in the new `rules/common/marine.yaml` and in `rules/gb`):
+  - ICES code lists by field name, checked against the vocabulary server (vocab.ices.dk, read in November 2026):
+    parameters (`ices_parameter_code`: determinand CD, HG, CB118), matrices (`ices_matrix_code`: matrix LI, MU,
+    SED63), methods of analysis (`ices_method_of_analysis_code`: metoa GC-MS), qualifier flags
+    (`ices_qualifier_flag`: qflag <, D), the basis of determination (`ices_basis_code`: basis W, D, L), types of
+    monitoring station (`ices_station_type`: MSTAT RH, IH) and gear codes of trawl surveys (`ices_gear_code`:
+    Gear GOV, ROT, BT4A);
+  - `ices_statistical_rectangle` (ICES Rectangle 34E5, ICESStSq 43D6), `worms_aphia_id` (AphiaID 126436,
+    Aphia_Code) and `fao_asfis_code` (Species(FAOCodes) COD, 3-alpha HAD) by field name: the registry types had
+    no rule;
+  - Scottish GSS codes by value: intermediate zones (S02), health boards (S08), council areas (S12), electoral
+    wards (S13), Scottish Parliament constituencies (S16), localities (S19) and settlements (S20);
+  - `uprn` by field name with the values checked (uprn 122046218, cag_uprn_nearest,
+    Unique_Property_Reference_Number): the UPRNs of Scottish councils have nine digits, and the value rule of
+    twelve digits gave the name rule no support; `gb_usrn` (usrn 38002160), `gb_scottish_seed_code` (Seed_Code
+    5720826, seedno), `gb_scotland_urban_rural_classification` (RURAL_CLASSIFICATION 5, Accessible Rural),
+    `gb_scottish_marine_region` (Outer Hebrides, Argyll & Clyde), `gb_parking_contravention_code` (Contravention
+    "16 - Parked without displaying a valid permit") and eastings and northings under a prefixed name (X_easting,
+    cag_northing);
+  - scientific names under Species_Latin_name, SpeciesSciName, Latin species name and Scientific Species Name
+    (`species`);
+  - Greek month abbreviations under month_name or ΜΗΝΑΣ (`el_month`: ΙΑΝ, ΦΕΒ, ΙΟΛ).
+- Fewer wrong labels on the same files:
+  - a number with four or more decimals is no value of a category field: status_BAC -0.108360984950716 and
+    se_status of the assessments of contaminants of Marine Scotland were `category` (55 columns of the snapshot);
+  - a bare Coast is no Tanzanian region by value: WLTYP (Coast, Open Sea, Estuary) of the same assessments was
+    `tz_region` (14 columns); under a region field name Coast stays the English name of Pwani;
+  - `md5hash` by field name checks the values: md5 of a table of Thessaloniki counts the complaints of the fifth
+    municipal district (1, 2, 12).
+
 - **Rules for the Spanish files of metacrafter-testdata** (2024 snapshots of Spanish open data portals,
   Dateno sources cdi00000546 to cdi00000588: Generalitat Valenciana, Arganda del Rey, Diputació de Castelló,
   Las Palmas de Gran Canaria, Región de Murcia, Datos Abiertos de Canarias, Observa Gijón, UniversiDATA and

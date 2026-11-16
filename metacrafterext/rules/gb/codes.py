@@ -139,3 +139,56 @@ def validate_companies_house_number(value):
     SC086146); spreadsheets drop the leading zero of a numeric one (4832101 for 04832101).
     Six digits and fewer are other registers (Irish CRO numbers 123456)."""
     return bool(_CH_NUMBER.match(str(value).strip().upper()))
+
+
+# --- Scottish council files (data.stirling.gov.uk, opendata.angus.gov.uk; Dateno sources
+# cdi00000831 and cdi00000833) of metacrafter-testdata.
+_WHOLE = re.compile(r"^(\d+)(?:\.0)?$")
+
+
+def _digits(value):
+    """The digits of a whole number, also when a reader made it a float (122046218.0)."""
+    m = _WHOLE.match(str(value).strip()) if value is not None else None
+    return m.group(1) if m else ""
+
+
+def validate_uprn(value):
+    """A Unique Property Reference Number: a whole number of 6 to 12 digits without a leading
+    zero (122046218 in Stirling, 117097853 in Angus, 100023336956)."""
+    digits = _digits(value)
+    return 6 <= len(digits) <= 12 and digits[0] != "0"
+
+
+def validate_usrn(value):
+    """A Unique Street Reference Number: eight digits (38002160, 47901305)."""
+    digits = _digits(value)
+    return len(digits) == 8 and digits[0] != "0"
+
+
+def validate_scottish_seed_code(value):
+    """A SEED code of a Scottish school: seven digits (5720826, 8212627)."""
+    digits = _digits(value)
+    return len(digits) == 7 and digits[0] != "0"
+
+
+_URBAN_RURAL_NAMES = frozenset((
+    "large urban areas", "other urban areas", "accessible small towns", "remote small towns",
+    "very remote small towns", "accessible rural", "remote rural", "very remote rural",
+    "accessible rural areas", "remote rural areas", "very remote rural areas",
+))
+
+
+def validate_scotland_urban_rural(value):
+    """A class of the Scottish Government urban rural classification: a code 1 to 8 or a name
+    (Other Urban Areas, Accessible Small Towns, Remote Rural)."""
+    text = re.sub(r"\s+", " ", str(value).strip().lower()) if value is not None else ""
+    return _digits(text) in ("1", "2", "3", "4", "5", "6", "7", "8") or text in _URBAN_RURAL_NAMES
+
+
+_CONTRAVENTION = re.compile(r"^\d{2}[a-z]{0,2}(?: ?[-–:] ?\S.*)?$", re.IGNORECASE)
+
+
+def validate_parking_contravention_code(value):
+    """A parking contravention code, alone or with its description: 01, 16, 40j,
+    16 - Parked without displaying a valid permit (not a description alone)."""
+    return bool(_CONTRAVENTION.match(str(value).strip())) if value is not None else False
