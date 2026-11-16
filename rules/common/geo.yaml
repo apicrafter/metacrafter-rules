@@ -877,3 +877,13 @@ rules:
     validator: metacrafterext.rules.es.countries.validate_es_country_name
     needs_values: true
     priority: 1
+  inspiregridcellcodevalue:
+    key: inspire_grid_cell_code
+    name: Cell code of a statistical grid in the INSPIRE form by value (1kmN2599E4695)
+    rule: '(?:CRS\d{4,5}RES)?\d{1,5}k?mN\d{2,8}E\d{2,8}'
+    type: data
+    match: regex
+    minlen: 9
+    maxlen: 40
+    validator: metacrafterext.rules.fi.codes.validate_inspire_grid_cell_code
+    priority: 1

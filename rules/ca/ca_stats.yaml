@@ -1,0 +1,133 @@
+name: ca-stats
+description: Statistics Canada codes, Canadian classifications and historical census units
+context: geo
+lang: en
+country_code: ca
+# Found in a 2024 snapshot of Borealis, the Canadian Dataverse Repository (borealisdata.ca, Dateno source
+# cdi00000328): replication packages with extracts of Statistics Canada tables, election studies and
+# opinion surveys, the Canadian Longitudinal Tract Database, the Canadian Historical GIS and field studies
+# of lakes; metacrafter-testdata.
+rules:
+  # ------------------------------------------------------------ data tables
+  # The CSV download of a Statistics Canada table has the columns REF_DATE, GEO, DGUID, UOM, VECTOR and
+  # COORDINATE; macroeconomic databases list the vectors they are built from (Vector(1), Vector(2)).
+  castatcanvectorbyname:
+    key: ca_statcan_vector
+    name: Statistics Canada vector by field name (VECTOR, Vector(1), vector_id) with v65201210
+    rule: (?i)vectors?(?:[ _]?(?:id|number|no|code))?(?:[ _]?\(?\d\)?)?|v[ _]?number|cansim[ _]?(?:vector|id|series)|series[ _]?vector
+    type: field
+    match: regex
+    validator: metacrafterext.rules.ca.stats.validate_ca_statcan_vector
+    needs_values: true
+    priority: 1
+  castatcanvectorvalue:
+    key: ca_statcan_vector
+    name: Statistics Canada vector by value (v65201210, v1212389364)
+    rule: metacrafterext.rules.ca.stats.validate_ca_statcan_vector_long
+    type: data
+    match: func
+    minlen: 7
+    maxlen: 11
+    priority: 1
+
+  # ------------------------------------------------------------ census geography
+  # Election studies give the riding of a respondent as feduid, FED or FED2013 (35076); a bare riding
+  # column with the numbers of provincial ridings (14, 100) fails the validator.
+  cafeduidbyname:
+    key: ca_feduid
+    name: Canadian federal electoral district code by field name (FEDUID, FED, FED2013, fed96, riding_code) with 35076
+    rule: (?i)fed[ _]?uid(?:[ _]?(?:19|20)?\d{2})?|fed(?:[ _]?(?:code|num|number|id|no))?(?:[ _]?(?:19|20)?\d{2})?|(?:federal[ _])?riding(?:[ _]?(?:id|code|number|no))?|federal[ _]electoral[ _]district(?:[ _]?(?:code|id|number))?|cef[ _]?idu
+    type: field
+    match: regex
+    validator: metacrafterext.rules.ca.stats.validate_ca_feduid
+    needs_values: true
+    priority: 1
+  # CMA of a survey file holds the three-digit codes (535, 462) or a short list of the survey's own
+  # codes (1 to 9 of the Labour Force Survey), which fail the validator.
+  cacmauidbyname:
+    key: ca_cmauid
+    name: Canadian census metropolitan area code by field name (CMAUID, CMA, cma16, CMACA, RMR) with 535
+    rule: (?i)cma[ _]?(?:uid|ca|code|id|pumf[a-z]?)?(?:[ _]?(?:19|20)?\d{2})?|[a-z]{0,3}cma(?:ca)?|rmr(?:[ _]?(?:idu|code))?|rmr[ _]?ar
+    type: field
+    match: regex
+    validator: metacrafterext.rules.ca.stats.validate_ca_cmauid
+    needs_values: true
+    priority: 1
+  cactuidbyname:
+    key: ca_ctuid
+    name: Canadian census tract identifier by field name (CTUID, ctuid_s, ctuid_t, CTUID_2016, SRIDU) with 5350001.00
+    rule: (?i)ct[ _]?uid(?:[ _]?[a-z0-9]{1,6})?|sr[ _]?idu|geo[ _]?uid|census[ _]?tract(?:[ _]?(?:id|uid|code))?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.ca.stats.validate_ca_ctuid
+    needs_values: true
+    priority: 1
+  # An economic region code has the four digits of a census division code (casgc): the field name
+  # tells them apart.
+  caeruidbyname:
+    key: ca_eruid
+    name: Canadian economic region code by field name (ERUID, ER, economic_region, REIDU) with 3530
+    rule: (?i)er[ _]?uid(?:[ _]?(?:19|20)?\d{2})?|er(?:[ _]?code)?|economic[ _]?region(?:[ _]?(?:code|id|uid))?|re[ _]?idu
+    type: field
+    match: regex
+    validator: metacrafterext.rules.ca.stats.validate_ca_eruid
+    needs_values: true
+    priority: 1
+  # PROV of the public use microdata files of Statistics Canada is the SGC code of the province (10 to
+  # 59); the surveys of polling firms number the provinces 1 to 10, which is not a code of a register.
+  casgcprovincebyname:
+    key: casgc
+    name: SGC code of a Canadian province by field name (PROV, province, RESPROV, PR, PRCODE) with 10, 24, 35, 59
+    rule: (?i)(?:res|sp|hh|cps|pes|dv)?[ _]?prov(?:ince)?(?:[ _]?(?:code|cd|id|uid))?|pr(?:[ _]?code)?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.ca.stats.validate_ca_sgc_province_code
+    needs_values: true
+    priority: 1
+  # prov of a table of metropolitan areas holds the names (Alberta, Nova Scotia, Ontario, Quebec);
+  # Ontario is also a city of California in the list of US cities.
+  caprovincenamebyname:
+    key: caprovince
+    name: Canadian province or territory by field name (prov, province, PRNAME, province_name) with Alberta, Nova Scotia, Québec
+    rule: (?i)(?:res|home)?[ _]?prov(?:ince)?(?:[ _]?(?:name|nom|terr(?:itory)?))?|pr[ _]?(?:name|e?name)|province[ _/]+territor(?:y|ies|e)|nom[ _]?(?:de[ _])?(?:la[ _])?province
+    type: field
+    match: regex
+    validator: metacrafterext.rules.ca.stats.validate_ca_province_name
+    needs_values: true
+    priority: 1
+
+  # ------------------------------------------------------------ classifications
+  # NOC, NOC2011, NOC_PES11, NOCHRDC2006 and revnoc of work and election surveys hold the unit groups
+  # (3112, 4112, 21100); the grouped variables of microdata files (noc_10, noc_40: 1 to 40) fail the
+  # validator.
+  canoccodebyname:
+    key: ca_noc_code
+    name: Canadian National Occupational Classification code by field name (NOC, NOC2011, NOC_PES11, noc_code, revnoc, CNP) with 3112, 21100
+    rule: (?i)(?:[a-z]{2,6}[ _]?)?noc(?:s|hrdc)?[ _]?(?:code|(?:19|20)\d{2}|\d{2})?(?:[ _][a-z]{1,6}\d{0,2}|[a-z]{2,6}\d{1,2})?|cnp(?:[ _]?(?:code|(?:19|20)\d{2}))?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.ca.stats.validate_ca_noc_code
+    needs_values: true
+    priority: 1
+  caecozonebyname:
+    key: ca_ecozone
+    name: Terrestrial ecozone of Canada by field name (Ecozone, ecozone_name, ECOZONE_EN) with Boreal Shield, Mixedwood Plains
+    rule: (?i)eco[ _-]?zones?(?:[ _]?(?:name|nom|en|e))?|terrestrial[ _]ecozone
+    type: field
+    match: regex
+    validator: metacrafterext.rules.ca.stats.validate_ca_ecozone
+    needs_values: true
+    priority: 1
+
+  # ------------------------------------------------------------ Canadian Historical GIS
+  # The aggregate tables of the censuses of 1851 to 1921 key the census divisions and subdivisions by
+  # TCPUID_CD_1891 (BC001) and TCPUID_CSD_1891 (BC001004).
+  catcpuidbyname:
+    key: ca_tcp_uid
+    name: Canadian Historical GIS census unit identifier by field name (TCPUID_CD_1891, TCPUID_CSD_1881, TCPUID) with ON001, BC001004
+    rule: (?i)tcp[ _]?uid(?:[ _]?(?:cd|csd))?(?:[ _]?(?:18|19)\d{2})?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.ca.stats.validate_ca_tcp_uid
+    needs_values: true
+    priority: 1
