@@ -52,3 +52,25 @@ rules:
     maxlen: 20
     fieldregex: vaccin|common_name|manufacturer|product
     priority: 1
+  # Price lists and registers of authorised medicines (the Pharmaceutical Services and the Veterinary
+  # Services of Cyprus, data.gov.cy; metacrafter-testdata): Oral, Parenteral, Topical; OR, IM, SC.
+  medicationroutebyname:
+    key: medication_route
+    name: Route of administration of a medicine by field name (Route of Administration, route_of_admin, admin_route) with Oral, Parenteral, IM, SC
+    # Authorization route (National, Decentralized) is the procedure, not the route.
+    rule: (?i)routes?[ _\n]+of[ _\n]+admin(?:istration)?|admin(?:istration)?[ _]route|drug[ _]route|route
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.eucodes.validate_medication_route
+    needs_values: true
+    priority: 1
+  # RABEPRAZOLE, Montelukast sodium, TOLTRAZURIL 50 MG/ML of the same lists.
+  medicationgenericnamebyname:
+    key: medication_generic_name
+    name: Active substance of a medicine by field name (Active Ingredient, Active Ingredients, Active Substance, Pharmacologically Active Substance, INN)
+    rule: (?i)(?:pharmacologically[ _])?active[ _\n]+(?:ingredient|substance|principle)s?|inn(?:[ _]name)?|generic[ _]name|δραστικ[ηή] ουσ[ιί]α
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.eucodes.validate_active_substance
+    needs_values: true
+    priority: 1

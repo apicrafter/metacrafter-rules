@@ -15,3 +15,15 @@ rules:
     validator: metacrafterext.rules.common.politics.validate_political_party
     needs_values: true
     priority: 1
+  # Election results by polling station of the Ministry of Interior of Cyprus (data.gov.cy;
+  # metacrafter-testdata): Γ ΔΗΜ. ΣΧΟΛΕΙΟ ΚΑΙΜΑΚΛΙΟΥ, ΔΗΜΟΤΙΚΟ ΣΧΟΛΕΙΟ ΑΓΙΟΥ ΑΝΔΡΕΟΥ.
+  pollingstationbyname:
+    key: polling_station
+    name: Polling station by field name (ELECTION_CENTRE, ELECTIONCENTER, Election Center, polling_station, polling_place, Εκλογικό Κέντρο) with names
+    # CENTRE of the same tables is the ballot box inside a station (ΚΕΝΤΡΟ Α): not here.
+    rule: (?i)election[ _]?cent(?:re|er)(?:[ _]?name)?|polling[ _]?(?:station|place|location|centre|center)(?:[ _]?name)?|εκλογικ[οό] κ[εέ]ντρο|bureau[ _]de[ _]vote|wahllokal
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.eucodes.validate_polling_station
+    needs_values: true
+    priority: 1

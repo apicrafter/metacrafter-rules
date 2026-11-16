@@ -1,0 +1,66 @@
+name: cy-codes
+description: Cypriot salary scales, vehicle plates, phone numbers, postal codes and political parties
+context: common
+lang: el
+country_code: cy
+# Found in an April 2024 snapshot of the National Open Data Portal of Cyprus (data.gov.cy, Dateno source
+# cdi00000396); metacrafter-testdata.
+rules:
+  # ------------------------------------------------------------ public service
+  # The lists of posts, appointments and retirements of the public service: A8, Α13, Α2-Α5-Α7+2.
+  cysalaryscalebyname:
+    key: cy_salary_scale
+    name: Cyprus public service salary scale by field name (SALARY_SCALE, Scale, O_SAL_SCALE, Κλίμακα) with A8, Α2-Α5-Α7, Α13+2
+    # SCALE_POINT and SALARY_POINT hold the step inside a scale (1η, 2η).
+    rule: (?i)(?:[a-z]+_)?(?:salary|sal)[ _]scale|scale|(?:μισθολογικ[ηή] )?κλ[ιί]μακα
+    type: field
+    match: regex
+    validator: metacrafterext.rules.cy.codes.validate_cy_salary_scale
+    needs_values: true
+    priority: 1
+  # ------------------------------------------------------------ vehicles
+  # The lists of stolen vehicles of the Cyprus Police: MNP341, DP853.
+  cyvehicleplatebyname:
+    key: cy_vehicle_plate
+    name: Cypriot vehicle plate by field name (Plate No., plate_number, Registration No., Αριθμός Εγγραφής) with ABC123
+    rule: '(?i)plate(?:[ _]?(?:no|number|num))?\.?|(?:vehicle[ _])?registration[ _]?(?:no|number)\.?|αρ(?:ιθμ[οό]ς|\.) ?εγγραφ[ηή]ς(?: οχ[ηή]ματος)?|πινακ[ιί]δ(?:α|ες)'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.cy.codes.validate_cy_vehicle_plate
+    needs_values: true
+    priority: 1
+  # ------------------------------------------------------------ contacts
+  # Eight digits with no country code (22805200, 99652441): labelled phone, cz_ico or nothing. Fields named
+  # phone are left to the universal rule: an eight-digit local number of Melbourne (9663 6733) has the shape
+  # of a Cypriot mobile number.
+  cyphonebyname:
+    key: cy_phone
+    name: Cypriot phone number by field name (Tel, Tel.1, TEL_NO, Tel. No. 2, Fax No., Pharmacy Tel. No., MOB_TEL_NO, wstPhone1, wstMobile, ΤΗΛΕΦΩΝΟ) with eight-digit numbers
+    rule: '(?i)(?:[a-z]+[ _])?(?:[a-z]+[ _])?(?:tel(?:ephone)?|fax|mob(?:ile)?)[ _.]*(?:tel[ _.]*)?(?:(?:no|νο|number|num)[ _.]*)?\d?|wst(?:phone\d?|fax|mobile)|(?:αριθμ[οό]ς )?(?:τηλ[εέ]φων(?:ο|ου)|τηλεμοιοτ[υύ]π(?:ο|ου))(?: \d)?|τηλ\.?(?: \d)?|φαξ|κινητ[οό]'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.cy.codes.validate_cy_phone
+    needs_values: true
+    priority: 1
+  # A four-digit postcode is that of a dozen countries: only under the names of Cypriot registers.
+  cypostcodebyname:
+    key: cy_postcode
+    name: Cypriot postal code by field name (wstPOCode, Ταχ. Κώδικας, Τ.Κ.) with four-digit codes
+    rule: (?i)wstpocode|ταχ(?:υδρομικ[οό]ς|\.) ?κ[ωώ]δ(?:ικας|\.)|τ\.? ?κ\.?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.cy.codes.validate_cy_postcode
+    needs_values: true
+    priority: 1
+  # ------------------------------------------------------------ elections
+  # Election results of the Ministry of Interior: ΔΗΜΟΚΡΑΤΙΚΟΣ ΣΥΝΑΓΕΡΜΟΣ, ΑΚΕΛ - ΑΡΙΣΤΕΡΑ - ΝΕΕΣ ΔΥΝΑΜΕΙΣ.
+  cypoliticalpartybyname:
+    key: political_party
+    name: Political party by field name (PARTY, PARTYDESC, ΚΟΜΜΑ, ΣΥΝΔΥΑΣΜΟΣ/ΚΟΜΜΑ) with Cypriot parties in Greek
+    # PARTYNAME of the presidential election holds the candidates: the values must name parties.
+    rule: (?i)party(?:[ _]?(?:desc|name))?|κ[οό]μμα|συνδυασμ[οό]ς ?/ ?κ[οό]μμα|παρ[αά]ταξη
+    type: field
+    match: regex
+    validator: metacrafterext.rules.cy.codes.validate_cy_political_party
+    needs_values: true
+    priority: 1
