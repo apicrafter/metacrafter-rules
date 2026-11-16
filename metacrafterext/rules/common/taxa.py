@@ -160,3 +160,17 @@ def validate_iucn_red_list_criteria(value):
     A4cd; B2ab(ii,iii)."""
     text = "".join(str(value).split())
     return bool(text) and bool(_IUCN_CRITERIA.fullmatch(text)) and text not in {"E"}
+
+
+# NatureServe ranks of the species lists of conservation data centres (Borealis, the Canadian Dataverse
+# Repository, Dateno source cdi00000328): scale letter, rank 1 to 5 or X, H, U, NR, NA, a range, a T rank
+# of a subspecies, qualifiers, and breeding and non-breeding ranks after a comma.
+_NS_RANK = r"(?:[1-5](?:[GTNS]?[1-5])?|[XHU]|NR|NA)"
+_NATURESERVE = re.compile(
+    r"[GTNS]" + _NS_RANK + r"[?QCBNM]{0,2}(?:T" + _NS_RANK + r"[?QC]{0,2})?(?:, ?[NS]" + _NS_RANK + r"[?BNM]{0,2})*")
+
+
+def validate_natureserve_rank(value):
+    """A NatureServe conservation status rank: G5, N4, S1S2, G5T4, GNR, NNA, NU, S3B,S5N, G3? (not LC,
+    G6, n/a, Secure or N)."""
+    return bool(_NATURESERVE.fullmatch(str(value).strip()))

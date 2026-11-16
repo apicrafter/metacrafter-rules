@@ -22,7 +22,7 @@ rules:
     rule: AB,BC,MB,NB,NL,NS,NT,NU,ON,PE,QC,SK,YT
     type: data
     match: text
-    fieldrule: province,prov,province_code,province/territory,province_territory,province_or_territory,prov_terr,provterr,province / territoire,province_territoire,provcd,provcd_1,provcd_2,provcd_3,provcd_4,prov_cd,prov_code
+    fieldrule: province,prov,pr,province_code,province/territory,province_territory,province_or_territory,prov_terr,provterr,province / territoire,province_territoire,provcd,provcd_1,provcd_2,provcd_3,provcd_4,prov_cd,prov_code
     fieldrulematch: text
     priority: 1
   cafsabyname:

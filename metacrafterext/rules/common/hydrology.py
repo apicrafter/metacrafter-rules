@@ -25,3 +25,12 @@ def validate_pfafstetter_code_long(value):
     level (NIVEL3, NIVEL_5), whose small numbers could be any level of anything."""
     m = _CODE.match(str(value).strip())
     return bool(m) and len(m.group(1)) >= 3
+
+
+def validate_hydrolakes_id(value):
+    """A lake identifier of HydroLAKES 1.0, 1 to 1427688: 552548, 3097, 552548.0 (not 0, 14276880 or
+    Island_Lake)."""
+    text = str(value).strip()
+    if text.endswith(".0"):
+        text = text[:-2]
+    return text.isdigit() and not text.startswith("0") and int(text) <= 1427688
