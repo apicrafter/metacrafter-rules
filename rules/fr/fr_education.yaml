@@ -28,9 +28,57 @@ rules:
   fracademiecodebyname:
     key: fr_academie_code
     name: French académie code by field name (code_academie, academie_code)
-    rule: (?i)code_?(?:de_l_)?academie|academie_?code|aca_?code|code_aca|num_?academie
+    rule: (?i)code_?(?:de_l_)?academie|academie_?code|aca_?code|code_aca|num_?academie|code_acad|(?:[a-z]+_)+code_academie
     type: field
     match: regex
     validator: metacrafterext.rules.fr.codes.validate_fr_academie_code
+    needs_values: true
+    priority: 1
+  frnatureuaicodebyname:
+    key: fr_nature_uai_code
+    name: Nature code of a French education unit by field name (nature_uai, code_nature with 151, 340)
+    # code_nature of a budget holds accounts of four digits and more: the values decide.
+    rule: (?i)(?:code[ _]?)?nature[ _]?uai(?:[ _]code)?|code[ _]nature(?:[ _](?:etab(?:lissement)?|uai))?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.fr.portals.validate_fr_nature_uai_code
+    needs_values: true
+    priority: 1
+  frrnsrvalue:
+    key: fr_rnsr
+    name: RNSR research structure number by value (200012199P)
+    # A year, five digits and a letter: ten characters that no other French code of the registry has.
+    rule: '(?:19[3-9]\d|20[0-4]\d)\d{5}[A-Z]'
+    type: data
+    match: regex
+    minlen: 10
+    maxlen: 10
+    validator: metacrafterext.rules.fr.portals.validate_fr_rnsr
+    priority: 1
+  frrnsrbyfieldname:
+    key: fr_rnsr
+    name: RNSR research structure number by field name (numero_national_de_structure, rnsr)
+    rule: (?i)(?:code|num[eé]ro|id|identifiant)?[ _]?rnsr|.*[ _]rnsr|num[eé]ro[ _]national[ _]de[ _]structure|num[eé]ro[ _]de[ _]structure(?:[ _](?:parent|enfant))?|structure[ _]de[ _]recherche
+    type: field
+    match: regex
+    validator: metacrafterext.rules.fr.portals.validate_fr_rnsr
+    needs_values: true
+    priority: 1
+  frcnusectioncodebyname:
+    key: fr_cnu_section_code
+    name: CNU section number by field name (code_section_cnu with 27, 60)
+    rule: (?i)(?:code|num[eé]ro|num)?[ _]?section[ _]?cnu(?:[ _]code)?|cnu[ _]section|code[ _]cnu
+    type: field
+    match: regex
+    validator: metacrafterext.rules.fr.portals.validate_fr_cnu_section_code
+    needs_values: true
+    priority: 1
+  fridrefidbyname:
+    key: fr_idref_id
+    name: IdRef identifier by field name (idref, identifiant_idref with 068861281)
+    rule: (?i)(?:identifiant|id|num[eé]ro|code)?[ _]?idref(?:[ _]id)?|ppn(?:[ _]idref)?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.fr.portals.validate_fr_idref_id
     needs_values: true
     priority: 1

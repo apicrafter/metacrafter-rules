@@ -9,6 +9,35 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Rules for the French and Finnish files of metacrafter-testdata** (May 2024 snapshots of French open data
+  portals, Dateno sources cdi00000664 to cdi00000698: data.gouv.fr, the portals of the ministries of education
+  and of higher education and research, Île-de-France, Occitanie, Toulouse Métropole, SNCF, Grand Paris Seine
+  Ouest, Anglet; and of Finnish ones, cdi00000621 to cdi00000633: the GeoServer of Statistics Finland,
+  Avoindata.fi, Tampere; validators in the new `metacrafterext.rules.fr.portals` and
+  `metacrafterext.rules.fi.codes`, rules in the new `rules/fr/fr_budget.yaml` and in `rules/fr/fr_education.yaml`,
+  `rules/fr/fr_transport.yaml`, `rules/fr/fr_geo.yaml`, `rules/fi/fi_geo.yaml` and `rules/common/geo.yaml`):
+  - French budgets: the instruction of a local budget (`fr_budget_nomenclature`: nomenclature with M14, M57,
+    M14V), its chapters (`fr_budget_chapitre_code`: chapitre, code_chapitre, BGT_NATURE with 011, 65, 930),
+    articles (`fr_budget_nature_code`: article, code_article, BGT_CONTNAT with 6574, 64111) and functions
+    (`fr_budget_fonction_code`: code_fonction with 020, 822), also before a label (011 - CHARGES A CARACTERE
+    GENERAL), and the programmes of the State budget (`fr_lolf_programme_code`: programme, code_du_programme
+    with 150, P172);
+  - education and research: kinds of education units (`fr_nature_uai_code`: nature_uai, code_nature with 151,
+    340), RNSR numbers by value and by field name (`fr_rnsr`: 200012199P), CNU sections
+    (`fr_cnu_section_code`: code_section_cnu with 27) and IdRef identifiers by field name (`fr_idref_id`:
+    idref, identifiant_idref);
+  - transport: accident numbers of the BAAC files (`fr_baac_accident_number`: Num_Acc), line codes of the
+    national rail network (`fr_rfn_line_code`: code_ligne with 830000, 5000) and kilometre points by value
+    (`fr_rail_pk`: 055+368), line identifiers of Île-de-France Mobilités (`fr_idfm_line_id`: id_line,
+    idrefligc with C01742; IDFM:C01742 by value) and road numbers (`fr_road_number`: RD, route with D121);
+  - territory: identifiers of urban planning documents by value (`fr_idurba`: 64024_PLU_20201024) and house
+    number suffixes (`fr_indice_repetition`: rep, rep_loc with bis, TER, B);
+  - Finland: municipality numbers (`fi_kuntanumero`: kunta, Kuntanumero, kunta_nro, kunnro2022 with 091, 91),
+    region, sub-region and electoral district codes (`fi_maakunta_code`, `fi_seutukunta_code`,
+    `fi_vaalipiiri_code`), postal codes (`fi_postcode`: postinumero, posti_alue), names under nimi and namn
+    (`name`) and suppliers under Toimittajan nimi (`orgname`);
+  - cell codes of statistical grids in the INSPIRE form by value (`inspire_grid_cell_code`: 1kmN6638E0272).
+
 - **Rules for the German files of metacrafter-testdata** (April 2024 snapshots of German open data portals,
   Dateno sources cdi00000446 to cdi00000467: Offene Daten Köln, Düsseldorf, Bonn, Münster and Wuppertal, the
   KDVZ municipalities, Mannheim, Potsdam, the Rhein-Kreis Neuss and others; validators in the new
@@ -849,6 +878,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- `fr_academie_code`, `fr_region_code` and `fr_department_code` take the prefixed codes of the open data of
+  higher education (A01, R11, D075); `fr_academie_code` also under code_acad and etablissement_code_academie.
+- `dep` is no longer a field name of `package_name`: it is the department in French tables (75, 92).
+- The value rule of `ccamcode` reads four letters and three digits (HBQK002); it read a letter, two digits and
+  a letter, the form of a budget instruction variant (M14V).
 - `wikidataid` by field name (entity_id, q_id) needs Q ids in the values: entity_id of the OneGov election
   exports of the Swiss cantons holds municipality numbers (2761).
 - From the Bolivian round: an Argentine INDEC department part is not written with two digits and a zero (01 to

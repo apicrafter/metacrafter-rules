@@ -296,7 +296,8 @@ rules:
   packagebyknown:
     key: package_name
     name: Package name by field name
-    rule: package,package_name,package_id,dependency,dep,module_name,library_name
+    # dep is the department in French tables (75, 92): left out
+    rule: package,package_name,package_id,dependency,module_name,library_name
     type: field
     match: text
     priority: 1

@@ -47,3 +47,62 @@ rules:
     validator: metacrafterext.rules.fr.codes.validate_fr_critair
     needs_values: true
     priority: 1
+  frbaacaccidentnumberbyname:
+    key: fr_baac_accident_number
+    name: Accident number of the French BAAC files by field name (Num_Acc)
+    # Twelve digits that start with a year: by value alone a timestamp without separators would pass.
+    rule: (?i)num[ _]?acc(?:ident)?|num[eé]ro[ _]accident|id[ _]?accident|accident[ _]id
+    type: field
+    match: regex
+    validator: metacrafterext.rules.fr.portals.validate_fr_baac_accident_number
+    needs_values: true
+    priority: 1
+  frrfnlinecodebyname:
+    key: fr_rfn_line_code
+    name: Line code of the French national rail network by field name (code_ligne with 830000)
+    # code_ligne of a bus network (12, A, C01742) fails the validator.
+    rule: (?i)code[ _]?(?:de[ _](?:la[ _])?)?ligne(?:[ _]rfn)?|ligne[ _]code|cod[ _]ligne|code[ _]lig
+    type: field
+    match: regex
+    validator: metacrafterext.rules.fr.portals.validate_fr_rfn_line_code
+    needs_values: true
+    priority: 1
+  frrailpkvalue:
+    key: fr_rail_pk
+    name: Kilometre point of a French railway line by value (055+368)
+    rule: '-?\d{3}\+\d{3}'
+    type: data
+    match: regex
+    minlen: 7
+    maxlen: 8
+    validator: metacrafterext.rules.fr.portals.validate_fr_rail_pk
+    priority: 1
+  fridfmlineidvalue:
+    key: fr_idfm_line_id
+    name: Île-de-France Mobilités line identifier with its GTFS prefix (IDFM:C01742)
+    rule: 'IDFM:C\d{5}'
+    type: data
+    match: regex
+    minlen: 11
+    maxlen: 11
+    validator: metacrafterext.rules.fr.portals.validate_fr_idfm_line_id
+    priority: 1
+  fridfmlineidbyfieldname:
+    key: fr_idfm_line_id
+    name: Île-de-France Mobilités line identifier by field name (id_line, idrefligc with C01742)
+    # C and five digits could be many things by value: the field name guards it.
+    rule: (?i)id[ _]?line|line[ _]?id|id[ _]?ref[ _]?lig(?:ne|c)?|id[ _]?ligne(?:[ _]idfm)?|route[ _]id|externalcode[ _]line|id[ _]?ligne[ _]?(?:idfm|stif)
+    type: field
+    match: regex
+    validator: metacrafterext.rules.fr.portals.validate_fr_idfm_line_id
+    needs_values: true
+    priority: 1
+  frroadnumberbyname:
+    key: fr_road_number
+    name: French road number by field name (route, rd with D121, A6)
+    rule: (?i)(?:num[eé]ro|num|nom|code|n°)?[ _]?(?:de[ _](?:la[ _])?)?route|r[dn]|num[ _]r[dn]|num[eé]ro[ _]r[dn]|route[ _](?:d[eé]partementale|nationale)|axe(?:[ _]routier)?|voie[ _]num
+    type: field
+    match: regex
+    validator: metacrafterext.rules.fr.portals.validate_fr_road_number
+    needs_values: true
+    priority: 1

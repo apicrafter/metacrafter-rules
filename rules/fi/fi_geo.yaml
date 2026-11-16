@@ -15,3 +15,63 @@ rules:
     fieldrule: hyvinvointialue,hyvinvointialuekoodi,hyvinvointialue_koodi,hva,hva_koodi,välfärdsområde,wellbeing_services_county
     fieldrulematch: text
     priority: 1
+  fikuntanumerobyname:
+    key: fi_kuntanumero
+    name: Finnish municipality number by field name (kunta, kuntanumero, kunta_nro with 091, 837)
+    # A kunta column of names (Kuhmo) fails the validator.
+    rule: (?i)kunta(?:[ _]?(?:nro|numero|koodi|nr|id|code|tunnus))?|kunn?ro\d*|kuntano|municipality[ _]?(?:code|number)|kommun(?:nummer|kod|nr)|kotikunta(?:[ _]?koodi)?|sijaintikunta
+    type: field
+    match: regex
+    validator: metacrafterext.rules.fi.codes.validate_fi_kuntanumero
+    needs_values: true
+    priority: 1
+  fimaakuntacodebyname:
+    key: fi_maakunta_code
+    name: Finnish region code by field name (maakunta with 01, 06, 19)
+    rule: (?i)maakunta(?:[ _]?(?:nro|numero|koodi|code|tunnus))?|maakuntano|landskap(?:skod)?|mk[ _]?koodi
+    type: field
+    match: regex
+    validator: metacrafterext.rules.fi.codes.validate_fi_maakunta_code
+    needs_values: true
+    priority: 1
+  fiseutukuntacodebyname:
+    key: fi_seutukunta_code
+    name: Finnish sub-region code by field name (seutukunta with 011, 023)
+    rule: (?i)seutukunta(?:[ _]?(?:nro|numero|koodi|code|tunnus))?|seutukuntano|sk[ _]?koodi
+    type: field
+    match: regex
+    validator: metacrafterext.rules.fi.codes.validate_fi_seutukunta_code
+    needs_values: true
+    priority: 1
+  fivaalipiiricodebyname:
+    key: fi_vaalipiiri_code
+    name: Finnish electoral district number by field name (vaalipiiri with 01, 12 Oulun vaalipiiri)
+    rule: (?i)vaalipiiri(?:[ _]?(?:nro|numero|koodi|code|tunnus))?|vaalipiirino|valkrets(?:nummer)?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.fi.codes.validate_fi_vaalipiiri_code
+    needs_values: true
+    priority: 1
+  fipostcodebyname:
+    key: fi_postcode
+    name: Finnish postal code by field name (postinumero, posti_alue, postinumeroalue)
+    rule: (?i)(?:.*[ _])?postinumero(?:alue)?(?:[ _]?(?:koodi|tunnus))?|posti[ _]?(?:nro|alue|numero|no)|postialue|postnummer|pno|postinro
+    type: field
+    match: regex
+    validator: metacrafterext.rules.fi.codes.validate_fi_postcode
+    needs_values: true
+    priority: 1
+  finamebyname:
+    key: name
+    name: Name by Finnish or Swedish field name (nimi, namn)
+    rule: nimi,namn,nimi_fi,nimi_se,nimi_sv,nimi_en
+    type: field
+    match: text
+    priority: 1
+  fiorgnamebyname:
+    key: orgname
+    name: Organisation by Finnish field name of a purchase invoice file (Toimittajan nimi, Toimittajanimi)
+    rule: (?i)toimittajan?[ _]?nimi|toimittaja|kunnan[ _]nimi|yrityksen[ _]nimi
+    type: field
+    match: regex
+    priority: 1

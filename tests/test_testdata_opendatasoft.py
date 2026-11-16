@@ -41,7 +41,8 @@ VALIDATORS = [
     (codes.validate_fr_bassin_vie_code, ["36006", "97415", "2A004"], ["3600", "360060"]),
     (codes.validate_fr_unite_urbaine_code, ["36203", "00751", "9D203", "64000"], ["9G203", "3620", "362030"]),
     (codes.validate_fr_aire_code, ["044", "001", "9D2", "000", "405"], ["44", "9G2", "0044"]),
-    (codes.validate_fr_academie_code, ["09", "28", "9", "43"], ["A11", "100", "Montpellier"]),
+    # A11 is the code 11 as the open data of higher education write it (tests/test_testdata_frfi.py)
+    (codes.validate_fr_academie_code, ["09", "28", "9", "43"], ["B11", "100", "Montpellier"]),
     (codes.validate_fr_uai, ["0595621P", "0140025B", "0220097L", "0280061P"], ["0595621A", "059562P", "0595621I", "W443005153"]),
     (codes.validate_fr_finess, ["490531589", "970100178", "180000010"], ["490531580", "500", "49053158"]),
     (codes.validate_fr_naf, ["62.01Z", "7022Z", "03.21Z"], ["62.01", "926C", "8121ZZ", "6201"]),

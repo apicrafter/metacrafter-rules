@@ -1,0 +1,57 @@
+name: fr-budget
+description: French budget codes (local budgets under M14 and M57, programmes of the State budget)
+context: finances
+lang: fr
+country_code: fr
+rules:
+  frbudgetnomenclaturebyname:
+    key: fr_budget_nomenclature
+    name: Budgetary and accounting instruction of a French local body by field name (nomenclature with M14, M57)
+    # A nomenclature column of another kind (NAFRev2, CNU, SISE) fails the validator.
+    rule: (?i)(?:type[ _])?nomenclature(?:[ _](?:comptable|budg[eé]taire))?|instruction[ _](?:budg[eé]taire|comptable)(?:[ _]et[ _]comptable)?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.fr.portals.validate_fr_budget_nomenclature
+    needs_values: true
+    priority: 1
+  frbudgetchapitrecodebyname:
+    key: fr_budget_chapitre_code
+    name: Chapter of a French local budget by field name (chapitre, code_chapitre, BGT_NATURE with 011, 65, 930)
+    # BGT_NATURE is the chapter in the SCDL budget schema; some publishers swap it with BGT_CONTNAT,
+    # so both names are tried and the values decide.
+    rule: (?i)(?:code|num[eé]ro|num|n°)?[ _]?(?:du[ _])?chapitre(?:[ _](?:code|par[ _]nature|budg[eé]taire|nature))?|chap(?:[ _]code)?|bgt_nature|bgt_contnat
+    type: field
+    match: regex
+    validator: metacrafterext.rules.fr.portals.validate_fr_budget_chapitre_code
+    needs_values: true
+    priority: 1
+  frbudgetnaturecodebyname:
+    key: fr_budget_nature_code
+    name: Article of a French local budget, an account by nature, by field name (article, code_article, BGT_CONTNAT with 6574, 64111)
+    # An article column of French grammar (au, à l') and a nature column of words fail the validator.
+    rule: (?i)(?:code|num[eé]ro|num|n°)?[ _]?(?:de[ _]l[ _']?)?article(?:[ _](?:code|budg[eé]taire|nature|comptable))?|bgt_contnat|bgt_nature|(?:code[ _]|num[eé]ro[ _])?compte[ _](?:nature|budg[eé]taire|par[ _]nature)|(?:code[ _])?nature[ _]comptable|nature
+    type: field
+    match: regex
+    validator: metacrafterext.rules.fr.portals.validate_fr_budget_nature_code
+    needs_values: true
+    priority: 1
+  frbudgetfonctioncodebyname:
+    key: fr_budget_fonction_code
+    name: Function code of a French local budget by field name (fonction, code_fonction, BGT_FONCTION with 020, 822)
+    # A fonction column of job titles fails the validator.
+    rule: (?i)(?:code|num[eé]ro)?[ _]?(?:de[ _])?(?:sous[ _]?)?fonction(?:[ _]code)?|code[ _]fonctionnel|bgt_fonction|rubrique[ _]fonctionnelle
+    type: field
+    match: regex
+    validator: metacrafterext.rules.fr.portals.validate_fr_budget_fonction_code
+    needs_values: true
+    priority: 1
+  frlolfprogrammecodebyname:
+    key: fr_lolf_programme_code
+    name: Programme of the French State budget (LOLF) by field name (programme, code_programme with 150, P172)
+    # A programme column of names or of codes of European programmes (ERC, MSCA) fails the validator.
+    rule: (?i)(?:code|num[eé]ro|num|id|identifiant|n°)?[ _]?(?:du[ _]|de[ _])?programme(?:[ _]lolf)?(?:[ _](?:code|chef[ _]de[ _]file))?|identifiants?[ _](?:autres[ _])?programmes?[ _]lolf(?:[ _]chef[ _]de[ _]file)?|code[ _]pgm|pgm
+    type: field
+    match: regex
+    validator: metacrafterext.rules.fr.portals.validate_fr_lolf_programme_code
+    needs_values: true
+    priority: 1
