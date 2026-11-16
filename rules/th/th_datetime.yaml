@@ -15,3 +15,43 @@ rules:
     fieldrule: ปี,ปี พ.ศ.,ปีพ.ศ.,พ.ศ.,year_be,be_year,buddhist_year
     fieldrulematch: text
     priority: 1
+  # Found in 2024 snapshots of Thai government CKAN catalogues (Dateno sources cdi00001512 to
+  # cdi00001533); metacrafter-testdata.
+  thmonthnamevalue:
+    key: th_month
+    name: Thai month name by value (มกราคม, ตุลาคม, ธันวาคม)
+    rule: metacrafterext.rules.th.codes.validate_th_month
+    type: data
+    match: func
+    minlen: 6
+    maxlen: 10
+    priority: 1
+  thmonthbyname:
+    key: th_month
+    name: Thai month name or abbreviation by field name (เดือน, month) with มกราคม, ต.ค., รวม
+    rule: (?i)(?:[ก-๙()]+)?เดือน(?:[ก-๙()]+)?|month(?:[ _]?(?:name|th|thai))?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.th.codes.validate_th_month_or_abbreviation
+    needs_values: true
+    priority: 1
+  # วันครบกำหนด, วันประมูล of the Public Debt Management Office: 17/06/2586, 16/05/2567.
+  thdatebevalue:
+    key: date_th_be
+    name: Date with a Buddhist era year by value (17/06/2567, 19/2/2563)
+    rule: (?:0?[1-9]|[12]\d|3[01])[/.-](?:0?[1-9]|1[0-2])[/.-]2[4-6]\d{2}
+    type: data
+    match: regex
+    minlen: 8
+    maxlen: 10
+    priority: 1
+  # LicenseDate of the broadcasting commission, the dates of spreadsheets: 17 มิ.ย.2556, 1-พ.ย.-65.
+  thdatethaivalue:
+    key: date_thai
+    name: Date with a Thai month name by value (24 กรกฎาคม 2566, 17 มิ.ย. 2556, 1-พ.ย.-65)
+    rule: metacrafterext.rules.th.codes.validate_date_thai
+    type: data
+    match: func
+    minlen: 7
+    maxlen: 20
+    priority: 1

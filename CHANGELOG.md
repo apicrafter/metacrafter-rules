@@ -9,6 +9,43 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Rules for the Portuguese, Swedish, Slovenian and Thai files of metacrafter-testdata** (2024 snapshots of
+  open data portals, Dateno sources cdi00001307 to cdi00001567: Observatório do Alto Tâmega e Barroso, Águeda,
+  Cascais, dados.gov.pt, Dados na Justiça, Umeå, podatki.gov.si and the CKAN catalogues of Thai agencies;
+  validators in the new `metacrafterext.rules.pt.codes`, `metacrafterext.rules.se.codes`,
+  `metacrafterext.rules.si.codes` and `metacrafterext.rules.th.codes`, rules in the new
+  `rules/pt/pt_codes.yaml`, `rules/se/se_codes.yaml`, `rules/si/si_codes.yaml` and `rules/th/th_codes.yaml`
+  and in `rules/th/th_datetime.yaml`):
+  - Portugal: DICOFRE codes of municipalities and parishes (`pt_dicofre`: DICOFRE, DTMN11, COD_INE with
+    170301, 1703), subsection codes of the census (`pt_bgri_code`: BGRI11, GEO_COD with 17032100111),
+    municipalities by a list of 306 names (`pt_concelho`: concelho, município, Concelho da Ocorrência with
+    Chaves, VILA POUCA DE AGUIAR), districts (`pt_district`: distrito with Vila Real, FARO), quarters by value
+    (`pt_quarter`: 4º Trimestre) and postal codes with the locality after them (`pt_postcode`: Código Postal
+    with 2765-013 Estoril). `rules/pt/` had no rule of Portugal itself: its files hold the rules of
+    Portuguese field names of Brazil;
+  - Sweden: property designations (`se_fastighetsbeteckning`: fastighet, fastighetsbeteckning with Umeå
+    Holmsund 5:141, del av Sofiehem 2:2), registry numbers of authorities (`se_diarienummer`: diarienr, dnr_ks
+    with BN 2018-01115, NV-01017-13, Ks-2021/00154), identifiers of protected areas (`se_nvr_id`: nvrid with
+    2001670) and key code areas of Statistics Sweden (`se_nyko`: nyckelkod with 010104);
+  - Slovenia, the first rules of the country: activity codes by value and by field name (`si_skd_code`: SKD
+    with I56.300), budget user codes (`si_proracunski_uporabnik`: Šifra PU, PRORAČUNSKI UPORABNIK with 12130),
+    heritage register numbers (`si_esd`: EŠD), cadastral municipality codes (`si_ko_code`: Sifra k.o. with
+    2304), parcel numbers (`si_parcel_number`: Parc. št., parcele with 637/4, *137/3), statistical regions
+    (`si_statistical_region`: Regija, Statistična_regija with Savinjska, OBALNO-KRAŠKA), salary subgroups
+    (`si_placna_podskupina`: Oznaka with A01, J03), registration numbers of seven or ten digits
+    (`si_maticna_stevilka`: Matična številka with 5154715000), tax numbers (`si_tin`: Davčna številka with
+    77003535, which was `cz_ico`) and postal codes (`si_postcode`: Poštna številka with 1360, 1251 Moravče);
+  - Thailand: province, district and subdistrict codes (`th_province_code`: รหัสจังหวัด with 83;
+    `th_district_code`: dcode with 1001; `th_subdistrict_code`: scode with 100101), districts of Bangkok
+    (`th_bangkok_district`: dname, district with จตุจักร, เขตพระนคร), regions (`th_region`: REGION, ภาค with
+    ภาคเหนือ, 4) ภาคตะวันออกเฉียงเหนือ and the rows of the whole kingdom), month names by value and by field
+    name (`th_month`: เดือน with มกราคม, ต.ค.), dates with a Buddhist era year (`date_th_be`: 17/06/2567) and
+    with a Thai month name (`date_thai`: 17 มิ.ย.2556, 1-พ.ย.-65), health facility codes (`th_hcode`:
+    รหัส5หลัก, รหัส9หลัก with 10741, 001074100), school codes (`th_school_code`: รหัสสถานศึกษา with
+    1310016101), bond symbols (`th_bond_symbol`: SYMBOL with LB436A, LB27NA), civil service position levels
+    (`th_civil_service_position_level`: ระดับตำแหน่ง with ชำนาญการ, อำนวยการสูง), sex with Thai values
+    (`gender`: SEX, เพศ with ชาย, หญิง, รวม) and name prefixes (`honorificprefix`: คำนำหน้าชื่อ with นาย, นาง,
+    นางสาว).
 - **Rules for the Indonesian and Italian files of metacrafter-testdata** (2024 snapshots of open data portals,
   Dateno sources cdi00000901 to cdi00000970: Kabupaten Tangerang, BRIN, data.gov.ie, ARPA Campania, Comune di
   Genova, Comune di Matera, the Ministero delle infrastrutture e dei trasporti, Regione Toscana, the Dataverse

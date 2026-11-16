@@ -1,0 +1,49 @@
+name: se-codes
+description: Swedish property designations, registry numbers, protected area and key code area identifiers
+context: government
+lang: sv
+country_code: se
+# Found in a 2024 snapshot of the open data portal of Umeå (opendata.umea.se, Dateno source cdi00001472);
+# metacrafter-testdata.
+rules:
+  # fastighet and fastighetsbeteckning of the building permits and detailed plans: Umeå Holmsund 5:141.
+  sefastighetsbeteckningbyname:
+    key: se_fastighetsbeteckning
+    name: Swedish property designation by field name (fastighet, fastighetsbeteckning) with Holmsund 5:141, Kikaren 7
+    rule: (?i)fastighet(?:er|en)?|fastighets?bet(?:eckning(?:ar)?)?|fastbet|fast[ _]?beteckning|beteckning
+    type: field
+    match: regex
+    validator: metacrafterext.rules.se.codes.validate_se_fastighetsbeteckning
+    needs_values: true
+    priority: 1
+  # diarienr of the building permits and nature reserves, dnr_ks of the land deals: BN 2018-01115,
+  # NV-01017-13, Ks-2021/00154, ks000867/2004.
+  sediarienummerbyname:
+    key: se_diarienummer
+    name: Swedish registry number by field name (diarienr, diarienummer, dnr) with BN 2018-01115, NV-01017-13
+    rule: (?i)diarie?[ _]?(?:nr|nummer|num|no)|dnr(?:[ _]\w+)?|d[ _]nr|arende[ _]?(?:nr|nummer)|ärende[ _]?(?:nr|nummer)
+    type: field
+    match: regex
+    validator: metacrafterext.rules.se.codes.validate_se_diarienummer
+    needs_values: true
+    priority: 1
+  # nvrid of the nature reserves: 2001670.
+  senvridbyname:
+    key: se_nvr_id
+    name: Swedish protected area identifier by field name (nvrid, nvr_id) with 2001670
+    rule: (?i)nvr[ _]?id|nvrid
+    type: field
+    match: regex
+    validator: metacrafterext.rules.se.codes.validate_se_nvr_id
+    needs_values: true
+    priority: 1
+  # nyckelkod of the area statistics: 010104.
+  senykobyname:
+    key: se_nyko
+    name: Swedish key code area (NYKO) by field name (nyckelkod, nyko, nyko6) with 010104
+    rule: (?i)nyckelkod(?:er|en)?(?:[ _]?\d)?|nyko(?:[ _]?(?:\d|kod|omr(?:ade|åde)?))?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.se.codes.validate_se_nyko
+    needs_values: true
+    priority: 1
