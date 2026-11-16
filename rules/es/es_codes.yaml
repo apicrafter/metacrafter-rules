@@ -1,0 +1,235 @@
+name: es-codes
+description: Spanish codes of territory, education, budgets, vehicles and registers
+context: common
+lang: es
+country_code: es
+# Found in 2024 snapshots of Spanish open data portals (Dateno sources cdi00000546 to cdi00000588:
+# dadesobertes.gva.es, datosabiertos.ayto-arganda.es, datosabiertos.dipcas.es, datosabiertos.laspalmasgc.es,
+# datosabiertos.regiondemurcia.es, datos.canarias.es, observa.gijon.es, universidata.es and
+# valencia.opendatasoft.com); metacrafter-testdata.
+rules:
+  # COD_PROV 03, cod_provincia_residencia 28, provincia_cod 12, prov_codigo 46, codigo_provincia 12.
+  esineprovincecodebyname:
+    key: es_ine_municipio
+    name: INE province code by Spanish field name (COD_PROV, cod_provincia_residencia, provincia_cod) with 03, 28, 46
+    rule: (?i)(?:cod(?:igo)?|c[oó]d\.?|c[oó]digo|id)[ _]?prov(?:incia)?(?:[ _](?:residencia|destino|curso|nacimiento|centro(?:[ _]sec)?|ine))?|prov(?:incia)?[ _]c[oó]d(?:igo)?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.es.codes.validate_es_ine_province_code
+    needs_values: true
+    priority: 1
+  # codmun 12028, cod_municipio_residencia 28006, ine 12002, codmunsub 12004, codigo_mun 12021. Codigomunicipio
+  # in one word is left out: a Brazilian table names the municipality part of an IBGE code so.
+  esinemunicipiocodebyname:
+    key: es_ine_municipio
+    name: INE municipality code by Spanish field name (cod_municipio, codmun, ine, codigo_mun, cod_ine) with 28079, 12028
+    rule: (?i)(?:cod(?:igo)?|c[oó]digo|id)[ _]mun(?:i|ic|icipio)?(?:[ _](?:residencia|destino|curso|nacimiento|centro(?:[ _]sec)?|ine))?|codmun(?:i|ic|icipio|sub)?|muni(?:cipio)?[ _]c[oó]d(?:igo)?|(?:c[oó]d(?:igo)?[ _])?ine(?:[ _]municipio)?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.es.codes.validate_es_ine_municipio_code
+    needs_values: true
+    priority: 1
+  # cod_comunidad_residencia 13, cod_comunidad_destino 7, codigo_de_ca 10, cod_autonomia 17.
+  esccaacodebyname:
+    key: es_ccaa_code
+    name: INE code of an autonomous community by field name (cod_comunidad, codigo_de_ca, cod_ccaa, cod_autonomia) with 13, 7, 10
+    rule: (?i)c[oó]d(?:igo)?[ _](?:de[ _])?(?:comunidad(?:[ _]aut[oó]noma)?|ccaa|ca|autonom[ií]a)(?:[ _](?:residencia|destino|curso|nacimiento|centro(?:[ _]sec)?))?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.es.codes.validate_es_ccaa_code
+    needs_values: true
+    priority: 1
+  # Código Nacionalidad of the population tables of Las Palmas de Gran Canaria: 101, 108, 110.
+  esinecountrycodebyname:
+    key: es_ine_country_code
+    name: INE country code by field name (Código Nacionalidad, codigo_nacionalidad) with 101, 108, 340
+    rule: (?i)c[oó]d(?:igo)?[ _](?:de[ _])?nacionalidad(?:[ _]ine)?|c[oó]d(?:igo)?[ _]pa[ií]s[ _]ine
+    type: field
+    match: regex
+    validator: metacrafterext.rules.es.codes.validate_es_ine_country_code
+    needs_values: true
+    priority: 1
+  # COD_CENTRO 03013698 of the enrolment tables of the Generalitat Valenciana, cod_conser, cod_eoi, cod_fpa
+  # (conservatories, language schools, adult education), cod_unidad_responsable 28051581 of UniversiDATA.
+  escentrodocentecodebyname:
+    key: es_centro_docente_code
+    name: Spanish school code by field name (COD_CENTRO, codigo_centro, cod_conser, cod_eoi, cod_unidad_responsable) with 03013698, 28051581
+    rule: (?i)c[oó]d(?:igo)?[ _]?(?:del[ _])?(?:centro(?:[ _]docente)?|conser|eoi|fpa|unidad[ _]responsable)
+    type: field
+    match: regex
+    validator: metacrafterext.rules.es.codes.validate_es_centro_docente_code
+    needs_values: true
+    priority: 1
+  # cod_universidad 056 of UniversiDATA; cod_universidad_procedencia of a mobility table holds Erasmus codes,
+  # which the validator leaves to the value rule of eu_erasmus_code.
+  esructuniversidadcodebyname:
+    key: es_ruct_universidad_code
+    name: RUCT university code by field name (cod_universidad, cod_universidad_mat, cod_universidad_doctorado) with 056, 019
+    rule: (?i)c[oó]d(?:igo)?[ _]universidad(?:[ _][a-z]+){0,2}
+    type: field
+    match: regex
+    validator: metacrafterext.rules.es.codes.validate_es_ruct_universidad_code
+    needs_values: true
+    priority: 1
+  esructtitulocodebyname:
+    key: es_ruct_titulo_code
+    name: RUCT degree code by field name (cod_titulacion, cod_titulacion_origen, codigo_titulacion) with 2500089, 4310001
+    rule: (?i)c[oó]d(?:igo)?[ _]titulaci[oó]n(?:[ _]origen)?|c[oó]d(?:igo)?[ _]ruct
+    type: field
+    match: regex
+    validator: metacrafterext.rules.es.codes.validate_es_ruct_titulo_code
+    needs_values: true
+    priority: 1
+  # TipoVia PZ of Arganda del Rey, VIAL CL of Las Palmas, codtipovia AV of València. Columns that spell the
+  # type (CALLE, AVENIDA) or write C/ are left to the validator.
+  estipoviabyname:
+    key: es_tipo_via
+    name: Spanish street type abbreviation by field name (TipoVia, tipo_via, Tipo vía, VIAL, codtipovia, sigla) with CL, AV, PZ
+    rule: (?i)(?:c[oó]d(?:igo|\.)?[ _]?)?tipo[ _]?(?:de[ _])?v[ií]a|vial|siglas?(?:[ _](?:de[ _])?v[ií]a)?|tvia
+    type: field
+    match: regex
+    validator: metacrafterext.rules.es.codes.validate_es_tipo_via
+    needs_values: true
+    priority: 1
+  # cod_capitulo 1, cod_articulo 10, cod_concepto 100, cod_subconcepto 10000, cod_economico 22103 of the
+  # budgets of Gijón and of the universities of UniversiDATA; COD_ECONOMICA 23002 of the Generalitat.
+  esbudgeteconomiccodebyname:
+    key: es_budget_economic_code
+    name: Economic classification of a Spanish budget by field name (cod_capitulo, cod_articulo, cod_concepto, cod_subconcepto, cod_economico) with 1, 10, 100, 22103
+    rule: (?i)c[oó]d(?:igo)?[ _](?:cap[ií]tulo|art[ií]culo|concepto|subconcepto|econ[oó]mic[oa])|econ[oó]mic[oa]|clasificaci[oó]n[ _]econ[oó]mica
+    type: field
+    match: regex
+    validator: metacrafterext.rules.es.codes.validate_es_budget_economic_code
+    needs_values: true
+    priority: 1
+  # cod_funcional 91200, cod_programa 23321, cod_areas_de_gasto 9 of the budgets of Gijón.
+  esbudgetprogramcodebyname:
+    key: es_budget_program_code
+    name: Programme classification of a Spanish local budget by field name (cod_programa, cod_funcional, cod_areas_de_gasto) with 9, 132, 91200
+    rule: (?i)c[oó]d(?:igo)?[ _](?:programa|funcional|[aá]reas?[ _]de[ _]gasto|pol[ií]tica(?:[ _]de[ _]gasto)?|grupo[ _]de[ _]programas?)|funcional|clasificaci[oó]n[ _](?:funcional|por[ _]programas)
+    type: field
+    match: regex
+    validator: metacrafterext.rules.es.codes.validate_es_budget_program_code
+    needs_values: true
+    priority: 1
+  # MATRICULA 3499 CDB of the list of municipal vehicles of a municipality of the Región de Murcia.
+  esvehicleplatebyname:
+    key: es_vehicle_plate
+    name: Spanish vehicle plate by field name (matricula, Matrícula, matricula_vehiculo) with 3499 CDB
+    rule: (?i)matr[ií]culas?(?:[ _](?:del?[ _])?veh[ií]culo)?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.es.codes.validate_es_vehicle_plate
+    needs_values: true
+    priority: 1
+  esvehicleplatevalue:
+    key: es_vehicle_plate
+    name: Spanish vehicle plate by value (3499 CDB, 7202JGL)
+    rule: '\d{4}[ -]?[BCDFGHJKLMNPRSTVWXYZ]{3}'
+    type: data
+    match: regex
+    minlen: 7
+    maxlen: 8
+    priority: 1
+  # NIF ***3520** of the registers of contracts and grants of the Región de Murcia.
+  esdnimaskedvalue:
+    key: es_dni_masked
+    is_pii: true
+    name: Spanish DNI or NIE masked for publication by value (***4567**, ****4567*)
+    rule: '\*{3}\d{4}\*{2}|\*{4}\d{4}\*'
+    type: data
+    match: regex
+    minlen: 9
+    maxlen: 9
+    priority: 1
+  # Código BDNS 604968 of the tables of grants of Arganda del Rey.
+  esbdnscodebyname:
+    key: es_bdns_code
+    name: BDNS grant call code by field name (Código BDNS, codigo_bdns, bdns, id_bdns) with 604968
+    rule: (?i)(?:(?:c[oó]d(?:igo)?|id|n[uú]m(?:ero)?)[ _.]?)?bdns(?:[ _]?(?:id|c[oó]d(?:igo)?|n[uú]m(?:ero)?))?|c[oó]d(?:igo)?[ _]convocatoria[ _]bdns
+    type: field
+    match: regex
+    validator: metacrafterext.rules.es.codes.validate_es_bdns_code
+    needs_values: true
+    priority: 1
+  # COD_ESTACION 03009003 of the hourly air quality tables of the Generalitat Valenciana. A five-digit
+  # codigo_estacion is an ADIF station (es_transport.yaml).
+  esairstationcodebyname:
+    key: es_air_station_code
+    name: Spanish air quality station code by field name (COD_ESTACION, codigo_estacion, codigo_nacional) with 03009003, 28079008
+    rule: (?i)c[oó]d(?:igo)?[ _](?:nacional[ _])?estaci[oó]n|c[oó]d(?:igo)?[ _]nacional
+    type: field
+    match: regex
+    validator: metacrafterext.rules.es.codes.validate_es_air_station_code
+    needs_values: true
+    priority: 1
+  # dir3 L05120007 of the directories of municipalities of the Diputació de Castelló.
+  esdir3byname:
+    key: es_dir3
+    name: Spanish DIR3 code by field name (dir3, codigo_dir3, dir3_organo) with L05120007, E04921901
+    rule: (?i)(?:c[oó]d(?:igo)?[ _])?dir3(?:[ _][a-z]+)?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.es.codes.validate_es_dir3
+    needs_values: true
+    priority: 1
+  # cod_pais_nacionalidad 380, cod_pais_residencia 724 of UniversiDATA (ISO 3166-1 numeric).
+  escountrycodenumbyname:
+    key: countrycode_num
+    name: ISO 3166-1 numeric country code by Spanish field name (cod_pais, cod_pais_nacionalidad, cod_pais_univ_destino) with 724, 380, 032
+    rule: (?i)c[oó]d(?:igo)?[ _]pa[ií]s(?:[ _][a-z]+){0,3}
+    type: field
+    match: regex
+    validator: metacrafterext.rules.es.codes.validate_countrycode_num
+    needs_values: true
+    priority: 1
+  # cod_continente_nacionalidad 150, cod_agregacion_paises_nacionalidad 039 of UniversiDATA (UN M49).
+  esunm49byname:
+    key: unm49
+    name: UN M49 region code by Spanish field name (cod_continente, cod_agregacion_paises) with 150, 039, 419
+    rule: (?i)c[oó]d(?:igo)?[ _](?:continente|agregaci[oó]n[ _]pa[ií]ses)(?:[ _][a-z]+){0,3}
+    type: field
+    match: regex
+    validator: metacrafterext.rules.es.codes.validate_unm49_region
+    needs_values: true
+    priority: 1
+  # CPV_CODIGO 38000000 of the minor contracts of the Región de Murcia, codigo_cpv 33112340-3.
+  escpvcodebyname:
+    key: cpvcode
+    name: CPV code by Spanish field name (cpv_codigo, codigo_cpv, cpvcodigo)
+    rule: cpv_codigo,codigo_cpv,cpvcodigo,código cpv,codigo cpv,cod_cpv
+    type: field
+    match: text
+    priority: 1
+  # codnut1 ES5, codnut2 ES52, codnut3 ES522 of the directory of municipalities of the Diputació de Castelló.
+  esnutsbyname:
+    key: nutsregion
+    name: NUTS region code by Spanish field name (codnut1, codnut2, codnut3, cod_nuts)
+    rule: codnut1,codnut2,codnut3,codnut,cod_nuts,codigo_nuts
+    type: field
+    match: text
+    priority: 1
+  # ADJUDICATARIO_CIF A08541468 of the minor contracts of the Región de Murcia, cd_nif B12536363 and
+  # cif_asociacion G46452928 of the Diputació de Castelló: the name says whose number it is.
+  escifbyrolename:
+    key: cif
+    is_pii: true
+    name: Spanish CIF by field name with a role (adjudicatario_cif, cif_adjudicatario, cd_nif, cif_asociacion, nif_proveedor)
+    rule: (?i)(?:adjudicatario|contratista|proveedor|tercero|beneficiario|empresa|entidad|asociaci[oó]n)[ _]?(?:cif|nif)|(?:cd[ _])?(?:cif|nif)(?:[ _](?:del[ _])?(?:adjudicatario|contratista|proveedor|tercero|beneficiario|entidad|asociaci[oó]n))?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.es.validators.validate_es_cif
+    needs_values: true
+    priority: 1
+  # curso_academico 2018-19 of UniversiDATA: by value alone 2018-19 is a financial year.
+  esschoolyearvalue:
+    key: school_year
+    name: Academic year by value under a Spanish field name (curso_academico 2018-19, curso_escolar 2020/21)
+    rule: metacrafterext.rules.common.generic.validate_school_year
+    type: data
+    match: func
+    minlen: 6
+    maxlen: 9
+    fieldrule: curso_academico,curso academico,curso académico,curso_académico,curso_escolar,curso escolar,curso_academico_inicio,curso_academico_fin,curso_academico_acceso_sue,año_academico,año académico,anio_academico
+    fieldrulematch: text
+    priority: 1

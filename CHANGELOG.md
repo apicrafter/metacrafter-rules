@@ -9,6 +9,39 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Rules for the Spanish files of metacrafter-testdata** (2024 snapshots of Spanish open data portals,
+  Dateno sources cdi00000546 to cdi00000588: Generalitat Valenciana, Arganda del Rey, Diputació de Castelló,
+  Las Palmas de Gran Canaria, Región de Murcia, Datos Abiertos de Canarias, Observa Gijón, UniversiDATA and
+  València, and cdi00000504, sprogteknologi.dk; validators in the new `metacrafterext.rules.es.codes`, rules
+  in the new `rules/es/es_codes.yaml`, `rules/common/sdmx.yaml` and `rules/dk/dk_texts.yaml`):
+  - territory: INE codes of provinces and municipalities by field name (`es_ine_municipio`: COD_PROV 03,
+    cod_municipio_residencia 28006, codmun, ine, codmunsub; the registry type had no rule, so Spanish tables got
+    the Argentine INDEC codes), codes of autonomous communities (`es_ccaa_code`: cod_comunidad_destino 7,
+    codigo_de_ca 10), INE country codes (`es_ine_country_code`: Código Nacionalidad 108), street type
+    abbreviations of the cadastre (`es_tipo_via`: TipoVia PZ, VIAL CL), NUTS codes under codnut1 to codnut3
+    and DIR3 codes (`es_dir3`: dir3 L05120007); a continent or a group of countries under a name that ends in
+    nacionalidad (des_continente_nacionalidad: Europa) is no longer a `nationality`;
+  - education: school codes (`es_centro_docente_code`: COD_CENTRO 03013698, cod_unidad_responsable 28051581),
+    RUCT codes of universities and degrees (`es_ruct_universidad_code`: cod_universidad 056;
+    `es_ruct_titulo_code`: cod_titulacion 2500089), Erasmus institution codes by field name and by value
+    (`eu_erasmus_code`: cod_universidad_procedencia I MILANO03, PL WARSZAW02), academic years under
+    curso_academico (`school_year` for 2018-19, which was a financial year by value), ISO 3166-1 numeric codes
+    and UN M49 regions under Spanish names (`countrycode_num`: cod_pais_nacionalidad 380; `unm49`:
+    cod_continente_nacionalidad 150, cod_agregacion_paises_nacionalidad 039);
+  - budgets, contracts and grants: the levels of the economic classification (`es_budget_economic_code`:
+    cod_capitulo 1, cod_articulo 10, cod_concepto 100, cod_economico 22103) and of the classification by
+    programmes (`es_budget_program_code`: cod_funcional 91200, cod_areas_de_gasto 9), BDNS calls for grants
+    (`es_bdns_code`: Código BDNS 604968), CPV codes under cpv_codigo and codigo_cpv, a CIF under a name with a
+    role (`cif`: ADJUDICATARIO_CIF, cd_nif, cif_asociacion) and identity documents masked for publication by
+    value (`es_dni_masked`: ***3520**);
+  - vehicles and environment: plates of the format of 2000 by field name and by value (`es_vehicle_plate`:
+    MATRICULA 3499 CDB) and national codes of air quality stations (`es_air_station_code`: COD_ESTACION
+    03009003);
+  - statistics: SDMX observation statuses (`sdmx_obs_status`: ESTADO_OBSERVACION_CODE M, OBS_STATUS), age
+    codes in the SDMX syntax (`sdmx_age`: EDAD_CODE Y45T64, Y_GE65, _T) and reporting periods
+    (`sdmx_reporting_period`: TIME_PERIOD_CODE 2018-Q1, 2008-M03, also by value for months);
+  - language resources: identifiers of the Danish Central Word Register by value (`dk_cor_id`: COR.72642,
+    COR.EXT.100002.300.01, COR.SEM.1000001.01).
 - **Rules for the French and Finnish files of metacrafter-testdata** (May 2024 snapshots of French open data
   portals, Dateno sources cdi00000664 to cdi00000698: data.gouv.fr, the portals of the ministries of education
   and of higher education and research, Île-de-France, Occitanie, Toulouse Métropole, SNCF, Grand Paris Seine

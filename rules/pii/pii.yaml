@@ -198,7 +198,7 @@ rules:
     key: nationality
     is_pii: True
     name: Nationality by Spanish field name (nacionalidad, NACIONALIDAD, madre_nacionalidad)
-    rule: (?i)(?:[a-z]+[ _])*nacionalidad(?:[ _][a-z]+)*
+    rule: (?i)(?!(?:[a-z]+[ _])*(?:continente|agregaci[oó]n)[ _])(?:[a-z]+[ _])*nacionalidad(?:[ _][a-z]+)*
     type: field
     match: regex
     validator: metacrafterext.rules.common.generic.validate_name_text
