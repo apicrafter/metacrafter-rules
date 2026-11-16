@@ -242,3 +242,23 @@ rules:
     validator: metacrafterext.rules.fr.codes.validate_fr_rivoli
     needs_values: true
     priority: 1
+  fridurbavalue:
+    key: fr_idurba
+    name: Identifier of a French urban planning document by value (64024_PLU_20201024)
+    rule: '(?:\d[0-9AB]\d{3}|\d{9})_(?:PLU|PLUi|PLUI|POS|CC|PSMV)_\d{8}(?:_[A-Z])?'
+    type: data
+    match: regex
+    minlen: 18
+    maxlen: 26
+    validator: metacrafterext.rules.fr.portals.validate_fr_idurba
+    priority: 1
+  frindicerepetitionbyname:
+    key: fr_indice_repetition
+    name: French house number suffix by field name (rep, rep_loc with bis, ter, B)
+    # A rep column of 0 and 1 fails the validator.
+    rule: (?i)rep(?:[ _]loc)?|indice[ _](?:de[ _])?r[eé]p(?:[eé]tition)?|ind[ _]?rep|rep[ _]num(?:[eé]ro)?|suffixe(?:[ _]num[eé]ro)?|indice[ _]rep
+    type: field
+    match: regex
+    validator: metacrafterext.rules.fr.portals.validate_fr_indice_repetition
+    needs_values: true
+    priority: 1

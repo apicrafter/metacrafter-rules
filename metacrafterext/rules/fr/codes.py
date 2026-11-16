@@ -43,7 +43,12 @@ def validate_fr_department_code(value):
     """A French department code: 01 to 95 (the leading zero may be lost: 1 for Ain; education
     data pad it to three digits: 028), 2A, 2B, 971 to 976, or a COG code of an overseas
     collectivity (975, 977, 978, 984, 986 to 988)."""
-    return bool(_DEPARTMENT_CODE.match(_text(value)))
+    text = _text(value)
+    # the open data of higher education write D and three characters (D075, D02A, D974)
+    prefixed = re.fullmatch(r"D(0\d\d|02[AB]|9[78]\d)", text)
+    if prefixed:
+        text = prefixed.group(1)[1:] if prefixed.group(1)[0] == "0" else prefixed.group(1)
+    return bool(_DEPARTMENT_CODE.match(text))
 
 
 # Region codes of the COG since 2016, and the codes of the regions merged in 2016 (21 Champagne-
@@ -57,7 +62,9 @@ def validate_fr_region_code(value):
     """A French region code of the COG (11 Île-de-France, 84 Auvergne-Rhône-Alpes, 01 to 06
     overseas), also of the regions before the 2016 merger (26 Bourgogne, 31 Nord-Pas-de-Calais).
     One digit is not taken: region numbers 1 to 11 of other countries would pass half the time."""
-    return _text(value) in _REGION_CODES
+    text = _text(value)
+    # the open data of higher education put an R before the code (R11, R84)
+    return (text[1:] if re.fullmatch(r"R\d\d", text) else text) in _REGION_CODES
 
 
 _DEPARTMENT_NAMES = frozenset(_fold(name) for name in """
@@ -208,12 +215,12 @@ def validate_fr_aire_code(value):
     return bool(_AIRE.match(_text(value)))
 
 
-_ACADEMIE = re.compile(r"^(?:0?[1-9]|[1-4]\d|[5-9]\d)$")
+_ACADEMIE = re.compile(r"^(?:A\d{2}|0?[1-9]|[1-9]\d)$")
 
 
 def validate_fr_academie_code(value):
     """An académie code of the Ministry of Education: two digits (09, 28, 43; 9 when the leading
-    zero is lost)."""
+    zero is lost); the open data of higher education put an A before it (A01)."""
     return bool(_ACADEMIE.match(_text(value)))
 
 
