@@ -55,7 +55,8 @@ rules:
   fipostcodebyname:
     key: fi_postcode
     name: Finnish postal code by field name (postinumero, posti_alue, postinumeroalue)
-    rule: (?i)(?:.*[ _])?postinumero(?:alue)?(?:[ _]?(?:koodi|tunnus))?|posti[ _]?(?:nro|alue|numero|no)|postialue|postnummer|pno|postinro
+    # postnummer is left out: Danish, Norwegian and Swedish tables use the word too.
+    rule: (?i)(?:.*[ _])?postinumero(?:alue)?(?:[ _]?(?:koodi|tunnus))?|posti[ _]?(?:nro|alue|numero|no)|postialue|pno|postinro
     type: field
     match: regex
     validator: metacrafterext.rules.fi.codes.validate_fi_postcode

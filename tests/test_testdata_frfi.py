@@ -137,7 +137,7 @@ FIELDS = [
     ("fi/fi_geo.yaml", "fiseutukuntacodebyname", ["seutukunta", "seutukuntakoodi"], ["seutukarttakoodi", "kunta", "maakunta"]),
     ("fi/fi_geo.yaml", "fivaalipiiricodebyname", ["vaalipiiri", "Vaalipiiri", "vaalipiirinro"], ["vaalit", "kunta", "vaalipiirin_nimi"]),
     ("fi/fi_geo.yaml", "fipostcodebyname", ["postinumero", "POSTINUMERO", "posti_alue", "postinumeroalue", "Toimittajan postinumero"],
-     ["postitoimipaikka", "posti", "nimi", "postiosoite"]),
+     ["postitoimipaikka", "posti", "nimi", "postiosoite", "postnummer"]),
 ]
 
 
@@ -166,6 +166,11 @@ def test_value_rules(path, rule_id, good, bad):
         assert value_matches(path, rule_id, value), value
     for value in bad:
         assert not value_matches(path, rule_id, value), value
+
+
+def test_ccam_value_rule_is_imprecise():
+    """Four letters and three digits are also plot and file references: the value rule is off by default."""
+    assert load("fr/fr_med.yaml", "frccamvalue")["imprecise"] == 1
 
 
 def test_dep_is_no_package():

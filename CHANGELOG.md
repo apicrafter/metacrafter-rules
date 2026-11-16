@@ -882,7 +882,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   higher education (A01, R11, D075); `fr_academie_code` also under code_acad and etablissement_code_academie.
 - `dep` is no longer a field name of `package_name`: it is the department in French tables (75, 92).
 - The value rule of `ccamcode` reads four letters and three digits (HBQK002); it read a letter, two digits and
-  a letter, the form of a budget instruction variant (M14V).
+  a letter, the form of a budget instruction variant (M14V). It is marked `imprecise`: plot and file references
+  have the same form.
 - `wikidataid` by field name (entity_id, q_id) needs Q ids in the values: entity_id of the OneGov election
   exports of the Swiss cantons holds municipality numbers (2761).
 - From the Bolivian round: an Argentine INDEC department part is not written with two digits and a zero (01 to

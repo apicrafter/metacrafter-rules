@@ -46,6 +46,8 @@ rules:
     rule: '[A-Z]{4}\d{3}'
     maxlen: 7
     minlen: 7
+    # four letters and three digits are also plot and file references (ABCD123): only with --include-imprecise
+    imprecise: 1
   frfinessbyname:
     key: fr_finess
     name: FINESS number by field name (finess, finess_et, numero_finess)
