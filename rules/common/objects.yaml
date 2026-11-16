@@ -183,8 +183,6 @@ rules:
     minlen: 3
     maxlen: 100
     priority: 1
-    # runtime_version 3.0.3.80 and studio_version 3.0.3.82 of an E-Prime log are software versions.
-    fieldregex: '(?i)^(?!.*(?:version|release|build|firmware)).'
     validator: metacrafterext.rules.common.identifiers.validate_oid_value
   objects_glnfield:
     key: gln

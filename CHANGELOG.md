@@ -40,9 +40,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - a bare Coast is no Tanzanian region by value: WLTYP (Coast, Open Sea, Estuary) of the same assessments was
     `tz_region` (14 columns); under a region field name Coast stays the English name of Pwani;
   - `md5hash` by field name checks the values: md5 of a table of Thessaloniki counts the complaints of the fifth
-    municipal district (1, 2, 12);
-  - an OID or an IPv4 address by value is not read from a version field: runtime_version 3.0.3.80 of an E-Prime
-    log was `oid`.
+    municipal district (1, 2, 12).
 
 - **Rules for the Spanish files of metacrafter-testdata** (2024 snapshots of Spanish open data portals,
   Dateno sources cdi00000546 to cdi00000588: Generalitat Valenciana, Arganda del Rey, Diputació de Castelló,

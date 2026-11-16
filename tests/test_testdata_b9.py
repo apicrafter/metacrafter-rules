@@ -137,13 +137,3 @@ def test_value_rules(path, rule_id, good, bad):
         assert spec["minlen"] <= len(value) <= spec["maxlen"]
     for value in bad:
         assert not pattern.fullmatch(value), value
-
-
-@pytest.mark.parametrize("path,rule_id", [("common/objects.yaml", "oidvalue"), ("ext/ext_internet.yaml", "ipv4")])
-def test_a_version_field_holds_no_oid_or_address(path, rule_id):
-    # runtime_version 3.0.3.80 of an E-Prime log
-    guard = re.compile(load(path, rule_id)["fieldregex"])
-    for name in ["runtime_version", "studio_version", "experiment_version", "Version", "firmware"]:
-        assert not guard.search(name), name
-    for name in ["oid", "object_identifier", "sysObjectID", "code", "ip", "ip_address", "host"]:
-        assert guard.search(name), name
