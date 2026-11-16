@@ -15,6 +15,8 @@ rules:
     match: ppr
     type: data
     is_pii: True
+    # runtime_version 3.0.3.80 and studio_version 3.0.3.82 of an E-Prime log are software versions.
+    fieldregex: '(?i)^(?!.*(?:version|release|build|firmware)).'
   ipv6:
     key: ipv6
     is_pii: True

@@ -43,6 +43,9 @@ rules:
     rule: md5,md5hash,md5_hash,md5_digest,md5_fingerprint
     match: text
     type: field
+    # md5 of a table of the city of Thessaloniki counts the complaints of the fifth municipal district (1, 2, 12).
+    validator: metacrafterext.rules.common.crypto.validate_md5
+    needs_values: true
     priority: 1
   md5hash:
     key: md5hash

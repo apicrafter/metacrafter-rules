@@ -43,3 +43,14 @@ rules:
     minlen: 3
     maxlen: 3
     priority: 2
+  # month_name ΙΑΝ, ΦΕΒ, ΜΑΡ, ΙΟΝ, ΙΟΛ of the monthly tables of the city of Thessaloniki
+  # (opendata.thessaloniki.gr, Dateno source cdi00000862); metacrafter-testdata.
+  elmonthabbreviationbyname:
+    key: el_month
+    name: Greek month abbreviation by field name (month_name, μήνας, ΜΗΝΑΣ) with ΙΑΝ, ΦΕΒ, ΙΟΥΛ
+    rule: (?i)month(?:[ _]?(?:name|abbr|short))?|μ[ηή]νας|μ[ηή]νες|mhnas|minas
+    type: field
+    match: regex
+    validator: metacrafterext.rules.gr.periods.validate_el_month_abbreviation
+    needs_values: true
+    priority: 1
