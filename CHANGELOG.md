@@ -9,6 +9,50 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Rules for the United Kingdom and French files of metacrafter-testdata** (2024 snapshots of UK open data
+  portals, Dateno sources cdi00000763 to cdi00000799: data.gov.uk, Cambridgeshire Insight, Calderdale Data
+  Works, Open Leicester, London Datastore, Open Data Glasgow; and of French ones, cdi00000700 to cdi00000747:
+  Opendatasoft portals of ministries, communes and RTE, Paris Data, Open Data Corse, research data
+  repositories; validators in the new `metacrafterext.rules.gb.portals` and in
+  `metacrafterext.rules.fr.portals`, rules in `rules/gb/`, `rules/fr/fr_environment.yaml`,
+  `rules/fr/fr_budget.yaml`, `rules/eu/eu_geo.yaml`, `rules/common/education.yaml` and
+  `rules/common/values.yaml`):
+  - statistical geography: names of lower and middle layer super output areas by field name and, for an
+    LSOA, by value (`gb_lsoa_name`: LSOA name, LSOA11NM with Cambridge 001A; `gb_msoa_name`: MSOA11NM with
+    Leicester 003), names of local authorities (`gb_local_authority_name`: Local authority, LA name, LAD11NM
+    with Calderdale, Barnet) and of constituencies of the House of Commons
+    (`gb_parliamentary_constituency`: Parliamentary constituency, UK constituency, PCON17NM with Calder
+    Valley), Unique Street Reference Numbers (`gb_usrn`: Usrn 44100754), and GSS codes under a bare code
+    column (`ukgsscode`: Code, area_code, geography_code with E06000001; weaker than the rules of one
+    geography);
+  - registers of councils: the three fixed phrases of brownfield land registers
+    (`gb_brownfield_planning_status`, `gb_brownfield_ownership_status`, also by value,
+    `gb_brownfield_permission_type`), council tax bands (`gb_council_tax_band`: Council Tax Band A to H),
+    ProClass codes alone or with their label (`gb_proclass_code`: Pro Class 271501-Information Communication
+    Technology), service URIs of the Local Government Service List by value (`gb_esd_service_uri`:
+    http://id.esd.org.uk/service/646), school names (`school_name`: School, School name with Abbey Park
+    Academy);
+  - companies, grants and transport: UK SIC 2007 codes of Companies House and of statistical tables
+    (`gb_sic_code`: SICCode.SicText_1 with 74990 - Non-trading company, SIC code 25.62), 360Giving identifiers
+    by value (`gb_360giving_id`: 360G-indigotrust:IND296), organisation identifiers of 360Giving files
+    (`org_id`: Recipient Org:Identifier GB-CHC-1131948), CRS codes of railway stations (`gb_crs_code`: TLC
+    HFX);
+  - spending: the department and the paying body of the spend files that follow the HM Treasury guidance
+    (`orgname`: Department family, Entity with Department for Transport, DFID) and the unit that spent
+    (`orgunit`: Expense area), and amounts written with a currency sign by value (`money`: £37,350.00,
+    -£1,917.95 under any field name);
+  - France: the sector, fuel and technology codes of the national register of electricity installations
+    (`fr_elec_filiere_code`: codeFiliere SOLAI; `fr_elec_combustible_code`: codeCombustible GAZ, FIOUL;
+    `fr_elec_technologie_code`: codeTechnologie PHOTV, FIL.E), PACAGE numbers of farms (`fr_pacage`: pacage
+    02B003120), the section and the side of a local budget line (`fr_budget_section`: BGT_SECTION,
+    section_budgetaire_i_f with fonctionnement; `fr_budget_sens`: BGT_CODRD, sens_depense_recette with
+    dépense), EUNIS habitat codes (`eunis_habitat_code`: cod_eunis A5.535), and field-name rules for types
+    that had only value rules or none: Annex I habitat codes (`eu_habitat_type_code`: cod_eur27 1170),
+    Natura 2000 site codes (`eu_natura2000_site`: cod_site FR9400570) and Sandre river codes under the names
+    of BD Carthage (`fr_sandre_cours_eau_code`: code_hydro, cgenelin Y7410600).
+  - a fix: an LSOA or MSOA column of names is no column of codes. `uksloa` and `ukmsoa` matched the bare
+    names `lsoa`, `msoa`, `msoa name` and `lsoa 2011 name` whatever the values, so MSOA names (Leicester 003)
+    and Scottish data zone names (Lenzie North - 07) were labelled as codes. Both rules now need GSS codes.
 - **Rules for the Spanish files of metacrafter-testdata** (2024 snapshots of Spanish open data portals,
   Dateno sources cdi00000546 to cdi00000588: Generalitat Valenciana, Arganda del Rey, Diputació de Castelló,
   Las Palmas de Gran Canaria, Región de Murcia, Datos Abiertos de Canarias, Observa Gijón, UniversiDATA and

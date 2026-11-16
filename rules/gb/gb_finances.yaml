@@ -31,3 +31,56 @@ rules:
     match: regex
     validator: metacrafterext.rules.gb.codes.validate_gb_vat
     priority: 1
+  # Found in 2024 snapshots of UK open data portals (data.gov.uk, Cambridgeshire Insight, Calderdale Data
+  # Works, Open Leicester, London Datastore, Open Data Glasgow; Dateno sources cdi00000763 to cdi00000799;
+  # metacrafter-testdata).
+  gbproclasscodebyname:
+    key: gb_proclass_code
+    name: ProClass procurement code by field name (Pro Class, ProcurementClassification:ProClassCode) with 271501
+    # The code alone or with its label (271501-Information Communication Technology); a column of labels
+    # only (ProClass Category: Healthcare) fails the validator.
+    rule: (?i)(?:proc(?:u)?rement[ _]?classification[:. _]?)?pro[ _]?class(?:[ _]?(?:code|id|category|label))?|procurement[ _]category[ _]\(proclass\)
+    type: field
+    match: regex
+    validator: metacrafterext.rules.gb.portals.validate_gb_proclass_code
+    needs_values: true
+    priority: 1
+  gb360givingidvalue:
+    key: gb_360giving_id
+    name: 360Giving identifier by value (360G-indigotrust:IND296)
+    rule: '360G-[A-Za-z0-9][A-Za-z0-9_.:-]*'
+    type: data
+    match: regex
+    minlen: 7
+    maxlen: 100
+    priority: 1
+  gb360givingorgidbyname:
+    key: org_id
+    name: Organisation identifier of a 360Giving file by field name (Recipient Org:Identifier, Funding Org:Identifier, RECORGIDENTIFIER) with GB-CHC-1131948
+    rule: (?i)(?:recipient|rec|funding)[ _]?org[:. _]?identifier
+    type: field
+    match: regex
+    validator: metacrafterext.rules.gb.portals.validate_org_id_or_360g
+    needs_values: true
+    priority: 1
+  # The spend files that departments publish under the HM Treasury guidance (25 000 pounds and over) name the
+  # department and the paying body Department family and Entity, and the unit that spent Expense area: 598
+  # distinct tables of data.gov.uk have an Entity column.
+  gbspendbodybyname:
+    key: orgname
+    name: Department or body of a UK spend file by field name (Department family, Departmental family, Entity) with Department for Transport, DFID
+    rule: (?i)department(?:al)?[ _]family|entity
+    type: field
+    match: regex
+    validator: metacrafterext.rules.gb.portals.validate_gb_spend_body
+    needs_values: true
+    priority: 1
+  gbspendexpenseareabyname:
+    key: orgunit
+    name: Spending unit of a UK spend file by field name (Expense area) with Finance & Corporate Services
+    rule: (?i)expenses?[ _]area
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.generic.has_letters
+    needs_values: true
+    priority: 1

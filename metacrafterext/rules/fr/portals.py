@@ -163,3 +163,79 @@ def validate_fr_idref_id(value):
     a file that stores it as a number loses the leading zeros."""
     text = _text(value)
     return bool(_IDREF.match(text.zfill(9) if text.isdigit() and 7 <= len(text) < 9 else text))
+
+
+# --- Energy, agriculture, habitats (French portals of the 2024 snapshots cdi00000700 to 723) ----
+
+_ELEC_CODE = re.compile(r"^[A-Z][A-Z.]{1,3}[A-Z]$")
+_ELEC_FILIERE = re.compile(r"^[A-Z]{5}$")
+
+
+def validate_fr_elec_filiere_code(value):
+    """A generation sector code of the national register of electricity installations: five
+    capital letters (SOLAI, EOLIE, HYDLQ, THERM, NUCLE, BIOEN)."""
+    return bool(_ELEC_FILIERE.match(_text(value)))
+
+
+def validate_fr_elec_code(value):
+    """A fuel or technology code of the national register of electricity installations: three to
+    five capital letters, with a full stop for an abbreviation (GAZ, FIOUL, D.MEN, PHOTV, FIL.E,
+    COG.V, LAC); several fuels in one cell are separated by commas (FIOUL,GAZ)."""
+    parts = [p.strip() for p in _text(value).split(",")]
+    return bool(parts) and all(_ELEC_CODE.match(p) for p in parts)
+
+
+_PACAGE = re.compile(r"^(?:0(?:0[1-9]|[1-9]\d|2[AB])|97[1-6])\d{6}$")
+
+
+def validate_fr_pacage(value):
+    """A PACAGE number of a farm: nine characters, the department in three (014, 02B, 974) and a
+    six-digit order number (02B003120). A file that stores it as a number loses the leading zero."""
+    text = _text(value).upper()
+    if text.isdigit() and len(text) == 8:
+        text = "0" + text
+    return bool(_PACAGE.match(text))
+
+
+_EUNIS = re.compile(r"^(?:[A-J]\d?(?:\.[0-9A-Z]{1,5})?|X\d{2})$")
+
+
+def validate_eunis_habitat_code(value):
+    """A habitat code of the EUNIS classification before its 2021 revision: a letter A to J for
+    the broad group, a digit, and after a full stop the digits or letters of the lower levels
+    (A5.535, A3.23, G1.A1, B1); X and two digits for a habitat complex (X09)."""
+    text = _text(value)
+    return len(text) >= 2 and bool(_EUNIS.match(text))
+
+
+_HABITAT_ANNEX1 = re.compile(r"^[1-9]\d[1-9A-Z][0A]\*?$")
+
+
+def validate_eu_habitat_type_code(value):
+    """A habitat type code of Annex I of the Habitats Directive: four characters (1170, 91E0), an
+    asterisk after it for a priority type."""
+    return bool(_HABITAT_ANNEX1.match(_text(value).upper()))
+
+
+_N2000_SITE = re.compile(r"^(?:AT|BE|BG|CY|CZ|DE|DK|EE|ES|FI|FR|GR|HR|HU|IE|IT|LT|LU|LV|MT|NL|PL|PT|RO|SE|SI|SK|UK)[0-9A-Z]{7}$")
+
+
+def validate_eu_natura2000_site(value):
+    """A Natura 2000 site code: the country code and seven letters or digits (FR9400570)."""
+    return bool(_N2000_SITE.match(_text(value)))
+
+
+def _fold_fr(value):
+    return _text(value).lower().replace("é", "e").replace("ã©", "e").rstrip("s")
+
+
+def validate_fr_budget_section(value):
+    """A section of a French local budget: fonctionnement or investissement, in any case, also by
+    the first letter (F, I)."""
+    return _fold_fr(value) in {"fonctionnement", "investissement", "f", "i"}
+
+
+def validate_fr_budget_sens(value):
+    """The side of a French local budget line: dépense or recette, singular or plural, in any
+    case, also by the first letter (D, R)."""
+    return _fold_fr(value) in {"depense", "recette", "d", "r"}

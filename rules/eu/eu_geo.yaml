@@ -59,3 +59,32 @@ rules:
     fieldrule: inspireid,inspire_id,inspire id,inspire-id,id_inspire,inspire_identifier,inspireidentifier
     fieldrulematch: text
     priority: 1
+  # Found in the Natura 2000 habitat maps of the Open Data Corse portal (2024 snapshot, Dateno source
+  # cdi00000716; metacrafter-testdata): cod_site FR9400570, cod_eur27 1170, cod_eunis A5.535.
+  eunishabitatcodebyname:
+    key: eunis_habitat_code
+    name: EUNIS habitat code by field name (cod_eunis, code_eunis, eunis) with A5.535
+    rule: (?i)(?:cod(?:e)?[ _])?eunis(?:[ _]?code)?\d?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.fr.portals.validate_eunis_habitat_code
+    needs_values: true
+    priority: 1
+  euhabitattypecodebyname:
+    key: eu_habitat_type_code
+    name: Habitats Directive habitat type code by field name (cod_eur27, code_eur28, code_natura2000) with 1170, 91E0
+    rule: (?i)cod(?:e)?[ _]eur(?:15|25|27|28)?|eur(?:15|25|27|28)|cod(?:e)?[ _](?:hab[ _])?n(?:atura[ _]?)?2000|cd_hab_dhff
+    type: field
+    match: regex
+    validator: metacrafterext.rules.fr.portals.validate_eu_habitat_type_code
+    needs_values: true
+    priority: 1
+  eunatura2000sitebyname:
+    key: eu_natura2000_site
+    name: Natura 2000 site code by field name (cod_site, sitecode, site_code) with FR9400570
+    rule: (?i)cod(?:e)?[ _]?site|site[ _]?code|(?:code|id)[ _]n(?:atura[ _]?)?2000(?:[ _]site)?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.fr.portals.validate_eu_natura2000_site
+    needs_values: true
+    priority: 1

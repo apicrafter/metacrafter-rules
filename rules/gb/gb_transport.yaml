@@ -53,3 +53,15 @@ rules:
     match: text
     validator: metacrafterext.rules.gb.codes.validate_naptan_code
     priority: 1
+  # Found in 2024 snapshots of UK open data portals (data.gov.uk, Cambridgeshire Insight, Calderdale Data
+  # Works, Open Leicester, London Datastore, Open Data Glasgow; Dateno sources cdi00000763 to cdi00000799;
+  # metacrafter-testdata).
+  gbcrscodebyname:
+    key: gb_crs_code
+    name: CRS code of a National Rail station by field name (TLC, CRS, CRS code, three letter code) with HFX
+    rule: (?i)tlc|crs(?:[ _]?code)?|(?:station[ _])?(?:3|three)[ _-]?(?:letter|alpha)[ _]?code|station[ _]crs
+    type: field
+    match: regex
+    validator: metacrafterext.rules.gb.portals.validate_gb_crs_code
+    needs_values: true
+    priority: 1
