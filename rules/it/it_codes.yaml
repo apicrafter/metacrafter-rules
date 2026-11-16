@@ -1,0 +1,150 @@
+name: it-codes
+description: Italian codes of public contracts, the cadastre, roads and statistics
+context: government
+lang: it
+country_code: it
+# Found in 2024 snapshots of Italian open data portals (Dateno sources cdi00000948, ARPA Campania;
+# cdi00000950, Comune di Genova; cdi00000951, Comune di Matera; cdi00000955, Ministero delle infrastrutture
+# e dei trasporti; cdi00000958, Regione Toscana); metacrafter-testdata.
+rules:
+  # categoria_prevalente OG1, OG3, OS12A of the contract notices of the Servizio Contratti Pubblici.
+  itsoacategorybyname:
+    key: it_soa_category
+    name: Italian SOA category of public works by field name (categoria_prevalente, categoria_soa) with OG1, OS12A
+    rule: (?i)categori[ae][ _](?:prevalente|soa|scorporabil[ei]|lavori)|cat[ _.](?:prevalente|soa)|(?:categoria|cat)[ _]prev|soa
+    type: field
+    match: regex
+    validator: metacrafterext.rules.it.codes.validate_it_soa_category
+    needs_values: true
+    priority: 1
+  itsoaclassificabyname:
+    key: it_soa_classifica
+    name: Italian SOA class of public works by field name (classifica, classifica_soa) with I, III-bis, VIII
+    rule: (?i)classific[ah](?:[ _](?:soa|prevalente|categoria(?:[ _]prevalente)?))?|class[ _.]soa
+    type: field
+    match: regex
+    validator: metacrafterext.rules.it.codes.validate_it_soa_classifica
+    needs_values: true
+    priority: 1
+  # CATEGORIA, Qualità and QUAL of the property inventories of the Comune di Matera: A/3, C/6, C/2.
+  itcatastocategorybyname:
+    key: it_catasto_category
+    name: Italian cadastral category by field name (categoria, categoria_catastale, qualità) with A/3, C/6
+    rule: (?i)cat(?:egoria)?(?:[ _.]catastale)?|qual(?:it[aàá…]'?)?|classamento|cat[ _.]cat(?:astale)?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.it.codes.validate_it_catasto_category
+    needs_values: true
+    priority: 1
+  # Nome strada of the road tables of the ministry: SS 011 - Padana Superiore, A 04 - Torino-Trieste.
+  itroadnumberbyname:
+    key: it_road_number
+    name: Italian road number by field name (strada, nome strada, codice_strada) with A1, SS 36, SS 011 - Padana Superiore
+    rule: (?i)(?:nome|codice|cod|numero|num|sigla|denominazione)?[ _.]?strada(?:[ _](?:statale|provinciale|regionale))?|strade|autostrada|tratta|s\.?[sp]\.?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.it.codes.validate_it_road_number
+    needs_values: true
+    priority: 1
+  # CUP, Codice CUP, numero cup: G27B16000290004. A bare cup is also the Spanish CUPS code of a health
+  # procedure (es_med.yaml), which has no letters in these places.
+  itcupbyname:
+    key: it_cup
+    name: Italian public investment project code (CUP) by field name (cup, codice_cup, numero cup)
+    rule: (?i)(?:codice|cod|numero|num|n)?[ _.]?cup(?:[ _](?:code|codice|progetto|intervento))?|codice[ _]unico[ _](?:di[ _])?progetto
+    type: field
+    match: regex
+    validator: metacrafterext.rules.it.codes.validate_it_cup
+    needs_values: true
+    priority: 1
+  itcupvalue:
+    key: it_cup
+    name: Italian public investment project code (CUP) by value (a letter, two digits, a letter, eleven digits)
+    rule: '[A-Z]\d{2}[A-Z]\d{11}'
+    type: data
+    match: regex
+    minlen: 15
+    maxlen: 15
+    priority: 1
+  # codice_comune, codistat, cod istat comune, luogo_esecuzione_istat, codice_istat_stazione_appaltante,
+  # PRO_COM_T: 045003, 45003, 012058091.
+  itistatcomunebyname:
+    key: it_istat_comune
+    name: Italian ISTAT municipality code by field name (codice_istat, codistat, cod_comune, pro_com) with 058091, 45003, 012058091
+    rule: (?i)(?:\w+[ _])?cod(?:ice|ici)?[ _.]?istat(?:[ _.]?(?:del[ _])?comun[ei])?(?:[ _]\w+)?|(?:\w+[ _])?istat(?:[ _]comune)?|cod(?:ice)?[ _.]?comune(?:[ _.]?istat)?|pro_?com(?:_t)?|comune[ _]istat|istat[ _]code|codcom(?:une)?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.it.codes.validate_it_istat_comune
+    needs_values: true
+    priority: 1
+  # sigla_provincia, prov, provincia_stazione_appaltante: MS, FI, RM. A provincia of names (Torino)
+  # stays province (it_geo.yaml).
+  itprovinceabbreviationbyname:
+    key: it_province_code
+    name: Italian province abbreviation by field name (sigla_provincia, prov, provincia) with MS, FI, RM
+    rule: (?i)(?!cod)(?:sigla(?:[ _.]?prov(?:incia)?)?|(?:sigla[ _.]?)?prov(?:incia)?(?:[ _.]?sigla)?|prov(?:incia)?[ _](?:\w+)|(?:\w+[ _])prov(?:incia)?|targa[ _]provincia|pv|pr)
+    type: field
+    match: regex
+    validator: metacrafterext.rules.it.codes.validate_it_province_abbreviation
+    needs_values: true
+    priority: 1
+  # cf_rup, codice_fiscale of persons: 16 letters and digits. Fields of 11 digits are it_iva.
+  itcodicefiscalebyname:
+    key: it_codicefiscale
+    is_pii: true
+    name: Italian tax code of a person by field name (codice_fiscale, cf, cf_rup, cod_fisc) with 16 characters
+    rule: (?i)(?:\w+[ _])?(?:codice[ _.]?fiscale|cod[ _.]?fisc(?:ale)?|c\.?f\.?)(?:[ _]\w+)?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.it.codes.validate_it_codice_fiscale
+    needs_values: true
+    priority: 1
+  # codice_ateco, ateco, codice_sezione of the business statistics of Regione Toscana: C, F, G, 47.11.
+  itatecobyname:
+    key: it_ateco
+    name: Italian ATECO code by field name (codice_ateco, ateco, ateco_2007) with C, 47, 47.11.2
+    rule: (?i)(?:cod(?:ice)?[ _.]?)?ateco(?:[ _.]?(?:2002|2007|2022|2025))?(?:[ _](?:codice|cod|code))?|(?:cod(?:ice)?[ _.]?)?sezione[ _]ateco|codice[ _]attivit[aà][ _]economica
+    type: field
+    match: regex
+    validator: metacrafterext.rules.it.codes.validate_it_ateco
+    needs_values: true
+    priority: 1
+  # rup of the contract notices: the person in charge of the procedure (responsabile unico del procedimento).
+  itrupbyname:
+    key: person_fullname
+    is_pii: true
+    name: Person in charge of an Italian public procedure by field name (rup, nome_rup, responsabile_unico_del_procedimento)
+    rule: (?i)(?:nome|nominativo)?[ _]?rup|responsabile[ _]unico[ _](?:del|di)[ _](?:procedimento|progetto)|responsabile[ _](?:del[ _])?procedimento
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.generic.validate_place_name
+    needs_values: true
+    priority: 1
+  # unita_misura, um, un_misura of the air and water quality tables of ARPA Campania.
+  itunitofmeasurebyname:
+    key: unit_of_measure
+    name: Unit of measure by Italian field name (unita_misura, unità di misura, un_misura)
+    rule: (?i)unit[aà]['’]?[ _.]?(?:di[ _])?misura|un[ _.]misura|u\.?d\.?m\.?
+    type: field
+    match: regex
+    priority: 1
+  # codice_inquinante and inquinante: CO, NO2, PM10, SO2, C6H6.
+  itairpollutantbyname:
+    key: air_pollutant
+    name: Air pollutant notation by Italian field name (inquinante, codice_inquinante, cod_inq) with PM10, NO2, O3
+    rule: (?i)(?:cod(?:ice)?[ _.])?inquinant[ei]|cod[ _.]inq
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.eucodes.validate_air_pollutant
+    needs_values: true
+    priority: 1
+  # stazione of the air quality measurements of ARPA Campania: IT0898A, the EoI code of the station.
+  iteoistationcodebyname:
+    key: eea_eoi_station_code
+    name: EoI air quality station code by Italian field name (stazione, codice_stazione, cod_staz) with IT0898A
+    rule: (?i)(?:cod(?:ice)?[ _.])?stazion[ei]|cod[ _.]staz(?:ione)?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.generic.validate_eea_station_code
+    needs_values: true
+    priority: 1

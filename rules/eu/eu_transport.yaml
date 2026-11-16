@@ -1,0 +1,17 @@
+name: eu-transport
+description: EU transport code lists
+context: transport
+lang: common
+country_code: eu
+rules:
+  # categoria_patente of the driving licence files of the Italian transport ministry (dati.mit.gov.it,
+  # Dateno source cdi00000955): B, C, D, CE, DE, A.
+  eudrivinglicencecategorybyname:
+    key: eu_driving_licence_category
+    name: EU driving licence category by field name (categoria_patente, licence_category, Führerscheinklasse) with B, CE, A2
+    rule: (?i)categori[ae][ _](?:della[ _])?patent[ei]|cat[ _.]patente|patente[ _]categoria|(?:driving[ _])?licen[cs]e[ _](?:categor(?:y|ies)|class(?:es)?)|cat[eé]gorie[ _](?:de[ _]|du[ _])?permis|f[uü]hrerscheinklassen?|fahrerlaubnisklassen?|rijbewijs[ _]?categorie|categor[ií]a[ _](?:de[ _])?(?:permiso|carn[eé])|clase[ _](?:de[ _])?permiso
+    type: field
+    match: regex
+    validator: metacrafterext.rules.it.codes.validate_eu_driving_licence_category
+    needs_values: true
+    priority: 1

@@ -73,3 +73,14 @@ rules:
     type: field
     match: regex
     priority: 1
+  # luogo_esecuzione_nuts, localizzazione_codice_nuts, Localizz. Cod. NUTS of the contract notices of the
+  # Italian transport ministry (dati.mit.gov.it, Dateno source cdi00000955): ITC11, ITF33.
+  nutscodebylongname:
+    key: nutsregion
+    name: NUTS region code by a field name with other words (luogo_esecuzione_nuts, localizzazione_codice_nuts, cod_nuts)
+    rule: (?i)(?:[\w.]+[ _.]+){1,4}nuts(?:[ _.]?(?:code|codice|cod))?|nuts[ _.](?:\w+[ _.]?){1,3}|cod(?:ice)?[ _.]?nuts
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.eucodes.validate_nuts_code
+    needs_values: true
+    priority: 1

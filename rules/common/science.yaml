@@ -642,3 +642,14 @@ rules:
     validator: metacrafterext.rules.common.hydrology.validate_hydrolakes_id
     needs_values: true
     priority: 1
+  # EID of the exports of Scopus search results (data.brin.go.id, Dateno source cdi00000906):
+  # 2-s2.0-0027725873.
+  scopuseidvalue:
+    key: scopus_eid
+    name: Scopus EID of a publication record by value (2-s2.0- and a number)
+    rule: 2-s2\.0-\d{8,12}
+    type: data
+    match: regex
+    minlen: 15
+    maxlen: 19
+    priority: 1

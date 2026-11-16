@@ -157,3 +157,23 @@ def validate_air_pollutant(value):
     """The notation of an air pollutant of air quality reporting: PM10, PM2.5, NO, NO2, NOX, SO2, O3, CO, C6H6
     (not Nitrogen Dioxide, a station code or a number)."""
     return bool(_AIR_POLLUTANT.match(_text(value)))
+
+
+# Countries with NUTS regions or statistical regions coded the same way: the EU, EFTA, the United Kingdom
+# and the candidate countries. Greece is EL in NUTS.
+_NUTS_COUNTRIES = frozenset(
+    "AT BE BG CY CZ DE DK EE EL ES FI FR HR HU IE IT LT LU LV MT NL PL PT RO SE SI SK "
+    "CH IS LI NO UK AL ME MK RS TR BA XK MD UA GE".split()
+)
+_NUTS_CODE = re.compile(r"([A-Z]{2})[0-9A-Z]{0,3}")
+
+
+def validate_nuts_code(value):
+    """A NUTS code: a country (IT, EL) and up to three more characters for the levels 1 to 3 (ITC, ITC1,
+    ITC11, DE21H), not a name or the code of a country outside the classification."""
+    text = str(value).strip().upper()
+    match = _NUTS_CODE.fullmatch(text)
+    if not match or match.group(1) not in _NUTS_COUNTRIES:
+        return False
+    # ITC and UKI are level 1; a longer code has a digit (ITC11, DE21H), a word has none (ROMA, ESTE).
+    return len(text) <= 3 or any(ch.isdigit() for ch in text)

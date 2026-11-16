@@ -1,0 +1,26 @@
+name: id-datetime
+description: Indonesian month names
+context: datetime
+lang: id
+country_code: id
+# Found in a 2024 snapshot of the open data portal of Tangerang Regency (opendata.tangerangkab.go.id,
+# Dateno source cdi00000904); metacrafter-testdata.
+rules:
+  idmonthnamevalue:
+    key: id_month
+    name: Indonesian month name by value (Januari, MARET, Agustus, Desember)
+    rule: metacrafterext.rules.id.codes.validate_id_month
+    type: data
+    match: func
+    minlen: 3
+    maxlen: 9
+    priority: 1
+  idmonthbyname:
+    key: id_month
+    name: Indonesian month name or abbreviation by field name (bulan, nama_bulan) with Januari, Agt, Des
+    rule: (?i)(?:nama[ _])?bulan(?:[ _](?:nama|lapor(?:an)?|data))?|bln
+    type: field
+    match: regex
+    validator: metacrafterext.rules.id.codes.validate_id_month_or_abbreviation
+    needs_values: true
+    priority: 1

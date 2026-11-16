@@ -186,6 +186,9 @@ def _looks_like_dotted_date(value):
 _THOUSANDS_GROUPED = re.compile(r"^[1-9]\d{0,2}(?:\.\d{3}){2,}$")
 
 
+_DOTTED_AMOUNT = re.compile(r"\d{1,3}(?:\.\d{3})+\.\d{2}")
+
+
 def validate_semver(value):
     """
     Validates semantic version format (SemVer 2.0.0).
@@ -207,6 +210,11 @@ def validate_semver(value):
     # Reject plain dotted dates (e.g. "31.5.2019") which match the semver
     # shape but are almost always calendar dates in real data.
     if _looks_like_dotted_date(value):
+        return False
+
+    # An amount with dots between the thousands and before the cents (7.922.45, 33.698.81), as
+    # tables of Italian and Indonesian local governments write it, is no version.
+    if _DOTTED_AMOUNT.fullmatch(value):
         return False
 
     # Reject numbers with dots as thousands separators (1.003.522 head of cattle in an

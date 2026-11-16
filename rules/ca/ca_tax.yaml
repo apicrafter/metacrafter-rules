@@ -11,6 +11,9 @@ rules:
     type: field
     priority: 1
     match: text
+    # bn is also a branch code (the libraries BR, CE, GA of the Comune di Genova): the values are nine
+    # digits.
+    validator: metacrafterext.rules.ca.validators.validate_ca_business_number
   cabnvalue:
     key: cabn
     name: Canada Business Number by value

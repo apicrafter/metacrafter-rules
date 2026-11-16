@@ -1388,6 +1388,9 @@ def validate_oid(value):
     return True
 
 
+_DOTTED_THOUSANDS = re.compile(r"\d{1,3}(?:\.\d{3})+(?:[.,]\d{1,2})?")
+
+
 def validate_oid_value(value):
     """
     Validates an OID found by value alone: validate_oid() and at least three arcs.
@@ -1396,7 +1399,12 @@ def validate_oid_value(value):
     or ratios, so a value-only match needs three arcs (2.5.4, 1.3.6.1.4.1.343). Fields
     named as OIDs are matched by the field-name rule.
     """
-    return validate_oid(value) and value.strip().count('.') >= 2
+    text = value.strip() if isinstance(value, str) else str(value)
+    # 1.336.326, 2.056.012.000 and 2.712.401.90 are numbers with dots between the thousands (Indonesian
+    # and Italian amounts), not arcs.
+    if _DOTTED_THOUSANDS.fullmatch(text):
+        return False
+    return validate_oid(value) and text.count('.') >= 2
 
 
 def validate_eidr(value):

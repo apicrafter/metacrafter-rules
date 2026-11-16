@@ -45,3 +45,14 @@ rules:
     priority: 3
     match: text
 
+  # kode_wilayah, kode wilayah, kode_kecamatan of the tables of Tangerang Regency (Dateno source
+  # cdi00000904): 36.03.01. Codes of the Ministry of Home Affairs (Kemendagri).
+  idkodewilayahbyname:
+    key: id_kode_wilayah
+    name: Indonesian administrative area code by field name (kode_wilayah, kode_kecamatan, kode_desa) with 36.03.01
+    rule: (?i)k(?:o?de|d)[ _]*(?:wilayah|wil|kecamatan|kec|desa|kelurahan|kel|desa[ _/]kelurahan|kab(?:upaten)?(?:[ _/]?kota)?|kota|prov(?:insi)?|kemendagri)(?:[ _]kemendagri)?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.id.codes.validate_id_kode_wilayah
+    needs_values: true
+    priority: 1

@@ -62,3 +62,23 @@ rules:
     match: regex
     validator: metacrafterext.rules.common.identifiers.validate_it_istat_province
     priority: 1
+  # comune_residenza, regione_residenza of the driving licence files of the transport ministry
+  # (dati.mit.gov.it, Dateno source cdi00000955); denominazione_comune, descom of Regione Toscana.
+  itcomunebyname:
+    key: it_comune
+    name: Italian municipality by field name (comune_residenza, denominazione_comune, nome_comune, descom)
+    rule: (?i)comune[ _](?:di[ _])?(?:residenza|nascita|sede|ubicazione|domicilio|intervento|localizzazione)|(?:nome|denominazione|desc(?:rizione)?|den)[ _.]?comune|descom|comune[ _](?:nome|denominazione|descrizione)
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.generic.validate_place_name
+    needs_values: true
+    priority: 1
+  itregionbyname:
+    key: it_region
+    name: Italian region by field name (regione, regione_residenza, nome_regione) with Piemonte, Emilia Romagna
+    rule: (?i)(?:nome|denominazione|desc(?:rizione)?|den)?[ _.]?region[ei](?:[ _]\w+)?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.it.codes.validate_it_region
+    needs_values: true
+    priority: 1

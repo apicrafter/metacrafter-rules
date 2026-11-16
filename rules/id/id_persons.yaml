@@ -61,3 +61,46 @@ rules:
     minlen: 12
     imprecise: 1
 
+  # jenis_kelamin of the tables of Tangerang Regency (opendata.tangerangkab.go.id, Dateno source
+  # cdi00000904): LAKI-LAKI, PEREMPUAN, Laki-Laki, LAKI_LAKI.
+  idgenderbyname:
+    key: gender
+    is_pii: true
+    name: Sex by Indonesian field name (jenis_kelamin, jenis kelamin, jk, kelamin) with Laki-laki, Perempuan
+    rule: (?i)jenis[ _]?kelamin|kelamin|jk|jns[ _]kelamin
+    type: field
+    match: regex
+    validator: metacrafterext.rules.id.codes.validate_id_sex
+    needs_values: true
+    priority: 1
+  # agama: ISLAM, KRISTEN, KHATOLIK, HINDU, BUDHA, KONGHUCU, KEPERCAYAAN.
+  idreligionbyname:
+    key: religion
+    is_pii: true
+    name: Religion by Indonesian field name (agama) with Islam, Kristen, Katolik, Hindu, Buddha, Konghucu
+    rule: (?i)agama(?:[ _](?:dan[ _])?kepercayaan)?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.id.codes.validate_id_religion
+    needs_values: true
+    priority: 1
+  # tingkat_pendidikan: SD, SLTP, SLTA, DIII, DIV/S1, S2, TIDAK/BELUM SEKOLAH.
+  ideducationlevelbyname:
+    key: education_level
+    name: Level of education by Indonesian field name (tingkat_pendidikan, pendidikan, jenjang_pendidikan) with SD, SLTA, S1
+    rule: (?i)(?:tingkat|jenjang)[ _]pendidikan(?:[ _]terakhir)?|pendidikan(?:[ _]terakhir)?|pendidikan[ _]tertinggi
+    type: field
+    match: regex
+    validator: metacrafterext.rules.id.codes.validate_id_education_level
+    needs_values: true
+    priority: 1
+  # golongan of the staff tables: I/a to IV/e.
+  idpnsgolonganbyname:
+    key: id_pns_golongan
+    name: Indonesian civil servant grade by field name (golongan, golongan_ruang, gol) with III/a, IV/e
+    rule: (?i)gol(?:ongan)?(?:[ _/](?:ruang|pns|kepangkatan|pangkat))?|pangkat[ _/]gol(?:ongan)?(?:[ _/]ruang)?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.id.codes.validate_id_pns_golongan
+    needs_values: true
+    priority: 1
