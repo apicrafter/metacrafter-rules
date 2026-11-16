@@ -1,0 +1,32 @@
+name: cy-geo
+description: Districts, municipalities and communities of Cyprus
+context: geo
+lang: el
+country_code: cy
+# Found in an April 2024 snapshot of the National Open Data Portal of Cyprus (data.gov.cy, Dateno source
+# cdi00000396); metacrafter-testdata.
+rules:
+  # Λευκωσία, ΛΕΜΕΣΟΣ, Lefkosia, Larnaka, Limassol: about 130 fields of the snapshot, half of them with
+  # the generic label district alone and half with none (District (GR), ELECTION_DISTRICT, ΕΠΑΡΧΙΑ).
+  cydistrictbyname:
+    key: cy_district
+    name: District of Cyprus by field name (District, District (GR), district_en, ELECTION_DISTRICT, Police District, ΕΠΑΡΧΙΑ) with the six districts
+    # District code (1 to 6) and All districts (a count) fail the validator.
+    rule: (?i)(?:(?:election|electoral|police|forest|court|postal|school|health)[ _])?dis?trict(?:[ _]?(?:\((?:gr|en|el)\)|gr|en|el|desc|name|court|office))?|επαρχ[ιί]α|επαρχιακ[οό] δικαστ[ηή]ριο
+    type: field
+    match: regex
+    validator: metacrafterext.rules.cy.codes.validate_cy_district
+    needs_values: true
+    priority: 1
+  # Registers of pharmacies, post offices, waste collectors and polling stations: Στρόβολος, ΛΑΤΣΙΑ,
+  # Lakatameia.
+  cymunicipalitybyname:
+    key: cy_municipality
+    name: Municipality or community of Cyprus by field name (Municipality/Community (GR), municipality_community_en, Municipality/Village, City/Village, ΔΗΜΟΣ, ΚΟΙΝΟΤΗΤΑ, wstArea) with place names
+    # Community alone is the Greek Cypriot or Turkish Cypriot community of the population tables.
+    rule: (?i)(?:muni[a-z]*|city|town)[ _]?[/_-][ _]?(?:community|village)(?:[ _/]+area)?(?:[ _]*\(?(?:gr|en|el)\)?)?|δ[ηή]μος|κοιν[οό]τητα|δ[ηή]μος ?/ ?κοιν[οό]τητα|wstarea
+    type: field
+    match: regex
+    validator: metacrafterext.rules.cy.codes.validate_cy_place_name
+    needs_values: true
+    priority: 1

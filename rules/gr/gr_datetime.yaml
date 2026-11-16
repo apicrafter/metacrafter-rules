@@ -1,0 +1,45 @@
+name: gr-datetime
+description: Greek month and weekday names, school years and yes/no
+context: datetime
+lang: el
+country_code: gr
+# Found in an April 2024 snapshot of the National Open Data Portal of Cyprus (data.gov.cy, Dateno source
+# cdi00000396); metacrafter-testdata.
+rules:
+  elmonthnamevalue:
+    key: el_month
+    name: Greek month name by value (Ιανουάριος, Μάιος, ΦΕΒΡΟΥΑΡΙΟΣ)
+    rule: metacrafterext.rules.gr.periods.validate_el_month
+    type: data
+    match: func
+    minlen: 5
+    maxlen: 12
+    priority: 1
+  eldayofweekvalue:
+    key: el_dayofweek
+    name: Greek day of the week by value (Δευτέρα, Παρασκευή, ΚΥΡΙΑΚΗ)
+    rule: metacrafterext.rules.gr.periods.validate_el_dayofweek
+    type: data
+    match: func
+    minlen: 5
+    maxlen: 9
+    priority: 1
+  # Σχολική Χρονιά of the school tables of the Ministry of Education of Cyprus: 2017-2018.
+  elschoolyearbyname:
+    key: school_year
+    name: School or academic year by Greek field name (Σχολική Χρονιά, Σχολικό Έτος, Ακαδημαϊκό Έτος)
+    rule: (?i)σχολικ[ηή] χρονι[αά]|σχολικ[οό] [εέ]τος|ακαδημα[ιϊ]κ[οό] [εέ]τος|ακαδημα[ιϊ]κ[ηή] χρονι[αά]
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.generic.validate_school_year
+    priority: 1
+  # EU Funding, UNESCO Site and the appointment columns of the insolvency practitioners: Ναι, Όχι, ΝΑΙ, ΟΧΙ.
+  elbooleanvalue:
+    key: boolean
+    name: Boolean value ναι/όχι (Greek)
+    rule: metacrafterext.rules.gr.periods.validate_el_yes_no
+    type: data
+    match: func
+    minlen: 3
+    maxlen: 3
+    priority: 2

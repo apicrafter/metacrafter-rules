@@ -32,6 +32,44 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   An `estado` of procurement statuses (Contrato, Adjudicación en firme, Apelación o Revocación,
   Desierto/Infructuoso) is no longer a `state`, and sixteen digits that start with 0 are no Indonesian NIK
   (`idnik`): province codes start at 11.
+- **Rules for the Cypriot files of metacrafter-testdata** (an April 2024 snapshot of the National Open Data
+  Portal of Cyprus, data.gov.cy, Dateno source cdi00000396; validators in the new `metacrafterext.rules.cy.codes`,
+  `metacrafterext.rules.gr.periods` and `metacrafterext.rules.common.eucodes`, rules in the new
+  `rules/cy/cy_geo.yaml`, `rules/cy/cy_codes.yaml`, `rules/gr/gr_datetime.yaml`, `rules/eu/eu_statistics.yaml` and
+  `rules/eu/eu_registers.yaml` and in the common files):
+  - territory: the six districts by field name (`cy_district`: District, District (GR), district_en,
+    ELECTION_DISTRICT, Police District, ΕΠΑΡΧΙΑ with Λευκωσία, ΛΕΜΕΣΟΣ, Λάρνακας, Lefkosia, Limassol; half of
+    these fields had the generic `district` and half no label), municipalities and communities
+    (`cy_municipality`: Municipality/Community (GR), municipality_community_en, City/Village, ΔΗΜΟΣ, ΚΟΙΝΟΤΗΤΑ,
+    wstArea with Στρόβολος, ΛΑΤΣΙΑ, Lakatameia);
+  - registers: salary scales of the public service (`cy_salary_scale`: SALARY_SCALE, Scale, O_SAL_SCALE with A8,
+    Α13 in Greek letters, Α2-Α5-Α7+2, Κλ. Α8, Α10 και Α11), vehicle plates in fields named for them
+    (`cy_vehicle_plate`: MNP341, DP853), phone numbers of eight digits (`cy_phone`: Tel, Tel.1, TEL_NO, Fax No.,
+    Pharmacy Tel. No., wstPhone1, ΤΗΛΕΦΩΝΟ with 22805200, 99 652441, +357 22651075, 00357-22-675600; they were
+    `phone`, `cz_ico` or nothing; fields named phone stay with the universal rule), postal codes under the names
+    of Cypriot registers (`cy_postcode`: wstPOCode, Ταχ. Κώδικας), parties of Cypriot elections in Greek
+    (`political_party`: PARTY, PARTYDESC, ΚΟΜΜΑ with ΔΗΜΟΚΡΑΤΙΚΟΣ ΣΥΝΑΓΕΡΜΟΣ, ΑΚΕΛ - ΑΡΙΣΤΕΡΑ - ΝΕΕΣ ΔΥΝΑΜΕΙΣ);
+  - Greek: month names by value (`el_month`: Ιανουάριος, Μάϊος, ΦΕΒΡΟΥΑΡΙΟΣ), weekday names by value
+    (`el_dayofweek`: Δευτέρα, ΚΥΡΙΑΚΗ), `school_year` under Σχολική Χρονιά and Ακαδημαϊκό Έτος, `boolean` for Ναι
+    and Όχι (ΝΑΙ, ΟΧΙ, NAI in Latin letters), `urban_rural_class` for Αστική and Αγροτική;
+  - Eurostat tables: age classes (`eurostat_age_class`: AGE with Y18-34, Y_LT14, Y_GE65, TOTAL; classes with the
+    Y also by value) and country and aggregate codes (`eurostat_geo_code`: CITIZEN, GEO with CY, EL, EU27_2020,
+    STLS, TOTAL);
+  - European registers: codes of the European List of Waste by field name (`eu_waste_code`: EWC, waste_code,
+    wstSubCateObjID with 200136, 20 03 01 and 30105 without the zero of chapter 03; no rule before), EASA
+    approval references by value (`easa_approval_number`: CY.ATO.002, CY.147.001), EU marketing authorisation
+    numbers of medicines by value (`eu_marketing_authorisation_number`: EU/2/10/118/011);
+  - universal rules: IMO port facility numbers by value (`imo_port_facility_number`: CYLMS-0001), technologies
+    and bands of mobile base stations by value (`mobile_network_band`: GSM900, UMTS2100, LTE1800; 5G-NR 700),
+    routes of administration (`medication_route`: Route of Administration with Oral, Parenteral, IM, SC), active
+    substances (`medication_generic_name`: Active Ingredient, Active Substance, INN; no rule before), polling
+    stations (`polling_station`: ELECTION_CENTRE, polling_station, Εκλογικό Κέντρο), air pollutant notations by
+    field name (`air_pollutant`: pollutant_code with NO2, PM10; no rule before), a year with its month in a
+    field named month (`yearmonth`: MONTH, Μήνας, mois with 01/2020), ISO weeks by field name (`iso_week`:
+    YearWeekISO, ISO Week with 2021-W32, 2021-1, 2022 - 16; no rule before), `unlocode` under UN Locator Code.
+
+  In the first 1000 lines of the 880 tables of the snapshot 2550 of 8698 fields get a label, 1815 before.
+
 - **Rules for the Colombian files of metacrafter-testdata** (a May 2024 snapshot of Datos Abiertos Colombia,
   www.datos.gov.co, Dateno source cdi00000385, which also lists the tables of the Cundinamarca map portal, the
   ICDE, the CAR, the city of Cali and Postdata; validators in the new `metacrafterext.rules.co.codes` and

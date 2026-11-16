@@ -189,7 +189,7 @@ rules:
   unlocodefield:
     key: unlocode
     name: UN/LOCODE by field name
-    rule: unlocode,un_locode,locode,un_location_code
+    rule: unlocode,un_locode,locode,un_location_code,un locode,un/locode,un locator code,un_locator_code,un location code
     type: field
     match: text
     priority: 1

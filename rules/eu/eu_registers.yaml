@@ -1,0 +1,36 @@
+name: eu-registers
+description: Identifiers of European registers (waste codes, EASA approvals, marketing authorisations of medicines)
+context: common
+lang: en
+country_code: eu
+# Found in an April 2024 snapshot of the National Open Data Portal of Cyprus (data.gov.cy, Dateno source
+# cdi00000396); metacrafter-testdata.
+rules:
+  # The register of licensed waste managers of the Department of Environment: 200136, 170201, 30105.
+  euwastecodebyname:
+    key: eu_waste_code
+    name: European List of Waste code by field name (EWC, ewc_code, waste_code, LoW code, wstSubCateObjID) with 20 03 01 or 200301
+    rule: (?i)ewc(?:[ _-]?(?:code|no|number))?|(?:eu[ _])?waste[ _]?code|low[ _]code|lista?[ _]?europe[ao][ _]?residu[io]s?|κωδικ[οό]ς ?(?:εκα|αποβλ[ηή]του)|wstsubcateobjid
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.eucodes.validate_eu_waste_code
+    needs_values: true
+    priority: 1
+  easaapprovalnumbervalue:
+    key: easa_approval_number
+    name: EASA organisation approval reference by value (CY.ATO.002, CY.147.001, UK.145.01234)
+    rule: metacrafterext.rules.common.eucodes.validate_easa_approval_number
+    type: data
+    match: func
+    minlen: 9
+    maxlen: 16
+    priority: 1
+  eumarketingauthorisationnumbervalue:
+    key: eu_marketing_authorisation_number
+    name: EU marketing authorisation number of a medicine by value (EU/2/10/118/011)
+    rule: metacrafterext.rules.common.eucodes.validate_eu_marketing_authorisation_number
+    type: data
+    match: func
+    minlen: 15
+    maxlen: 20
+    priority: 1
