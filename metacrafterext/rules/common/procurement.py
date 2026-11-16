@@ -3,10 +3,14 @@ tender, restricted procedure, direct award), as procurement registers write it i
 Portuguese, French, Italian, German, English, Estonian, Russian and Japanese, and the codes of
 the OCDS method and eForms procedure type code lists.
 
+Procurement statuses: the stage or outcome of a procedure, an award or a contract (Adjudicación en
+firme, En recepción de ofertas, Desierto/Infructuoso) and the OCDS status code lists.
+
 Found in the ARSAT purchase orders (Argentina: Contratacion directa - Inciso F, Compras Menores,
 Licitacion Publica Nacional), the public works of the City of Buenos Aires, the contract
 registers of Madrid, the SIPOT direct awards of Veracruz, the French DECP, the Estonian contract
-notices and the bid results of Tochigi of metacrafter-testdata.
+notices and the bid results of Tochigi of metacrafter-testdata; the statuses and the Costa Rican
+procedures in the SICOP procurement reports of the INEC (datosabiertos.inec.cr).
 """
 import re
 import unicodedata
@@ -28,6 +32,10 @@ _PHRASES = {
     "procedimiento negociado", "dialogo competitivo", "asociacion para la innovacion",
     "basado en acuerdo marco", "trato directo", "comparacion de precios", "procedimiento abreviado",
     "procedimiento especial de seleccion", "convenio marco",
+    # Costa Rica: Ley de Contratación Administrativa (licitación abreviada, escasa cuantía) and
+    # Ley General de Contratación Pública (licitación mayor, menor, reducida), as SICOP names them
+    "licitacion mayor", "licitacion menor", "licitacion reducida", "escasa cuantia",
+    "procedimiento por excepcion",
     # Portuguese: Brazil (Lei 8.666/1993, Lei 14.133/2021), Portugal (Código dos Contratos Públicos)
     "pregao eletronico", "pregao presencial", "pregao", "concorrencia publica", "concorrencia",
     "tomada de precos", "dispensa de licitacao", "dispensa", "inexigibilidade", "ajuste direto",
@@ -120,3 +128,39 @@ def validate_procurement_method_or_code(value):
     named after the procedure."""
     text = _fold(value)
     return text in PROCUREMENT_METHOD_CODES or validate_procurement_method(value)
+
+
+# Statuses of a procedure that only procurement has: an award, bids, a void tender, an appeal.
+# Vigente, Finalizado or En proceso are the statuses of anything and are left to other rules.
+_STATUS_WORDS = re.compile(
+    r"\b(?:adjudicad[oa]s?|adjudicacion|preadjudicad[oa]|readjudicad[oa]|desiert[oa]s?|infructuos[oa]s?|"
+    r"ofertas?|licitad[oa]|apelacion|revocacion|revocad[oa]|contrato|contratad[oa]|"
+    r"sin efecto|awarded|unsuccessful|tendering|bids?)\b")
+_STATUS_PLAIN = frozenset((
+    # SICOP (Costa Rica): stages of a procedure in its reports
+    "en evaluacion", "en apertura", "en recepcion", "publicado", "publicada",
+))
+
+# OCDS code lists tenderStatus, awardStatus and contractStatus; accepted in a field of an OCDS
+# record only (tender.status, awards.status, contracts.status).
+PROCUREMENT_STATUS_CODES = frozenset((
+    "planning", "planned", "active", "cancelled", "unsuccessful", "complete", "withdrawn", "pending",
+    "terminated"))
+
+
+def validate_procurement_status(value):
+    """The status of a procurement procedure written out: Contrato, Adjudicación en firme,
+    Desierto/Infructuoso, Sin efecto, En recepción de ofertas, En evaluación, Contrato notificado;
+    not Vigente or Finalizado alone, and not a sentence."""
+    text = _fold(value).replace("/", " / ")
+    text = re.sub(r" +", " ", text)
+    if not text or len(text) > 60 or len(text.split()) > 7 or re.search(r"\d", text):
+        return False
+    if validate_procurement_method(value):
+        return False  # Contratación Directa is a kind of procedure
+    return text in _STATUS_PLAIN or bool(_STATUS_WORDS.search(text))
+
+
+def validate_procurement_status_code(value):
+    """A code of the OCDS tender, award or contract status code lists."""
+    return _fold(value) in PROCUREMENT_STATUS_CODES

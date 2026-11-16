@@ -100,6 +100,18 @@ rules:
     validator: metacrafterext.rules.common.generic.validate_person_fullname_not_place
     needs_values: true
     priority: 1
+  # Found in the SICOP procurement reports of the INEC of Costa Rica (datosabiertos.inec.cr,
+  # metacrafter-testdata): the officials in charge of each step of a procedure.
+  esinchargefullnamebyname:
+    key: person_fullname
+    name: Full name of the person in charge by Spanish field name (ENCARGADO_PROVEDURIA, ENCARGADO_ESTUDIOS_TECNICOS, ADMINISTRADOR_CONTRATACION)
+    # KRISTEL ESTIBALIZ RAMOS BRENES, Guillermo Reyes Gutiérrez; an encargado of unit names fails.
+    rule: (?i)encargad[oa]s?(?:[ _](?:del?[ _]|de[ _]la[ _])?[a-zñáéíóú]+){0,4}|administrador(?:a|es)?(?:[ _](?:del?[ _]|de[ _]la[ _])?(?:contrataci[oó]n|contrato|proyecto))
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.generic.validate_person_fullname_not_place
+    needs_values: true
+    priority: 1
   esjobtitlebyname:
     key: jobtitle
     name: Job title by Spanish field name (puesto, puesto_de_trabajo, cargo, ocupación) with text

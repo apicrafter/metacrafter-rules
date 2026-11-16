@@ -9,6 +9,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Rules for the Costa Rican files of metacrafter-testdata** (an April 2024 snapshot of Datos Abiertos INEC,
+  datosabiertos.inec.cr, Dateno source cdi00000393: the procurement reports the Instituto Nacional de Estadística
+  y Censos exports from SICOP, its budgets and budget execution reports; validators in the new
+  `metacrafterext.rules.cr.codes` and in `metacrafterext.rules.common.procurement`, rules in the new
+  `rules/cr/cr_codes.yaml` and in `rules/common/procurement.yaml` and `rules/es/es_persons.yaml`):
+  - SICOP: procedure numbers by value (`cr_sicop_procedure_number`: 2022CD-000001-0014400001), contract numbers
+    in fields named for them (`cr_sicop_contract_number`: NUMERO_CONTRATO with 0432023010900006,
+    0432023010900090-00 or, from a spreadsheet, 432016010900002.00; labelled `idnik` and `imsi` before),
+    catalogue codes of goods and services (`cr_sicop_goods_code`: COD_BIEN_SERVICIO with 4010160492001000);
+  - budget: codes of the classification by object of expenditure in fields named for them
+    (`cr_budget_object_code`: SUBPARTIDA, SUBP., PART./ SUBP., Código por OBG with 1, 1.04, 1.04.04; the
+    subpartidas were labelled `date` before) and of the income classification by value
+    (`cr_budget_income_code`: 1.3.1.2.09.09.0.0.000, 1.3.1.2.9.9.0.0.0);
+  - universal rules: the status of a procurement procedure (`procurement_status`: ESTADO with Contrato,
+    Adjudicación en firme, Desierto/Infructuoso, Sin efecto, En recepción de ofertas; `tender.status`,
+    `awards.status` and `contracts.status` of an OCDS record with the codes of its status code lists), the
+    procedure types of the Costa Rican procurement laws (`procurement_method`: Licitación Mayor, Licitación
+    Menor, Licitación Reducida, Escasa cuantía, Procedimiento por Excepción), suppliers by Spanish field name
+    (`orgname`: PROVEEDOR_ADJUDICADO, PROVEEDOR_ADJU, contratista) and the people in charge of a step
+    (`person_fullname`: ENCARGADO_PROVEDURIA, ENCARGADO_ESTUDIOS_TECNICOS, ADMINISTRADOR_CONTRATACION).
+  An `estado` of procurement statuses (Contrato, Adjudicación en firme, Apelación o Revocación,
+  Desierto/Infructuoso) is no longer a `state`, and sixteen digits that start with 0 are no Indonesian NIK
+  (`idnik`): province codes start at 11.
 - **Rules for the Colombian files of metacrafter-testdata** (a May 2024 snapshot of Datos Abiertos Colombia,
   www.datos.gov.co, Dateno source cdi00000385, which also lists the tables of the Cundinamarca map portal, the
   ICDE, the CAR, the city of Cali and Postdata; validators in the new `metacrafterext.rules.co.codes` and
