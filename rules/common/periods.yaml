@@ -85,3 +85,14 @@ rules:
     validator: metacrafterext.rules.common.eucodes.validate_iso_week_loose
     needs_values: true
     priority: 1
+  # season of field surveys of DataverseNO (Summer, Winter); the season of a cyclone or of a sport is a year
+  # (1897, 1986/87).
+  seasonbyname:
+    key: season
+    name: Season of the year by field name (season, Season, season_name, sampling_season) with Summer, Winter
+    rule: (?i)(?:[a-z]+[ _])?seasons?(?:[ _]name)?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.periods.validate_season_name
+    needs_values: true
+    priority: 1

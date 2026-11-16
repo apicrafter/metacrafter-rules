@@ -9,6 +9,49 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Rules for the Pacific, Polish, Macedonian, Mongolian, Dutch, Norwegian and New Zealand files of
+  metacrafter-testdata** (2024 snapshots of open data portals and data repositories, Dateno sources cdi00001031
+  to cdi00001296: the environment data portals of the Pacific of SPREP, epibaza.pzh.gov.pl, data.gov.mk,
+  data.num.edu.mn, the IISH Dataverse, DataverseNO, the Lithuanian Data Archive LiDA, data.govt.nz,
+  data.bioheritage.nz, map.gov.kz; validators in the new `metacrafterext.rules.common.conservation`,
+  `metacrafterext.rules.common.epidemiology`, `metacrafterext.rules.pl.codes`, `metacrafterext.rules.mk.codes`,
+  `metacrafterext.rules.mn.codes`, `metacrafterext.rules.no.codes` and `metacrafterext.rules.nz.codes`, rules in
+  the new `rules/common/conservation.yaml`, `rules/common/occupations.yaml`, `rules/pl/pl_statistics.yaml`,
+  `rules/mk/mk_common.yaml`, `rules/mn/mn_common.yaml`, `rules/no/no_legal.yaml` and `rules/nz/nz_geo.yaml` and in
+  `rules/common/redlist.yaml`, `rules/common/science.yaml`, `rules/common/periods.yaml`,
+  `rules/common/medical.yaml` and `rules/nl/nl_geo.yaml`). In the first lines of the 1 922 distinct tables of
+  the snapshots 4 521 columns get a label, 3 848 before:
+  - protected areas and species: the attributes of the World Database on Protected Areas
+    (`wdpa_governance_type`: GOV_TYPE with Indigenous peoples; `wdpa_ownership_type`: OWN_TYPE with State,
+    Communal; `wdpa_designation_type`: DESIG_TYPE with National; `wdpa_no_take`: NO_TAKE with All, Part;
+    `wdpa_verification`: VERIF with State Verified; `wdpa_id`: WDPAID), the population trend, the criteria and
+    the rank columns of Red List exports (`iucn_population_trend`: populationTrend with Decreasing;
+    `iucn_red_list_criteria`: redlistCriteria; `taxon_name`: kingdomName, phylumName, className, orderName,
+    familyName with ANIMALIA, CARANGIDAE, which was `person_surname`, and genusName), c-squares codes by value
+    and by field name (`csquares_code`: C-Square Code with 1212:121:2), the basin and the storm nature of
+    IBTrACS (`ibtracs_basin`: BASIN with SP, SI; `ibtracs_nature`: NATURE with TS, NR);
+  - occupations and periods: HISCO codes (`hisco`: hisco, occupation_hisco_1 with 41025), ISCO-88 and ISCO-08
+    codes under survey names (`isco88`: isco88, spisco88, iscoco; `isco08`: isco08, spisco08), seasons
+    (`season`: season with Summer, Winter), case classifications of disease surveillance
+    (`case_classification`: klasyfikacja with potwierdzony, prawdopodobny, możliwy);
+  - Poland: voivodeships by value and by field name (`pl_voivodeship`: województwo with mazowieckie, ŚLĄSKIE),
+    sex, age groups, years, months, town or village and diseases under Polish names (`gender`: płeć with M, K;
+    `age_range`: grupa wieku with 20-29, 70+; `year`: rok zgłoszenia; `month`: miesiąc zachorowania;
+    `urban_rural_class`: środowisko zamieszkania with miasto, wieś; `medical_condition`: jednostka chorobowa),
+    yes and no by value (`boolean`: tak, nie);
+  - North Macedonia: municipalities (`mk_municipality`: општина with Крушево, Карпош), first names, surnames,
+    phone numbers, years, months, coordinates, names, descriptions, notes and settlements under Macedonian
+    names (`person_firstname`: име; `person_surname`: презиме; `phone`: контакт телефон, тел. with 070235790,
+    which was `rsin`, `cz_ico` or `plregon`; `year`: година; `month`: месец; `latitude`, `longitude`:
+    географска ширина (latitude); `name`: назив; `description`: опис; `comment`: забелешка; `city`: населено
+    место);
+  - Mongolia: days of the week by value (`mn_dayofweek`: Даваа, Лхагва, Баасан), sex, academic years, years
+    and names under Mongolian names (`gender`: хүйс with Эрэгтэй, Эмэгтэй; `school_year`: хичээлийн_жил;
+    `year`: он; `name`: нэр);
+  - the Netherlands, Norway and New Zealand: Amsterdamse codes of municipalities (`nl_amco`: amco, acode with
+    10002), references of decisions of the Supreme Court of Norway by value (`no_supreme_court_reference`:
+    HR-2019-2420-A, Rt-2015-353), regions of New Zealand (`nz_region`: region, RegionGrp with Canterbury).
+
 - **Rules for the Indonesian and Italian files of metacrafter-testdata** (2024 snapshots of open data portals,
   Dateno sources cdi00000901 to cdi00000970: Kabupaten Tangerang, BRIN, data.gov.ie, ARPA Campania, Comune di
   Genova, Comune di Matera, the Ministero delle infrastrutture e dei trasporti, Regione Toscana, the Dataverse
@@ -1050,6 +1093,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `area`.
 
 ### Fixed
+
+- Eight digits and a letter are a Spanish NIF only with its check letter (`esnif` by value now runs
+  `validate_es_nif`), and a Statbel statistical sector is written in capitals: the object types of the
+  topographic layers of map.gov.kz (71150000m, 51631000l, 43211000f) were `esnif` in 44 and
+  `be_statistical_sector` in 19 of 77 distinct tables.
 
 - An amount with dots between the thousands and before the cents (7.922.45, 33.698.81 in a property inventory
   of the Comune di Matera) is no semantic version, and a number with dots between the thousands (1.336.326,

@@ -45,3 +45,14 @@ rules:
     minlen: 10
     maxlen: 14
     priority: 1
+  # amco and acode of the historical municipality tables of the IISH Dataverse (datasets.iisg.amsterdam, a
+  # 2024 snapshot): 10002, 11434, beside the CBS number (cbsnr).
+  nlamcobyname:
+    key: nl_amco
+    name: Amsterdamse code of a Dutch municipality by field name (amco, AMCO, acode, amsterdamse_code, amsterdam_code)
+    rule: (?i)amco|acode|amsterdam(?:se)?[ _]?code
+    type: field
+    match: regex
+    validator: metacrafterext.rules.nl.validators.validate_nl_amco
+    needs_values: true
+    priority: 1

@@ -1,0 +1,17 @@
+name: no-legal
+description: References of decisions of the Supreme Court of Norway
+context: legal
+lang: nb
+country_code: 'no'
+# Found in a 2024 snapshot of DataverseNO (dataverse.no, Dateno source cdi00001211): tables of decisions
+# of Høyesterett; metacrafter-testdata.
+rules:
+  nosupremecourtreferencevalue:
+    key: no_supreme_court_reference
+    name: Reference of a decision of the Supreme Court of Norway by value (HR-2019-2420-A, Rt-2015-353)
+    rule: metacrafterext.rules.no.codes.validate_no_supreme_court_reference
+    type: data
+    match: func
+    minlen: 9
+    maxlen: 16
+    priority: 1

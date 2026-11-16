@@ -1,0 +1,99 @@
+name: conservation
+description: Attributes of protected areas (WDPA), cyclone tracks (IBTrACS) and c-squares cells
+context: environment
+lang: common
+# Found in 2024 snapshots of the environment data portals of the Pacific (pacific-data.sprep.org and the
+# country portals of SPREP, Dateno sources cdi00001247 to cdi00001264: the national extracts of the World
+# Database on Protected Areas and the AquaMaps species counts by c-square) and of data.govt.nz
+# (cdi00001241: the IBTrACS tracks of the South Pacific); metacrafter-testdata.
+rules:
+  wdpagovernancetypebyname:
+    key: wdpa_governance_type
+    name: WDPA governance type by field name (GOV_TYPE, governance_type) with Indigenous peoples, Joint governance
+    rule: (?i)gov(?:ernance)?[ _]?type
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.conservation.validate_wdpa_governance_type
+    needs_values: true
+    priority: 1
+  wdpaownershiptypebyname:
+    key: wdpa_ownership_type
+    name: WDPA ownership type by field name (OWN_TYPE, ownership_type) with State, Communal, Joint ownership
+    rule: (?i)own(?:ership)?[ _]?type
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.conservation.validate_wdpa_ownership_type
+    needs_values: true
+    priority: 1
+  wdpadesignationtypebyname:
+    key: wdpa_designation_type
+    name: WDPA designation type by field name (DESIG_TYPE, designation_type) with National, International
+    rule: (?i)desig(?:nation)?[ _]?type
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.conservation.validate_wdpa_designation_type
+    needs_values: true
+    priority: 1
+  wdpanotakebyname:
+    key: wdpa_no_take
+    name: WDPA no-take status by field name (NO_TAKE) with All, Part, Not Reported
+    rule: (?i)no[ _]?take
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.conservation.validate_wdpa_no_take
+    needs_values: true
+    priority: 1
+  wdpaverificationbyname:
+    key: wdpa_verification
+    name: WDPA verification status by field name (VERIF) with State Verified, Expert Verified
+    rule: (?i)verif(?:ication)?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.conservation.validate_wdpa_verification
+    needs_values: true
+    priority: 1
+  ibtracsbasinbyname:
+    key: ibtracs_basin
+    name: IBTrACS basin code by field name (BASIN) with SP, SI, NA, WP
+    rule: (?i)basin
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.conservation.validate_ibtracs_basin
+    needs_values: true
+    priority: 1
+  ibtracsnaturebyname:
+    key: ibtracs_nature
+    name: IBTrACS storm nature by field name (NATURE) with TS, ET, NR
+    rule: (?i)nature
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.conservation.validate_ibtracs_nature
+    needs_values: true
+    priority: 1
+  csquarescodebyname:
+    key: csquares_code
+    name: C-squares code by field name (C-Square Code, csquarecode, c_square, csquare)
+    rule: (?i)c[- _]?squares?(?:[ _]?(?:code|id))?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.conservation.validate_csquares_code
+    needs_values: true
+    priority: 1
+  csquarescodevalue:
+    key: csquares_code
+    name: C-squares code finer than ten degrees by value (1212:121:2, 3112:360)
+    rule: metacrafterext.rules.common.conservation.validate_csquares_code_fine
+    type: data
+    match: func
+    minlen: 6
+    maxlen: 22
+    priority: 1
+  wdpaidbyname:
+    key: wdpa_id
+    name: WDPA site ID by field name (WDPAID, wdpa_id, WDPA ID) with a number
+    rule: (?i)wdpa[ _]?id
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.conservation.validate_wdpa_id
+    needs_values: true
+    priority: 1

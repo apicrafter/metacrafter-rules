@@ -50,7 +50,12 @@ def validate_be_statistical_sector(value):
     """A Statbel statistical sector: the NIS code of the municipality and four characters, a letter
     for the former municipality and three for the sector (21004A00-, 62063A012, 61072F3MN, 6103131PQ;
     21004ZZZZ for an unknown sector). The last four are not all digits (not 621234567)."""
-    m = _SECTOR.fullmatch(_text(value).upper())
+    text = _text(value)
+    # The codes are written in capitals: 51631000l and 71150000m are object types of Kazakh topographic
+    # maps (eight digits and l, m or f for line, area or point).
+    if any(ch.islower() for ch in text):
+        return False
+    m = _SECTOR.fullmatch(text)
     if not m:
         return False
     tail = m.group(2)

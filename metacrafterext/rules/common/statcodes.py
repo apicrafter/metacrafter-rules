@@ -110,3 +110,22 @@ def validate_emdat_disaster_number(value):
     """An EM-DAT disaster number: year, a hyphen and a four-digit sequence, with the ISO alpha-3
     code of the country in the public table (2020-0218, 1993-0500-CMR)."""
     return bool(_EMDAT_NUMBER.match(str(value).strip()))
+
+
+# ------------------------------------------------------------------ occupations
+# Found in 2024 snapshots of the IISH Dataverse (datasets.iisg.amsterdam, Dateno source cdi00001190) and of
+# the Lithuanian Data Archive LiDA (lida.dataverse.lt, cdi00001098).
+_HISCO = re.compile(r"\d{4,5}(?:\.0)?")
+_ISCO_CODE = re.compile(r"\d{1,5}(?:\.0)?")
+
+
+def validate_hisco(value):
+    """A HISCO occupation code: five digits, four when a spreadsheet dropped the leading zero, also
+    read as a float (41025, 02120, 2000, 58320.0); not the negative numbers of uncoded titles."""
+    return bool(_HISCO.fullmatch(str(value).strip()))
+
+
+def validate_isco_code(value):
+    """An ISCO occupation code of one to four digits, or the five digits that surveys use for no answer
+    (7245, 2145, 0, 66666), also read as a float."""
+    return bool(_ISCO_CODE.fullmatch(str(value).strip()))

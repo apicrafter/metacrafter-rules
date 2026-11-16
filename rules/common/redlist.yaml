@@ -17,7 +17,7 @@ rules:
   iucnredlistcriteriabyname:
     key: iucn_red_list_criteria
     name: IUCN Red List criteria by field name (critério, criterio, criteria, iucn_criteria)
-    rule: (?i)crit[eé]rios?(?:[ _](?:iucn|uicn|de[ _]avalia[cç][aã]o))?|(?:iucn[ _])?criteri(?:a|on)
+    rule: (?i)crit[eé]rios?(?:[ _](?:iucn|uicn|de[ _]avalia[cç][aã]o))?|(?:(?:iucn|red[ _]?list)[ _]?)?criteri(?:a|on)
     type: field
     match: regex
     validator: metacrafterext.rules.common.taxa.validate_iucn_red_list_criteria
@@ -32,3 +32,14 @@ rules:
     minlen: 6
     maxlen: 120
     priority: 2
+  # redlistCategory, redlistCriteria and populationTrend are the columns of the assessment exports of the
+  # IUCN Red List (the species lists of the Pacific Environment Data Portal, SPREP, a 2024 snapshot).
+  iucnpopulationtrendbyname:
+    key: iucn_population_trend
+    name: Red List population trend by field name (populationTrend, population_trend, pop_trend) with Decreasing, Stable
+    rule: (?i)(?:[a-z]+[ _])?pop(?:ulation)?[ _]?trend(?:[ _]?(?:iucn|red[ _]?list))?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.conservation.validate_iucn_population_trend
+    needs_values: true
+    priority: 1

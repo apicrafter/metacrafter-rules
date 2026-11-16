@@ -134,3 +134,13 @@ def validate_wo_publication_number(value):
 def validate_upov_code(value):
     """A UPOV code of a plant taxon: SOLAN_LYC, LILIU, PRUNU_PER_NUC, OCIMU_BAS (not Lilium or LIL)."""
     return bool(_UPOV.match(str(value).strip()))
+
+
+# ------------------------------------------------------------------ seasons
+# Found in 2024 snapshots of DataverseNO (dataverse.no, Dateno source cdi00001211).
+_SEASONS = frozenset(("spring", "summer", "autumn", "fall", "winter"))
+
+
+def validate_season_name(value):
+    """A season of the year in English: Spring, summer, Autumn, FALL, Winter (not 1986/87 or wet)."""
+    return str(value).strip().lower() in _SEASONS
