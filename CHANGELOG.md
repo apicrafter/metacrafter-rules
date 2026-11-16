@@ -19,7 +19,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     the Argentine INDEC codes), codes of autonomous communities (`es_ccaa_code`: cod_comunidad_destino 7,
     codigo_de_ca 10), INE country codes (`es_ine_country_code`: Código Nacionalidad 108), street type
     abbreviations of the cadastre (`es_tipo_via`: TipoVia PZ, VIAL CL), NUTS codes under codnut1 to codnut3
-    and DIR3 codes (`es_dir3`: dir3 L05120007);
+    and DIR3 codes (`es_dir3`: dir3 L05120007); a continent or a group of countries under a name that ends in
+    nacionalidad (des_continente_nacionalidad: Europa) is no longer a `nationality`;
   - education: school codes (`es_centro_docente_code`: COD_CENTRO 03013698, cod_unidad_responsable 28051581),
     RUCT codes of universities and degrees (`es_ruct_universidad_code`: cod_universidad 056;
     `es_ruct_titulo_code`: cod_titulacion 2500089), Erasmus institution codes by field name and by value

@@ -18,11 +18,12 @@ rules:
     validator: metacrafterext.rules.es.codes.validate_es_ine_province_code
     needs_values: true
     priority: 1
-  # codmun 12028, cod_municipio_residencia 28006, ine 12002, codmunsub 12004, codigo_mun 12021.
+  # codmun 12028, cod_municipio_residencia 28006, ine 12002, codmunsub 12004, codigo_mun 12021. Codigomunicipio
+  # in one word is left out: a Brazilian table names the municipality part of an IBGE code so.
   esinemunicipiocodebyname:
     key: es_ine_municipio
     name: INE municipality code by Spanish field name (cod_municipio, codmun, ine, codigo_mun, cod_ine) with 28079, 12028
-    rule: (?i)(?:cod(?:igo)?|c[oó]digo|id)[ _]?mun(?:i|ic|icipio)?(?:[ _](?:residencia|destino|curso|nacimiento|centro(?:[ _]sec)?|ine))?|codmunsub|muni(?:cipio)?[ _]c[oó]d(?:igo)?|(?:c[oó]d(?:igo)?[ _])?ine(?:[ _]municipio)?
+    rule: (?i)(?:cod(?:igo)?|c[oó]digo|id)[ _]mun(?:i|ic|icipio)?(?:[ _](?:residencia|destino|curso|nacimiento|centro(?:[ _]sec)?|ine))?|codmun(?:i|ic|icipio|sub)?|muni(?:cipio)?[ _]c[oó]d(?:igo)?|(?:c[oó]d(?:igo)?[ _])?ine(?:[ _]municipio)?
     type: field
     match: regex
     validator: metacrafterext.rules.es.codes.validate_es_ine_municipio_code
