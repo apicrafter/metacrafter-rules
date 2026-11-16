@@ -1,0 +1,69 @@
+name: pt-codes
+description: Portuguese administrative area codes, census subsections, municipalities, districts and quarters
+context: geo
+lang: pt
+country_code: pt
+# Found in 2024 snapshots of Portuguese open data portals (Dateno sources cdi00001307, Observatório do Alto
+# Tâmega e Barroso; cdi00001313, Águeda; cdi00001315, Cascais; cdi00001317, dados.gov.pt; cdi00001318,
+# Dados na Justiça; cdi00001324, Viseu Dão Lafões); metacrafter-testdata.
+rules:
+  # DICOFRE, Dicofre, DTMN11 and COD_INE of the layers of the Alto Tâmega: 170301, 1703.
+  ptdicofrebyname:
+    key: pt_dicofre
+    name: Portuguese DICOFRE code by field name (dicofre, dtmn11, dtmnfr, cod_ine, dico) with 170301, 1703
+    rule: (?i)dicofre(?:\d{2,4})?|dico|dt(?:mn|cc)(?:fr)?(?:\d{2,4})?|cod(?:igo)?[ _]?ine|ine[ _]?cod(?:e|igo)?|cod(?:igo)?[ _]?(?:da[ _])?freg(?:uesia)?|cod(?:igo)?[ _]?(?:do[ _])?conc(?:elho)?|freg[ _]?cod|conc[ _]?cod
+    type: field
+    match: regex
+    validator: metacrafterext.rules.pt.codes.validate_pt_dicofre
+    needs_values: true
+    priority: 1
+  # BGRI11 and GEO_COD of the census layers of 2011: 17032100111.
+  ptbgribyname:
+    key: pt_bgri_code
+    name: Portuguese census subsection code by field name (bgri11, bgri2021, geo_cod, subseccao) with 17032100111
+    rule: (?i)bgri(?:[ _]?\d{2,4})?(?:[ _]?(?:id|cod(?:e|igo)?))?|geo[ _]?cod(?:e|igo)?|subsec(?:c|ç)?(?:ao|ão)?(?:[ _]?\d{2,4})?|cod(?:igo)?[ _]?subsec\w*
+    type: field
+    match: regex
+    validator: metacrafterext.rules.pt.codes.validate_pt_bgri_code
+    needs_values: true
+    priority: 1
+  # CONCELHO, Concelho, concelho, Concelho da Ocorrência: Chaves, VILA POUCA DE AGUIAR.
+  ptconcelhobyname:
+    key: pt_concelho
+    name: Portuguese municipality by field name (concelho, município, concelho da ocorrência) with Chaves, VILA POUCA DE AGUIAR
+    rule: (?i)(?:nome[ _]|des(?:ig(?:nacao)?)?[ _])?concelhos?(?:[ _]\w+){0,3}|(?:nome[ _])?munic[ií]pios?(?:[ _]\w+){0,3}|conc(?:[ _]?(?:nome|des\w*))?|mun(?:[ _]?(?:nome|des\w*))?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.pt.codes.validate_pt_concelho
+    needs_values: true
+    priority: 1
+  # DISTRITO, Distrito, Distrito da Ocorrência: VILA REAL, Faro.
+  ptdistrictbyname:
+    key: pt_district
+    name: Portuguese district by field name (distrito, distrito da ocorrência) with Vila Real, FARO
+    rule: (?i)(?:nome[ _]|des(?:ig(?:nacao)?)?[ _])?distritos?(?:[ _]\w+){0,3}|dist(?:[ _]?(?:nome|des\w*))?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.pt.codes.validate_pt_district
+    needs_values: true
+    priority: 1
+  # Trimestre of the justice statistics: 4º Trimestre.
+  ptquartervalue:
+    key: pt_quarter
+    name: Quarter in Portuguese by value (4º Trimestre, 1.º trimestre de 2023)
+    rule: '[1-4]\.?[ºo°]? ?[Tt]rimestre(?: (?:de )?\d{4})?'
+    type: data
+    match: regex
+    minlen: 11
+    maxlen: 25
+    priority: 1
+  # Código Postal, CodigoPost, Codigo Postal Estabelecimento: 2765-013, 2765-013 Estoril.
+  ptpostcodebyname:
+    key: pt_postcode
+    name: Portuguese postal code by field name (código postal, codigopost, cod_postal) with 2765-013, 2765-013 Estoril
+    rule: (?i)c[oó]d(?:igo)?[ _.]?post(?:al)?(?:[ _]\w+){0,2}|cp7?|cpostal
+    type: field
+    match: regex
+    validator: metacrafterext.rules.pt.codes.validate_pt_postcode
+    needs_values: true
+    priority: 1

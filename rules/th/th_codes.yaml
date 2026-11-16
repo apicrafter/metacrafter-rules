@@ -1,0 +1,130 @@
+name: th-codes
+description: Thai administrative area codes, regions, month names, dates, health facility and school codes, bond symbols
+context: government
+lang: th
+country_code: th
+# Found in 2024 snapshots of Thai government CKAN catalogues (Dateno sources cdi00001512, City Data
+# Platform; cdi00001518, Department of Fisheries; cdi00001520, National Statistical Office; cdi00001521,
+# Office of the Civil Service Commission; cdi00001522, Department of Sericulture; cdi00001530, Public Debt
+# Management Office; cdi00001531, Office of the Vocational Education Commission; cdi00001532, Bangkok
+# Metropolitan Administration); metacrafter-testdata.
+rules:
+  # รหัสจังหวัด of the health facility lists: 83, 55.
+  thprovincecodebyname:
+    key: th_province_code
+    name: Thai province code by field name (รหัสจังหวัด, changwat_code, cwt_code) with 10, 83
+    rule: (?i)รหัสจังหวัด|รหัส[ _]จังหวัด|(?:changwat|chw|cwt)[ _]?(?:code|id)|prov(?:ince)?[ _]?code[ _]?th|th[ _]prov(?:ince)?[ _]?code
+    type: field
+    match: regex
+    validator: metacrafterext.rules.th.codes.validate_th_province_code
+    needs_values: true
+    priority: 1
+  # dcode of the tables of the Bangkok Metropolitan Administration: 1001, 1030.
+  thdistrictcodebyname:
+    key: th_district_code
+    name: Thai district code by field name (dcode, รหัสอำเภอ, รหัสเขต, amphoe_code) with 1001, 1030
+    rule: (?i)dcode|d_code|รหัสอำเภอ|รหัสเขต|(?:amphoe|amphur|amp)[ _]?(?:code|id)|ampcode|code[ _]dist|dist(?:rict)?[ _]?code[ _]?th
+    type: field
+    match: regex
+    validator: metacrafterext.rules.th.codes.validate_th_district_code
+    needs_values: true
+    priority: 1
+  # scode of the tables of the Bangkok Metropolitan Administration: 100101, 100501.
+  thsubdistrictcodebyname:
+    key: th_subdistrict_code
+    name: Thai subdistrict code by field name (scode, รหัสตำบล, รหัสแขวง, tambon_code) with 100101
+    rule: (?i)scode|s_code|รหัสตำบล|รหัสแขวง|(?:tambon|tumbon|tam)[ _]?(?:code|id)|tamcode
+    type: field
+    match: regex
+    validator: metacrafterext.rules.th.codes.validate_th_subdistrict_code
+    needs_values: true
+    priority: 1
+  # dname, District and district of the Bangkok tables: จตุจักร, เขตจตุจักร, ป้อมปราบฯ.
+  thbangkokdistrictbyname:
+    key: th_bangkok_district
+    name: Bangkok district by field name (dname, district, เขต, สำนักงานเขต) with จตุจักร, เขตพระนคร
+    rule: (?i)d[ _]?name|district(?:[ _]?(?:name|th|thai))?|dist|เขต|ชื่อเขต|สำนักงานเขต|เขตพื้นที่|อำเภอ|อำเภอ/เขต|เขต/อำเภอ
+    type: field
+    match: regex
+    validator: metacrafterext.rules.th.codes.validate_th_bangkok_district_or_total
+    needs_values: true
+    priority: 1
+  # REGION and region of the National Statistical Office, ภาค of the City Data Platform.
+  thregionbyname:
+    key: th_region
+    name: Thai region by field name (ภาค, region, ภูมิภาค) with ภาคเหนือ, กลาง, 4) ภาคตะวันออกเฉียงเหนือ
+    rule: (?i)ภาค|ภูมิภาค|region(?:[ _]?(?:name|th|thai))?|reg(?:[ _]name)?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.th.codes.validate_th_region_or_total
+    needs_values: true
+    priority: 1
+  # รหัส5หลัก and รหัส9หลัก of the health facility lists of the City Data Platform: 10741, 001074100.
+  thhcodebyname:
+    key: th_hcode
+    name: Thai health facility code by field name (hcode, hospcode, รหัส5หลัก, รหัส9หลัก, รหัสสถานบริการ) with 10741, 001074100
+    rule: '(?i)h(?:osp)?[ _]?code(?:[ _]?[59])?|hcode9|รหัส ?[59] ?หลัก|รหัส(?:สถานบริการ|หน่วยบริการ|สถานพยาบาล|โรงพยาบาล)(?:สุขภาพ)?(?:[ ]?[59] ?หลัก)?'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.th.codes.validate_th_hcode
+    needs_values: true
+    priority: 1
+  # รหัสสถานศึกษา and รหัสโรงเรียน of the college lists of the vocational education commission.
+  thschoolcodebyname:
+    key: th_school_code
+    name: Thai school code by field name (รหัสสถานศึกษา, รหัสโรงเรียน) with 1310016101
+    rule: (?i)รหัสสถานศึกษา|รหัสโรงเรียน|รหัสวิทยาลัย|รหัสสถานศึกษา ?10 ?หลัก|school[ _]?code[ _]?10|schoolcode10
+    type: field
+    match: regex
+    validator: metacrafterext.rules.th.codes.validate_th_school_code
+    needs_values: true
+    priority: 1
+  # SYMBOL of the auction and bond tables of the Public Debt Management Office: LB436A, LB27NA.
+  thbondsymbolbyname:
+    key: th_bond_symbol
+    name: Thai bond symbol by field name (symbol, thaibma_symbol, รุ่นพันธบัตร) with LB436A, LB27NA
+    rule: (?i)(?:thai ?bma|bond|issue)?[ _]?symbol|สัญลักษณ์|รุ่นพันธบัตร|รุ่นตราสารหนี้|ชื่อรุ่น
+    type: field
+    match: regex
+    validator: metacrafterext.rules.th.codes.validate_th_bond_symbol
+    needs_values: true
+    priority: 1
+  # ระดับตำแหน่ง of the staff statistics of the civil service commission.
+  thcivilservicelevelbyname:
+    key: th_civil_service_position_level
+    name: Thai civil service position level by field name (ระดับตำแหน่ง, ระดับ) with ชำนาญการ, อำนวยการสูง
+    rule: (?i)ระดับตำแหน่ง|ระดับ|ตำแหน่งระดับ|position[ _]level|level
+    type: field
+    match: regex
+    validator: metacrafterext.rules.th.codes.validate_th_civil_service_position_level
+    needs_values: true
+    priority: 1
+  # SEX and เพศ of the statistical tables: ชาย, หญิง, รวม.
+  thsexbyname:
+    key: gender
+    name: Sex by field name with Thai values (เพศ, sex, gender) with ชาย, หญิง, รวม
+    rule: (?i)เพศ|sex(?:[ _][a-z]\w*)?|gender
+    type: field
+    match: regex
+    validator: metacrafterext.rules.th.codes.validate_th_sex
+    needs_values: true
+    priority: 1
+  thsexvalue:
+    key: gender
+    name: Sex by Thai value (ชาย, หญิง)
+    rule: metacrafterext.rules.th.codes.validate_th_sex_word
+    type: data
+    match: func
+    minlen: 3
+    maxlen: 7
+    priority: 1
+  # คำนำหน้าชื่อ of the farmer lists of the Department of Sericulture: นาย, นาง, นางสาว.
+  thnameprefixbyname:
+    key: honorificprefix
+    name: Name prefix by Thai field name (คำนำหน้าชื่อ, คำนำหน้า) with นาย, นาง, นางสาว
+    rule: (?i)คำนำหน้าชื่อ|คำนำหน้า|คำนำหน้านาม|prefix|title|name[ _]?prefix|prename
+    type: field
+    match: regex
+    validator: metacrafterext.rules.th.codes.validate_th_name_prefix
+    needs_values: true
+    priority: 1

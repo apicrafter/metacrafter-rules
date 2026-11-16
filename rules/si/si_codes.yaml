@@ -1,0 +1,117 @@
+name: si-codes
+description: Slovenian activity codes, budget user codes, cadastre, statistical regions and register numbers
+context: government
+lang: sl
+country_code: si
+# Found in a 2024 snapshot of the open data portal of Slovenia (podatki.gov.si, Dateno source
+# cdi00001493); metacrafter-testdata.
+rules:
+  # SKD of the registers of accommodation and sports providers: I56.300, R93.190.
+  siskdvalue:
+    key: si_skd_code
+    name: Slovenian activity code (SKD) by value with the section letter (I56.300, R93.190)
+    rule: '[A-U]\d{2}\.\d{3}'
+    type: data
+    match: regex
+    minlen: 7
+    maxlen: 7
+    priority: 1
+  siskdbyname:
+    key: si_skd_code
+    name: Slovenian activity code by field name (skd, šifra dejavnosti, glavna dejavnost) with I56.300, 56.101
+    rule: (?i)skd(?:[ _]?(?:2008|[sš]ifra|koda))?|(?:[sš]ifra|koda)[ _](?:glavne[ _])?dejavnosti|(?:[sš]ifra|koda)[ _]skd|glavna[ _]dejavnost
+    type: field
+    match: regex
+    validator: metacrafterext.rules.si.codes.validate_si_skd_code
+    needs_values: true
+    priority: 1
+  # Šifra PU, PRORAČUNSKI UPORABNIK, SIFRA_PU of the salary and budget tables: 12130, 72699.
+  siproracunskiuporabnikbyname:
+    key: si_proracunski_uporabnik
+    name: Slovenian budget user code by field name (šifra PU, sifra_pu, proračunski uporabnik) with 12130, 00078
+    rule: (?i)(?:b')?(?:[sš]ifra|[sš]if|[sš]t)[ _.]?(?:pu|prora[cč]unskega[ _]uporabnika)'?|(?:[sš]ifra[ _])?prora[cč]unski[ _]uporabnik|pu[ _]?(?:[sš]ifra|id)
+    type: field
+    match: regex
+    validator: metacrafterext.rules.si.codes.validate_si_proracunski_uporabnik
+    needs_values: true
+    priority: 1
+  # EŠD (evidenčna številka dediščine) of the municipal lists of monuments: 828, 23361.
+  siesdbyname:
+    key: si_esd
+    name: Slovenian heritage register number by field name (EŠD, evidenčna številka dediščine) with 828
+    rule: (?i)e[sš]d(?:[ _(].*)?|eviden[cč]na[ _][sš]tevilka[ _]dedi[sš][cč]ine|[sš]t(?:evilka)?\.?[ _]e[sš]d
+    type: field
+    match: regex
+    validator: metacrafterext.rules.si.codes.validate_si_esd
+    needs_values: true
+    priority: 1
+  # Sifra k.o., k.o., Katasterska občina: 2304, 1961 - Trzin.
+  sikocodebyname:
+    key: si_ko_code
+    name: Slovenian cadastral municipality code by field name (šifra k.o., k.o., katastrska občina) with 2304, 1961 - Trzin
+    rule: (?i)(?:(?:[sš]ifra|[sš]if|[sš]t(?:evilka)?)\.?[ _])?k\.? ?o\.?(?:[ _](?:[sš]ifra|id))?|(?:[sš]ifra[ _])?katast(?:e)?rsk[ae][ _]ob[cč]in[ae]|ko[ _]?(?:id|sifra|šifra)|sifko
+    type: field
+    match: regex
+    validator: metacrafterext.rules.si.codes.validate_si_ko_code
+    needs_values: true
+    priority: 1
+  # Parcelna številka, Parc. št., parcele: 637/4, *137/3, 1526/42, k.o. Sevnica.
+  siparcelnumberbyname:
+    key: si_parcel_number
+    name: Slovenian parcel number by field name (parcelna številka, parc. št., parcele) with 637/4, *137/3
+    rule: (?i)parc(?:el(?:n[ae]|a|e)?)?\.?[ _]*(?:[sš]t(?:evilk[ae])?\.?)?|[sš]t(?:evilka)?\.?[ _]parcele?|parcel\.?[ _][sš]t\.?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.si.codes.validate_si_parcel_number
+    needs_values: true
+    priority: 1
+  # Statistična_regija, Regija, Regija projekta: Savinjska, OBALNO-KRAŠKA.
+  sistatisticalregionbyname:
+    key: si_statistical_region
+    name: Slovenian statistical region by field name (regija, statistična regija, regija projekta) with Savinjska, OBALNO-KRAŠKA
+    rule: (?i)(?:statisti[cč]na[ _])?regij[ae](?:[ _]\w+){0,2}|stat(?:isti[cč]na)?[ _]?regija|region(?:[ _]name)?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.si.codes.validate_si_statistical_region
+    needs_values: true
+    priority: 1
+  # Oznaka beside Plačna podskupina in the salary statistics: A01, C03, J03.
+  siplacnapodskupinabyname:
+    key: si_placna_podskupina
+    name: Slovenian salary subgroup by field name (oznaka, plačna podskupina, šifra plačne podskupine) with A01, J03
+    rule: (?i)oznaka(?:[ _]pla[cč]ne[ _]podskupine)?|pla[cč]na[ _]podskupina|(?:[sš]ifra|oznaka)[ _]pla[cč]ne[ _](?:pod)?skupine|pla[cč]na[ _]skupina|pps
+    type: field
+    match: regex
+    validator: metacrafterext.rules.si.codes.validate_si_placna_podskupina
+    needs_values: true
+    priority: 1
+  # Matična številka, maticna, MATICNA, Matična številka društva: 5154715000, 5817641.
+  simaticnastevilkabyname:
+    key: si_maticna_stevilka
+    name: Slovenian registration number by field name (matična številka, maticna, matična št.) with 5154715000, 5817641
+    rule: (?i)(?:b')?(?:\w+_)?mati\wna(?:[ _](?:\wt(?:evilka)?\.?))?(?:[ _]\w+){0,2}'?|ms[ _]?(?:podjetja|subjekta)
+    type: field
+    match: regex
+    validator: metacrafterext.rules.si.codes.validate_si_maticna_stevilka
+    needs_values: true
+    priority: 1
+  # Davčna številka, DAVCNA, DAVČNA ŠTEVILKA PONUDNIKA: 77003535.
+  sitaxnumberbyname:
+    key: si_tin
+    name: Slovenian tax number by field name (davčna številka, davcna, davčna št.) with 77003535
+    rule: (?i)(?:b')?(?:\w+_)?dav\wna(?:[ _](?:\wt(?:evilka)?\.?))?(?:[ _]\w+){0,2}'?|ds[ _]?(?:podjetja|zavezanca)
+    type: field
+    match: regex
+    validator: metacrafterext.rules.si.codes.validate_si_tax_number
+    needs_values: true
+    priority: 1
+  # Poštna številka, poštna št., Pošt. št., PostnaStevilka, Poštna številka in pošta: 1360, 1251 Moravče.
+  sipostcodebyname:
+    key: si_postcode
+    name: Slovenian postal code by field name (poštna številka, poštna št., postnastevilka) with 1360, 1251 Moravče
+    rule: (?i)po[sš]t(?:na|\.)?[ _]?[sš]t(?:evilka)?\.?(?:[ _]\w+){0,3}|po[sš]tna[ _]?stevilka
+    type: field
+    match: regex
+    validator: metacrafterext.rules.si.codes.validate_si_postcode
+    needs_values: true
+    priority: 1
