@@ -56,7 +56,7 @@ rules:
   destadtteilbyname:
     key: de_stadtteil
     name: German city quarter by field name (Stadtteil, Stadtteilname, Stadtteilnummer, STADTTEILNR, Ortsteil, ortsteil_name, STIMMBEZIRK_STADTTEIL)
-    rule: (?i)(?:\w+_)?(?:stadt|orts)teil(?:e|s)?(?:[ _-]?(?:name|nr\.?|nummer|bezeichnung|id|kita))?\d?
+    rule: (?i)(?:\w+_)?(?:stadt|orts)teil(?:e|s)?(?:[ _-]?(?:name|nr\.?|nummer|bezeichnung|id|kita|opendataportal))?\d?
     type: field
     match: regex
     validator: metacrafterext.rules.de.codes.validate_de_stadtteil
@@ -70,6 +70,26 @@ rules:
     type: field
     match: regex
     validator: metacrafterext.rules.de.codes.validate_de_gemarkung
+    needs_values: true
+    priority: 1
+  # flurstuck of the well register of Meerbusch and Flurstück of the house numbering lists of Bonn: 22, 917, 1174/2.
+  deflurstueckbyname:
+    key: parcelnumber
+    name: Parcel number by German field name (Flurstück, Flurstueck, flurstuck, Flurstücksnummer)
+    rule: (?i)flurst(?:ü|ue|u)ck(?:s?[ _-]?(?:nr\.?|nummer))?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.de.codes.validate_de_flurstueck
+    needs_values: true
+    priority: 1
+  # kommune of the Unfallatlas extracts and the migration tables of the KDVZ municipalities: Stadt Neuss, Niederzier.
+  dekommunebyname:
+    key: city
+    name: Municipality by German field name (Kommune) with Stadt Neuss, Gemeinde Rommerskirchen, Niederzier
+    rule: (?i)kommune(?:n?name)?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.de.codes.validate_de_kommune
     needs_values: true
     priority: 1
   decountrynamebyvalue:
@@ -146,7 +166,7 @@ rules:
   degeopointbyname:
     key: geopoint
     name: Point as latitude and longitude text by German field name (geopos, koordinaten, eingang_koordinaten, geoposition, geometrisches_zentrum)
-    rule: (?i)geopos(?:ition)?|(?:[a-zäöü]+[ _])?koordinaten?|geo[ _]?koordinaten|geometrisches[ _]zentrum
+    rule: (?i)geopos(?:ition)?|(?:[a-zäöü]+[ _])?koordinaten?|geo[ _]?koordinaten|geometrisches[ _]zentrum|geo[ _]?punkt
     type: field
     match: regex
     validator: metacrafterext.rules.common.generic.validate_latlon_pair

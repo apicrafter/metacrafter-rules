@@ -300,3 +300,41 @@ _HOUSE_NUMBER = re.compile(r"^\d{1,4}(?: ?[a-zA-Z])?(?: ?[-–/+] ?\d{1,4}(?: ?[
 def validate_de_house_number(value):
     """A German house number: 9, 20 c, 13 - 14, 2-5, 12a, 5 (Containerbau) (not 53125, 06. Aug or alle)."""
     return bool(_HOUSE_NUMBER.match(_digits(value)))
+
+
+# ------------------------------------------------------------------ parcels, municipalities, vehicles
+_FLURSTUECK = re.compile(r"^\d{1,5}(?: ?/ ?\d{1,4})?$")
+
+
+def validate_de_flurstueck(value):
+    """The number of a parcel inside a Flur: 22, 917, 1174/2 (not 5001-001, 123456 or Osterath)."""
+    return bool(_FLURSTUECK.match(_digits(value)))
+
+
+_KOMMUNE_PREFIX = re.compile(r"^(?:kreisfreie stadt|kreisstadt|kolpingstadt|landeshauptstadt|stadt|gemeinde|markt) ")
+
+
+def validate_de_kommune(value):
+    """A German municipality by name, with or without its kind: Stadt Neuss, Gemeinde Rommerskirchen,
+    Niederzier, Bad Münstereifel (not 05358040, Gesamt or a sentence)."""
+    text = _text(value)
+    if not text or text[0].isdigit() or len(text) > 50:
+        return False
+    return _area(_KOMMUNE_PREFIX.sub("", text.lower()))
+
+
+_FAHRZEUGART = frozenset((
+    "pkw", "lkw", "krad", "kraftrad", "motorrad", "kom", "bus", "omnibus", "kraftomnibus", "fahrrad", "moped",
+    "mofa", "roller", "e-scooter", "anhänger", "anhaenger", "sattelzug", "zugmaschine", "wohnmobil",
+    "kleintransporter", "transporter", "traktor", "sonstige", "sonstiges fahrzeug", "leichtkraftrad",
+))
+_FAHRZEUGART_START = ("pkw", "lkw", "anhänger", "anhaenger", "krad", "kraftrad", "kleintransporter", "bus ")
+
+
+def validate_de_fahrzeugart(value):
+    """A kind of vehicle in German: PKW, LKW, Krad, Anhänger ohne Zugfahrzeug, Kleintransporter (unter 3,5 t
+    zGG) (not 04a, FORD or 12)."""
+    text = _text(value).lower()
+    if not text or len(text) > 50:
+        return False
+    return text in _FAHRZEUGART or text.startswith(_FAHRZEUGART_START)

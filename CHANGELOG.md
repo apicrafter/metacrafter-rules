@@ -40,6 +40,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     (`eu_waste_code`);
   - German month names by value and, with abbreviations (Mrz, Okt., 03 Mrz), in fields named Monat
     (`de_month`); school numbers under Schulnr., schulnum_1 and LDS-Nr. (`de_schulnummer`).
+  - rules for types that missed these names: parcel numbers under Flurstück and flurstuck (`parcelnumber`),
+    municipalities under Kommune (`city`: Stadt Neuss, Niederzier), wards under Kommunalwahlbezirk
+    (`municipal_ward`), kinds of vehicles under Fahrzeugart (`vehicle_type`: PKW, LKW, Anhänger ohne
+    Zugfahrzeug), street addresses under Anschrift and STRASSE_HsNr (`street_address`) and points under
+    geopunkt (`geopoint`).
 - **Rules for the Costa Rican files of metacrafter-testdata** (an April 2024 snapshot of Datos Abiertos INEC,
   datosabiertos.inec.cr, Dateno source cdi00000393: the procurement reports the Instituto Nacional de Estadística
   y Censos exports from SICOP, its budgets and budget execution reports; validators in the new

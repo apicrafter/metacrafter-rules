@@ -11,9 +11,12 @@ import pytest
 
 from metacrafterext.rules.de.codes import (
     validate_de_election_type,
+    validate_de_fahrzeugart,
+    validate_de_flurstueck,
     validate_de_gemarkung,
     validate_de_house_number,
     validate_de_kfz_unterscheidungszeichen,
+    validate_de_kommune,
     validate_de_month,
     validate_de_nationality,
     validate_de_political_party,
@@ -68,6 +71,11 @@ VALIDATORS = [
     (validate_de_political_party, ["CDU", "SPD", "GRÜNE", "Bündnis 90/Die Grünen", "DIE LINKE", "Die Linke Köln", "FREIE WÄHLER",
                                    "Bündnis 90 / Die Grünen"],
      ["Sachkosten", "Max Mustermann", "12", ""]),
+    (validate_de_flurstueck, ["22", "917", "1174/2", "22.0"], ["5001-001", "123456", "Osterath", ""]),
+    (validate_de_kommune, ["Stadt Neuss", "Gemeinde Rommerskirchen", "Niederzier", "Bad Münstereifel", "Rhein-Kreis Neuss"],
+     ["05358040", "Gesamt", ""]),
+    (validate_de_fahrzeugart, ["PKW", "LKW", "Krad", "Anhänger ohne Zugfahrzeug", "Kleintransporter (unter 3,5 t zGG)"],
+     ["04a", "FORD", "12", ""]),
     (validate_de_house_number, ["9", "20 c", "13 - 14", "2-5", "12a", "5 (Containerbau)", "1.0", "186a"], ["53125", "06. Aug", "alle", ""]),
 ]
 
@@ -123,6 +131,10 @@ FIELDS = [
                                             "Stadtteile", "Stadtteil Kita"],
      ["Stadt", "Stadtbezirk", "Teil", "Ort (Stadtteil)", "Stadtteilbuecherei Bilk"]),
     ("de/de_geo.yaml", "degemarkungbyname", ["Gemarkung", "gemarkung", "Gemarkungsname"], ["gem_flur", "Flur", "Gemarkungsschlüssel"]),
+    ("de/de_geo.yaml", "deflurstueckbyname", ["Flurstück", "flurstuck", "Flurstueck", "Flurstücksnummer"], ["Flur", "gem_flur"]),
+    ("de/de_geo.yaml", "dekommunebyname", ["kommune", "Kommune"], ["Kommunalwahlbezirk", "Anzahl gesamt Kommune"]),
+    ("de/de_codes.yaml", "dekommunalwahlbezirkbyname", ["Kommunalwahlbezirk", "KOMMUNALWAHLBEZIRK"], ["Wahlbezirk", "Stimmbezirk"]),
+    ("de/de_codes.yaml", "defahrzeugartbyname", ["fahrzeugart", "Fahrzeugtyp"], ["fahrzeug", "fabrikat"]),
     ("de/de_datetime.yaml", "demonthbyname", ["Monat", "monat", "MONAT", "Monatsname"], ["Monate", "umonat", "Monatssumme"]),
 ]
 
