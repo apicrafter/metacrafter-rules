@@ -204,10 +204,12 @@ _ORG_TEXT = re.compile(r"^[A-Za-z][A-Za-z0-9 '’.,&()/:-]*$")
 
 def validate_gb_spend_body(value):
     """A department or body of a UK spend file (Department Family, Entity): a name or an acronym
-    in letters (Department for Transport, DFID, MoJ HQ, HMRC). A site reference (T1, T10) is no
-    body."""
+    in letters (Department for Transport, DFID, MoJ HQ, HMRC). A site reference (T1, T10) or a
+    flag (True, False: entity of the Australian plant breeder's rights data) is no body."""
     text = _text(value)
     if not 2 <= len(text) <= 100 or not _ORG_TEXT.match(text):
+        return False
+    if text.lower() in {"true", "false", "yes", "no", "none", "n/a", "total"}:
         return False
     return sum(ch.isalpha() for ch in text) >= 2 and not re.fullmatch(r"[A-Z]\d{1,3}", text)
 

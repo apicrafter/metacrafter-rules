@@ -81,7 +81,7 @@ VALIDATORS = [
      ["GB-CHC-1131948", "360G", "360G-", "Transparency Aug 01", ""]),
     (validate_org_id_or_360g, ["GB-CHC-1131948", "GB-LAE-BNE", "360G-indigotrust", "GB-COH-01234567"], ["1131948", "Indigo Trust", ""]),
     (validate_gb_spend_body, ["Department for Transport", "DFID", "MoJ HQ", "Communities & Local Government", "HM Treasury"],
-     ["T1", "T10", "1", "37", ""]),
+     ["T1", "T10", "1", "37", "True", "False", ""]),
     (validate_symbol_amount, ["£37,350.00", "-£1,917.95", "£0", "(£250.00)", "€ 1,200", "$15.5m", "£0.00", "£167,711,343.64", "£-250"],
      ["37,350.00", "£145,000 - £149,999", "£", "Nil Return", "£1,2", "1,200 €", ""]),
     (validate_fr_elec_filiere_code, ["SOLAI", "HYDLQ", "EOLIE", "THERM", "NUCLE", "BIOEN"], ["Solaire", "GAZ", "SOLAIR", "solai", ""]),
