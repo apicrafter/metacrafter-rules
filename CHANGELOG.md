@@ -9,6 +9,37 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Rules for the German files of metacrafter-testdata** (April 2024 snapshots of German open data portals,
+  Dateno sources cdi00000446 to cdi00000467: Offene Daten Köln, Düsseldorf, Bonn, Münster and Wuppertal, the
+  KDVZ municipalities, Mannheim, Potsdam, the Rhein-Kreis Neuss and others; validators in the new
+  `metacrafterext.rules.de.codes`, rules in the new `rules/de/de_codes.yaml` and in `rules/de/de_geo.yaml`,
+  `rules/de/de_datetime.yaml` and `rules/de/de_education.yaml`):
+  - fines and accidents: numbers of the federal catalogue of traffic offences by field name
+    (`de_tatbestandsnummer`: Tatb-Nr., tatbestand1, TBNR with 113140, 141312, 142278.A), the district code of
+    a plate where a fine table gives it alone (`de_kfz_unterscheidungszeichen`: kennzeichen1 with K, BN, LEV),
+    and the columns of the Unfallatlas as digits or words (`de_unfallart`: UART, `de_unfalltyp`: UTYP1,
+    `crash_severity`: UKATEGORIE with Unfall mit Leichtverletzten);
+  - population and elections: the nationality key of the Federal Statistical Office (`de_staatsangehoerigkeitsschluessel`:
+    staatenkey with 423, 287), nationalities as German adjectives (`de_nationality`: nationalitaet with
+    afghanisch, britisch (BOTC)), the kind of an election (`election_type`: Wahl with Ratswahl, Europawahl,
+    Stichwahl des Oberbürgermeisters), polling districts (`polling_district`: Stimmbezirk, NR_STIMMBEZIRK800,
+    Briefwahlbezirk with 10405, 371/377; Wahlbezirk is left out, in municipal elections of North
+    Rhine-Westphalia it is a ward) and parties under German field names (`political_party`: Parteien,
+    Fraktion with CDU, Bündnis 90/Die Grünen, Die Linke Köln);
+  - territory: city districts (`de_stadtbezirk`: Stadtbezirk, Stadtbez., Kölner Stadtbezirke with Bad
+    Godesberg, 2 / Rodenkirchen, 03), city quarters (`de_stadtteil`: Stadtteil, Stadtteilname,
+    Stadtteilnummer, Ortsteil with Pempelfort, 014 Pempelfort, 036), cadastral districts (`de_gemarkung`),
+    street keys (`de_strassenschluessel`: Straßenschlüssel, strassenschlussel, STRSCHL with 00063, 1002),
+    streets under Straße, Strassenname, STRASSE1, Strasse neu and wahllokal_strasse (`street`) and house
+    numbers under Hausnummer, HausNr, Hsnr. neu and ungerade Hausnummer von (`buildingnumber`: 9, 20 c,
+    13 - 14);
+  - classifications: school types (`de_schulform`: Schulform, Schulart with Grundschule, Städt. Gymnasium,
+    GY, G/O/OG), product areas of municipal budgets (`de_produktbereich`: Produktbereich, Produktbereich NR,
+    PB-Nr. with Innere Verwaltung, 02 - Sicherheit und Ordnung, 01), WZ 2008 codes (`de_wz2008`: 47.71,
+    46.18.2) and codes of the European List of Waste under AVV-Nr., AVV-Abfallart-Nr and Abfallschlüssel
+    (`eu_waste_code`);
+  - German month names by value and, with abbreviations (Mrz, Okt., 03 Mrz), in fields named Monat
+    (`de_month`); school numbers under Schulnr., schulnum_1 and LDS-Nr. (`de_schulnummer`).
 - **Rules for the Costa Rican files of metacrafter-testdata** (an April 2024 snapshot of Datos Abiertos INEC,
   datosabiertos.inec.cr, Dateno source cdi00000393: the procurement reports the Instituto Nacional de Estadística
   y Censos exports from SICOP, its budgets and budget execution reports; validators in the new

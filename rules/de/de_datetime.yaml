@@ -29,3 +29,23 @@ rules:
     maxlen: 20
     validator: metacrafterext.rules.common.generic.validate_german_long_date
     priority: 1
+  # Monat of the monthly tables of Düsseldorf, Wuppertal and Cologne: Januar, März, Mrz, 03 Mrz (April 2024
+  # snapshots of German open data portals, Dateno sources cdi00000446 to cdi00000467).
+  demonthnamevalue:
+    key: de_month
+    name: German month name by value (Januar, März, Dezember)
+    rule: Januar,Jänner,Februar,März,April,Mai,Juni,Juli,August,September,Oktober,November,Dezember
+    type: data
+    match: text
+    minlen: 3
+    maxlen: 9
+    priority: 1
+  demonthbyname:
+    key: de_month
+    name: German month name or abbreviation by field name (Monat, Monatsname) with Januar, Mrz, Okt., 03 Mrz
+    rule: (?i)(?:\w+_)?monat(?:s?name)?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.de.codes.validate_de_month
+    needs_values: true
+    priority: 1

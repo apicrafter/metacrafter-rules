@@ -12,6 +12,66 @@ rules:
     match: text
     type: field
     priority: 1
+  # Found in April 2024 snapshots of German open data portals (Dateno sources cdi00000446 to cdi00000467).
+  # Straße, Strassenname, STRASSE1, wahllokal_strasse, strasse_strassenname of facility and election tables.
+  destreetbyname:
+    key: street
+    is_pii: True
+    name: Street name by German field name (Straße, Strassenname, Straßenname, STRASSE1, Strasse neu, wahllokal_strasse)
+    rule: (?i)(?:\w+_)?stra(?:ss|ß)e(?:n?name|nbezeichnung)?(?:\d|[ _](?:neu|alt))?|strasse_strassenname|str(?:assen)?name
+    type: field
+    match: regex
+    priority: 1
+  # Hausnummer, Hausnr, HNR, wahllokal_hausnummer: 9, 20 c, 13 - 14.
+  dehousenumberbyname:
+    key: buildingnumber
+    name: House number by German field name (Hausnummer, Hausnr, Haus-Nr., HNR, Hsnr. neu, ungerade Hausnummer von, wahllokal_hausnummer)
+    rule: (?i)(?!stra(?:ss|ß)e)(?:\w+_)?(?:(?:un)?gerade[ _])?(?:hausnummer|hausnr\.?|haus[ _-]nr\.?|hnr|hsnr\.?)(?:\d|[ _](?:neu|alt|von|bis))?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.de.codes.validate_de_house_number
+    needs_values: true
+    priority: 1
+  # Street directories of Cologne, Düsseldorf and the Rhein-Kreis Neuss: 00063, 03703, 1002.
+  destrassenschluesselbyname:
+    key: de_strassenschluessel
+    name: German street key by field name (Straßenschlüssel, Strassenschluessel, STRSCHL)
+    rule: (?i)stra(?:ss|ß)en[ _-]?schl(?:ue|ü|u)ssel|str[ _-]?schl(?:ue|ü|u)?(?:ssel)?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.de.codes.validate_de_strassenschluessel
+    needs_values: true
+    priority: 1
+  # Stadtbezirk of the tables of Bonn, Cologne, Düsseldorf and Wuppertal: Bad Godesberg, 2 / Rodenkirchen, 03.
+  destadtbezirkbyname:
+    key: de_stadtbezirk
+    name: German city district by field name (Stadtbezirk, Stadtbezirke, Stadtbezirksname, Stadtbezirknummer, Stadtbez., Kölner Stadtbezirke)
+    rule: (?i)(?:\w+ )?stadtbezirk(?:e|s)?(?:[ _-]?(?:name|nr\.?|nummer|bezeichnung))?|stadtbez\.?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.de.codes.validate_de_stadtbezirk
+    needs_values: true
+    priority: 1
+  # Stadtteil and Ortsteil of population, election and facility tables: Pempelfort, 014 Pempelfort, 036.
+  destadtteilbyname:
+    key: de_stadtteil
+    name: German city quarter by field name (Stadtteil, Stadtteilname, Stadtteilnummer, STADTTEILNR, Ortsteil, ortsteil_name, STIMMBEZIRK_STADTTEIL)
+    rule: (?i)(?:\w+_)?(?:stadt|orts)teil(?:e|s)?(?:[ _-]?(?:name|nr\.?|nummer|bezeichnung|id|kita))?\d?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.de.codes.validate_de_stadtteil
+    needs_values: true
+    priority: 1
+  # Gemarkung of the registers of municipal land of Bonn and Meerbusch: Beuel, Oberkassel, Langst-Kierst.
+  degemarkungbyname:
+    key: de_gemarkung
+    name: German cadastral district by field name (Gemarkung, Gemarkungsname)
+    rule: (?i)gemarkung(?:s?name)?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.de.codes.validate_de_gemarkung
+    needs_values: true
+    priority: 1
   decountrynamebyvalue:
     key: decountryname
     name: Country name by value in German
