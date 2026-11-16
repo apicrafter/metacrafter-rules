@@ -18,3 +18,44 @@ rules:
     type: field
     priority: 1
     rule: data_morte
+  # mese and MESE of the monthly tables of Italian municipalities (Comune di Matera, Comune di Genova;
+  # Dateno sources cdi00000950 and cdi00000951): gennaio, Febbraio, MARZO.
+  itmonthnamevalue:
+    key: it_month
+    name: Italian month name by value (gennaio, Dicembre, MAGGIO)
+    rule: metacrafterext.rules.it.codes.validate_it_month
+    type: data
+    match: func
+    minlen: 5
+    maxlen: 9
+    priority: 1
+  itmonthbyname:
+    key: it_month
+    name: Italian month name or abbreviation by field name (mese, mese_riferimento) with gennaio, GEN, lug
+    rule: (?i)(?:\w+[ _])?mes[ei](?:[ _](?:di[ _])?(?:riferimento|competenza|rilevazione))?|nome[ _]mese
+    type: field
+    match: regex
+    validator: metacrafterext.rules.it.codes.validate_it_month_or_abbreviation
+    needs_values: true
+    priority: 1
+  # Anno_di_riferimento of the unfinished public works and anno_nascita of the driving licences of the
+  # transport ministry (dati.mit.gov.it, Dateno source cdi00000955).
+  ityearbylongname:
+    key: year
+    name: Year by Italian field name with other words (anno_di_riferimento, anno_rilevazione, anno_competenza)
+    rule: (?i)anno[ _](?:di[ _])?(?:riferimento|rilevazione|competenza|esercizio|finanziario|pubblicazione|immatricolazione|costruzione|impianto)
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.generic.validate_year_value
+    needs_values: true
+    priority: 1
+  itbirthyearbyname:
+    key: birth_year
+    is_pii: true
+    name: Year of birth by Italian field name (anno_nascita, anno_di_nascita)
+    rule: (?i)anno[ _](?:di[ _])?nascita
+    type: field
+    match: regex
+    validator: metacrafterext.rules.de.persons.validate_birth_year
+    needs_values: true
+    priority: 1

@@ -50,3 +50,9 @@ def validate_ca_fsa(value):
     """A Canadian forward sortation area: the first three characters of a postal code, a
     letter of a province or territory, a digit and a letter (K7P, T2P, X0A)."""
     return bool(_CA_FSA.match(str(value).strip().upper()))
+
+
+def validate_ca_business_number(value):
+    """A Canada Business Number: nine digits, alone or with a program account (123456789, 123456789RT0001),
+    not the two letters of a branch (BR, CE)."""
+    return bool(re.fullmatch(r"\d{9}(?: ?[A-Z]{2} ?\d{4})?", " ".join(str(value).split()).upper()))

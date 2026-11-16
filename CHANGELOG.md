@@ -9,6 +9,42 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Rules for the Indonesian and Italian files of metacrafter-testdata** (2024 snapshots of open data portals,
+  Dateno sources cdi00000901 to cdi00000970: Kabupaten Tangerang, BRIN, data.gov.ie, ARPA Campania, Comune di
+  Genova, Comune di Matera, the Ministero delle infrastrutture e dei trasporti, Regione Toscana, the Dataverse
+  repositories of the universities of Iceland and Milan; validators in the new `metacrafterext.rules.it.codes`
+  and `metacrafterext.rules.id.codes`, rules in the new `rules/it/it_codes.yaml`, `rules/id/id_datetime.yaml`
+  and `rules/eu/eu_transport.yaml` and in `rules/it/`, `rules/id/`, `rules/ie/ie_geo.yaml`,
+  `rules/eu/eu_procurement.yaml`, `rules/common/environment.yaml` and `rules/common/science.yaml`):
+  - Italian public contracts: SOA categories and classes of public works (`it_soa_category`:
+    categoria_prevalente with OG1, OS12A; `it_soa_classifica`: classifica with I, III-bis, VIII), CUP project
+    codes by field name and by value (`it_cup`: cup, Codice_CUP with G27B16000290004; a bare `cup` was the
+    Spanish `cupscode`), the person in charge of a procedure (`person_fullname`: rup), tax codes of persons
+    (`it_codicefiscale`: cf_rup with 16 characters), NUTS codes under long field names (`nutsregion`:
+    luogo_esecuzione_nuts, Localizzazione_codice_NUTS with ITC11);
+  - Italian geography and statistics: ISTAT municipality codes of six digits, of five without the leading
+    zero and of nine with the region in front (`it_istat_comune`: codice_comune, codistat,
+    luogo_esecuzione_istat with 045003, 45003, 012058091, which was `plregon`), province abbreviations
+    (`it_province_code`: sigla_provincia, prov, provincia_stazione_appaltante with MS, FI), regions
+    (`it_region`: regione, regione_residenza with Piemonte, Emilia Romagna), municipalities under longer names
+    (`it_comune`: comune_residenza, denominazione_comune), ATECO codes (`it_ateco`: codice_ateco with C, 47.11),
+    month names by value and by field name (`it_month`: mese with Gennaio, GEN), years and years of birth
+    under longer names (`year`: Anno_di_riferimento; `birth_year`: anno_nascita);
+  - the cadastre, roads and the environment: cadastral categories (`it_catasto_category`: categoria, qualità
+    with A/3, C/6), road numbers alone or before the road name (`it_road_number`: NOME STRADA with
+    SS 011 - Padana Superiore), EU driving licence categories (`eu_driving_licence_category`:
+    categoria_patente with B, CE), bathing water identifiers (`eu_bathing_water_id`: Numind with
+    IT015065119001), EoI station codes, pollutant notations and units under Italian names
+    (`eea_eoi_station_code`: stazione; `air_pollutant`: codice_inquinante; `unit_of_measure`: unita_misura);
+  - Indonesia: administrative area codes of the Ministry of Home Affairs (`id_kode_wilayah`: kode_wilayah,
+    kode_kecamatan with 36.03.01, in 285 of the 594 distinct tables of Tangerang), month names by value and by
+    field name (`id_month`: bulan with JANUARI, which was `de_month` for the months that German shares), civil
+    servant grades (`id_pns_golongan`: golongan with III/a), sex, religion and levels of education under
+    Indonesian names and words (`gender`: jenis_kelamin with LAKI-LAKI; `religion`: agama with ISLAM, KRISTEN;
+    `education_level`: tingkat_pendidikan with SLTA, DIV/S1);
+  - identifiers by value: Scopus EIDs (`scopus_eid`: 2-s2.0-0027725873) and Logainm IDs as the address of
+    the page of a place (`ie_logainm_id`: https://www.logainm.ie/13847.aspx).
+
 - **Rules for the United Kingdom and French files of metacrafter-testdata** (2024 snapshots of UK open data
   portals, Dateno sources cdi00000763 to cdi00000799: data.gov.uk, Cambridgeshire Insight, Calderdale Data
   Works, Open Leicester, London Datastore, Open Data Glasgow; and of French ones, cdi00000700 to cdi00000747:
@@ -1015,6 +1051,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- An amount with dots between the thousands and before the cents (7.922.45, 33.698.81 in a property inventory
+  of the Comune di Matera) is no semantic version, and a number with dots between the thousands (1.336.326,
+  2.712.401.90 in tables of Tangerang) is no OID.
+- The field rule of the Canada Business Number checks its values: `bn` of the library loans of the Comune di
+  Genova (55 tables) holds branch codes (BR, CE), not nine digits.
 - `fr_academie_code`, `fr_region_code` and `fr_department_code` take the prefixed codes of the open data of
   higher education (A01, R11, D075); `fr_academie_code` also under code_acad and etablissement_code_academie.
 - `dep` is no longer a field name of `package_name`: it is the department in French tables (75, 92).

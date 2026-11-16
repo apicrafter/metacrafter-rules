@@ -23,3 +23,21 @@ rules:
     maxlen: 8
     fieldrule: eircode,eir_code,eircode_full,eir code,postcode,post_code,postal_code
     fieldrulematch: text
+  # dc:coverage of the archaeological reports of Transport Infrastructure Ireland in the Digital
+  # Repository of Ireland (data.gov.ie, Dateno source cdi00000917): https://www.logainm.ie/13847.aspx.
+  ielogainmidvalue:
+    key: ie_logainm_id
+    name: Logainm ID of an Irish place as the address of its page (https://www.logainm.ie/13847.aspx)
+    rule: (?i)https?://(?:www\.)?logainm\.ie/(?:(?:en|ga)/)?[1-9]\d{0,7}(?:\.aspx)?
+    type: data
+    match: regex
+    minlen: 22
+    maxlen: 45
+    priority: 1
+  ielogainmidbyname:
+    key: ie_logainm_id
+    name: Logainm ID of an Irish place by field name (logainm_id, logainm)
+    rule: (?i)logainm(?:[ _]?(?:id|ref|code))?
+    type: field
+    match: regex
+    priority: 1

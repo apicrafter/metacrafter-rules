@@ -219,3 +219,14 @@ rules:
     validator: metacrafterext.rules.common.eucodes.validate_air_pollutant
     needs_values: true
     priority: 1
+  # NUMIND, COD_ACQUA DI BALNEAZIONE and ID_AREA of the bathing water tables of ARPA Campania
+  # (dati.arpacampania.it, Dateno source cdi00000948): IT015063007003.
+  eubathingwateridbyname:
+    key: eu_bathing_water_id
+    name: EU bathing water identifier by field name (numind, bathingWaterIdentifier, bwid, cod_acqua di balneazione) with IT015063007003
+    rule: (?i)numind|bathing[ _]?water[ _]?(?:id(?:entifier)?|code)|bw[ _]?id|bwid|cod(?:ice)?[ _.]?acqu[ae][ _]di[ _]balneazione|codice[ _]balneazione|id[ _]area[ _]balneazione|id[ _]area
+    type: field
+    match: regex
+    validator: metacrafterext.rules.it.codes.validate_eu_bathing_water_id
+    needs_values: true
+    priority: 1
