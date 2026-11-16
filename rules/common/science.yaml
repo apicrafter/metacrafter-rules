@@ -570,3 +570,63 @@ rules:
     validator: metacrafterext.rules.common.omics.validate_log2_fold_change
     needs_values: true
     priority: 1
+  # ------------------------------------------------------------ microRNAs, soybean genes, barcodes
+  # Found in a 2024 snapshot of Borealis, the Canadian Dataverse Repository (borealisdata.ca, Dateno
+  # source cdi00000328): tables of microRNA target predictions (miRNA: hsa-miR-34a-5p; mRNA:
+  # Glyma.10G039300.1) and of environmental DNA surveys (bin_uri: BOLD:AAM2154).
+  mirnanamevalue:
+    key: mirna_name
+    name: microRNA name of miRBase by value (hsa-miR-34a-5p, hsa-let-7b-5p, gma-miR10418 MIMAT0041661)
+    rule: metacrafterext.rules.common.genomics.validate_mirna_name
+    type: data
+    match: func
+    minlen: 8
+    maxlen: 36
+    priority: 1
+  mirbasematureidvalue:
+    key: mirbase_mature_id
+    name: miRBase mature microRNA accession by value (MIMAT0046872)
+    rule: metacrafterext.rules.common.genomics.validate_mirbase_mature_id
+    type: data
+    match: func
+    minlen: 12
+    maxlen: 12
+    priority: 1
+  glymageneidvalue:
+    key: glyma_gene_id
+    name: Soybean gene model identifier by value (Glyma.10G039300, Glyma.18G243100.2, Glyma10g34560)
+    rule: metacrafterext.rules.common.genomics.validate_glyma_gene_id
+    type: data
+    match: func
+    minlen: 13
+    maxlen: 20
+    priority: 1
+  boldbinvalue:
+    key: bold_bin
+    name: BOLD Barcode Index Number by value (BOLD:AAY6600)
+    rule: metacrafterext.rules.common.genomics.validate_bold_bin
+    type: data
+    match: func
+    minlen: 12
+    maxlen: 12
+    priority: 1
+  # ROUNDEDGRANK and ROUNDEDNRANK of an inventory of wild plants (G5, T4, NNR, N3).
+  natureserverankbyname:
+    key: natureserve_rank
+    name: NatureServe conservation status rank by field name (G_RANK, ROUNDEDNRANK, S_RANK, global_rank, NatureServe rank) with G5, N4, S1S2
+    rule: (?i)(?:rounded[ _]?)?[gnst][ _]?rank|(?:rounded[ _]?)?(?:global|national|subnational|state|provincial)[ _]?(?:conservation[ _]?)?(?:status[ _]?)?rank|nature[ _]?serve[ _]?(?:global[ _]|national[ _])?(?:rank|status)
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.taxa.validate_natureserve_rank
+    needs_values: true
+    priority: 1
+  # HyLak_ID of lake surface temperature series joins them with HydroLAKES.
+  hydrolakesidbyname:
+    key: hydrolakes_id
+    name: HydroLAKES lake identifier by field name (Hylak_id, HYLAK_ID, hydrolakes_id) with 552548
+    rule: (?i)hylak[ _]?id|hydro[ _]?lakes?[ _]?id
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.hydrology.validate_hydrolakes_id
+    needs_values: true
+    priority: 1
