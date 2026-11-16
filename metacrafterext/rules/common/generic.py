@@ -753,7 +753,11 @@ _STATUS_FIRST_WORDS = frozenset((
     "propuesto", "estudio", "proyecto", "programado", "programada", "funcionamiento", "operativo",
     "operativa", "inconcluso", "inconclusa", "desconocido", "desconocida",
     # the national dam inventory: Existente y en operacion, Existe y no operable
-    "existente", "existe", "inexistente"))
+    "existente", "existe", "inexistente",
+    # statuses of a procurement procedure in the SICOP reports of Costa Rica (datosabiertos.inec.cr):
+    # Contrato, Adjudicación en firme, Apelación o Revocación, Desierto/Infructuoso
+    "contrato", "contratado", "contratada", "adjudicacion", "apelacion", "revocacion", "infructuoso",
+    "infructuosa", "desierto/infructuoso"))
 
 
 def validate_state_not_status(value):

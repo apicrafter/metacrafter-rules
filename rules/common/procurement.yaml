@@ -25,6 +25,40 @@ rules:
     minlen: 4
     maxlen: 120
     priority: 1
+  # Found in the SICOP procurement reports of the INEC of Costa Rica (datosabiertos.inec.cr,
+  # metacrafter-testdata): Contrato, Adjudicación en firme, Desierto/Infructuoso, Sin efecto.
+  procurementstatusbyname:
+    key: procurement_status
+    name: Procurement status by field name (ESTADO, estado_procedimiento, Estado del concurso, situación) with Adjudicación en firme, Desierto, En recepción de ofertas
+    # An estado of anything else (Vigente, Finalizado, a state of Mexico) fails the validator.
+    rule: (?i)estado(?:[ _](?:del?[ _]|de[ _]la[ _])?(?:procedimiento|proceso|concurso|contrataci[oó]n|licitaci[oó]n|tr[aá]mite|compra|adjudicaci[oó]n))?|situaci[oó]n(?:[ _](?:del?[ _]|de[ _]la[ _])?(?:procedimiento|proceso|concurso|contrataci[oó]n|licitaci[oó]n))?|(?:tender|procurement|procedure)[ _]?status
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.procurement.validate_procurement_status
+    needs_values: true
+    priority: 1
+  procurementstatusocds:
+    key: procurement_status
+    name: Procurement status in an OCDS record (tender.status, awards.status, contracts.status) with active, unsuccessful, terminated
+    rule: (?i)(?:.*\.)?(?:tender|awards?|contracts?)\.status
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.procurement.validate_procurement_status_code
+    needs_values: true
+    priority: 1
+  # The supplier that won a line of a procedure: a company (INTERHAND SOCIEDAD ANONIMA), a
+  # public body or a person in business (SICOP reports of the INEC of Costa Rica).
+  suppliernamebyname:
+    key: orgname
+    name: Supplier name by Spanish field name (PROVEEDOR_ADJUDICADO, PROVEEDOR_ADJU, proveedor, contratista)
+    # A column of supplier codes or tax numbers fails the validator; nit_proveedor, rut_proveedor
+    # and proveedor_id are not matched.
+    rule: (?i)(?:nombre[ _](?:del?[ _])?)?(?:proveedor(?:es)?|contratistas?)(?:[ _](?:adju(?:d(?:ic(?:ado|atario)?)?)?|ganador|contratado|seleccionado|nombre))?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.generic.validate_name_text
+    needs_values: true
+    priority: 1
   # Found in the Buenos Aires Compras OCDS exports (data.buenosaires.gob.ar, metacrafter-testdata).
   ocdsocidvalue:
     key: ocds_ocid

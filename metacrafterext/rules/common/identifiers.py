@@ -781,6 +781,10 @@ def validate_id_nik(value):
     nik = value.replace(' ', '').replace('-', '')
     if len(nik) != 16 or not nik.isdigit():
         return False
+    # Province codes start at 11 (Aceh): 0432023010900006 is a contract number of the Costa
+    # Rican SICOP, not a NIK.
+    if nik[0] == '0':
+        return False
 
     day = int(nik[6:8])
     if day > 40:
