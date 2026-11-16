@@ -9,6 +9,33 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Rules for the Borealis files of metacrafter-testdata** (a 2024 snapshot of Borealis, the Canadian
+  Dataverse Repository, borealisdata.ca, Dateno source cdi00000328: 25 933 tabular files of research data,
+  survey microdata and replication packages; validators in the new `metacrafterext.rules.ca.stats` and in
+  `metacrafterext.rules.common.genomics`, `taxa` and `hydrology`, rules in the new `rules/ca/ca_stats.yaml`
+  and in `rules/common/science.yaml` and `rules/ca/ca_geo.yaml`):
+  - Statistics Canada tables: the vector of a time series (`ca_statcan_vector`: VECTOR, Vector(1) with
+    v65201210; six to ten digits also by value);
+  - census geography: federal electoral districts (`ca_feduid`: FEDUID, FED, FED2013, riding with 35076; the
+    numbers of provincial ridings fail), census metropolitan areas and agglomerations (`ca_cmauid`: CMAUID,
+    CMA, cma16, CMACA with 535; the one-digit groups of the Labour Force Survey fail), census tracts
+    (`ca_ctuid`: CTUID, ctuid_s with 5350001.00), economic regions (`ca_eruid`: ERUID, ER with 3530), the SGC
+    code of a province under the names of microdata files (`casgc`: PROV, RESPROV, PR with 10 to 62; the 1 to
+    10 of polling firms fail), provinces by name (`caprovince`: prov, province, PRNAME with Alberta, Nova
+    Scotia, Québec; no rule read them before) and the two-letter abbreviations in a field named PR
+    (`caprovincecode`);
+  - classifications: National Occupational Classification unit groups (`ca_noc_code`: NOC, NOC2011,
+    NOC_PES11, revnoc, CNP with 3112, 21100; the grouped variables noc_10 and noc_40 fail), terrestrial
+    ecozones (`ca_ecozone`: Ecozone with Boreal Shield, Mixedwood Plains);
+  - the Canadian Historical GIS: census divisions and subdivisions of the censuses of 1851 to 1921
+    (`ca_tcp_uid`: TCPUID_CD_1891, TCPUID_CSD_1891 with BC001, BC001004);
+  - life sciences, universal rules by value: microRNA names of miRBase (`mirna_name`: hsa-miR-34a-5p,
+    hsa-let-7b-5p, asu-mir-9, also with the accession after a space), accessions of mature microRNAs
+    (`mirbase_mature_id`: MIMAT0046872), soybean gene models (`glyma_gene_id`: Glyma.10G039300.1,
+    Glyma10g34560), Barcode Index Numbers of BOLD (`bold_bin`: BOLD:AAY6600);
+  - ecology, universal rules by field name: NatureServe conservation status ranks (`natureserve_rank`:
+    G_RANK, ROUNDEDNRANK, S_RANK with G5, T4, NNR, S1S2) and HydroLAKES lake identifiers (`hydrolakes_id`:
+    Hylak_id with 552548).
 - **Rules for the Colombian files of metacrafter-testdata** (a May 2024 snapshot of Datos Abiertos Colombia,
   www.datos.gov.co, Dateno source cdi00000385, which also lists the tables of the Cundinamarca map portal, the
   ICDE, the CAR, the city of Cali and Postdata; validators in the new `metacrafterext.rules.co.codes` and

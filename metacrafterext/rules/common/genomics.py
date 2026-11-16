@@ -81,3 +81,43 @@ _ENSEMBL_GENE = re.compile(r"ENS(?:[A-Z]{3})?G\d{11}(?:\.\d+)?")
 def validate_ensembl_gene_id(value):
     """An Ensembl gene identifier: ENSG00000000003, ENSMUSG00000064370.1 (not a transcript ENST...)."""
     return bool(_ENSEMBL_GENE.fullmatch(_text(value)))
+
+
+# ------------------------------------------------------------------ microRNAs, soybean genes, barcodes
+# Found in a 2024 snapshot of Borealis, the Canadian Dataverse Repository (borealisdata.ca, Dateno
+# source cdi00000328): microRNA target predictions and environmental DNA surveys.
+_MIRNA = re.compile(r"[a-z]{3,4}-(?:miR|mir|let|lin|bantam|lsy|iab)-?[0-9A-Za-z]*(?:-\d+)?(?:-[35]p|\*)?")
+_MIMAT = re.compile(r"MIMAT\d{7}")
+
+
+def validate_mirna_name(value):
+    """A microRNA name of miRBase with the species code: hsa-miR-34a-5p, hsa-let-7b-5p, asu-mir-9,
+    gma-miR10418, also with its accession after a space (gma-miR10418 MIMAT0041661) (not miR-34a, miRNA,
+    linear or MIMAT0041661)."""
+    parts = _text(value).split(" ")
+    if not _MIRNA.fullmatch(parts[0]):
+        return False
+    return len(parts) == 1 or (len(parts) == 2 and bool(_MIMAT.fullmatch(parts[1])))
+
+
+def validate_mirbase_mature_id(value):
+    """A miRBase accession of a mature microRNA: MIMAT0046872 (not MI0026471 or MIMAT004166)."""
+    return bool(_MIMAT.fullmatch(_text(value)))
+
+
+_GLYMA = re.compile(r"Glyma(?:\.(?:0[1-9]|1\d|20)[Gg]\d{6}|(?:0[1-9]|1\d|20)[Gg]\d{5})(?:\.\d+)?")
+
+
+def validate_glyma_gene_id(value):
+    """A soybean gene model or transcript: Glyma.10G039300, Glyma.18G243100.2, Glyma10g34560 (not
+    Glyma.21G039300, AT1G01010 or Hetgly04685.t1)."""
+    return bool(_GLYMA.fullmatch(_text(value)))
+
+
+_BOLD_BIN = re.compile(r"BOLD:[A-Z]{3}\d{4}")
+
+
+def validate_bold_bin(value):
+    """A Barcode Index Number of BOLD: BOLD:AAY6600, BOLD:AAB0529 (not AAY6600, TAX:12439 or
+    BOLD:AA6600)."""
+    return bool(_BOLD_BIN.fullmatch(_text(value)))
