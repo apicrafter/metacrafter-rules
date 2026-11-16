@@ -53,6 +53,17 @@ rules:
     match: text
     validator: metacrafterext.rules.gb.codes.validate_naptan_code
     priority: 1
+  # Contravention "16 - Parked without displaying a valid permit", "06 - No ticket" of the parking fines of
+  # Stirling Council (data.stirling.gov.uk, Dateno source cdi00000831); metacrafter-testdata.
+  gbparkingcontraventioncodebyname:
+    key: gb_parking_contravention_code
+    name: UK parking contravention code by field name (Contravention, contravention_code) with 01, 16 - Parked without displaying a valid permit
+    rule: (?i)(?:pcn[ _])?contravention(?:[ _]?(?:code|type|description|desc))?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.gb.codes.validate_parking_contravention_code
+    needs_values: true
+    priority: 1
   # Found in 2024 snapshots of UK open data portals (data.gov.uk, Cambridgeshire Insight, Calderdale Data
   # Works, Open Leicester, London Datastore, Open Data Glasgow; Dateno sources cdi00000763 to cdi00000799;
   # metacrafter-testdata).

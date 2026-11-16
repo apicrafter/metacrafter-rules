@@ -77,3 +77,14 @@ rules:
     fieldrule: urn,ofsted urn,ofsted_urn,provider urn,provider_urn,unique reference number
     fieldrulematch: text
     priority: 1
+  # Seed_Code 5720826, seedno 5745829 of the school tables of Stirling Council (data.stirling.gov.uk, Dateno
+  # source cdi00000831); metacrafter-testdata. A bare seed is the seed of a random number generator.
+  gbscottishseedcodebyname:
+    key: gb_scottish_seed_code
+    name: Scottish school SEED code by field name (Seed_Code, seedno, SEED number, school_seed) with 5720826
+    rule: (?i)seed[ _]?(?:code|no|number|num|id)|(?:school|establishment)[ _]seed(?:[ _]?(?:code|no|number))?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.gb.codes.validate_scottish_seed_code
+    needs_values: true
+    priority: 1

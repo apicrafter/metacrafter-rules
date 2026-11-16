@@ -265,6 +265,18 @@ rules:
     validator: metacrafterext.rules.common.fieldwork.validate_scientific_name
     needs_values: true
     priority: 1
+  # Species_Latin_name Squatina squatina, SpeciesSciName Agonus cataphractus, Latin species name, ScientificSpeciesName of the
+  # fishery tables of Marine Scotland Data (data.marine.gov.scot, Dateno source cdi00000828): words in another order
+  # or joined by spaces.
+  speciesbylatinfieldname:
+    key: species
+    name: Scientific name of a species by field name (Species_Latin_name, SpeciesSciName, Latin species name, Scientific Species Name)
+    rule: (?i)species[ _]?(?:latin|sci(?:entific)?)[ _]?names?|latin[ _](?:species[ _])?names?|scientific[ _]?species[ _]?names?|species[ _]names?[ _]\(?(?:latin|scientific)\)?|scientific[ _]names?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.fieldwork.validate_scientific_name
+    needs_values: true
+    priority: 1
   dwcscientificnameauthorshipbyfield:
     key: dwc_scientific_name_authorship
     name: Authorship of a scientific name by field name (authorship, scientificNameAuthorship, Author/Date)

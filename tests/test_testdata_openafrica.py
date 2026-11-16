@@ -169,7 +169,7 @@ VALUES = [
     ("ke/ke_geo.yaml", "kecountyvalue", ["Mombasa", "Taita/Taveta"], ["Rift Valley", "Kenya"]),
     ("ng/ng_geo.yaml", "ngstatevalue", ["Kaduna", "Federal Capital Territory"], ["Northern Nigeria"]),
     ("ng/ng_geo.yaml", "nglgavalue", ["Birnin Gwari", "Aba North"], ["Gayam", "19001"]),
-    ("tz/tz_geo.yaml", "tzregionvalue", ["Dodoma", "Coast"], ["Kongwa"]),
+    ("tz/tz_geo.yaml", "tzregionvalue", ["Dodoma", "Pwani", "Coast Region"], ["Kongwa", "Coast"]),
     ("za/za_geo.yaml", "zaprovincevalue", ["KwaZulu-Natal", "MPUMALANGA"], ["South Africa"]),
     ("za/za_finances.yaml", "zaeconomicclassificationvalue", ["Compensation of employees"], ["Administration"]),
     ("common/admin_areas.yaml", "hascvalue", ["TZ.AS.AS"], ["tz.as.as"]),

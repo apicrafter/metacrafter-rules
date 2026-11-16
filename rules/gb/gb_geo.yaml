@@ -355,6 +355,129 @@ rules:
     match: regex
     validator: metacrafterext.rules.common.generic.has_letters
     priority: 1
+  # --- Scottish geographies and gazetteer numbers of the open data of Stirling Council and Angus Council
+  # (data.stirling.gov.uk, opendata.angus.gov.uk; Dateno sources cdi00000831 and cdi00000833) and the
+  # Scottish Marine Regions of Marine Scotland Data (cdi00000828); metacrafter-testdata.
+  gbscotlandintermediatezonecodevalue:
+    key: gb_scotland_intermediate_zone_code
+    name: Scottish intermediate zone GSS code by value (S02)
+    rule: 'S02\d{6}'
+    type: data
+    match: regex
+    minlen: 9
+    maxlen: 9
+    priority: 1
+  gbscotlandhealthboardcodevalue:
+    key: gb_scotland_health_board_code
+    name: Scottish health board GSS code by value (S08)
+    rule: 'S08\d{6}'
+    type: data
+    match: regex
+    minlen: 9
+    maxlen: 9
+    priority: 1
+  gbscotlandcouncilareacodevalue:
+    key: gb_scotland_council_area_code
+    name: Scottish council area GSS code by value (S12)
+    rule: 'S12\d{6}'
+    type: data
+    match: regex
+    minlen: 9
+    maxlen: 9
+    priority: 1
+  gbscotlandelectoralwardcodevalue:
+    key: gb_scotland_electoral_ward_code
+    name: Scottish electoral ward GSS code by value (S13)
+    rule: 'S13\d{6}'
+    type: data
+    match: regex
+    minlen: 9
+    maxlen: 9
+    priority: 1
+  gbscottishparliamentconstituencycodevalue:
+    key: gb_scottish_parliament_constituency_code
+    name: Scottish Parliament constituency GSS code by value (S16)
+    rule: 'S16\d{6}'
+    type: data
+    match: regex
+    minlen: 9
+    maxlen: 9
+    priority: 1
+  gbscotlandlocalitycodevalue:
+    key: gb_scotland_locality_code
+    name: Scottish locality GSS code by value (S19)
+    rule: 'S19\d{6}'
+    type: data
+    match: regex
+    minlen: 9
+    maxlen: 9
+    priority: 1
+  gbscotlandsettlementcodevalue:
+    key: gb_scotland_settlement_code
+    name: Scottish settlement GSS code by value (S20)
+    rule: 'S20\d{6}'
+    type: data
+    match: regex
+    minlen: 9
+    maxlen: 9
+    priority: 1
+  # uprn 122006259, UPRN, cag_uprn_nearest, Unique_Property_Reference_Number: the UPRNs of Scottish councils
+  # have nine digits, so the value rule of twelve digits gave the name rule no support. Site_UPRN and
+  # Block_UPRN of a property register of Stirling hold numbers of the council's own asset system.
+  gbuprnbynamewithvalues:
+    key: uprn
+    name: UK UPRN by field name (uprn, cag_uprn_nearest, Unique_Property_Reference_Number) with 122046218, 100023336956
+    rule: (?i)(?!site|block)(?:[a-z]+[ _])?uprn(?:[ _](?:nearest|number|no))?|unique[ _]property[ _]reference[ _]number
+    type: field
+    match: regex
+    validator: metacrafterext.rules.gb.codes.validate_uprn
+    needs_values: true
+    priority: 1
+  gbusrnbyname:
+    key: gb_usrn
+    name: UK USRN by field name (usrn, cag_usrn_nearest, Unique_Street_Reference_Number) with 38002160
+    rule: (?i)(?:[a-z]+[ _])?usrn(?:[ _](?:nearest|number|no))?|unique[ _]street[ _]reference[ _]number
+    type: field
+    match: regex
+    validator: metacrafterext.rules.gb.codes.validate_usrn
+    needs_values: true
+    priority: 1
+  # RURAL_CLASSIFICATION 2, 5, 3, 6 and RURAL_CLASSIFICATION_DESCRIPTION Other Urban Areas, Accessible Rural.
+  gbscotlandurbanruralclassificationbyname:
+    key: gb_scotland_urban_rural_classification
+    name: Scottish Government urban rural classification by field name (RURAL_CLASSIFICATION, urban_rural_classification, UR6FOLD) with 2, Accessible Rural
+    rule: (?i)(?:urban[ _]?rural|rural(?:[ _]?urban)?)[ _]?class(?:ification)?(?:[ _](?:description|name|code))?|ur[ _]?[68][ _]?fold(?:[ _](?:description|name|code))?|urban[ _]?rural[ _]?[68][ _]?fold(?:[ _](?:description|name|code))?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.gb.codes.validate_scotland_urban_rural
+    needs_values: true
+    priority: 1
+  # Scottish Marine Region of the aquaculture statistics: Outer Hebrides, Shetland Isles, Argyll & Clyde.
+  gbscottishmarineregionbyname:
+    key: gb_scottish_marine_region
+    name: Scottish Marine Region by field name (Scottish Marine Region, marine_region, SMR) with Outer Hebrides, Shetland Isles
+    rule: (?i)scottish[ _]marine[ _]regions?|marine[ _]regions?(?:[ _]name)?|smr(?:[ _]name)?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.marine.validate_scottish_marine_region
+    needs_values: true
+    priority: 1
+  # X_easting 280258, Y_northing 887997, cag_easting of surveys on the British National Grid: the grid
+  # words carry a prefix that the universal rules do not know.
+  gbeastingbyprefixedname:
+    key: easting
+    name: Easting by a prefixed field name (X_easting, cag_easting, site_easting)
+    rule: (?i)(?:x|cag|site|grid|os)[ _.]eastings?
+    type: field
+    match: regex
+    priority: 1
+  gbnorthingbyprefixedname:
+    key: northing
+    name: Northing by a prefixed field name (Y_northing, cag_northing, site_northing)
+    rule: (?i)(?:y|cag|site|grid|os)[ _.]northings?
+    type: field
+    match: regex
+    priority: 1
   # Found in 2024 snapshots of UK open data portals (data.gov.uk, Cambridgeshire Insight, Calderdale Data
   # Works, Open Leicester, London Datastore, Open Data Glasgow; Dateno sources cdi00000763 to cdi00000799;
   # metacrafter-testdata).
@@ -407,15 +530,6 @@ rules:
     type: field
     match: regex
     validator: metacrafterext.rules.gb.portals.validate_gb_area_name
-    needs_values: true
-    priority: 1
-  gbusrnbyname:
-    key: gb_usrn
-    name: Unique Street Reference Number by field name (USRN, street_usrn) with 44100754
-    rule: (?i)(?:[a-z]+[ _])?usrn
-    type: field
-    match: regex
-    validator: metacrafterext.rules.gb.portals.validate_gb_usrn
     needs_values: true
     priority: 1
   ukgsscodeundercode:

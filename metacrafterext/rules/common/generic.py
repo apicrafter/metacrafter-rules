@@ -479,9 +479,15 @@ _ISO_DATE = re.compile(r"^\d{4}-\d{2}-\d{2}(?:[T ]\d{2}:\d{2}(?::\d{2}(?:\.\d+)?
 _BOOLEAN_WORDS = frozenset(("true", "false"))
 
 
+# A measured or computed number: status_BAC -0.108360984950716, se_status 0.158856488805864 of an
+# assessment of contaminants hold the distance to a threshold, not a status.
+_LONG_DECIMAL = re.compile(r"^-?\d+[.,]\d{4,}(?:[eE][-+]?\d+)?$")
+
+
 def validate_category_value(value):
     """A value of a category field (type, status, kind): not a boolean (true, false), not a
-    date (2019-11-27) and not a URL or a path (http://..., /l/ru/category/...).
+    date (2019-11-27), not a number with four or more decimals (-0.10836) and not a URL or a
+    path (http://..., /l/ru/category/...).
 
     Field names with type or status also name flags (prise_type_2: true / false), dates
     (company_status_date) and links (category_url) (metacrafter-rules #69).
@@ -490,6 +496,8 @@ def validate_category_value(value):
     if not text:
         return False
     if text.lower() in _BOOLEAN_WORDS or _ISO_DATE.match(text):
+        return False
+    if _LONG_DECIMAL.match(text):
         return False
     return not (_URL.match(text) or "://" in text or (text.startswith("/") and "/" in text[1:]))
 

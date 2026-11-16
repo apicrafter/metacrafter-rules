@@ -18,7 +18,8 @@ rules:
   tzregionvalue:
     key: tz_region
     name: Tanzanian region by value (Dodoma, Dar es Salaam, Kaskazini Pemba)
-    rule: metacrafterext.rules.tz.geo.validate_tz_region
+    # A bare Coast is any coast (water body types Coast, Open Sea, Estuary of a marine monitoring table).
+    rule: metacrafterext.rules.tz.geo.validate_tz_region_by_value
     type: data
     match: func
     minlen: 4

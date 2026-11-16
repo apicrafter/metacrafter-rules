@@ -1,0 +1,110 @@
+name: marine-codes
+description: ICES code lists, statistical rectangles and identifiers of marine species
+context: environment
+lang: common
+country_code: xx
+# Found in an April 2024 snapshot of Marine Scotland Data (data.marine.gov.scot, Dateno source cdi00000828:
+# the assessments of contaminants of the Clean Seas Environment Monitoring Programme, the groundfish survey
+# monitoring and assessment data products and the fishing statistics by ICES rectangle) and in the fishery
+# tables of the CUHK Research Data Repository (cdi00000875); metacrafter-testdata.
+rules:
+  # determinand CD, HG, CB118, BAA of the CSEMP assessments; PARAM in the ICES reporting format.
+  icesparametercodebyname:
+    key: ices_parameter_code
+    name: ICES parameter code by field name (determinand, PARAM, parameter_code) with CD, HG, CB118
+    rule: (?i)determinand(?:[ _]?code)?|param(?:eter)?[ _]code|param
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.marine.validate_ices_parameter_code
+    needs_values: true
+    priority: 1
+  # matrix LI, MU, SED63, SB, BI. SEDTOT, a total sediment of the CSEMP files, is not in the vocabulary.
+  icesmatrixcodebyname:
+    key: ices_matrix_code
+    name: ICES matrix code by field name (matrix, MATRX) with LI, MU, SED63
+    rule: (?i)matri?x(?:[ _]?code)?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.marine.validate_ices_matrix_code
+    needs_values: true
+    priority: 1
+  icesmethodofanalysiscodebyname:
+    key: ices_method_of_analysis_code
+    name: ICES method of analysis code by field name (metoa) with GC-MS, ICP-MS, GC-ECD
+    rule: (?i)metoa(?:[ _]?code)?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.marine.validate_ices_method_of_analysis_code
+    needs_values: true
+    priority: 1
+  # qflag, normConc.qflag, qflag_norm, CORG.qflag: < and D.
+  icesqualifierflagbyname:
+    key: ices_qualifier_flag
+    name: ICES qualifier flag by field name (qflag, normConc.qflag, qflag_norm) with <, D, Q
+    rule: (?i)(?:[a-z0-9%]+[._])?qflag(?:[._][a-z0-9]+)?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.marine.validate_ices_qualifier_flag
+    needs_values: true
+    priority: 1
+  # basis D, W, L and basis_profile of the CSEMP assessments. FMSYBasis of a stock assessment names a method.
+  icesbasiscodebyname:
+    key: ices_basis_code
+    name: ICES basis of determination by field name (basis, basis_profile) with W, D, L
+    rule: (?i)basis(?:[ _.](?:profile|code|of[ _]determination))?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.marine.validate_ices_basis_code
+    needs_values: true
+    priority: 1
+  icesstationtypebyname:
+    key: ices_station_type
+    name: ICES type of monitoring station by field name (MSTAT) with B, RH, IH
+    rule: (?i)mstat
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.marine.validate_ices_station_type
+    needs_values: true
+    priority: 1
+  # Gear GOV, ROT, BT4A, BT8, NCT of the groundfish survey data products. GearType OT, BT and a gear
+  # name (Otter trawl) are not codes of the vocabulary.
+  icesgearcodebyname:
+    key: ices_gear_code
+    name: ICES gear type code by field name (Gear, gear_code) with GOV, ROT, BT4A
+    rule: (?i)gear(?:[ _]?code)?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.marine.validate_ices_gear_code
+    needs_values: true
+    priority: 1
+  # ICES Rectangle 34E5, ICES_Rectangle, ICESStSq 36E4, ices_rectangle, StatRec. Statistical Rectangles
+  # of a stock table holds ranges (39-40 E5; 40 E4), which the values refuse.
+  icesstatisticalrectanglebyname:
+    key: ices_statistical_rectangle
+    name: ICES statistical rectangle by field name (ICES Rectangle, ICESStSq, StatRec, statistical_rectangle) with 34E5, 43D6
+    rule: (?i)ices[ _]?(?:stat(?:istical)?[ _]?)?(?:rect(?:angle)?s?|st(?:at)?[ _]?sq(?:uare)?s?|squares?)|stat(?:istical)?[ _]?rect?(?:angle)?s?|ices[ _]?(?:area[ _])?code
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.marine.validate_ices_statistical_rectangle
+    needs_values: true
+    priority: 1
+  # AphiaID 156533, Aphia_Code 127190, species_aphia_id, SpeciesAphiaID, valid_AphiaID.
+  wormsaphiaidbyname:
+    key: worms_aphia_id
+    name: WoRMS AphiaID by field name (AphiaID, Aphia_Code, species_aphia_id, valid_AphiaID) with 126436, 156533
+    rule: (?i)(?:[a-z]+[ _.]?)?aphia[ _.]?(?:id|code)(?:[ _.][a-z]+)?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.marine.validate_worms_aphia_id
+    needs_values: true
+    priority: 1
+  # Species(FAOCodes) WHB, COD, MAC and 3-alpha COD, HAD of the NAFO catch tables.
+  faoasfiscodebyname:
+    key: fao_asfis_code
+    name: FAO ASFIS 3-alpha species code by field name (Species(FAOCodes), 3-alpha, fao_code, asfis_code) with COD, HAD, WHB
+    rule: (?i)species[ _]?\(?fao[ _]?codes?\)?|fao[ _]?(?:species[ _]?)?codes?|species[ _]?fao(?:[ _]?code)?|3[ _-]?alpha(?:[ _-]?code)?|(?:fao[ _]?)?asfis(?:[ _]?code)?|alpha3[ _]?species
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.marine.validate_fao_asfis_code
+    needs_values: true
+    priority: 1
