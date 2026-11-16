@@ -34,3 +34,17 @@ rules:
     validator: metacrafterext.rules.common.education.validate_eter_id
     needs_values: true
     priority: 1
+
+  # ------------------------------------------------------------ school names
+  # Found in 2024 snapshots of UK open data portals (Calderdale Data Works, Cambridgeshire Insight, data.gov.uk;
+  # Dateno sources cdi00000764, cdi00000786 and cdi00000793; metacrafter-testdata): 125 distinct tables name
+  # the school in a School or School name column. A number or a flag under the name fails the validator.
+  schoolnamebyname:
+    key: school_name
+    name: School name by field name (School, School name, Name of school) with Abbey Park Academy
+    rule: (?i)school(?:[ _]?name)?|name[ _]of[ _](?:the[ _])?school
+    type: field
+    match: regex
+    validator: metacrafterext.rules.gb.portals.validate_school_name
+    needs_values: true
+    priority: 1

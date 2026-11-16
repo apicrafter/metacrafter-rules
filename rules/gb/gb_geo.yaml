@@ -69,14 +69,21 @@ rules:
     match: text
     type: field
     priority: 1
-    rule: lsoa,lsoa code,lsoa_code,lsoa11cd,lsoa11_cd,lsoa code 2011,lsoa 2011 code,lsoa 2011 name
+    rule: lsoa,lsoa code,lsoa_code,lsoa11cd,lsoa11_cd,lsoa code 2011,lsoa 2011 code
+    # GSS codes only (E01000001): an LSOA column also holds names (Cambridge 001A is gb_lsoa_name) and the
+    # data zone names of Scotland (Lenzie North - 07).
+    validator: metacrafterext.rules.common.generic.validate_gss_code
+    needs_values: true
   ukmsoafield:
     key: ukmsoa
     name: UK Middle Super Output Area (MSOA) code by field name
     match: text
     type: field
     priority: 1
-    rule: msoa,msoa code,msoa_code,msoa11cd,msoa11_cd,msoa name,msoa04cd,msoa04_cd
+    rule: msoa,msoa code,msoa_code,msoa11cd,msoa11_cd,msoa04cd,msoa04_cd
+    # GSS codes only (E02000001): MSOA name holds names (Leicester 003 is gb_msoa_name).
+    validator: metacrafterext.rules.common.generic.validate_gss_code
+    needs_values: true
   ukonscodefield:
     key: ukonscode
     name: UK ONS (Office for National Statistics) code by field name
@@ -471,3 +478,69 @@ rules:
     type: field
     match: regex
     priority: 1
+  # Found in 2024 snapshots of UK open data portals (data.gov.uk, Cambridgeshire Insight, Calderdale Data
+  # Works, Open Leicester, London Datastore, Open Data Glasgow; Dateno sources cdi00000763 to cdi00000799;
+  # metacrafter-testdata).
+  gblsoanamebyname:
+    key: gb_lsoa_name
+    name: LSOA name by field name (LSOA name, LSOA11NM, LSOA name (2011), lsoa) with Cambridge 001A
+    rule: (?i)(?:[a-z]+[ _])?(?:(?:19|20)\d\d[ _])?lsoa(?:[ _]?(?:19|20)?\d\d)?[ _]?(?:name|nm)w?(?:[ _]?\(?(?:19|20)\d\d\)?)?|lsoa
+    type: field
+    match: regex
+    validator: metacrafterext.rules.gb.portals.validate_gb_lsoa_name
+    needs_values: true
+    priority: 1
+  gblsoanamevalue:
+    key: gb_lsoa_name
+    name: LSOA name by value (Cambridge 001A, Barking and Dagenham 001B)
+    # The name of a district, three digits and a capital letter; a house number has no fixed length.
+    rule: "[A-Z][A-Za-z'’.,-]*(?: [A-Za-z'’.,&-]+){0,6} \\d{3}[A-Z]"
+    type: data
+    match: regex
+    minlen: 8
+    maxlen: 60
+    validator: metacrafterext.rules.gb.portals.validate_gb_lsoa_name
+    priority: 1
+  gbmsoanamebyname:
+    key: gb_msoa_name
+    name: MSOA name by field name (MSOA name, MSOA11NM, msoa) with Leicester 003
+    # MSOA11HCLNM holds the names of the House of Commons Library (Belgrave South), which fail the validator.
+    rule: (?i)(?:[a-z]+[ _])?(?:(?:19|20)\d\d[ _])?msoa(?:[ _]?(?:19|20)?\d\d)?[ _]?(?:name|nm)w?(?:[ _]?\(?(?:19|20)\d\d\)?)?|msoa
+    type: field
+    match: regex
+    validator: metacrafterext.rules.gb.portals.validate_gb_msoa_name
+    needs_values: true
+    priority: 1
+  gblocalauthoritynamebyname:
+    key: gb_local_authority_name
+    name: Local authority name by field name (Local authority, LA name, LAD11NM) with Calderdale, Barnet
+    # A code under the same name (E06000001, 302) fails the validator.
+    rule: (?i)local[ _]?authority(?:[ _]?(?:name|district|district[ _]name))?|la[ _]?name|(?:lad|ltla|utla|ctyua)\d\dnmw?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.gb.portals.validate_gb_area_name
+    needs_values: true
+    priority: 1
+  gbparliamentaryconstituencybyname:
+    key: gb_parliamentary_constituency
+    name: UK parliamentary constituency by field name (Parliamentary constituency, UK constituency, PCON17NM) with Calder Valley
+    # A bare constituency is any country's constituency (Kenya): the name must say Parliament or the UK,
+    # or be the ONS column name. A GSS code under the name (E14000614) fails the validator.
+    rule: (?i)(?:uk|westminster|parliamentary)[ _]constituency(?:[ _]name)?|pcon\d\dnmw?|parliamentary[ _]constituencies
+    type: field
+    match: regex
+    validator: metacrafterext.rules.gb.portals.validate_gb_area_name
+    needs_values: true
+    priority: 1
+  ukgsscodeundercode:
+    key: ukgsscode
+    name: GSS code in a code column of a statistical table (Code, area_code, ONS code, geography_code) with E06000001
+    # The name tells nothing; the values must be GSS codes (a country letter and eight digits).
+    # Weaker than the rules of one geography (ONS code, LA code, a region or a country by value): a
+    # column of this name mixes regions, districts and wards.
+    rule: (?i)code|(?:area|geo|geography|gss)[ _]?codes?|(?:lsoa|msoa|oa|ward)[ _]code[ _]?\(?(?:19|20)\d\d\)?|(?:19|20)\d\d[ _](?:lsoa|msoa|oa)(?:[ _]code)?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.generic.validate_gss_code
+    needs_values: true
+    priority: 3

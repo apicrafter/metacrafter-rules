@@ -58,3 +58,50 @@ rules:
     validator: metacrafterext.rules.fr.codes.validate_fr_gaspar_id
     needs_values: true
     priority: 1
+  # Found in 2024 snapshots of French Opendatasoft portals (Open Data Réseaux Énergies, Grand Paris Sud, the
+  # Open Data Corse portal; Dateno sources cdi00000711 to cdi00000717; metacrafter-testdata).
+  frelecfilierecodebyname:
+    key: fr_elec_filiere_code
+    name: Generation sector code of the French register of electricity installations by field name (codeFiliere) with SOLAI, HYDLQ
+    rule: (?i)code[ _]?fili[eè]re(?:[ _]de[ _]production)?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.fr.portals.validate_fr_elec_filiere_code
+    needs_values: true
+    priority: 1
+  freleccombustiblecodebyname:
+    key: fr_elec_combustible_code
+    name: Fuel code of the French register of electricity installations by field name (codeCombustible, codesCombustiblesSecondaires) with GAZ, FIOUL
+    rule: (?i)codes?[ _]?combustibles?(?:[ _]?secondaires?)?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.fr.portals.validate_fr_elec_code
+    needs_values: true
+    priority: 1
+  frelectechnologiecodebyname:
+    key: fr_elec_technologie_code
+    name: Technology code of the French register of electricity installations by field name (codeTechnologie) with PHOTV, FIL.E
+    rule: (?i)code[ _]?technologie
+    type: field
+    match: regex
+    validator: metacrafterext.rules.fr.portals.validate_fr_elec_code
+    needs_values: true
+    priority: 1
+  frpacagebyname:
+    key: fr_pacage
+    name: PACAGE number of a farm by field name (pacage, num_pacage) with 02B003120
+    rule: (?i)(?:n(?:um(?:ero)?|o|°)?[ _]?)?pacage(?:[ _]?(?:num(?:ero)?|id))?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.fr.portals.validate_fr_pacage
+    needs_values: true
+    priority: 1
+  frsandrecourseaubyhydroname:
+    key: fr_sandre_cours_eau_code
+    name: Sandre river code by the field names of BD Carthage (code_hydro, codehydro, cgenelin, code_h) with Y7410600
+    rule: (?i)code?[ _]?hydro|cgenelin|code_h|c_hydro
+    type: field
+    match: regex
+    validator: metacrafterext.rules.fr.codes.validate_fr_sandre_cours_eau_code
+    needs_values: true
+    priority: 1

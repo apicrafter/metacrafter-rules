@@ -19,7 +19,7 @@ rules:
     name: Chapter of a French local budget by field name (chapitre, code_chapitre, BGT_NATURE with 011, 65, 930)
     # BGT_NATURE is the chapter in the SCDL budget schema; some publishers swap it with BGT_CONTNAT,
     # so both names are tried and the values decide.
-    rule: (?i)(?:code|num[eé]ro|num|n°)?[ _]?(?:du[ _])?chapitre(?:[ _](?:code|par[ _]nature|budg[eé]taire|nature))?|chap(?:[ _]code)?|bgt_nature|bgt_contnat
+    rule: (?i)(?:code|num[eé]ro|num|n°)?[ _]?(?:du[ _])?chapitre(?:[ _](?:code|par[ _]nature|budg[eé]taire|nature))?|chap(?:[ _]code)?|bgt_nature|bgt_contnat|chapitre[ _]budg[eé]taire[ _]cl[eé]
     type: field
     match: regex
     validator: metacrafterext.rules.fr.portals.validate_fr_budget_chapitre_code
@@ -29,7 +29,7 @@ rules:
     key: fr_budget_nature_code
     name: Article of a French local budget, an account by nature, by field name (article, code_article, BGT_CONTNAT with 6574, 64111)
     # An article column of French grammar (au, à l') and a nature column of words fail the validator.
-    rule: (?i)(?:code|num[eé]ro|num|n°)?[ _]?(?:de[ _]l[ _']?)?article(?:[ _](?:code|budg[eé]taire|nature|comptable))?|bgt_contnat|bgt_nature|(?:code[ _]|num[eé]ro[ _])?compte[ _](?:nature|budg[eé]taire|par[ _]nature)|(?:code[ _])?nature[ _]comptable|nature
+    rule: (?i)(?:code|num[eé]ro|num|n°)?[ _]?(?:de[ _]l[ _']?)?article(?:[ _](?:code|budg[eé]taire|nature|comptable))?|bgt_contnat|bgt_nature|(?:code[ _]|num[eé]ro[ _])?compte[ _](?:nature|budg[eé]taire|par[ _]nature)|(?:code[ _])?nature[ _]comptable|nature|nature[ _]budg[eé]taire[ _]cl[eé]
     type: field
     match: regex
     validator: metacrafterext.rules.fr.portals.validate_fr_budget_nature_code
@@ -39,7 +39,7 @@ rules:
     key: fr_budget_fonction_code
     name: Function code of a French local budget by field name (fonction, code_fonction, BGT_FONCTION with 020, 822)
     # A fonction column of job titles fails the validator.
-    rule: (?i)(?:code|num[eé]ro)?[ _]?(?:de[ _])?(?:sous[ _]?)?fonction(?:[ _]code)?|code[ _]fonctionnel|bgt_fonction|rubrique[ _]fonctionnelle
+    rule: (?i)(?:code|num[eé]ro)?[ _]?(?:de[ _])?(?:sous[ _]?)?fonction(?:[ _]code)?|code[ _]fonctionnel|bgt_fonction|rubrique[ _]fonctionnelle|fonction[ _]cl[eé]
     type: field
     match: regex
     validator: metacrafterext.rules.fr.portals.validate_fr_budget_fonction_code
@@ -53,5 +53,26 @@ rules:
     type: field
     match: regex
     validator: metacrafterext.rules.fr.portals.validate_fr_lolf_programme_code
+    needs_values: true
+    priority: 1
+  # Found in the budgets of Paris and of the communes of Grand Paris Seine et Oise (opendata.paris.fr,
+  # 2024 snapshots, Dateno sources cdi00000707 and cdi00000723; metacrafter-testdata): the section and the
+  # side of a budget line, BGT_SECTION and BGT_CODRD of the SCDL budget schema.
+  frbudgetsectionbyname:
+    key: fr_budget_section
+    name: Section of a French local budget by field name (section, BGT_SECTION, section_budgetaire_i_f) with fonctionnement, investissement
+    rule: (?i)(?:bgt_)?section(?:[ _]budg[eé]taire)?(?:_i_f)?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.fr.portals.validate_fr_budget_section
+    needs_values: true
+    priority: 1
+  frbudgetsensbyname:
+    key: fr_budget_sens
+    name: Side of a French local budget line by field name (sens, BGT_CODRD, sens_depense_recette) with dépense, recette
+    rule: (?i)bgt_codrd|sens(?:[ _]d[eé]penses?[ _]recettes?)?|d[eé]penses?[ _/]recettes?|recettes?[ _/]d[eé]penses?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.fr.portals.validate_fr_budget_sens
     needs_values: true
     priority: 1

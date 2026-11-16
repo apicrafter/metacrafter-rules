@@ -93,3 +93,16 @@ rules:
     validator: metacrafterext.rules.common.waterquality.validate_energy_amount
     needs_values: true
     priority: 1
+
+  # A column of amounts written with the pound sign (£37,350.00, -£1,917.95) under any name (2016, Bonuses,
+  # Payroll staff costs): 849 such columns of the UK portal snapshots of 2024 had no label, since only the
+  # name of a field said money.
+  moneywithsignvalue:
+    key: money
+    name: Money amount with a currency sign by value (£37,350.00, -£1,917.95, € 1,200)
+    rule: metacrafterext.rules.gb.portals.validate_symbol_amount
+    type: data
+    match: func
+    minlen: 2
+    maxlen: 24
+    priority: 1

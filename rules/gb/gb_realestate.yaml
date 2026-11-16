@@ -70,3 +70,54 @@ rules:
     match: text
     validator: metacrafterext.rules.gb.codes.validate_voa_description_code
     priority: 1
+  # Found in 2024 snapshots of UK open data portals (data.gov.uk, Cambridgeshire Insight, Calderdale Data
+  # Works, Open Leicester, London Datastore, Open Data Glasgow; Dateno sources cdi00000763 to cdi00000799;
+  # metacrafter-testdata).
+  # Brownfield land registers follow the data standard of 2017 (gov.uk): PlanningStatus, OwnershipStatus and
+  # PermissionType take fixed phrases; 45 registers of the snapshots hold them.
+  gbbrownfieldplanningstatusbyname:
+    key: gb_brownfield_planning_status
+    name: Planning status of a brownfield land register by field name (PlanningStatus) with permissioned, not permissioned, pending decision
+    rule: (?i)planning[ _]?status
+    type: field
+    match: regex
+    validator: metacrafterext.rules.gb.portals.validate_gb_brownfield_planning_status
+    needs_values: true
+    priority: 1
+  gbbrownfieldownershipstatusbyname:
+    key: gb_brownfield_ownership_status
+    name: Ownership status of a brownfield land register by field name (OwnershipStatus) with owned by a public authority
+    rule: (?i)ownership[ _]?status
+    type: field
+    match: regex
+    validator: metacrafterext.rules.gb.portals.validate_gb_brownfield_ownership_status
+    needs_values: true
+    priority: 1
+  gbbrownfieldownershipstatusvalue:
+    key: gb_brownfield_ownership_status
+    name: Ownership status of a brownfield land register by value (not owned by a public authority, mixed ownership)
+    rule: owned by a public authority,not owned by a public authority,mixed ownership,unknown ownership
+    type: data
+    match: text
+    minlen: 15
+    maxlen: 32
+    priority: 1
+  gbbrownfieldpermissiontypebyname:
+    key: gb_brownfield_permission_type
+    name: Permission type of a brownfield land register by field name (PermissionType) with full planning permission
+    rule: (?i)permission[ _]?type
+    type: field
+    match: regex
+    validator: metacrafterext.rules.gb.portals.validate_gb_brownfield_permission_type
+    needs_values: true
+    priority: 1
+  gbcounciltaxbandbyname:
+    key: gb_council_tax_band
+    name: Council tax band by field name (Council Tax Band, council_tax_band, CT band) with A to H
+    # A bare band holds the bands of pay scales and of energy ratings as often.
+    rule: (?i)(?:council[ _]?tax|ct)[ _]?band(?:ing)?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.gb.portals.validate_gb_council_tax_band
+    needs_values: true
+    priority: 1

@@ -36,3 +36,24 @@ rules:
     match: regex
     validator: metacrafterext.rules.gb.codes.validate_companies_house_number
     priority: 1
+  # Found in 2024 snapshots of UK open data portals (data.gov.uk, Cambridgeshire Insight, Calderdale Data
+  # Works, Open Leicester, London Datastore, Open Data Glasgow; Dateno sources cdi00000763 to cdi00000799;
+  # metacrafter-testdata).
+  gbsiccodebyname:
+    key: gb_sic_code
+    name: UK SIC 2007 code by field name (SIC code, SICCode.SicText_1, 2007 SIC code(s)) with 62020, 25.62, 74990 - Non-trading company
+    rule: (?i)(?:(?:uk|2007|2003)[ _])?sic(?:[ _]?(?:2007|2003|07|03))?(?:[ _]?codes?(?:\(s\))?)?|sic[ _]?code\.sic[ _]?text[ _]?\d
+    type: field
+    match: regex
+    validator: metacrafterext.rules.gb.portals.validate_gb_sic_code
+    needs_values: true
+    priority: 1
+  gbesdserviceurivalue:
+    key: gb_esd_service_uri
+    name: Service URI of the Local Government Service List by value (http://id.esd.org.uk/service/646)
+    rule: 'https?://id\.esd\.org\.uk/service/\d{1,5}'
+    type: data
+    match: regex
+    minlen: 30
+    maxlen: 40
+    priority: 1
