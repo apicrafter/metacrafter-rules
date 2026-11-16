@@ -1,0 +1,17 @@
+name: dk-texts
+description: Danish language resource identifiers
+context: texts
+lang: da
+country_code: dk
+# Found in the tables of the Central Word Register (ordregister.dk) in a 2024 snapshot of sprogteknologi.dk
+# (Dateno source cdi00000504); metacrafter-testdata.
+rules:
+  dkcoridvalue:
+    key: dk_cor_id
+    name: Danish Central Word Register identifier by value (COR.72642, COR.EXT.100002.300.01, COR.SEM.1000001.01)
+    rule: 'COR\.(?:\d{5}(?:\.\d{3}\.\d{2})?|[A-Z0-9_]{3,}(?:\.\d+)+)'
+    type: data
+    match: regex
+    minlen: 9
+    maxlen: 40
+    priority: 1

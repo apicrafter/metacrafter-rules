@@ -1,0 +1,72 @@
+name: sdmx-codes
+description: Codes of SDMX code lists and Erasmus institution codes
+context: common
+lang: common
+country_code: xx
+# Found in the statistical exports of the statistics institute of the Canary Islands (datos.canarias.es,
+# Dateno source cdi00000563: TERRITORIO_CODE, TIME_PERIOD_CODE, EDAD_CODE, ESTADO_OBSERVACION_CODE) and in the
+# mobility tables of UniversiDATA (cdi00000583); metacrafter-testdata.
+rules:
+  sdmxobsstatusbyname:
+    key: sdmx_obs_status
+    name: SDMX observation status by field name (OBS_STATUS, ESTADO_OBSERVACION_CODE, observation_status) with A, E, P, M
+    rule: (?i)obs(?:ervation)?[ _]?status(?:[ _]code)?|estado[ _]observaci[oó]n[ _]code
+    type: field
+    match: regex
+    validator: metacrafterext.rules.es.codes.validate_sdmx_obs_status
+    needs_values: true
+    priority: 1
+  sdmxagebyname:
+    key: sdmx_age
+    name: SDMX age code by field name (EDAD_CODE, AGE_CODE, grupo_edad_code) with Y15T24, Y_GE65, _T
+    rule: (?i)(?:[a-z]+[ _]){0,3}(?:edad|age)(?:[ _][a-z]+){0,2}[ _]code
+    type: field
+    match: regex
+    validator: metacrafterext.rules.es.codes.validate_sdmx_age
+    needs_values: true
+    priority: 1
+  sdmxagebandvalue:
+    key: sdmx_age
+    name: SDMX age band by value (Y15T24, Y45T64)
+    rule: metacrafterext.rules.es.codes.validate_sdmx_age_band
+    type: data
+    match: func
+    minlen: 4
+    maxlen: 8
+    priority: 1
+  sdmxreportingperiodbyname:
+    key: sdmx_reporting_period
+    name: SDMX reporting period by field name (TIME_PERIOD, TIME_PERIOD_CODE) with 2018-Q1, 2008-M03
+    rule: (?i)time[ _]period(?:[ _]code)?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.es.codes.validate_sdmx_reporting_period
+    needs_values: true
+    priority: 1
+  sdmxreportingmonthvalue:
+    key: sdmx_reporting_period
+    name: Month as an SDMX reporting period by value (2008-M03)
+    rule: metacrafterext.rules.es.codes.validate_sdmx_reporting_month
+    type: data
+    match: func
+    minlen: 8
+    maxlen: 8
+    priority: 1
+  erasmuscodebyname:
+    key: eu_erasmus_code
+    name: Erasmus institution code by field name (erasmus_code, codigo_erasmus, cod_universidad_procedencia, cod_universidad_destino) with E  MADRID03, I MILANO03
+    rule: (?i)(?:c[oó]d(?:e|igo)?[ _])?erasmus(?:[ _](?:code|c[oó]d(?:igo)?|id))?|c[oó]d(?:igo)?[ _]universidad[ _](?:procedencia|destino|origen)
+    type: field
+    match: regex
+    validator: metacrafterext.rules.es.codes.validate_erasmus_code
+    needs_values: true
+    priority: 1
+  erasmuscodevalue:
+    key: eu_erasmus_code
+    name: Erasmus institution code by value with the space after the country letters (I MILANO03, PL WARSZAW02)
+    rule: metacrafterext.rules.es.codes.validate_erasmus_code_by_value
+    type: data
+    match: func
+    minlen: 8
+    maxlen: 15
+    priority: 1
