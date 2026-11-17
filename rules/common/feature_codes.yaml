@@ -1,0 +1,16 @@
+name: feature-codes
+description: Feature codes of the Feature and Attribute Coding Catalogue (FACC) of DIGEST
+context: geo
+lang: common
+# Found in 2024 snapshots of the GeoServer of the Arctic SDI (arcticsdi.lm.se, Dateno source temp00000631):
+# EuroRegionalMap layers with F_CODE; metacrafter-testdata.
+rules:
+  facccodebyname:
+    key: facc_code
+    name: FACC feature code by field name (F_CODE, facc, facc_code) with AL020, AQ125
+    rule: (?i)f[ _]?code|facc(?:[ _]?code)?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.b14.validate_facc_code
+    needs_values: true
+    priority: 1

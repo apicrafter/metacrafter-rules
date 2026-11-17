@@ -9,6 +9,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Rules for the files of metacrafter-testdata from 2024 snapshots of 60 data catalogues** (mostly GeoServers:
+  the national spatial data infrastructure of Mongolia, Portuguese and Swedish municipalities, the Arctic SDI,
+  Polish forest data, the Pacific Community, EUMETSAT, UK national parks and councils; and the CKAN portals of
+  Open Data NI, Hull, West Sussex and others; 3051 distinct tables of 14 065):
+  - Mongolia (`mn/mn_geo.yaml`): provinces (`mn_aimag`: AU1_NAME, aimag, аймаг and by value with Дорнод,
+    Баян-Өлгий, Улаанбаатар), soums and districts (`mn_soum`: AU2_NAME, soum, сум, дүүрэг with Хэрлэн), bags
+    and khoroos (`mn_bag`: AU3_NAME, bag, khoroo and by value with 5-р баг, 20-хороо) and the codes of the
+    National Statistics Office (`mn_aimag_code`: AU1 with 011, 084; `mn_soum_code`: AU2 with 01122;
+    `mn_bag_code`: AU3 with 0211353).
+  - Portugal (`pt/pt_parish.yaml`): civil parishes (`pt_freguesia`: freguesia, nome_freguesia, freg with
+    Valongo do Vouga, UF Águeda e Borralha).
+  - United Kingdom (`gb/gb_b14.yaml`): Healthcare Resource Group codes (`gb_hrg_code`: HRG with AA22G), Northern
+    Ireland wards of 1992 (`gb_ni_ward_1992_code`: 95AA01 by value), Super Output Areas (`gb_ni_soa_code`:
+    95AA01S1 by value) and district councils of 1973 to 2015 (`gb_ni_lgd_1992_code`: 95AA by value), road
+    numbers (`gb_road_number`: Route, Road, ROADNUM with A2, M1, B5074) and AddressBase classes
+    (`gb_addressbase_classification`: BLPU_CLASS, CLASSIFICATION_CODE with RD02, RI01).
+  - FACC feature codes of DIGEST (`common/feature_codes.yaml`, `facc_code`: F_CODE with AL020, AQ125).
 - **Rules for the files of metacrafter-testdata from 2024 snapshots of 43 data catalogues** (NYC Open Data,
   Harvard Dataverse, HealthData.gov, the ASARECA data hub, the Subak Data Catalogue, the OpenUp data portal, Data
   Atlas Fontium, the metadata catalogue of GIAP, the Comune di Parma, Ho Chi Minh City, Geoweba, the Ajman Data

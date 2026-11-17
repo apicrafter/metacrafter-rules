@@ -1,0 +1,63 @@
+name: gb-b14
+description: Healthcare Resource Groups, Northern Ireland codes of 1992, road numbers and AddressBase classes
+context: geo
+lang: en
+country_code: gb
+# Found in 2024 snapshots of the Open Data NI portal (admin.opendatani.gov.uk, Dateno source temp00004663)
+# and of the GeoServers of Pembrokeshire, Cumbria, Cheshire East and the Brecon Beacons (temp00003701,
+# temp00001527, temp00001530, temp00001526); metacrafter-testdata.
+rules:
+  gbhrgcodebyname:
+    key: gb_hrg_code
+    name: Healthcare Resource Group code by field name (HRG, hrg_code, HRG4) with AA22G
+    rule: (?i)hrg4?(?:[ _]?code)?|healthcare[ _]resource[ _]group(?:[ _]code)?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.gb.b14.validate_gb_hrg_code
+    needs_values: true
+    priority: 1
+  gbniward1992value:
+    key: gb_ni_ward_1992_code
+    name: Northern Ireland 1992 ward code by value (95AA01)
+    rule: 95([A-Z])\1\d{2}
+    type: data
+    match: regex
+    minlen: 6
+    maxlen: 6
+    priority: 1
+  gbnisoavalue:
+    key: gb_ni_soa_code
+    name: Northern Ireland Super Output Area code by value (95AA01S1, 95AA02W1)
+    rule: 95([A-Z])\1\d{2}[SW]\d
+    type: data
+    match: regex
+    minlen: 8
+    maxlen: 8
+    priority: 1
+  gbnilgd1992value:
+    key: gb_ni_lgd_1992_code
+    name: Northern Ireland 1992 district council code by value (95AA, 95ZZ)
+    rule: 95([A-Z])\1
+    type: data
+    match: regex
+    minlen: 4
+    maxlen: 4
+    priority: 1
+  gbroadnumberbyname:
+    key: gb_road_number
+    name: UK road number by field name (route, road, road_number, road_no) with A2, M1, B101
+    rule: (?i)(?:road|route)(?:[ _]?(?:no|num(?:ber)?|ref|code|id))?|road[ _]?name|rd[ _]?no
+    type: field
+    match: regex
+    validator: metacrafterext.rules.gb.b14.validate_gb_road_number
+    needs_values: true
+    priority: 1
+  gbaddressbaseclassbyname:
+    key: gb_addressbase_classification
+    name: AddressBase classification by field name (BLPU_CLASS, CLASSIFICATION_CODE) with RD02, RI01
+    rule: (?i)blpu[ _]?class(?:ification)?(?:[ _]?code)?|classification[ _]?code|abp[ _]?class
+    type: field
+    match: regex
+    validator: metacrafterext.rules.gb.b14.validate_gb_addressbase_classification
+    needs_values: true
+    priority: 1

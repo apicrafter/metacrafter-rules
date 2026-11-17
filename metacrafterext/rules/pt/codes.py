@@ -125,3 +125,17 @@ def validate_pt_postcode(value):
     """A Portuguese postal code, with the locality that tables write after it: 2765-013, 5460,
     2765-013 Estoril."""
     return bool(_POSTCODE.fullmatch(_text(value)))
+
+
+# A parish name: Valongo do Vouga, São Pedro da Afurada, UF Águeda e Borralha, Santa Maria Maior (Lisboa).
+_FREGUESIA = re.compile(r"[^\W\d_][^\W\d_ '.()/,-]*(?:[ '.()/,-]+[^\W\d_][^\W\d_'.()-]*\)?)*")
+_NOT_PARISH = frozenset(("nao conhecido", "nao conhecida", "desconhecido", "desconhecida", "null", "none",
+                         "n/a", "na", "outros", "sem informacao"))
+
+
+def validate_pt_freguesia(value):
+    """A civil parish of Portugal: Valongo do Vouga, UF Águeda e Borralha (not 0, -- Não conhecido --)."""
+    v = _text(value)
+    if not 2 <= len(v) <= 120 or not _FREGUESIA.fullmatch(v):
+        return False
+    return _fold(v) not in _NOT_PARISH

@@ -1,0 +1,81 @@
+name: mn-geo
+description: Mongolian provinces, soums and bags with the codes of the National Statistics Office
+context: geo
+lang: mn
+country_code: mn
+# Found in a 2024 snapshot of the GeoServer of the national spatial data infrastructure of Mongolia
+# (geo.nsdi.gov.mn, Dateno source temp00000488): layers with AU1, AU2, AU3 and AU1_NAME to AU3_NAME;
+# metacrafter-testdata.
+rules:
+  mnaimagbyname:
+    key: mn_aimag
+    name: Mongolian province by field name (au1_name, aimag, аймаг) with Дорнод, Улаанбаатар
+    rule: (?i)au1[ _]?name|aimag(?:[ _]?name)?|аймаг(?:ийн[ _]нэр)?|аймгийн[ _]нэр
+    type: field
+    match: regex
+    validator: metacrafterext.rules.mn.geo.validate_mn_aimag
+    needs_values: true
+    priority: 1
+  mnaimagvalue:
+    key: mn_aimag
+    name: Mongolian province by value (Дорнод, Баян-Өлгий, Улаанбаатар)
+    rule: metacrafterext.rules.mn.geo.validate_mn_aimag
+    type: data
+    match: func
+    minlen: 3
+    maxlen: 14
+    priority: 1
+  mnaimagcodebyname:
+    key: mn_aimag_code
+    name: Mongolian province code by field name (au1, aimag_code) with 011, 021, 084
+    rule: (?i)au1(?:[ _]?code)?|aimag[ _]?(?:code|kod|id)|аймгийн[ _]код
+    type: field
+    match: regex
+    validator: metacrafterext.rules.mn.geo.validate_mn_aimag_code
+    needs_values: true
+    priority: 1
+  mnsoumbyname:
+    key: mn_soum
+    name: Mongolian soum or district by field name (au2_name, soum, сум, дүүрэг) with Хэрлэн, Баянзүрх
+    rule: (?i)au2[ _]?name|soum(?:[ _]?name)?|сум(?:ын[ _]нэр)?|дүүрэг|duureg
+    type: field
+    match: regex
+    validator: metacrafterext.rules.mn.geo.validate_mn_soum
+    needs_values: true
+    priority: 1
+  mnsoumcodebyname:
+    key: mn_soum_code
+    name: Mongolian soum code by field name (au2, soum_code) with 01122, 02101
+    rule: (?i)au2(?:[ _]?code)?|soum[ _]?(?:code|kod|id)|сумын[ _]код
+    type: field
+    match: regex
+    validator: metacrafterext.rules.mn.geo.validate_mn_soum_code
+    needs_values: true
+    priority: 1
+  mnbagbyname:
+    key: mn_bag
+    name: Mongolian bag or khoroo by field name (au3_name, bag, khoroo, баг, хороо) with 5-р баг, 3-р хороо
+    rule: (?i)au3[ _]?name|bag(?:[ _]?name)?|khoroo(?:[ _]?name)?|баг(?:ийн[ _]нэр)?|хороо
+    type: field
+    match: regex
+    validator: metacrafterext.rules.mn.geo.validate_mn_bag
+    needs_values: true
+    priority: 1
+  mnbagvalue:
+    key: mn_bag
+    name: Mongolian bag or khoroo by value (5-р баг, 3-р хороо, 20-хороо)
+    rule: metacrafterext.rules.mn.geo.validate_mn_bag
+    type: data
+    match: func
+    minlen: 5
+    maxlen: 40
+    priority: 1
+  mnbagcodebyname:
+    key: mn_bag_code
+    name: Mongolian bag code by field name (au3, bag_code) with 0211353
+    rule: (?i)au3(?:[ _]?code)?|bag[ _]?(?:code|kod|id)|багийн[ _]код
+    type: field
+    match: regex
+    validator: metacrafterext.rules.mn.geo.validate_mn_bag_code
+    needs_values: true
+    priority: 1
