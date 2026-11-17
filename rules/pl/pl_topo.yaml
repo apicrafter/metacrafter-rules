@@ -1,0 +1,53 @@
+name: pl-topo
+description: Polish topographic object codes, geographical names identifiers, cadastral units, case references and TERC codes
+context: geo
+lang: pl
+country_code: pl
+# Found in 2024 snapshots of Data Atlas Fontium (data.atlasfontium.pl, Dateno source cdi00002091) and of
+# the metadata catalogue of GIAP (e-spdp.pl, cdi00002093); metacrafter-testdata.
+rules:
+  plbdot10kcodebyname:
+    key: pl_bdot10k_code
+    name: 'Polish BDOT10k object code by field name (x_kod, kod_o, kod obiektu) with BUBD11, ADMS14_h'
+    rule: '(?i)x[ _]?kod|kod[ _]?o(?:biektu)?|kod[ _]?bdot(?:10k)?|bdot[ _]?kod'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.pl.b13.validate_pl_bdot10k_code
+    needs_values: true
+    priority: 1
+  plprngidbyname:
+    key: pl_prng_id
+    name: 'Polish geographical names register identifier by field name (id_prng, idPRNG) with 134542'
+    rule: '(?i)id[ _]?prng|prng[ _]?id|identyfikator[ _]prng'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.pl.b13.validate_pl_prng_id
+    needs_values: true
+    priority: 1
+  pljednostkaewidencyjnavalue:
+    key: pl_jednostka_ewidencyjna
+    name: 'Polish cadastral unit code by value (186101_1, 180902_5)'
+    rule: '\d{6}_[1-589]'
+    type: data
+    match: regex
+    minlen: 8
+    maxlen: 8
+    priority: 1
+  plznaksprawybyname:
+    key: pl_znak_sprawy
+    name: 'Polish case reference by field name (znak sprawy, numer decyzji, decyzje_numerdecyzji, nr sprawy) with 6730.26.2016'
+    rule: '(?i)znak[ _]?sprawy|(?:[a-z]+[ _])?(?:numer|nr)[ _]?(?:decyzji|sprawy|wniosku)|sygnatura'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.pl.b13.validate_pl_znak_sprawy
+    needs_values: true
+    priority: 1
+  plteryttercbyname:
+    key: pl_teryt_terc
+    name: 'Polish TERC code by field name (teryt, JPT_KOD_JE, kod_teryt, terc) with 0225011, 1408'
+    rule: '(?i)jpt[ _]kod[ _]je|(?:kod[ _]?)?(?:teryt|terc)'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.pl.b13.validate_pl_teryt_terc
+    needs_values: true
+    priority: 1

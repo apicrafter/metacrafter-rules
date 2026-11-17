@@ -1,0 +1,17 @@
+name: eu-environment
+description: Ecological status classes of the EU Water Framework Directive
+context: geo
+lang: en
+country_code: eu
+# Found in a 2024 snapshot of the Lounaistieto GeoServer (geoserver.lounaistieto.fi, Dateno source
+# cdi00004515); metacrafter-testdata.
+rules:
+  euwfdecologicalstatusbyname:
+    key: eu_wfd_ecological_status
+    name: 'Ecological status class by field name (eco_status, ecological status, ekologinen tila) with Good, Moderate'
+    rule: '(?i)eco(?:logical)?[ _]?(?:status|class)(?:[ _]class)?|ekol(?:oginen)?[ _]?tila'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.eu.water.validate_eu_wfd_ecological_status
+    needs_values: true
+    priority: 1

@@ -1,0 +1,17 @@
+name: fi-environment
+description: Finnish drainage basin numbers
+context: geo
+lang: fi
+country_code: fi
+# Found in a 2024 snapshot of the Lounaistieto GeoServer (geoserver.lounaistieto.fi, Dateno source
+# cdi00004515); metacrafter-testdata.
+rules:
+  fivesistoaluebyname:
+    key: fi_vesistoalue
+    name: 'Finnish drainage basin number by field name (vesalnro, vesistöalue, valuma-alueen tunnus) with 35.141'
+    rule: '(?i)vesal(?:ue)?[ _]?(?:nro|numero|tunnus)|vesist[oö]alue(?:en)?(?:[ _]?(?:nro|numero|tunnus))?|valuma[ _-]?alue(?:en)?[ _]?(?:nro|numero|tunnus)'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.fi.b13.validate_fi_vesistoalue
+    needs_values: true
+    priority: 1

@@ -1,0 +1,17 @@
+name: ae-makani
+description: Makani numbers of the UAE
+context: geo
+lang: en
+country_code: ae
+# Found in a 2024 snapshot of the Ajman Data Portal (data.ajman.ae, Dateno source cdi00004174);
+# metacrafter-testdata.
+rules:
+  aemakaninumberbyname:
+    key: ae_makani_number
+    name: 'Makani number by field name (makaninumber, makani_no, makani) with 42642 10565, 5009209779'
+    rule: '(?i)makani(?:[ _]?(?:number|no|num))?|رقم[ _]مكاني'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.ae.b13.validate_ae_makani_number
+    needs_values: true
+    priority: 1

@@ -1,0 +1,18 @@
+name: it-istat
+description: ISTAT codes of foreign states
+context: government
+lang: it
+country_code: it
+# Found in a 2024 snapshot of the open data of the Comune di Parma (opendata.comune.parma.it, Dateno source
+# cdi00002171); metacrafter-testdata.
+rules:
+  # A cittadinanza column of names (ALBANIA) does not pass the validator.
+  itistatcountrycodebyname:
+    key: it_istat_country_code
+    name: 'ISTAT code of a state by field name (cittad, cittadinanza, cod_cittadinanza, stato estero) with 100, 443'
+    rule: '(?i)(?:cod(?:ice)?[ _]?)?cittad(?:inanza)?|cod(?:ice)?[ _]?stato(?:[ _]estero)?|stato[ _]estero'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.it.b13.validate_it_istat_country_code
+    needs_values: true
+    priority: 1

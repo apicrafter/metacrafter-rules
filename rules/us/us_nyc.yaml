@@ -1,0 +1,66 @@
+name: us-nyc
+description: New York City school codes, boroughs, community districts and parks property numbers
+context: geo
+lang: en
+country_code: us
+# Found in a 2024 snapshot of NYC Open Data (data.cityofnewyork.us, Dateno source cdi00001862);
+# metacrafter-testdata.
+rules:
+  # DBN of the school lists of the Department of Education: district, borough letter, school number.
+  usnycdbnvalue:
+    key: us_nyc_dbn
+    name: 'New York City school code (DBN) by value (01M015, 24Q600)'
+    rule: '\d{2}[KMQRX]\d{3}'
+    type: data
+    match: regex
+    minlen: 6
+    maxlen: 6
+    priority: 1
+  usnycdbnbyname:
+    key: us_nyc_dbn
+    name: 'New York City school code by field name (dbn, school_dbn, ATS system code) with 01M015'
+    rule: '(?i)(?:[a-z]+[ _])?dbn|ats[ _]system[ _]code'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.us.b13.validate_us_nyc_dbn
+    needs_values: true
+    priority: 1
+  # A borough column of London or Alaska does not pass the validator.
+  usnycboroughbyname:
+    key: us_nyc_borough
+    name: 'New York City borough by field name (borough, boro, boroname) with Manhattan, BROOKLYN, M, X, K'
+    rule: '(?i)boro(?:ugh)?(?:[ _]?(?:name|desc))?|boroname'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.us.b13.validate_us_nyc_borough
+    needs_values: true
+    priority: 1
+  usnycboroughcodebyname:
+    key: us_nyc_borough_code
+    name: 'New York City borough code by field name (borocode, boro_code, borough code) with 1 to 5'
+    rule: '(?i)boro(?:ugh)?[ _]?(?:code|id)'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.us.b13.validate_us_nyc_borough_code
+    needs_values: true
+    priority: 1
+  # communityboard holds the three-digit number (310); Community Board beside a borough column the number
+  # in the borough (1 to 18).
+  usnyccommunitydistrictbyname:
+    key: us_nyc_community_district
+    name: 'New York City community district by field name (community board, communityboard, community district, BoroCD) with 310 or 1 to 18'
+    rule: '(?i)community[ _]?(?:board|district)s?(?:[ _](?:number|no|id))?|comm(?:unity)?[ _]?board|boro[ _]?cd'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.us.b13.validate_us_nyc_community_district
+    needs_values: true
+    priority: 1
+  usnycparkspropertybyname:
+    key: us_nyc_parks_property_id
+    name: 'NYC Parks property number by field name (gispropnum, omppropid) with B028, M042-ZN01'
+    rule: '(?i)gis[ _]?prop[ _]?num|omp[ _]?prop[ _]?id'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.us.b13.validate_us_nyc_parks_property_id
+    needs_values: true
+    priority: 1

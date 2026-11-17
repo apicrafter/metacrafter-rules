@@ -1,0 +1,73 @@
+name: research-codes
+description: Country codes of conflict research, Polity scores, FAOSTAT codes and epidemiological weeks
+context: science
+lang: common
+country_code: xx
+# Found in 2024 snapshots of Harvard Dataverse (Dateno source cdi00001690), the ASARECA data hub
+# (cdi00001606) and HealthData.gov (cdi00004220); metacrafter-testdata.
+rules:
+  gwcountrycodebyname:
+    key: gw_country_code
+    name: 'Gleditsch-Ward country code by field name (gwno, gwcode, gwno_a) with 2, 200, 710.0'
+    rule: '(?i)(?:[a-z]+[ _])?gw[ _]?(?:no|code|id|num)(?:[ _]?(?:[ab12]|loc))?'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.b13.validate_gw_country_code
+    needs_values: true
+    priority: 1
+  # stateabb of a US table holds two letters (CA): it does not pass the validator.
+  cowcountryabbreviationbyname:
+    key: cow_country_abbreviation
+    name: 'Correlates of War country abbreviation by field name (stateabb, cowabb) with USA, UKG, GMY'
+    rule: '(?i)stateabb(?:[ _]?[ab12])?|cow[ _]?abb(?:rev)?'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.b13.validate_cow_country_abbreviation
+    needs_values: true
+    priority: 1
+  polityscorebyname:
+    key: polity_score
+    name: 'Polity score by field name (polity, polity2, polity4, e_polity2) with -10 to 10, -88'
+    rule: '(?i)(?:[a-z][ _])?polity(?:[ _]?(?:2|4|iv|score))?'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.b13.validate_polity_score
+    needs_values: true
+    priority: 1
+  faostatelementcodebyname:
+    key: faostat_element_code
+    name: 'FAOSTAT element code by field name (Element Code) with 5510, 551'
+    rule: '(?i)element[ _]?code'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.b13.validate_faostat_element_code
+    needs_values: true
+    priority: 1
+  # The bare Area Code and Item Code are too common outside FAOSTAT (telephone area codes, stock items).
+  faostatareacodebyname:
+    key: faostat_area_code
+    name: 'FAOSTAT area code by field name (Area Code (FAO)) with 114, 5000'
+    rule: '(?i)area[ _]code[ _]\(?fao\)?'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.b13.validate_faostat_area_code
+    needs_values: true
+    priority: 1
+  faostatitemcodebyname:
+    key: faostat_item_code
+    name: 'FAOSTAT item code by field name (Item Code (FAO)) with 15, 3010'
+    rule: '(?i)item[ _]code[ _]\(?fao\)?'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.b13.validate_faostat_item_code
+    needs_values: true
+    priority: 1
+  epiweekbyname:
+    key: epi_week
+    name: 'Epidemiological week by field name (MMWR Week, mmwr_week, epi_week, epiweek) with 1 to 53'
+    rule: '(?i)mmwr[ _]?week|epi(?:demiological)?[ _]?week'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.b13.validate_epi_week
+    needs_values: true
+    priority: 1

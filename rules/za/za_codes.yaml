@@ -1,0 +1,45 @@
+name: za-codes
+description: South African Surveyor-General codes, medicine registration numbers and schedules, census small areas
+context: government
+lang: en
+country_code: za
+# Found in a 2024 snapshot of the OpenUp data portal (data.openup.org.za, Dateno source cdi00002019);
+# metacrafter-testdata.
+rules:
+  zasgcodevalue:
+    key: za_sg_code
+    name: 'South African Surveyor-General 21-character code by value (C03700050000652000000)'
+    rule: '[BCFKNT][0-9A-Z]{3}\d{17}'
+    type: data
+    match: regex
+    minlen: 21
+    maxlen: 21
+    priority: 1
+  # A registration number of another register does not have the three parts between slashes.
+  zamedicineregistrationbyname:
+    key: za_medicine_registration_number
+    name: 'South African medicine registration number by field name (MCC medicine reg no, registration number) with 29/20.1.1/0163'
+    rule: '(?i)(?:[a-z]+[ _]){0,2}reg(?:istration)?[ _]?(?:no|number|num)\.?'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.za.b13.validate_za_medicine_registration_number
+    needs_values: true
+    priority: 1
+  zamedicineschedulebyname:
+    key: za_medicine_schedule
+    name: 'South African medicine schedule by field name (medicine schedule, schedule) with S4'
+    rule: '(?i)(?:medicine[ _])?schedules?'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.za.b13.validate_za_medicine_schedule
+    needs_values: true
+    priority: 1
+  zasmallareacodebyname:
+    key: za_small_area_code
+    name: 'South African census small area code by field name (sal, sal_code, small area code) with 2610024'
+    rule: '(?i)sal(?:[ _]?(?:code|2011))?|small[ _]area[ _]code'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.za.b13.validate_za_small_area_code
+    needs_values: true
+    priority: 1
