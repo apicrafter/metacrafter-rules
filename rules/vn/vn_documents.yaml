@@ -1,0 +1,26 @@
+name: vn-documents
+description: Vietnamese practising certificate numbers and numbers of official documents
+context: government
+lang: vi
+country_code: vn
+# Found in a 2024 snapshot of the open data of Ho Chi Minh City (opendata.hochiminhcity.gov.vn, Dateno source
+# cdi00002343); metacrafter-testdata.
+rules:
+  vncchnnumbervalue:
+    key: vn_cchn_number
+    name: 'Vietnamese practising certificate number by value (000019/HCM-CCHN, 000017/BYT-CCHN)'
+    rule: '\d{4,8}/[A-ZĐ]{2,5}- ?CCHN'
+    type: data
+    match: regex
+    minlen: 11
+    maxlen: 22
+    priority: 1
+  vndocumentnumberbyname:
+    key: vn_document_number
+    name: 'Vietnamese document number by field name (quyetdinhso, số quyết định, sogiayphep, số giấy phép, số hiệu) with 1753/QĐ-GDĐT-TC'
+    rule: '(?i)quy[eế]t[ _]?[dđ][iị]nh[ _]?s[oố]|s[oố][ _]?quy[eế]t[ _]?[dđ][iị]nh|s[oố][ _]?gi[aấ]y[ _]?ph[eé]p|s[oố][ _]?(?:k[yý][ _]?)?hi[eệ]u|s[oố][ _]?v[aă]n[ _]?b[aả]n'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.vn.b13.validate_vn_document_number
+    needs_values: true
+    priority: 1

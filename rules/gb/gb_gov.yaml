@@ -1,0 +1,17 @@
+name: gb-gov
+description: UK Government Major Projects Portfolio identifiers
+context: government
+lang: en
+country_code: gb
+# Found in a 2024 snapshot of the Subak Data Catalogue (data.subak.org, Dateno source cdi00002002): the
+# major projects data of UK departments; metacrafter-testdata.
+rules:
+  gbgmppidvalue:
+    key: gb_gmpp_id
+    name: 'UK Government Major Projects Portfolio ID by value (MOD_0101_1516-Q1)'
+    rule: '[A-Za-z]{2,6}_\d{4}_\d{4}-Q[1-4]'
+    type: data
+    match: regex
+    minlen: 15
+    maxlen: 20
+    priority: 1

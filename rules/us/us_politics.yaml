@@ -1,0 +1,37 @@
+name: us-politics
+description: US congressional districts, Congress numbers and party identification of survey respondents
+context: government
+lang: en
+country_code: us
+# Found in a 2024 snapshot of Harvard Dataverse (dataverse.harvard.edu, Dateno source cdi00001690): survey
+# files of the Cooperative Election Study and of Nationscape, roll-call and legislator tables;
+# metacrafter-testdata.
+rules:
+  # The validator wants the state abbreviation: a column of bare district numbers does not pass.
+  uscongressionaldistrictbyname:
+    key: us_congressional_district
+    name: 'US congressional district by field name (congress_district, cong_dist, congdist, cd_code) with NY10, CA-12'
+    rule: '(?i)cong(?:ress(?:ional)?)?[ _]?dist(?:rict)?(?:[ _]?(?:code|id))?|cd[ _]?(?:code|id)|house[ _]district'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.us.b13.validate_us_congressional_district
+    needs_values: true
+    priority: 1
+  uscongressnumberbyname:
+    key: us_congress_number
+    name: 'Number of the US Congress by field name (congress, cong, congress_number) with 96, 111.0'
+    rule: '(?i)congress(?:[ _]?(?:number|num|no))?|cong(?:num)?'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.us.b13.validate_us_congress_number
+    needs_values: true
+    priority: 1
+  uspartyidentificationbyname:
+    key: us_party_identification
+    name: 'US party identification by field name (pid3, pid7, pid7_legacy) with codes 1 to 8 or Democrat, Strong Republican'
+    rule: '(?i)pid[ _]?[37](?:[ _]?[a-z]+)?|party[ _]?id[ _]?[37]'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.us.b13.validate_us_party_identification
+    needs_values: true
+    priority: 1

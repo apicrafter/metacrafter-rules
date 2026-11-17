@@ -1,0 +1,37 @@
+name: ps-geo
+description: Palestinian governorates and postal codes
+context: geo
+lang: ar
+country_code: ps
+# Found in a 2024 snapshot of Open Data in Palestine (opendata.ps, Dateno source cdi00004270);
+# metacrafter-testdata.
+rules:
+  psgovernoratebyname:
+    key: ps_governorate
+    name: 'Palestinian governorate by field name (governorate, governorate_a, المحافظة) with Hebron, رام الله والبيرة'
+    rule: '(?i)(?:[a-z]+[ _]){0,2}governorates?(?:[ _](?:name|en|ar|a|e|english|arabic))?|المحافظ[ةه]|محافظ[ةه]'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.ps.geo.validate_ps_governorate
+    needs_values: true
+    priority: 1
+  pspostcodebyname:
+    key: ps_postcode
+    name: 'Palestinian postal code by field name (postcode, postal code) with P3920463'
+    rule: '(?i)post(?:al)?[ _]?code|zip(?:[ _]?code)?|الرمز[ _]البريدي'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.ps.geo.validate_ps_postcode
+    needs_values: true
+    priority: 1
+  # PostCode of the business and tourism directories: the universal postcode name rule takes the field,
+  # so the letter P and seven digits are matched by value as well.
+  pspostcodevalue:
+    key: ps_postcode
+    name: 'Palestinian postal code by value (P3920463, P610 0154)'
+    rule: 'P\d{3} ?\d{4}'
+    type: data
+    match: regex
+    minlen: 8
+    maxlen: 9
+    priority: 1

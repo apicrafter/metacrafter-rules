@@ -1,0 +1,1 @@
+"""Peruvian rules: UBIGEO codes."""

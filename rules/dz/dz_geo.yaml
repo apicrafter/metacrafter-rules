@@ -1,0 +1,26 @@
+name: dz-geo
+description: Algerian provinces (wilayas) and their codes
+context: geo
+lang: fr
+country_code: dz
+# Found in a 2024 snapshot of Geoweba (geoweba.transformatek.dz, Dateno source cdi00002408);
+# metacrafter-testdata.
+rules:
+  dzwilayabyname:
+    key: dz_wilaya
+    name: 'Algerian province by field name (wilaya, nom_wilaya) with Alger, BEJAIA, Tizi Ouzou'
+    rule: '(?i)(?:nom[ _])?wilayas?(?:[ _](?:name|nom|fr))?'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.dz.geo.validate_dz_wilaya
+    needs_values: true
+    priority: 1
+  dzwilayacodebyname:
+    key: dz_wilaya_code
+    name: 'Algerian province code by field name (code_wil, code_wilaya, wilaya_agence, wilaya) with 16, 06'
+    rule: '(?i)code[ _]?wil(?:aya)?|wilaya(?:[ _]?(?:code|id|agence))?'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.dz.geo.validate_dz_wilaya_code
+    needs_values: true
+    priority: 1

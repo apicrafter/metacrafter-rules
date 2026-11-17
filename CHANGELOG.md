@@ -9,6 +9,43 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Rules for the files of metacrafter-testdata from 2024 snapshots of 43 data catalogues** (NYC Open Data,
+  Harvard Dataverse, HealthData.gov, the ASARECA data hub, the Subak Data Catalogue, the OpenUp data portal, Data
+  Atlas Fontium, the metadata catalogue of GIAP, the Comune di Parma, Ho Chi Minh City, Geoweba, the Ajman Data
+  Portal, datos.gov.py, Open Data in Palestine and the Lounaistieto GeoServer; 7398 distinct tables of 15 136):
+  - New York City: school codes (`us_nyc_dbn`: 01M015 by value and under DBN), boroughs (`us_nyc_borough`:
+    borough, boro, BoroName with Manhattan, BROOKLYN or the letters M, X, K, Q, R), borough codes
+    (`us_nyc_borough_code`: BoroCode with 1 to 5), community districts (`us_nyc_community_district`: Community
+    Board, communityboard, BoroCD with 310 or 1 to 18) and parks property numbers (`us_nyc_parks_property_id`:
+    GISPROPNUM, OMPPROPID with B028, M042-ZN01).
+  - United States: congressional districts (`us_congressional_district`: congress_district with NY10, CA-12),
+    numbers of the Congress (`us_congress_number`: congress, cong with 96, 111.0) and party identification of
+    survey respondents (`us_party_identification`: pid3, pid7, pid7_legacy with the codes or Democrat, Strong
+    Republican).
+  - Research codes (`common/research_codes.yaml`): Gleditsch-Ward country codes (`gw_country_code`: gwno, gwcode,
+    opponent_gwno), Correlates of War abbreviations (`cow_country_abbreviation`: stateabb with USA, UKG), Polity
+    scores (`polity_score`: polity, polity2 with -10 to 10 and -66, -77, -88), FAOSTAT codes
+    (`faostat_element_code` under Element Code; `faostat_area_code` and `faostat_item_code` only under Area Code
+    (FAO) and Item Code (FAO): the bare names are telephone area codes and stock items elsewhere) and
+    epidemiological weeks (`epi_week`: MMWR Week, epi_week with 1 to 53).
+  - Poland: BDOT10k object codes (`pl_bdot10k_code`: x_kod, kod_o with BUBD11, ADMS14_h), identifiers of the
+    register of geographical names (`pl_prng_id`: id_prng), cadastral unit codes (`pl_jednostka_ewidencyjna`:
+    186101_1 by value), case references (`pl_znak_sprawy`: znak sprawy, numer decyzji with 6730.26.2016) and TERC
+    codes under teryt and JPT_KOD_JE (`pl_teryt_terc`).
+  - Algeria: provinces and their codes (`dz_wilaya`, `dz_wilaya_code`: wilaya, code_wil). Paraguay: departments,
+    department codes and procurement call numbers (`py_department`, `py_department_code`,
+    `py_dncp_licitacion_id`: departamento, depdes, dep, id_llamado). Peru: UBIGEO codes (`pe_ubigeo`). Palestine:
+    governorates in English and Arabic and postal codes (`ps_governorate`, `ps_postcode`: P3920463 by value).
+  - United Arab Emirates: Makani numbers (`ae_makani_number`). South Africa: the 21-character code of the
+    Surveyor-General by value (`za_sg_code`), medicine registration numbers and schedules
+    (`za_medicine_registration_number`: 29/20.1.1/0163; `za_medicine_schedule`: S4) and census small areas
+    (`za_small_area_code`: sal). Italy: ISTAT codes of states (`it_istat_country_code`: cittad with 100, 443).
+  - Vietnam: practising certificate numbers by value (`vn_cchn_number`: 000019/HCM-CCHN) and numbers of official
+    documents (`vn_document_number`: quyetdinhso, sogiayphep with 1753/QĐ-GDĐT-TC). Finland: drainage basin
+    numbers (`fi_vesistoalue`: vesalnro with 35.141). European Union: ecological status classes
+    (`eu_wfd_ecological_status`: eco_status with Good, Moderate). United Kingdom: identifiers of the Government
+    Major Projects Portfolio by value (`gb_gmpp_id`: MOD_0101_1516-Q1).
+
 - **Rules for the Pacific, Polish, Macedonian, Mongolian, Dutch, Norwegian and New Zealand files of
   metacrafter-testdata** (2024 snapshots of open data portals and data repositories, Dateno sources cdi00001031
   to cdi00001296: the environment data portals of the Pacific of SPREP, epibaza.pzh.gov.pl, data.gov.mk,
@@ -1110,6 +1147,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     a bare number there is not a code, as the BEV round decided).
 
 ### Changed
+
+- A Polish case reference without the unit symbol (6730.26.2016) is no semantic version: `validate_semver`
+  rejects four digits, a number and a year.
 
 - `city` and the other place-name rules no longer read a division numbered before its name (17. MUTIS, 01.
   NORTE, the comunas of Bucaramanga): `validate_place_name` refuses it as it refuses Comuna 14.

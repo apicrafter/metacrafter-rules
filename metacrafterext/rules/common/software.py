@@ -187,6 +187,7 @@ _THOUSANDS_GROUPED = re.compile(r"^[1-9]\d{0,2}(?:\.\d{3}){2,}$")
 
 
 _DOTTED_AMOUNT = re.compile(r"\d{1,3}(?:\.\d{3})+\.\d{2}")
+_CASE_REFERENCE = re.compile(r"\d{4}\.\d{1,5}\.(?:19|20)\d{2}")
 
 
 def validate_semver(value):
@@ -210,6 +211,11 @@ def validate_semver(value):
     # Reject plain dotted dates (e.g. "31.5.2019") which match the semver
     # shape but are almost always calendar dates in real data.
     if _looks_like_dotted_date(value):
+        return False
+
+    # A Polish case reference without the unit symbol (6730.26.2016: the class of the file
+    # classification, the number of the case, the year) has the same shape.
+    if _CASE_REFERENCE.fullmatch(value):
         return False
 
     # An amount with dots between the thousands and before the cents (7.922.45, 33.698.81), as

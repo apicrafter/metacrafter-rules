@@ -1,0 +1,35 @@
+name: py-geo
+description: Paraguayan departments, department codes and procurement call numbers
+context: geo
+lang: es
+country_code: py
+# Found in a 2024 snapshot of datos.gov.py (Dateno source cdi00004215); metacrafter-testdata.
+rules:
+  # The departments of Bolivia, Colombia or Argentina do not pass the validator.
+  pydepartmentbyname:
+    key: py_department
+    name: 'Paraguayan department by field name (departamento, dpto, depdes) with Alto Paraná, CONCEPCION, Capital'
+    rule: '(?i)(?:nombre[ _])?(?:departamentos?|dpto|depto)(?:[ _]desc(?:ripcion)?)?|dep[ _]?des(?:c)?'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.py.geo.validate_py_department
+    needs_values: true
+    priority: 1
+  pydepartmentcodebyname:
+    key: py_department_code
+    name: 'Paraguayan department code by field name (dep, dptov of the election and household survey tables) with 0 to 17'
+    rule: '(?i)dep|dptov'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.py.geo.validate_py_department_code
+    needs_values: true
+    priority: 1
+  pydncplicitacionidbyname:
+    key: py_dncp_licitacion_id
+    name: 'Paraguayan procurement call ID by field name (id_llamado, id licitación) with 187326'
+    rule: '(?i)id[ _]?llamado|llamado[ _]?id|(?:id|nro)[ _]?licitaci[oó]n|licitaci[oó]n[ _]?id'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.py.geo.validate_py_dncp_licitacion_id
+    needs_values: true
+    priority: 1
