@@ -1,0 +1,52 @@
+name: mn-common
+description: Mongolian days of the week and Mongolian field names (sex, academic year, year, name)
+context: common
+lang: mn
+country_code: mn
+# Found in a 2024 snapshot of the open data portal of the National University of Mongolia
+# (data.num.edu.mn, Dateno source cdi00001123): timetables, courses, programmes and admissions;
+# metacrafter-testdata.
+rules:
+  mndayofweekvalue:
+    key: mn_dayofweek
+    name: Mongolian day of the week by value (Даваа, Лхагва, Баасан, Ням)
+    rule: metacrafterext.rules.mn.codes.validate_mn_dayofweek
+    type: data
+    match: func
+    minlen: 3
+    maxlen: 6
+    priority: 1
+  mnsexbyname:
+    key: gender
+    name: Sex by Mongolian field name (хүйс, элсэгчийн_хүйс) with Эрэгтэй, Эмэгтэй
+    rule: (?i)(?:.+[ _])?хүйс
+    type: field
+    match: regex
+    validator: metacrafterext.rules.mn.codes.validate_mn_sex
+    needs_values: true
+    priority: 1
+  mnschoolyearbyname:
+    key: school_year
+    name: Academic year by Mongolian field name (хичээлийн_жил, хичээлийн жил) with 2017-2018
+    rule: (?i)хичээлийн[ _]жил
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.generic.validate_school_year
+    needs_values: true
+    priority: 1
+  mnyearbyname:
+    key: year
+    name: Year by Mongolian field name (он, хөтөлбөр_батлагдсан_он) with four digits
+    rule: (?i)(?:.+[ _])?он
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.urban.validate_calendar_year
+    needs_values: true
+    priority: 1
+  mnnamebyname:
+    key: name
+    name: Name of an object by Mongolian field name (нэр, хичээлийн_нэр, хөтөлбөрийн_нэр, монгол_нэр)
+    rule: (?i)(?:.+[ _])?нэр
+    type: field
+    match: regex
+    priority: 1

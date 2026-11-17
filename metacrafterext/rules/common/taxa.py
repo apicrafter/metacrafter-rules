@@ -61,6 +61,16 @@ def validate_higher_taxon_name(value):
     return any(text.endswith(ending) and len(text) - len(ending) >= stem for ending, stem in _RANK_ENDINGS)
 
 
+
+def validate_higher_taxon_name_any_case(value):
+    """A taxon above the genus written in any case, as the IUCN Red List exports write it in capitals:
+    ANIMALIA, CHORDATA, ACTINOPTERYGII, PERCIFORMES, CARANGIDAE (not SMITH or Caranx)."""
+    if not isinstance(value, str):
+        return False
+    text = value.strip()
+    return validate_higher_taxon_name(text if not text.isupper() else text.capitalize())
+
+
 # Darwin Core lifeStage values: the GBIF LifeStage vocabulary and the words and abbreviations of
 # fish, invertebrate, coral and plant surveys.
 LIFE_STAGES = frozenset("""

@@ -1,0 +1,109 @@
+name: mk-common
+description: Municipalities of North Macedonia and Macedonian field names (name, surname, phone, year, month, coordinates)
+context: common
+lang: mk
+country_code: mk
+# Found in a 2024 snapshot of the open data portal of North Macedonia (data.gov.mk, Dateno source
+# cdi00001115): 426 tables of ministries and municipalities; metacrafter-testdata.
+rules:
+  mkmunicipalitybyname:
+    key: mk_municipality
+    name: Municipality of North Macedonia by field name (општина, Општина, општини) with Крушево, Карпош
+    rule: (?i)општин[аи](?:[ _](?:на[ _])?(?:седиште|живеење|раѓање))?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.mk.codes.validate_mk_municipality
+    needs_values: true
+    priority: 1
+  mkfirstnamebyname:
+    key: person_firstname
+    is_pii: True
+    name: First name by Macedonian field name (име)
+    rule: (?i)име(?:[ _]на[ _]контакт[ _]лице)?
+    type: field
+    match: regex
+    priority: 1
+  mksurnamebyname:
+    key: person_surname
+    is_pii: True
+    name: Surname by Macedonian field name (презиме)
+    rule: (?i)презиме(?:[ _]на[ _]контакт[ _]лице)?
+    type: field
+    match: regex
+    priority: 1
+  # 070235790, 075/423-125, 02/3071-657, +389075396926: nine digits also pass the check digits of other
+  # countries' numbers (rsin, cz_ico, plregon), which the field name now settles.
+  mkphonebyname:
+    key: phone
+    is_pii: True
+    name: Phone number by Macedonian field name (телефон, контакт телефон, тел., телефонски број, контакт-телефон, телефон 1)
+    rule: (?i)(?:контакт[ _\n-]?)?тел(?:ефон(?:ски[ _]број)?|\.)?(?:[ _]?(?:за[ _]контакт|\d))?|мобилен(?:[ _]телефон)?|контакт[ _]?\d?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.mk.codes.validate_mk_phone
+    needs_values: true
+    priority: 1
+  mkyearbyname:
+    key: year
+    name: Year by Macedonian field name (година) with four digits
+    rule: (?i)година
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.urban.validate_calendar_year
+    needs_values: true
+    priority: 1
+  mkmonthbyname:
+    key: month
+    name: Month by Macedonian field name (месец) with 1 to 12 or a Macedonian name
+    rule: (?i)месец
+    type: field
+    match: regex
+    validator: metacrafterext.rules.mk.codes.validate_mk_month
+    needs_values: true
+    priority: 1
+  mklatitudebyname:
+    key: latitude
+    name: Latitude by Macedonian field name (географска ширина (latitude), географски координати (latitude))
+    rule: (?i)географск[аи][ _](?:ширина|координати)[ _]\(latitude\)|географска[ _]ширина
+    type: field
+    match: regex
+    validator: metacrafterext.rules.mk.codes.validate_decimal_degrees
+    needs_values: true
+    priority: 1
+  mklongitudebyname:
+    key: longitude
+    name: Longitude by Macedonian field name (географска должина (longitude), географски координати (longitude), also spelled longitute)
+    rule: (?i)географск[аи][ _](?:должина|координати)[ _]\(longit[uy][dt]e\)|географска[ _]должина
+    type: field
+    match: regex
+    validator: metacrafterext.rules.mk.codes.validate_decimal_degrees
+    needs_values: true
+    priority: 1
+  mknamebyname:
+    key: name
+    name: Name of an object by Macedonian field name (назив, назив на објект, назив на училиште)
+    rule: (?i)назив(?:[ _]на[ _][^_]+)?
+    type: field
+    match: regex
+    priority: 1
+  mkdescriptionbyname:
+    key: description
+    name: Description by Macedonian field name (опис)
+    rule: (?i)опис
+    type: field
+    match: regex
+    priority: 1
+  mkcommentbyname:
+    key: comment
+    name: Note by Macedonian field name (забелешка, забелешки, коментар)
+    rule: (?i)(?:дополнителн[аи][ _])?забелешк[аи]|коментар
+    type: field
+    match: regex
+    priority: 1
+  mkcitybyname:
+    key: city
+    name: Settlement by Macedonian field name (населено место, град)
+    rule: (?i)населено[ _]место|град
+    type: field
+    match: regex
+    priority: 1

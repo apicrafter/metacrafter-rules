@@ -97,6 +97,9 @@ rules:
     match: ppr
     type: data
     rule: Optional(Word(nums, exact=1)) + Word(nums, exact=7) + Optional(Literal('-')) + Word(alphas, exact=1)
+    # The letter is a check letter (the number modulo 23): eight digits and a letter are also the object
+    # types of Kazakh topographic maps (71150000m, 51631000l).
+    validator: metacrafterext.rules.es.validators.validate_es_nif
     maxlen: 9
     minlen: 8
 

@@ -1,0 +1,17 @@
+name: nz-geo
+description: Regions of New Zealand
+context: geo
+lang: en
+country_code: nz
+# Found in 2024 snapshots of data.govt.nz and of the New Zealand's Biological Heritage data repository
+# (data.bioheritage.nz, Dateno sources cdi00001241, cdi00001243); metacrafter-testdata.
+rules:
+  nzregionbyname:
+    key: nz_region
+    name: Region of New Zealand by field name (region, Region, regiongrp, regional_council) with Canterbury, Otago
+    rule: (?i)(?:nz[ _])?region(?:[ _]?(?:name|grp|group|council))?|regional[ _]council
+    type: field
+    match: regex
+    validator: metacrafterext.rules.nz.codes.validate_nz_region
+    needs_values: true
+    priority: 1

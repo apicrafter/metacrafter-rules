@@ -1,0 +1,89 @@
+name: pl-statistics
+description: Polish voivodeships and the words of Polish statistical tables (sex, age group, year, month, town or village)
+context: geo
+lang: pl
+country_code: pl
+# Found in a 2024 snapshot of the open data of the National Institute of Public Health (Narodowy Instytut
+# Zdrowia Publicznego, epibaza.pzh.gov.pl, Dateno source cdi00001288): 205 tables of notified cases of
+# infectious diseases; metacrafter-testdata.
+rules:
+  plvoivodeshipvalue:
+    key: pl_voivodeship
+    name: Polish voivodeship by value (mazowieckie, Warmińsko-mazurskie, ŚLĄSKIE)
+    rule: metacrafterext.rules.pl.codes.validate_pl_voivodeship
+    type: data
+    match: func
+    minlen: 7
+    maxlen: 19
+    priority: 1
+  plvoivodeshipbyname:
+    key: pl_voivodeship
+    name: Polish voivodeship by field name (województwo, Województwo (nazwa), województwo zgłoszenia, woj.)
+    rule: (?i)wojew[oó]dztw[oa](?:[ _].*)?|woj\.?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.pl.codes.validate_pl_voivodeship_column
+    needs_values: true
+    priority: 1
+  plsexbyname:
+    key: gender
+    name: Sex by Polish field name (płeć, Płeć (M, K), płeć m/k) with M, K, Kobieta, Mężczyzna
+    rule: (?i)p[łl]e[ćc](?:[ _]?\(?m[,/ ]+k\)?)?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.pl.codes.validate_pl_sex
+    needs_values: true
+    priority: 1
+  plagegroupbyname:
+    key: age_range
+    is_pii: True
+    name: Age group by Polish field name (grupa wieku, grupy wieku, grupa wiekowa, grupy wiekowe) with 20-29, 70+
+    rule: (?i)grup[ay][ _]wiek(?:u|owa|owe)|przedzia[łl][ _]wiek(?:u|owy)
+    type: field
+    match: regex
+    validator: metacrafterext.rules.pl.codes.validate_pl_age_group
+    needs_values: true
+    priority: 1
+  plyearbyname:
+    key: year
+    name: Year by Polish field name (rok zgłoszenia, rok rejestracji, rok rozpoznania, Rok (wykazania)) with four digits
+    rule: (?i)rok[ _]\(?(?:zg[łl]oszenia|rejestracji|rozpoznania|wykazania|zachorowania|urodzenia|sprawozdawczy)\)?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.urban.validate_calendar_year
+    needs_values: true
+    priority: 1
+  plmonthbyname:
+    key: month
+    name: Month by Polish field name (miesiąc, miesiąc zachorowania, miesiac zgłoszenia) with 1 to 12 or a Polish name
+    rule: (?i)miesi[ąa]c(?:[ _]\(?(?:zachorowania|zg[łl]oszenia|rejestracji|rozpoznania)\)?)?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.pl.codes.validate_pl_month
+    needs_values: true
+    priority: 1
+  plresidencebyname:
+    key: urban_rural_class
+    name: Town or village by Polish field name (środowisko zamieszkania, środowisko zamieszkania (miasto, wieś)) with miasto, wieś
+    rule: (?i)[śs]rodowisko(?:[ _]zamieszkania)?(?:[ _]\(.*\))?|miasto[ /_]+wie[śs]
+    type: field
+    match: regex
+    validator: metacrafterext.rules.pl.codes.validate_pl_residence
+    needs_values: true
+    priority: 1
+  pldiseasebyname:
+    key: medical_condition
+    name: Disease by Polish field name (jednostka chorobowa, choroba, rozpoznanie)
+    rule: (?i)jednostka[ _]choro(?:ro)?bowa|choroba|rozpoznanie
+    type: field
+    match: regex
+    priority: 1
+  plbooleanvalue:
+    key: boolean
+    name: Boolean value tak/nie (Polish)
+    rule: metacrafterext.rules.pl.codes.validate_pl_yes_no
+    type: data
+    match: func
+    minlen: 3
+    maxlen: 3
+    priority: 2

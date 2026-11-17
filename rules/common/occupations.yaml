@@ -1,0 +1,36 @@
+name: occupations
+description: Occupation codes of historical and social surveys (HISCO, ISCO-88)
+context: industry
+lang: common
+# Found in 2024 snapshots of the IISH Dataverse (datasets.iisg.amsterdam, Dateno source cdi00001190) and of
+# the Lithuanian Data Archive LiDA (lida.dataverse.lt, cdi00001098); metacrafter-testdata.
+rules:
+  hiscobyname:
+    key: hisco
+    name: HISCO occupation code by field name (hisco, HISCO, occupation_hisco_1, hiscocode1, hisco_code)
+    rule: (?i)(?:[a-z]+[ _])?hisco(?:[ _]?code)?(?:[ _]?\d)?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.statcodes.validate_hisco
+    needs_values: true
+    priority: 1
+  # isco88 and spisco88 (the respondent and the spouse) of the International Social Survey Programme;
+  # iscoco and iscocop of the European Social Survey, rounds 1 to 5.
+  isco88byname:
+    key: isco88
+    name: ISCO-88 occupation code by field name (isco88, spisco88, ISCO_88, iscoco, iscocop)
+    rule: (?i)(?:[a-z]{1,3}[ _]?)?isco[ _-]?88(?:[ _]?(?:com|code))?|iscocop?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.statcodes.validate_isco_code
+    needs_values: true
+    priority: 1
+  isco08surveybyname:
+    key: isco08
+    name: ISCO-08 occupation code by survey field name (isco08, spisco08, isco08p, ISCO_08)
+    rule: (?i)(?:[a-z]{1,3}[ _]?)?isco[ _-]?08[a-z]?(?:[ _]?code)?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.statcodes.validate_isco_code
+    needs_values: true
+    priority: 1

@@ -56,3 +56,14 @@ def validate_nl_vat(value):
     
     return True
 
+
+import re  # noqa: E402
+
+# Found in a 2024 snapshot of the IISH Dataverse (datasets.iisg.amsterdam, Dateno source cdi00001190).
+_AMCO = re.compile(r"1[01]\d{3}(?:\.0)?")
+
+
+def validate_nl_amco(value):
+    """An Amsterdamse code of a Dutch municipality: five digits that begin with 10 or 11 (10002, 11434),
+    also read as a float (11228.0)."""
+    return bool(_AMCO.fullmatch(str(value).strip()))

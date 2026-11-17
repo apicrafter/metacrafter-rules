@@ -223,6 +223,28 @@ rules:
     minlen: 4
     maxlen: 40
     priority: 1
+  # kingdomName, phylumName, className, orderName, familyName and genusName are the columns of the
+  # assessment exports of the IUCN Red List (ANIMALIA, CHORDATA, ACTINOPTERYGII, PERCIFORMES, CARANGIDAE,
+  # Caranx). familyName is a surname elsewhere: the values must be taxa of the rank, which their endings
+  # or the lists of kingdoms, phyla and classes show.
+  taxonranknamebyfield:
+    key: taxon_name
+    name: Higher taxon name by a rank name column (kingdomName, phylumName, className, orderName, familyName)
+    rule: (?i)(?:kingdom|phylum|class|order|family)[ _]?name
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.taxa.validate_higher_taxon_name_any_case
+    needs_values: true
+    priority: 1
+  taxongenusnamebyfield:
+    key: taxon_name
+    name: Genus by field name (genusName, genus_name) with one capitalized Latin word
+    rule: (?i)genus[ _]?name
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.generic.validate_taxon_name
+    needs_values: true
+    priority: 1
   taxonclassorderbyfield:
     key: taxon_name
     name: Class or order of a taxon by Darwin Core term
