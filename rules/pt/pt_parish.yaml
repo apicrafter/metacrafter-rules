@@ -1,0 +1,18 @@
+name: pt-parish
+description: Portuguese civil parishes (freguesias)
+context: geo
+lang: pt
+country_code: pt
+# Found in 2024 snapshots of the GeoServers of Águeda, Vila Nova de Gaia (Evolutio), the Alto Tâmega and
+# Terras de Bouro (Dateno sources temp00005298, temp00000588, temp00000590, temp00000591);
+# metacrafter-testdata.
+rules:
+  ptfreguesiabyname:
+    key: pt_freguesia
+    name: Portuguese civil parish by field name (freguesia, nome_freguesia, freg) with Valongo do Vouga, UF Águeda e Borralha
+    rule: (?i)(?:nome[ _]|des(?:ig(?:nacao)?)?[ _])?freguesias?(?:[ _](?:nome|des\w*|\d))?|freg(?:[ _]?(?:nome|des\w*))?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.pt.codes.validate_pt_freguesia
+    needs_values: true
+    priority: 1
