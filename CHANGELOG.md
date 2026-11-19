@@ -9,6 +9,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Rules for the tables of the Many Eyes archive** (IBM Many Eyes, 2007 to 2012: 203 534 tables uploaded by its
+  users, 114 585 distinct headers; files of metacrafter-testdata taken from it):
+  - Sports (`common/sports.yaml`): sports (`sport`: sport, Sportart, deporte with Basketball, Pallavolo,
+    Leichtathletik), positions of players (`sports_position`: Position, Pos with QB, SS, 1B, PG, Goalkeeper,
+    Zagueiro, Flanker) and medals (`medal`: Medal, Medaglia, Medalla with Gold, Argento, Oro).
+  - Entertainment (`common/entertainment.yaml`): video game platforms (`video_game_platform`: Platform, Console,
+    Consola with PS3, Xbox 360, Wii and by value), genres (`genre`: Genre, primary genre; not the género of a
+    person, nor the French genre of a school, Ordinaire or Spécialisé), zodiac signs (`zodiac_sign`: Sign, Star sign with Aries, Escorpio) and Bible references
+    (`bible_reference`: John 3:16, 1 Samuel 15:2-3, Mt_28.19 by value and under verse, citation, scripture).
+  - Parts of the day (`part_of_day` in `common/dateandtime.yaml`: Time of Day with Morning, Night, Noche), vehicle
+    makes (`vehicle_make` in `common/vehicles.yaml`: Make, Manufacturer, Marca, Marque with Toyota, chevrolet, 1º
+    FIAT) and models (`vehicle_model`: Vehicle Name, Car Model, and Model when the value starts with a make, as
+    Ford Focus), letter grades (`letter_grade` in `common/education.yaml`: Grade with A-, B+) and course codes
+    (`course_code`: Course, Unit Code, COURSE_ID with SI 505, ACTG3000).
+  - Hashtags (`hashtag` in `common/useraccounts.yaml`: Hashtag and by value with #londonriot, not a hex colour
+    #0047B2), post IDs of X (`x_post_id`: tweet id, in_reply_to_status_id_str), points in degrees and minutes
+    (`iso6709` in `common/geo.yaml`: 48°51′N 2°21′E, 43.42°S, 172.14°E by value), call signs (`call_sign` in
+    `common/telecom.yaml`: station call sign with WWOR, KABC-TV) and stock tickers (`tickersymbol` in
+    `common/crossborder_finance.yaml`: Symbol, Ticker with AAPL, BRK.B; not a bond code with digits inside, LB436A).
+  - Brazil: B3 trading codes (`br_b3_ticker` in `br/br_finances.yaml`: Ativo, Papel with PETR4, ALLL11).
+  - United States: MPA film ratings (`us_mpa_rating` in `us/us_media.yaml`: MPAA, Rating with PG-13, R) and the team
+    abbreviations of Major League Baseball, the NBA and the NFL (`mlb_team_code`, `nba_team_code`,
+    `nfl_team_code` in `us/us_sports.yaml`: Team, Tm, Opp, Home with NYY, LAL, NE). The leagues share codes;
+    the league whose codes fit every value of the column scores highest.
 - **Rules for the files of metacrafter-testdata from 2024 snapshots of 60 data catalogues** (mostly GeoServers:
   the national spatial data infrastructure of Mongolia, Portuguese and Swedish municipalities, the Arctic SDI,
   Polish forest data, the Pacific Community, EUMETSAT, UK national parks and councils; and the CKAN portals of

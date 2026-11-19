@@ -1,0 +1,36 @@
+name: sports
+description: Sports, positions of players in team sports and medals
+context: common
+lang: common
+country_code: xx
+# Found in the tables of the Many Eyes archive (IBM Many Eyes, 2007 to 2012; 203 534 tables uploaded by its
+# users, 114 585 distinct headers): results, rosters, drafts, surveys of leisure and medal tables, in
+# English, Spanish, Portuguese, Italian, German and French; metacrafter-testdata.
+rules:
+  sportbyname:
+    key: sport
+    name: Sport by field name (sport, type of sport, favorite sport, deporte, esporte, sportart, discipline, disciplina) with Basketball, Pallavolo, Fútbol
+    rule: (?i)(?:(?:type|kind|name)[ _]of[ _])?sports?(?:[ _](?:name|type|played|category|discipline))?|(?:favou?rite|main|primary|preferred)[ _]sports?|deportes?|esportes?|modalidade(?:[ _]esportiva)?|sport[ _]?art|sportarten?|disciplina(?:[ _]deportiva)?|disziplin|discipline(?:[ _]sportive)?|sport[ _]?discipline
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.manyeyes.validate_sport
+    needs_values: true
+    priority: 1
+  sportspositionbyname:
+    key: sports_position
+    name: Position of a player by field name (position, pos, player position, posición, posição) with QB, SS, 1B, PG, Goalkeeper, Zagueiro
+    rule: (?i)(?:(?:player|playing|primary|fielding|field|draft|roster|mvp|fantasy)[ _]?)?(?:pos(?:ition)?s?|psition)\.?(?:[ _]?\d)?|posici[oó]n(?:[ _]de[ _]juego)?|posi[cç][aã]o|posizione|spielposition|poste
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.manyeyes.validate_sports_position
+    needs_values: true
+    priority: 1
+  medalbyname:
+    key: medal
+    name: Medal by field name (medal, medal type, medalla, medalha, médaille) with Gold, Silver, Bronze, Oro
+    rule: (?i)medals?(?:[ _](?:type|won|class|name|color|colour))?|medall?as?|medalhas?|m[eé]dailles?|medagli[ae]|medaille|award|premio|pr[eê]mio
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.manyeyes.validate_medal
+    needs_values: true
+    priority: 1

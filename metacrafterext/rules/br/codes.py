@@ -506,3 +506,13 @@ def validate_br_biome(value):
     several of them as the CNCFlora lists them (Amazônia, Mata Atlântica, Cerrado)."""
     parts = [p.strip() for p in re.split(r"[,;/|]| e ", _fold(value))]
     return bool(parts) and all(p in _BIOMES for p in parts)
+
+
+# From the Many Eyes archive (IBM Many Eyes, 2007 to 2012): portfolios and Ibovespa tables of B3 tickers.
+_B3_TICKER = re.compile(r"[A-Z][A-Z0-9]{3}(?:[1-9]|1[01])")
+
+
+def validate_br_b3_ticker(value):
+    """A B3 trading code: PETR4, VALE3, CPLE6, B3SA3, ALLL11 (not AAPL, PETR, PETR12, petr4)."""
+    raw = re.sub(r"\.SA$", "", " ".join(str(value or "").split()))
+    return bool(_B3_TICKER.fullmatch(raw)) and raw[:4].isalnum() and any(c.isalpha() for c in raw[1:4])

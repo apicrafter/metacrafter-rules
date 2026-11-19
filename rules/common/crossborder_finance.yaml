@@ -112,3 +112,13 @@ rules:
     match: regex
     validator: metacrafterext.rules.common.identifiers.validate_mcc
     priority: 1
+  # Quotes and portfolios of the Many Eyes archive (IBM Many Eyes, 2007 to 2012): symbol, ticker with AAPL, SPY.
+  tickersymbolbyname:
+    key: tickersymbol
+    name: Stock ticker by field name (symbol, ticker, stock symbol, ticker symbol) with AAPL, SPY, BRK.B
+    rule: (?i)(?:(?:stock|ticker|trading|share|equity|security)[ _]?)?symbols?|tickers?(?:[ _]?(?:symbols?|code))?|stock[ _]?(?:code|ticker)
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.manyeyes.validate_tickersymbol
+    needs_values: true
+    priority: 1

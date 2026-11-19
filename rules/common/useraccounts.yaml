@@ -90,3 +90,32 @@ rules:
     validator: metacrafterext.rules.common.identifiers.validate_twitter_at_handle
     needs_values: true
     priority: 1
+  # Twitter exports of the Many Eyes archive (IBM Many Eyes, 2007 to 2012): hashtags in their own column
+  # and the numbers of posts (id_str, in_reply_to_status_id_str, tweetid).
+  hashtagbyname:
+    key: hashtag
+    name: Hashtag by field name (hashtag, hashtags, hash tag, entities.hashtags.text) with #wikileaks or cablegate
+    rule: (?i)(?:[a-z]+[ _.])?hash[ _]?tags?(?:[ _.]text)?|entities[ _.]hashtags(?:[ _.]text)?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.manyeyes.validate_hashtag
+    needs_values: true
+    priority: 1
+  hashtagvalue:
+    key: hashtag
+    name: Hashtag by value (#wikileaks, #opassange, #COVID19), not a hex colour (#0047B2)
+    rule: '#(?![0-9A-Fa-f]{3}$|[0-9A-Fa-f]{6}$|[0-9A-Fa-f]{8}$)(?=\w*[^\W\d_])\w{1,139}'
+    type: data
+    match: regex
+    minlen: 3
+    maxlen: 140
+    priority: 2
+  xpostidbyname:
+    key: x_post_id
+    name: X (Twitter) post ID by field name (tweet id, tweetid, status_id, in_reply_to_status_id_str) with 440322224407314432
+    rule: (?i)(?:tweet|status|x[ _]post)[ _]?ids?(?:[ _]str)?|in[ _]reply[ _]to[ _]status[ _]id(?:[ _]str)?|(?:quoted|retweeted)[ _]status[ _]id(?:[ _]str)?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.manyeyes.validate_x_post_id
+    needs_values: true
+    priority: 1
