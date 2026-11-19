@@ -122,3 +122,42 @@ rules:
     validator: metacrafterext.rules.common.manyeyes.validate_tickersymbol
     needs_values: true
     priority: 1
+  # Found in the tables of the Plotly community feed (the VizNet corpus of Plotly charts, 2015 to 2018:
+  # 1 090 629 charts, 1 013 540 distinct tables), whose columns are named after the traces of a chart
+  # (x, y, labels), so the sector or rating of a holding is found by its values; metacrafter-testdata.
+  gicssectorvalue:
+    key: gics_sector
+    name: GICS sector by value (Consumer Discretionary, Information Technology, Financials, Health Care)
+    rule: metacrafterext.rules.common.plotly.validate_gics_sector_value
+    type: data
+    match: func
+    minlen: 6
+    maxlen: 40
+    priority: 1
+  gicssectorbyname:
+    key: gics_sector
+    name: GICS sector by field name (sector, GICS sector, sector name) with Energy, Utilities, Technology
+    rule: (?i)(?:gics[ _]|industry[ _]|market[ _])?sectors?(?:[ _](?:name|gics))?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.plotly.validate_gics_sector
+    needs_values: true
+    priority: 1
+  creditratingvalue:
+    key: credit_rating
+    name: 'Credit rating by value (AAA, AA+, BBB-, Baa2, Caa1)'
+    rule: metacrafterext.rules.common.plotly.validate_credit_rating_value
+    type: data
+    match: func
+    minlen: 2
+    maxlen: 8
+    priority: 1
+  creditratingbyname:
+    key: credit_rating
+    name: 'Credit rating by field name (credit rating, bond rating, S&P, Moody''s, Fitch, Moody''s_(long_term)) with A, BBB+, Baa2'
+    rule: (?i)(?:credit|bond|issuer|sovereign|long[ _]term|lt|debt|agency)[ _]?ratings?|(?:s&p|moody'?s|fitch)(?:[ _](?:ratings?|\(?long[ _]term\)?))*|bond[ _]quality|riesgo
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.plotly.validate_credit_rating
+    needs_values: true
+    priority: 1

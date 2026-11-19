@@ -9,6 +9,33 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Rules for the tables of the Plotly community feed** (the VizNet corpus of Plotly charts, 2015 to 2018: 1 090 629
+  charts of Plotly users, 1 013 540 distinct tables; files of metacrafter-testdata taken from it). Plotly names the
+  columns of a chart after its traces (x, y, labels, Brooklyn, x), so most rules look at the values; validators in
+  `metacrafterext/rules/common/plotly.py`. Words that are as common in other columns as in the type (Electric,
+  Noise, Snow of 311; Direct, Social, Email of the channels; Energy, Technology of the sectors; error and warning in
+  lower case) count only in a field named after the type:
+  - United States: complaint types of NYC 311 (`us_nyc_311_complaint_type` in `us/us_nyc.yaml`: Blocked Driveway,
+    HEAT/HOT WATER, Noise - Residential by value and under Complaint Type, Problem (formerly Complaint Type)).
+  - Web and text analytics (`common/analytics.yaml`, new): social networks (`social_network`: Facebook, VKontakte,
+    Google+), marketing channels of web analytics (`marketing_channel`: Organic Search, Paid Search, (Other);
+    Direct and Email under Channel, Default Channel Grouping), web browsers and operating systems by value
+    (`web_browser`: Chrome Mobile, Mobile Safari; `operating_system`: Windows 7, OS X 10.10, android 4.4.3), emotions
+    (`emotion`: anger, disgust, anticipation) and sentiment labels under Sentiment, Polarity (`sentiment`: positive,
+    neutral, neg; not by value, since the same words are test results).
+  - Finance (`common/crossborder_finance.yaml`): GICS sectors (`gics_sector`: Consumer Discretionary, Financials;
+    Energy and Utilities under Sector) and credit ratings (`credit_rating`: AA+, BBB-, Baa2 by value; A, B+ and A1
+    only under credit rating, S&P, Moody's, Fitch, since school grades and cell references share them); exchanges
+    of cryptocurrencies (`crypto_exchange` in `common/cryptocurrency.yaml`: Bitfinex, GDAX, Poloniex).
+  - Environment and energy (`common/environment.yaml`): weather conditions (`weather_condition`: Partly Cloudy,
+    Overcast, clear-day; Clear and Rain under Weather, Conditions) and energy sources (`energy_source`: Natural Gas,
+    Wind Offshore, Biofuels & Waste; Gas and Solar under Fuel, Technology, Production Type); planets of the Solar
+    System (`planet` in `common/science.yaml`).
+  - Software (`common/software.yaml`): log levels (`log_level`: INFO, WARN, debug; error under Level, Severity) and
+    Amazon EC2 instance types (`aws_ec2_instance_type`: t2.micro, c5.2xlarge, m7i-flex.large).
+  - Colors in the CSS notations of charts (`common/common.yaml`, by value): `rgbacolor` (rgba(179,226,205,1)),
+    `rgbcolor` (rgb(31,120,180)), `hslcolor` (hsl(51.4285714286,50%,50%), with decimals) and `hexcolor` with its
+    hash (#2ca02c).
 - **Rules for the tables of the Many Eyes archive** (IBM Many Eyes, 2007 to 2012: 203 534 tables uploaded by its
   users, 114 585 distinct headers; files of metacrafter-testdata taken from it):
   - Sports (`common/sports.yaml`): sports (`sport`: sport, Sportart, deporte with Basketball, Pallavolo,

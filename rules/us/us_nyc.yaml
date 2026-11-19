@@ -64,3 +64,24 @@ rules:
     validator: metacrafterext.rules.us.b13.validate_us_nyc_parks_property_id
     needs_values: true
     priority: 1
+  # Found in the tables of the Plotly community feed (the VizNet corpus of Plotly charts, 2015 to 2018:
+  # 1 090 629 charts, 1 013 540 distinct tables), whose columns are named after the traces of a chart
+  # (x, y, labels), so the complaint type of a chart is found by its values; metacrafter-testdata.
+  usnyc311complainttypevalue:
+    key: us_nyc_311_complaint_type
+    name: 'NYC 311 complaint type by value (Blocked Driveway, HEAT/HOT WATER, Noise - Residential, Rodent)'
+    rule: metacrafterext.rules.common.plotly.validate_nyc_311_complaint_type_value
+    type: data
+    match: func
+    minlen: 4
+    maxlen: 70
+    priority: 1
+  usnyc311complainttypebyname:
+    key: us_nyc_311_complaint_type
+    name: 'NYC 311 complaint type by field name (Complaint Type, complaint_type, Problem (formerly Complaint Type)) with Plumbing, Electric, Rodent'
+    rule: (?i)(?:311[ _])?complaint(?:[ _]?types?)?|problem[ _]\(formerly[ _]complaint[ _]type\)|type[ _]of[ _]complaint
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.plotly.validate_nyc_311_complaint_type
+    needs_values: true
+    priority: 1
