@@ -1,0 +1,92 @@
+name: analytics
+description: Web and text analytics (social networks, marketing channels, web browsers and operating systems by value, sentiment and emotion labels)
+context: internet
+lang: common
+country_code: xx
+# Found in the tables of the Plotly community feed (the VizNet corpus of Plotly charts, 2015 to 2018: 1 090 629
+# charts of Plotly users, 1 013 540 distinct tables): web analytics dashboards, surveys of media use and
+# charts of the sentiment and emotions of tweets. Plotly names the columns after the traces of a chart (x, y,
+# labels), so these types are found by their values, apart from the sentiment labels, whose words are also
+# results of tests; metacrafter-testdata.
+rules:
+  socialnetworkvalue:
+    key: social_network
+    name: Social network by value (Facebook, Twitter, Instagram, LinkedIn, VKontakte)
+    rule: metacrafterext.rules.common.plotly.validate_social_network
+    type: data
+    match: func
+    minlen: 2
+    maxlen: 30
+    priority: 1
+  socialnetworkbyname:
+    key: social_network
+    name: Social network by field name (social network, social media, platform, network) with Facebook, Reddit
+    rule: (?i)social[ _]?(?:media|networks?|networking|platforms?|sites?|channels?)(?:[ _](?:name|sites?|platforms?|used))?|social|(?:social[ _])?platforms?|networks?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.plotly.validate_social_network
+    needs_values: true
+    priority: 1
+  marketingchannelvalue:
+    key: marketing_channel
+    name: 'Marketing channel by value (Organic Search, Paid Search, Referral, (Other), Affiliates)'
+    rule: metacrafterext.rules.common.plotly.validate_marketing_channel_value
+    type: data
+    match: func
+    minlen: 3
+    maxlen: 30
+    priority: 1
+  marketingchannelbyname:
+    key: marketing_channel
+    name: Marketing channel by field name (channel, default channel grouping, traffic source, acquisition channel) with Direct, Social, Email
+    rule: (?i)(?:default[ _])?channel(?:[ _]?(?:grouping|group|name|type))?s?|(?:marketing|traffic|acquisition|sales)[ _](?:channels?|sources?)|channelgrouping
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.plotly.validate_marketing_channel
+    needs_values: true
+    priority: 1
+  webbrowservalue:
+    key: web_browser
+    name: Web browser by value (Chrome, Firefox, Safari, Internet Explorer, Opera, Chrome Mobile)
+    rule: metacrafterext.rules.common.plotly.validate_web_browser_value
+    type: data
+    match: func
+    minlen: 3
+    maxlen: 30
+    priority: 1
+  operatingsystemvalue:
+    key: operating_system
+    name: Operating system by value (Windows, iOS, Android, Linux, OS X 10.10, Windows 7)
+    rule: metacrafterext.rules.common.plotly.validate_operating_system_value
+    type: data
+    match: func
+    minlen: 3
+    maxlen: 30
+    priority: 1
+  sentimentbyname:
+    key: sentiment
+    name: Sentiment label by field name (sentiment, polarity, sentiment class, tone) with positive, negative, neutral
+    rule: (?i)(?:text[ _]|tweet[ _]|review[ _])?sentiments?(?:[ _]?(?:label|class|classification|category|polarity|type))?|polarity|tone
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.plotly.validate_sentiment
+    needs_values: true
+    priority: 1
+  emotionvalue:
+    key: emotion
+    name: Emotion by value (anger, disgust, fear, joy, sadness, surprise, anticipation)
+    rule: metacrafterext.rules.common.plotly.validate_emotion
+    type: data
+    match: func
+    minlen: 3
+    maxlen: 20
+    priority: 1
+  emotionbyname:
+    key: emotion
+    name: Emotion by field name (emotion, emotions, emotion label, mood) with joy, anger, neutral
+    rule: (?i)emotions?(?:[ _](?:label|class|category|type))?|moods?|feelings?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.plotly.validate_emotion
+    needs_values: true
+    priority: 1

@@ -174,4 +174,24 @@ rules:
     match: text
     type: field
     priority: 2
-
+  # Found in the tables of the Plotly community feed (the VizNet corpus of Plotly charts, 2015 to 2018:
+  # 1 090 629 charts, 1 013 540 distinct tables), whose columns are named after the traces of a chart
+  # (x, y, labels), so the exchange of a price is found by its values; metacrafter-testdata.
+  cryptoexchangevalue:
+    key: crypto_exchange
+    name: Cryptocurrency exchange by value (Binance, Coinbase, GDAX, Kraken, Bitfinex)
+    rule: metacrafterext.rules.common.plotly.validate_crypto_exchange
+    type: data
+    match: func
+    minlen: 3
+    maxlen: 30
+    priority: 1
+  cryptoexchangebyname:
+    key: crypto_exchange
+    name: Cryptocurrency exchange by field name (exchange, exchange name, market) with Kraken, Bitstamp
+    rule: (?i)(?:crypto(?:currency)?[ _])?exchanges?(?:[ _]name)?|exchange[ _]?name|market(?:[ _]?place)?|venue
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.plotly.validate_crypto_exchange
+    needs_values: true
+    priority: 1

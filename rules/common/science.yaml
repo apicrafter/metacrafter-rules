@@ -675,3 +675,24 @@ rules:
     minlen: 15
     maxlen: 19
     priority: 1
+  # Found in the tables of the Plotly community feed (the VizNet corpus of Plotly charts, 2015 to 2018:
+  # 1 090 629 charts, 1 013 540 distinct tables), whose columns are named after the traces of a chart
+  # (x, y, labels), so the planet of a chart is found by its values; metacrafter-testdata.
+  planetvalue:
+    key: planet
+    name: Planet of the Solar System by value (Mercury, Earth, Jupiter, Pluto)
+    rule: metacrafterext.rules.common.plotly.validate_planet
+    type: data
+    match: func
+    minlen: 4
+    maxlen: 25
+    priority: 1
+  planetbyname:
+    key: planet
+    name: Planet by field name (planet, planet name) with Mars, Venus
+    rule: (?i)planets?(?:[ _]name)?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.plotly.validate_planet
+    needs_values: true
+    priority: 1

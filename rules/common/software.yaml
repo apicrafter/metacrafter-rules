@@ -470,3 +470,42 @@ rules:
     minlen: 4
     maxlen: 100000
     priority: 2
+  # Found in the tables of the Plotly community feed (the VizNet corpus of Plotly charts, 2015 to 2018:
+  # 1 090 629 charts, 1 013 540 distinct tables), whose columns are named after the traces of a chart
+  # (x, y, labels), so the log level or instance type of a chart is found by its values; metacrafter-testdata.
+  loglevelvalue:
+    key: log_level
+    name: Log level by value (INFO, WARN, ERROR, DEBUG, fatal)
+    rule: metacrafterext.rules.common.plotly.validate_log_level_value
+    type: data
+    match: func
+    minlen: 3
+    maxlen: 13
+    priority: 1
+  loglevelbyname:
+    key: log_level
+    name: Log level by field name (level, log level, levelname, severity) with error, warning, notice
+    rule: (?i)(?:log[ _]?)?level(?:[ _]?name)?|log[ _]?(?:severity|type)|(?:syslog[ _])?severity
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.plotly.validate_log_level
+    needs_values: true
+    priority: 1
+  awsec2instancetypevalue:
+    key: aws_ec2_instance_type
+    name: Amazon EC2 instance type by value (t2.micro, m4.large, c5.2xlarge)
+    rule: metacrafterext.rules.common.plotly.validate_aws_ec2_instance_type
+    type: data
+    match: func
+    minlen: 6
+    maxlen: 30
+    priority: 1
+  awsec2instancetypebyname:
+    key: aws_ec2_instance_type
+    name: Amazon EC2 instance type by field name (instance type, InstanceType, instance size)
+    rule: (?i)(?:ec2[ _])?instance[ _]?(?:types?|sizes?)
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.plotly.validate_aws_ec2_instance_type
+    needs_values: true
+    priority: 1

@@ -240,3 +240,42 @@ rules:
     validator: metacrafterext.rules.common.generic.validate_colour_name
     needs_values: true
     priority: 1
+  # Found in the tables of the Plotly community feed (the VizNet corpus of Plotly charts, 2015 to 2018:
+  # 1 090 629 charts, 1 013 540 distinct tables), whose columns are named after the traces of a chart
+  # (x, y, labels), so the color of a trace or marker is found by its values; metacrafter-testdata.
+  rgbacolorvalue:
+    key: rgbacolor
+    name: RGBA color by value (rgba(179,226,205,1), rgba(222, 45, 38, 0.8))
+    rule: metacrafterext.rules.common.plotly.validate_rgba_color
+    type: data
+    match: func
+    minlen: 13
+    maxlen: 40
+    priority: 1
+  rgbcolorvalue:
+    key: rgbcolor
+    name: RGB color in the rgb() notation by value (rgb(31,120,180), rgb(255, 99, 71))
+    rule: metacrafterext.rules.common.plotly.validate_rgb_color
+    type: data
+    match: func
+    minlen: 10
+    maxlen: 30
+    priority: 1
+  hslcolorvalue:
+    key: hslcolor
+    name: HSL color in the hsl() notation by value (hsl(0.0,50%,50%), hsl(120, 100%, 25%))
+    rule: metacrafterext.rules.common.plotly.validate_hsl_color
+    type: data
+    match: func
+    minlen: 13
+    maxlen: 50
+    priority: 1
+  hexcolorvalue:
+    key: hexcolor
+    name: 'Hex color with a hash by value (#2ca02c, #1F77B4, #FFF)'
+    rule: metacrafterext.rules.common.plotly.validate_hex_color
+    type: data
+    match: func
+    minlen: 4
+    maxlen: 7
+    priority: 1

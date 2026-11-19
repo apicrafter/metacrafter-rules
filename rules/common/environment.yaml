@@ -230,3 +230,42 @@ rules:
     validator: metacrafterext.rules.it.codes.validate_eu_bathing_water_id
     needs_values: true
     priority: 1
+  # Found in the tables of the Plotly community feed (the VizNet corpus of Plotly charts, 2015 to 2018:
+  # 1 090 629 charts, 1 013 540 distinct tables), whose columns are named after the traces of a chart
+  # (x, y, labels), so the weather or energy source of a chart is found by its values; metacrafter-testdata.
+  weatherconditionvalue:
+    key: weather_condition
+    name: Weather condition by value (Partly Cloudy, Overcast, Light Rain, Thunderstorm, Fog)
+    rule: metacrafterext.rules.common.plotly.validate_weather_condition_value
+    type: data
+    match: func
+    minlen: 3
+    maxlen: 50
+    priority: 1
+  weatherconditionbyname:
+    key: weather_condition
+    name: Weather condition by field name (weather, weather condition, conditions, summary) with Clear, Rain, Snow
+    rule: (?i)weather(?:[ _]?(?:conditions?|description|desc|main|summary|type|state|icon))?|(?:sky|weather)[ _]?(?:conditions?|cover)|conditions?|summary|icon
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.plotly.validate_weather_condition
+    needs_values: true
+    priority: 1
+  energysourcevalue:
+    key: energy_source
+    name: Energy source by value (Coal, Natural Gas, Nuclear, Hydro, Wind Offshore, Solar PV)
+    rule: metacrafterext.rules.common.plotly.validate_energy_source
+    type: data
+    match: func
+    minlen: 3
+    maxlen: 50
+    priority: 1
+  energysourcebyname:
+    key: energy_source
+    name: Energy source by field name (fuel, fuel type, energy source, technology, production type) with Gas, Wind, Solar
+    rule: (?i)(?:energy|fuel|power|generation|primary|plant)[ _]?(?:sources?|types?|fuels?|technolog(?:y|ies)|tech)|fuels?|technolog(?:y|ies)|production[ _]types?|type[ _]of[ _](?:power|energy|fuel)|psr[ _]?type
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.plotly.validate_energy_source
+    needs_values: true
+    priority: 1
