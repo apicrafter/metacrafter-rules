@@ -887,3 +887,14 @@ rules:
     maxlen: 40
     validator: metacrafterext.rules.fi.codes.validate_inspire_grid_cell_code
     priority: 1
+  # Places of the Many Eyes archive (IBM Many Eyes, 2007 to 2012) give the point in degrees and minutes
+  # with the hemispheres (48°51′N 2°21′E, 43.42°S, 172.14°E), as ISO 6709 writes it for people.
+  iso6709dmsvalue:
+    key: iso6709
+    name: Geographic point in degrees, minutes and seconds by value (50°40′46.461″N 95°48′26.533″W, 48°51′N 2°21′E)
+    rule: metacrafterext.rules.common.manyeyes.validate_iso6709_dms
+    type: data
+    match: func
+    minlen: 8
+    maxlen: 60
+    priority: 1

@@ -1,0 +1,61 @@
+name: entertainment
+description: Video game platforms, genres of works, zodiac signs and Bible references
+context: common
+lang: common
+country_code: xx
+# Found in the tables of the Many Eyes archive (IBM Many Eyes, 2007 to 2012; 203 534 tables uploaded by its
+# users, 114 585 distinct headers): sales charts of games, lists of films, songs and books, surveys and
+# cross-reference lists of the Bible; metacrafter-testdata.
+rules:
+  videogameplatformbyname:
+    key: video_game_platform
+    name: Video game platform by field name (platform, console, system, plataforma, piattaforma) with PlayStation 3, Xbox 360, Wii, DS
+    rule: (?i)(?:(?:game|gaming|video[ _]?game)[ _]?)?(?:platforms?|consoles?|system)(?:[ _](?:name|type))?|plataformas?|consolas?|piattaform[ae]|spielkonsole|konsole
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.manyeyes.validate_video_game_platform
+    needs_values: true
+    priority: 1
+  videogameplatformvalue:
+    key: video_game_platform
+    name: Video game platform by value (PS3, Xbox 360, Nintendo DS, Wii, Game Boy Advance)
+    rule: ps1,ps2,ps3,ps4,ps5,psp,ps vita,playstation,playstation 2,playstation 3,playstation 4,playstation 5,playstation portable,playstation vita,xbox,xbox 360,x360,xbox one,wii,wii u,nintendo switch,nintendo ds,nds,3ds,nintendo 3ds,gamecube,n64,nintendo 64,snes,game boy,game boy color,game boy advance,gba,dreamcast,sega genesis,mega drive,sega saturn
+    type: data
+    match: text
+    priority: 2
+  genrebyname:
+    key: genre
+    name: Genre by field name (genre, genres, primary genre, music genre, genere) with Drama, Rap, R&B/Soul
+    rule: (?i)(?:(?:primary|main|sub|music(?:al)?|film|movie|book|game|literary|tv|show)[ _]?)?genres?(?:[ _]name)?|genere(?:[ _]musicale)?|musikrichtung|musikgenre
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.manyeyes.validate_genre
+    needs_values: true
+    priority: 1
+  zodiacsignbyname:
+    key: zodiac_sign
+    name: Zodiac sign by field name (star sign, zodiac, sign, signo, Sternzeichen, знак зодиака) with Aries, Leo, Escorpio
+    rule: (?i)(?:(?:star|sun|zodiac|astrological|astro)[ _]?)?signs?|zodiac(?:[ _]sign)?|signo(?:[ _](?:del[ _])?zod[ií]aco)?|sternzeichen|tierkreiszeichen|signe(?:[ _]astrologique|[ _]du[ _]zodiaque)?|segno(?:[ _]zodiacale)?|horoscope|hor[oó]scopo|знак(?:[ _]зодиака)?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.manyeyes.validate_zodiac_sign
+    needs_values: true
+    priority: 1
+  biblereferencevalue:
+    key: bible_reference
+    name: Bible reference by value (John 3:16, Genesis 1:1, 1 Samuel 15:2-3, Mt_28.19)
+    rule: metacrafterext.rules.common.manyeyes.validate_bible_reference
+    type: data
+    match: func
+    minlen: 5
+    maxlen: 40
+    priority: 1
+  biblereferencebyname:
+    key: bible_reference
+    name: Bible reference by field name (verse, bible verse, scripture, reference, citation, passage) with John 3:16
+    rule: (?i)(?:bible[ _]?)?(?:verses?|references?|refs?|citations?|passages?|scriptures?)(?:[ _](?:ref(?:erence)?|text))?|bible[ _]?(?:ref(?:erence)?|verse|citation)
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.manyeyes.validate_bible_reference
+    needs_values: true
+    priority: 1

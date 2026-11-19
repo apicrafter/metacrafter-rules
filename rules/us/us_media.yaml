@@ -1,0 +1,17 @@
+name: us-media
+description: Film ratings of the Motion Picture Association
+context: common
+lang: en
+country_code: us
+# Found in the lists of films of the Many Eyes archive (IBM Many Eyes, 2007 to 2012): MPAA, mpaa rating,
+# rating with G, PG, PG-13, R; metacrafter-testdata.
+rules:
+  usmparatingbyname:
+    key: us_mpa_rating
+    name: MPA film rating by field name (mpaa, mpaa rating, mpa rating, film rating, rated, rating) with PG-13, R
+    rule: (?i)mpaa(?:[ _]?rating)?|mpa[ _]?rating|(?:film|movie|content|age|us)[ _]?rating|rated|ratings?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.manyeyes.validate_us_mpa_rating
+    needs_values: true
+    priority: 1

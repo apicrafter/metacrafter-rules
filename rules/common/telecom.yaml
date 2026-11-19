@@ -118,3 +118,13 @@ rules:
     minlen: 5
     maxlen: 120
     priority: 1
+  # Lists of broadcasters of the Many Eyes archive (IBM Many Eyes, 2007 to 2012): station call sign, call letters.
+  callsignbyname:
+    key: call_sign
+    name: Radio call sign by field name (call sign, callsign, call letters, station call sign, indicativo, Rufzeichen) with KDKA, WNYC-FM
+    rule: (?i)(?:(?:station|radio|amateur|broadcast)[ _]?)?call[ _]?signs?|call[ _]letters|indicativo(?:[ _]de[ _]llamada)?|rufzeichen
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.manyeyes.validate_call_sign
+    needs_values: true
+    priority: 1

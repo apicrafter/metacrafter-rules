@@ -107,3 +107,32 @@ rules:
     validator: metacrafterext.rules.common.vehicles.validate_engine_or_chassis_number
     needs_values: true
     priority: 1
+  # Vehicle tables of the Many Eyes archive (IBM Many Eyes, 2007 to 2012): fuel economy (auto-mpg), sales,
+  # recalls and registrations give the make (chevrolet, Toyota, 1º FIAT) and the model (Ford Focus).
+  vehiclemakebyname:
+    key: vehicle_make
+    name: Vehicle make by field name (make, vehicle make, car make, manufacturer, marca, marque, Marke) with Toyota, chevrolet, VW
+    rule: (?i)(?:(?:vehicle|veh|car|auto|truck|motorcycle)[ _]?)?(?:make|maker|manufacturer|mfr|mfg)(?:[ _](?:name|desc(?:ription)?))?|marca(?:[ _](?:do[ _]ve[ií]culo|del[ _]veh[ií]culo|veiculo|vehiculo|carro|auto))?|marque(?:[ _]du[ _]v[eé]hicule)?|marke|fahrzeugmarke|fabricante|hersteller|constructeur
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.manyeyes.validate_vehicle_make
+    needs_values: true
+    priority: 1
+  vehiclemodelbyname:
+    key: vehicle_model
+    name: Vehicle model by a field name that names vehicles (vehicle model, car model, car name, vehicle name, modelo do veículo) with Ford Focus, Corolla
+    rule: (?i)(?:vehicle|veh|car|auto|truck|motorcycle)[ _]?(?:model|name)(?:[ _]name)?|modelo[ _](?:do[ _]ve[ií]culo|del[ _]veh[ií]culo|veiculo|vehiculo|carro|auto)|fahrzeugmodell|mod[eè]le[ _]du[ _]v[eé]hicule
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.manyeyes.validate_vehicle_model
+    needs_values: true
+    priority: 1
+  vehiclemodelwithmakebyname:
+    key: vehicle_model
+    name: Vehicle model by field name (model, modelo, Modell) when the values start with a make (Ford Focus, chevrolet chevelle malibu)
+    rule: (?i)models?(?:[ _]name)?|modelos?|modell|mod[eè]le
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.manyeyes.validate_vehicle_model_with_make
+    needs_values: true
+    priority: 1

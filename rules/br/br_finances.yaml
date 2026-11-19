@@ -42,3 +42,13 @@ rules:
     match: text
     priority: 1
 
+  # Portfolios and Ibovespa tables of the Many Eyes archive (IBM Many Eyes, 2007 to 2012): ativo, papel with PETR4.
+  brb3tickerbyname:
+    key: br_b3_ticker
+    name: B3 ticker by field name (ativo, papel, código de negociação, ticker, símbolo) with PETR4, VALE3, ALLL11
+    rule: (?i)ativos?|pap[eé]is|papel|a[cç][aã]o|a[cç][oõ]es|c[oó]d(?:igo)?(?:[ _]de)?[ _]?(?:negocia[cç][aã]o|do[ _]ativo|ativo|da[ _]a[cç][aã]o|neg)|codneg|tickers?(?:[ _]?b3)?|s[ií]mbolo|symbol
+    type: field
+    match: regex
+    validator: metacrafterext.rules.br.codes.validate_br_b3_ticker
+    needs_values: true
+    priority: 1

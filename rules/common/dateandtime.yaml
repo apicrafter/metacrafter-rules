@@ -466,3 +466,14 @@ rules:
     validator: metacrafterext.rules.common.statcodes.validate_date_ymd_compact
     needs_values: true
     priority: 1
+  # Surveys of time use and media consumption and incident records of the Many Eyes archive (IBM Many Eyes,
+  # 2007 to 2012) give the part of the day in words: Morning, Afternoon, Evening, Night.
+  partofdaybyname:
+    key: part_of_day
+    name: Part of the day by field name (time of day, daypart, período del día, Tageszeit) with Morning, Afternoon, Noche
+    rule: (?i).*\b(?:time|part|period)[ _]of[ _](?:the[ _])?day\b.*|time[ _]?of[ _]?day|day[ _]?parts?|per[ií]odo(?:[ _](?:do|del))?[ _]d[ií]a|momento[ _]del[ _]d[ií]a|franja[ _]horaria|tageszeit|moment[ _]de[ _]la[ _]journ[ée]e|fascia[ _]oraria
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.manyeyes.validate_part_of_day
+    needs_values: true
+    priority: 1

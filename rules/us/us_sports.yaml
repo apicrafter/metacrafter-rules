@@ -1,0 +1,36 @@
+name: us-sports
+description: Abbreviations of the teams of Major League Baseball, the NBA and the NFL
+context: common
+lang: en
+country_code: us
+# Found in the tables of the Many Eyes archive (IBM Many Eyes, 2007 to 2012): box scores, standings, rosters,
+# drafts and fantasy league tables; metacrafter-testdata. The leagues share many codes (ATL, BOS, CHI): the
+# validators decide, and the league whose codes fit every value scores highest.
+rules:
+  mlbteamcodebyname:
+    key: mlb_team_code
+    name: MLB team abbreviation by field name (team, tm, opponent, opp, home, away, mlb team) with NYY, LAD, CWS
+    rule: (?i)(?:(?:home|away|visiting|visitor|opposing|winning|losing|fantasy|pro)[ _]?)?(?:team|tm|club)(?:[ _]?(?:abbr(?:eviation)?|code|id|\d))?|opp(?:onent)?(?:[ _]?(?:team|abbr|code))?|vs\.?|franchise|home|away|visitor|(?:mlb|nba|nfl)[ _]?team(?:[ _]?(?:abbr|code))?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.us.sports.validate_mlb_team_code
+    needs_values: true
+    priority: 1
+  nbateamcodebyname:
+    key: nba_team_code
+    name: NBA team abbreviation by field name (team, tm, opponent, opp, home, away, nba team) with LAL, GSW, NYK
+    rule: (?i)(?:(?:home|away|visiting|visitor|opposing|winning|losing|fantasy|pro)[ _]?)?(?:team|tm|club)(?:[ _]?(?:abbr(?:eviation)?|code|id|\d))?|opp(?:onent)?(?:[ _]?(?:team|abbr|code))?|vs\.?|franchise|home|away|visitor|(?:mlb|nba|nfl)[ _]?team(?:[ _]?(?:abbr|code))?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.us.sports.validate_nba_team_code
+    needs_values: true
+    priority: 1
+  nflteamcodebyname:
+    key: nfl_team_code
+    name: NFL team abbreviation by field name (team, tm, opponent, opp, home, away, nfl team) with NE, GB, NYG
+    rule: (?i)(?:(?:home|away|visiting|visitor|opposing|winning|losing|fantasy|pro)[ _]?)?(?:team|tm|club)(?:[ _]?(?:abbr(?:eviation)?|code|id|\d))?|opp(?:onent)?(?:[ _]?(?:team|abbr|code))?|vs\.?|franchise|home|away|visitor|(?:mlb|nba|nfl)[ _]?team(?:[ _]?(?:abbr|code))?
+    type: field
+    match: regex
+    validator: metacrafterext.rules.us.sports.validate_nfl_team_code
+    needs_values: true
+    priority: 1

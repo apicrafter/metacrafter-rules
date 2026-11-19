@@ -48,3 +48,22 @@ rules:
     validator: metacrafterext.rules.gb.portals.validate_school_name
     needs_values: true
     priority: 1
+  # Gradebooks, grade distributions and timetables of the Many Eyes archive (IBM Many Eyes, 2007 to 2012).
+  lettergradebyname:
+    key: letter_grade
+    name: Letter grade by field name (grade, letter grade, final grade, course grade) with A, A-, B+, F
+    rule: (?i)(?:(?:letter|final|course|overall|mid[ _]?term|exam|class|semester|term)[ _]?)?grades?(?:[ _](?:letter|awarded|earned|received|achieved))?|letter[ _]?grade|grade[ _]?letter
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.manyeyes.validate_letter_grade
+    needs_values: true
+    priority: 1
+  coursecodebyname:
+    key: course_code
+    name: Course code by field name (course, course code, unit code, module code, courses offered) with CSI 101, ACTG3000
+    rule: (?i)\(?(?:courses?|class|unit|module|subject|paper)(?:[ _]?(?:code|id|no\.?|num(?:ber)?|key|offered|taken|\d))?\)?|course[ _]?(?:taken|offered)|c[oó]d(?:igo)?[ _](?:do[ _]|del[ _])?(?:curso|disciplina|asignatura|materia)
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.manyeyes.validate_course_code
+    needs_values: true
+    priority: 1
