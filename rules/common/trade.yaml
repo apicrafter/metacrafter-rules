@@ -179,3 +179,24 @@ rules:
     priority: 1
     rule: >-
       (?i)(?:product|goods|item|commodity|cargo|merchandise|article)[ _.-]?(?:description|desc|descr)|description[ _.-]?of[ _.-]?goods
+  # Found in the WDC Web Tables Corpus 2015 (tables of HTML pages that Web Data Commons extracted from the
+  # Common Crawl of July 2015; 4 963 794 relational tables of 2 571 606 pages on 98 249 hosts in six
+  # segments): currency pairs of the tables of exchange rates and forex quotes; metacrafter-testdata.
+  currencypairbyname:
+    key: currency_pair
+    name: 'Currency pair by field name (currency pair, pair, symbol, instrument, cross, paire de devises) with EUR/USD, EURUSD'
+    rule: '(?i)(?:currency|fx|forex|ccy)?[ _]?pairs?|instruments?|symbols?|cross(?:[ _]rate)?|paires?(?:[ _]de[ _]devises?)?|par(?:es)?(?:[ _]de[ _]divisas)?|w(?:ä|ae)hrungspaar|valutapar|pasangan[ _]mata[ _]uang|kereszt|coppia(?:[ _]di[ _]valute)?|valutapaar'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.webtables.validate_currency_pair
+    needs_values: true
+    priority: 1
+  currencypairvalue:
+    key: currency_pair
+    name: 'Currency pair by value (EUR/USD, USD/JPY, GBP/CHF, EUR-GBP)'
+    rule: metacrafterext.rules.common.webtables.validate_currency_pair_value
+    type: data
+    match: func
+    minlen: 7
+    maxlen: 9
+    priority: 1

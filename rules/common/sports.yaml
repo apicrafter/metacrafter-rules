@@ -34,3 +34,51 @@ rules:
     validator: metacrafterext.rules.common.manyeyes.validate_medal
     needs_values: true
     priority: 1
+  # Found in the WDC Web Tables Corpus 2015 (tables of HTML pages that Web Data Commons extracted from the
+  # Common Crawl of July 2015; 4 963 794 relational tables of 2 571 606 pages on 98 249 hosts in six
+  # segments): results and records of game schedules and standings of teams, and events of athletics and swimming in results and records; metacrafter-testdata.
+  gameresultvalue:
+    key: game_result
+    name: 'Result of a game with its score by value (W 31-28, L, 10-0, W, 3-2 (OT), Loss 104-111)'
+    rule: metacrafterext.rules.common.webtables.validate_game_result
+    type: data
+    match: func
+    minlen: 5
+    maxlen: 40
+    priority: 1
+  winlossrecordbyname:
+    key: win_loss_record
+    name: 'Win-loss record by field name (Record, Overall, Conf, W-L, W-L-T, Home, Away) with 20-5, 9-3-0'
+    rule: '(?i)(?:(?:overall|conf(?:erence)?|home|away|road|neutral|div(?:ision)?|league|season|team|career|total|all[ _]games|h|r|a|n|ov|cf)[ _.]*)?(?:records?|w[ _/-]?l(?:[ _/-]?[td])?(?:[ _/-]?otl)?|won[ _/-]?lost(?:[ _/-]?tied)?)|overall|conf\.?|home|away|road|neutral|vs\.?[ _]?(?:div|conf)\.?|bilan|bilanz'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.webtables.validate_win_loss_record
+    needs_values: true
+    priority: 1
+  athleticseventbyname:
+    key: athletics_event
+    name: 'Athletics event by field name (event, discipline, Disziplin, épreuve, prueba) with 100m, Long Jump, 5K'
+    rule: '(?i)(?:track|field|race|athletics)?[ _]?(?:events?|disciplines?)(?:[ _]name)?|disziplin|[ée]preuve|prueba|prova|onderdeel|gara|race'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.webtables.validate_athletics_event
+    needs_values: true
+    priority: 1
+  athleticseventvalue:
+    key: athletics_event
+    name: 'Athletics event by value (100 Meter Dash, 110m Hurdles, 4x400 Relay, Long Jump, Shot Put, Marathon)'
+    rule: metacrafterext.rules.common.webtables.validate_athletics_event_value
+    type: data
+    match: func
+    minlen: 3
+    maxlen: 40
+    priority: 1
+  swimmingeventvalue:
+    key: swimming_event
+    name: 'Swimming event by value (50 Free, 200 IM, 100 Backstroke, 400 Medley Relay, 100 SCY Free)'
+    rule: metacrafterext.rules.common.webtables.validate_swimming_event
+    type: data
+    match: func
+    minlen: 6
+    maxlen: 50
+    priority: 1

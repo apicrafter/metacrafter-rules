@@ -67,3 +67,42 @@ rules:
     validator: metacrafterext.rules.common.manyeyes.validate_course_code
     needs_values: true
     priority: 1
+  # Found in the WDC Web Tables Corpus 2015 (tables of HTML pages that Web Data Commons extracted from the
+  # Common Crawl of July 2015; 4 963 794 relational tables of 2 571 606 pages on 98 249 hosts in six
+  # segments): class standings of the rosters and statistics of college teams (Yr, Cl., Class) and academic terms of course lists and schedules; metacrafter-testdata.
+  classstandingbyname:
+    key: class_standing
+    name: 'Class standing by field name (Yr, Cl., Class, Year, Eligibility) with Fr., So., Jr., Sr., R-Fr.'
+    rule: '(?i)(?:class|cl|yr|year|academic)(?:[ _.]*(?:year|standing|level|in[ _]school|/?class|/?exp\.?|/?elig\.?))?\.?|class(?:ification)?|elig(?:ibility)?\.?(?:[ _]year)?|(?:student|academic)[ _](?:classification|standing|level)|yr\.?[ _/]?cl\.?|grade[ _]level'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.webtables.validate_class_standing
+    needs_values: true
+    priority: 1
+  classstandingvalue:
+    key: class_standing
+    name: 'Class standing by value (Freshman, Sophomore, Fr., So., R-Fr., Redshirt Junior)'
+    rule: metacrafterext.rules.common.webtables.validate_class_standing_value
+    type: data
+    match: func
+    minlen: 2
+    maxlen: 30
+    priority: 1
+  academictermbyname:
+    key: academic_term
+    name: 'Academic term by field name (term, semester, academic term, session, year & term) with Fall 2015, Sp 2011'
+    rule: '(?i)(?:academic|school|course|class|start|entry|admit|enrol?led|effective|catalog|next)?[ _.]*(?:terms?|semesters?|trimesters?|sessions?)(?:[ _.]*(?:name|code|desc(?:ription)?|offered|taken|year))?|year[ _]*(?:&|and)[ _]*(?:term|semester)|(?:term|semester)[ _]*(?:&|and|/)[ _]*year|semestre|cuatrimestre|periodo(?:[ _]acad[eé]mico)?|eff\.?[ _]date'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.webtables.validate_academic_term
+    needs_values: true
+    priority: 1
+  academictermvalue:
+    key: academic_term
+    name: 'Academic term by value (Fall 2015, Spring Semester 2016, Summer Term 2015, 2013 Fall)'
+    rule: metacrafterext.rules.common.webtables.validate_academic_term_value
+    type: data
+    match: func
+    minlen: 6
+    maxlen: 40
+    priority: 1

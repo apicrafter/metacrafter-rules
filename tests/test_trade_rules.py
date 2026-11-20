@@ -85,6 +85,10 @@ FIELD_CASES = [
     ("goodsdescriptionbyfield",
      ["PRODUCT DESCRIPTION", "goods_description", "item_desc", "description of goods", "CommodityDescription"],
      ["description", "product", "product_name", "goods"]),
+    # The values decide (validate_currency_pair): a Symbol of stock tickers is no currency pair.
+    ("currencypairbyname",
+     ["Currency pair", "pair", "Symbol", "Instrument", "Cross", "Paire de devise", "Pasangan mata uang"],
+     ["currency", "pairing", "symbolic"]),
 ]
 
 

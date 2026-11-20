@@ -9,6 +9,38 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Rules for the tables of the WDC Web Tables Corpus 2015** (tables of HTML pages that Web Data Commons extracted
+  from the Common Crawl of July 2015; 4 963 794 relational tables of 2 571 606 pages on 98 249 hosts in six
+  segments; files of metacrafter-testdata taken from it). Validators in `metacrafterext/rules/common/webtables.py`;
+  words that are as common in other columns as in the type (Jr. and Sr., which are also name suffixes; S, M and L;
+  Text, Date and Long; Available; New; 100 m, which is also a length) count only in a field named after the type:
+  - Sports (`common/sports.yaml`): game results with the score (`game_result`: W, 3-2; L 31-28; Loss 104-111, by
+    value), win-loss records under Record, Overall, Conf, W-L-T, Home and Away (`win_loss_record`: 20-5, 9-3-0),
+    athletics events (`athletics_event`: 110m Hurdles, Long Jump, Shot Put by value; 100m and 5K under Event,
+    Discipline) and swimming events (`swimming_event`: 50 Free, 200 IM, 400 Medley Relay).
+  - Education (`common/education.yaml`): class standings of college rosters under Yr., Cl., Class, Year
+    (`class_standing`: Fr., So., Jr., Sr., R-Fr.; Freshman and Fr. with its full stop by value, not FR, a code of
+    France) and academic terms (`academic_term`: Fall 2015, Spring Semester 2016 by value; FA14, 2013 Fall and
+    Spring under Term, Semester; First Quarter is a quarter of the calendar year).
+  - E-commerce (`common/ecommerce.yaml`): letter sizes of clothes (`clothing_size`: XS, XL, 3XL, X-Large by
+    value; S, M, L under Size, Taglia, Größe; Small, Medium and Large in words alone are also sizes of companies and
+    do not count), stock availability (`item_availability`: In Stock, Sold Out,
+    Pre-order, Auf Lager, InStock of schema.org by value; Available and Discontinued under Availability, Stock)
+    and the condition of items for sale (`item_condition`: Used, Refurbished, Pre-Owned by value; New under
+    Condition, New/Used).
+  - Software (`common/software.yaml`): data types of API and database documentation (`data_type`: int, String,
+    VARCHAR(64), bigint(20) unsigned by value; Text and Long under Type, Data Type, Modifier and Type) and Unix
+    file modes of repository browsers (`unix_file_mode`: -rw-r--r--, drwxr-xr-x by value; 0644 under Mode,
+    Permissions).
+  - Internet (`common/internet.yaml`): HTTP header names (`http_header_name`: Content-Type, X-Powered-By by value;
+    Date and Server under Header Key, Header Name) and DNS record types under Type, Record Type
+    (`dns_record_type`: MX, NS, SOA, TXT; A alone is also a grade and does not count), which had no rules, and
+    screen resolutions (`screen_resolution`: 1920x1080, 1024 × 768 by value; 3648x2736 under Resolution,
+    Auflösung).
+  - Currency pairs of forex quotes (`currency_pair` in `common/trade.yaml`: EUR/USD by value; EURUSD under Pair,
+    Symbol), English ordinal numbers of ranks and places (`ordinal_number` in `common/values.yaml`: 1st, 22nd,
+    103rd) and priorities of issue trackers under Priority, Importance, Urgency (`priority_level` in
+    `common/common.yaml`: High, Normal, Blocker, P1).
 - **Rules for the tables of the Plotly community feed** (the VizNet corpus of Plotly charts, 2015 to 2018: 1 090 629
   charts of Plotly users, 1 013 540 distinct tables; files of metacrafter-testdata taken from it). Plotly names the
   columns of a chart after its traces (x, y, labels, Brooklyn, x), so most rules look at the values; validators in

@@ -106,3 +106,15 @@ rules:
     minlen: 2
     maxlen: 24
     priority: 1
+  # Found in the WDC Web Tables Corpus 2015 (tables of HTML pages that Web Data Commons extracted from the
+  # Common Crawl of July 2015; 4 963 794 relational tables of 2 571 606 pages on 98 249 hosts in six
+  # segments): ranks, places, percentiles and draft rounds written as English ordinal numbers; metacrafter-testdata.
+  ordinalnumbervalue:
+    key: ordinal_number
+    name: 'English ordinal number by value (1st, 2nd, 3rd, 4th, 22nd, 103rd, 1st Place)'
+    rule: metacrafterext.rules.common.webtables.validate_ordinal_number
+    type: data
+    match: func
+    minlen: 3
+    maxlen: 14
+    priority: 1
