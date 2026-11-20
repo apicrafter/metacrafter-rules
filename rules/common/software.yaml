@@ -509,3 +509,42 @@ rules:
     validator: metacrafterext.rules.common.plotly.validate_aws_ec2_instance_type
     needs_values: true
     priority: 1
+  # Found in the WDC Web Tables Corpus 2015 (tables of HTML pages that Web Data Commons extracted from the
+  # Common Crawl of July 2015; 4 963 794 relational tables of 2 571 606 pages on 98 249 hosts in six
+  # segments): data types of the documentation of APIs, languages and databases, and the file modes of repository browsers (cgit, gitweb); metacrafter-testdata.
+  datatypebyname:
+    key: data_type
+    name: 'Data type by field name (type, data type, datatype, modifier and type, return type, value type) with int, String, VARCHAR(64)'
+    rule: '(?i)(?:(?:data|field|column|value|return|param(?:eter)?|arg(?:ument)?|attribute|property|variable|java|sql|php|db|database|oracle|mysql|sql[ _]server|xml|json|c|c\+\+|c#|\.net|python)[ _.]*)?types?|data[ _]?types?|modifier[ _](?:and|&)[ _]type|typ|tipo(?:[ _]de[ _]dato)?|type[ _]de[ _]donn[ée]es|datentyp|tipo[ _]dato|veritipi|typ[ _]danych'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.webtables.validate_data_type
+    needs_values: true
+    priority: 1
+  datatypevalue:
+    key: data_type
+    name: 'Data type by value (int, String, boolean, void, VARCHAR(64), bigint(20) unsigned, uint32)'
+    rule: metacrafterext.rules.common.webtables.validate_data_type_value
+    type: data
+    match: func
+    minlen: 3
+    maxlen: 40
+    priority: 1
+  unixfilemodebyname:
+    key: unix_file_mode
+    name: 'Unix file mode by field name (mode, permissions, perms, chmod, file mode) with -rw-r--r--, 0644'
+    rule: '(?i)(?:file[ _]?)?modes?|perm(?:ission)?s?|file[ _]permissions?|chmod|access[ _]mode|unix[ _](?:mode|permissions?)|prawa(?:[ _]dost[eę]pu)?|rechte|droits|permisos|drwxr-xr-x'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.webtables.validate_unix_file_mode
+    needs_values: true
+    priority: 1
+  unixfilemodevalue:
+    key: unix_file_mode
+    name: 'Unix file mode by value (-rw-r--r--, drwxr-xr-x, lrwxrwxrwx, -rwsr-xr-x)'
+    rule: metacrafterext.rules.common.webtables.validate_unix_file_mode_value
+    type: data
+    match: func
+    minlen: 10
+    maxlen: 11
+    priority: 1

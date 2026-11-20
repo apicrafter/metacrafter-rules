@@ -314,3 +314,51 @@ rules:
     match: text
     validator: metacrafterext.rules.common.generic.validate_wifi_ssid
     priority: 1
+  # Found in the WDC Web Tables Corpus 2015 (tables of HTML pages that Web Data Commons extracted from the
+  # Common Crawl of July 2015; 4 963 794 relational tables of 2 571 606 pages on 98 249 hosts in six
+  # segments): HTTP response headers and DNS records of the pages of website statistics services, and screen resolutions of visitor statistics, device and display specifications; metacrafter-testdata.
+  httpheadernamebyname:
+    key: http_header_name
+    name: 'HTTP header name by field name (header key, header name, header, response header) with Content-Type, Server, Date'
+    rule: '(?i)(?:(?:http|response|request)[ _.]*)*headers?(?:[ _.]*(?:key|name|field(?:[ _]name)?))?|(?:header[ _])?field[ _]name'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.webtables.validate_http_header_name
+    needs_values: true
+    priority: 1
+  httpheadernamevalue:
+    key: http_header_name
+    name: 'HTTP header name by value (Content-Type, Cache-Control, X-Powered-By, Last-Modified, Set-Cookie)'
+    rule: metacrafterext.rules.common.webtables.validate_http_header_name_value
+    type: data
+    match: func
+    minlen: 4
+    maxlen: 40
+    priority: 1
+  dnsrecordtypebyname:
+    key: dns_record_type
+    name: 'DNS record type by field name (type, record type, RR type, qtype) with MX, NS, SOA, TXT, CNAME'
+    rule: '(?i)(?:(?:dns|record|rr|resource[ _]record|query)[ _.]*)*types?|rr[ _]?type|qtype|record'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.webtables.validate_dns_record_type
+    needs_values: true
+    priority: 1
+  screenresolutionbyname:
+    key: screen_resolution
+    name: 'Resolution by field name (resolution, screen resolution, display resolution, Auflösung, résolution) with 1920x1080, 3648x2736'
+    rule: '(?i)(?:(?:screen|display|native|max(?:imum)?|video|output|input|image|photo|sensor|camera|panel|recording|default|2d|3d|raw|jpeg|still|movie)[ _.]*)*(?:resolutions?|res\.?)(?:[ _.]*\(?(?:px|pixels?|w[x×]h)\)?)?|aufl(?:ö|oe)sung|r[ée]solution|resoluci[oó]n|risoluzione|resolutie|resolu[cç][aã]o|rozdzielczo[sś][cć]|pixels?|pixel[ _](?:dimensions|size)|size[ _]*\(w[ _]?[x×][ _]?h\)|(?:image|frame|video)[ _]size[ _]*\(?px\)?|output[ _]res\.?'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.webtables.validate_screen_resolution
+    needs_values: true
+    priority: 1
+  screenresolutionvalue:
+    key: screen_resolution
+    name: 'Display resolution by value (1920x1080, 1366x768, 1024 x 768, 640 × 960 px, 3840x2160)'
+    rule: metacrafterext.rules.common.webtables.validate_screen_resolution_value
+    type: data
+    match: func
+    minlen: 7
+    maxlen: 40
+    priority: 1

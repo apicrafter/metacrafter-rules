@@ -279,3 +279,15 @@ rules:
     minlen: 4
     maxlen: 7
     priority: 1
+  # Found in the WDC Web Tables Corpus 2015 (tables of HTML pages that Web Data Commons extracted from the
+  # Common Crawl of July 2015; 4 963 794 relational tables of 2 571 606 pages on 98 249 hosts in six
+  # segments): priorities of the tickets of issue trackers (Trac, Drupal, Bugzilla, CurseForge) and of task lists; metacrafter-testdata.
+  prioritylevelbyname:
+    key: priority_level
+    name: 'Priority by field name (priority, prio, importance, urgency, Priorität, priorité) with High, Normal, Critical, P1'
+    rule: '(?i)(?:task|ticket|issue|bug|case|request|order|project|work|item)?[ _.]*(?:priorit(?:y|ies|ät|at|é|e|ad|à|a|eit)|prio\.?|importance|urgency|urgence|urgencia|dringlichkeit|wichtigkeit)(?:[ _.]*(?:level|class|rank))?'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.webtables.validate_priority_level
+    needs_values: true
+    priority: 1

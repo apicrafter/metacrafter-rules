@@ -39,4 +39,60 @@ rules:
     type: field
     match: text
     priority: 1
-
+  # Found in the WDC Web Tables Corpus 2015 (tables of HTML pages that Web Data Commons extracted from the
+  # Common Crawl of July 2015; 4 963 794 relational tables of 2 571 606 pages on 98 249 hosts in six
+  # segments): clothing sizes of size charts and shops, and the availability and condition of items for sale; metacrafter-testdata.
+  clothingsizebyname:
+    key: clothing_size
+    name: 'Clothing size by field name (size, sizes, taglia, talla, Größe, taille) with XS, S, M, L, XL'
+    rule: '(?i)(?:(?:clothing|garment|apparel|shirt|t-?shirt|dress|jacket|coat|pants?|jersey|glove|helmet|hat|cap|sock|vest|top|bra|uniform|general[ _]hat|int(?:ernational)?|us|uk|eu|letter|alpha)[ _.]*)?sizes?(?:[ _.]*(?:category|label|letter|code|int(?:ernational)?|chart|options?|range))?|taglia|tag(?:lie)?|tallas?|gr(?:ö|oe)(?:ß|ss)en?|taille|tama[ñn]o|st(?:ø|o)rrelse|storlek|maat|rozmiar|velikost|m[ée]ret|koko|beden|размер|options?'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.webtables.validate_clothing_size
+    needs_values: true
+    priority: 1
+  clothingsizevalue:
+    key: clothing_size
+    name: 'Clothing size by value (XS, XL, XXL, 3XL, X-Large, One Size, S/M)'
+    rule: metacrafterext.rules.common.webtables.validate_clothing_size_value
+    type: data
+    match: func
+    minlen: 2
+    maxlen: 20
+    priority: 1
+  itemavailabilitybyname:
+    key: item_availability
+    name: 'Stock availability by field name (availability, stock, stock status, inventory, dispo.) with In Stock, Available, Discontinued'
+    rule: '(?i)(?:stock[ _]*)?availab(?:ility|le)(?:[ _]status)?|(?:in[ _])?stock(?:[ _.]*(?:status|level|info|availability|state))?|inventory(?:[ _](?:status|level))?|on[ _]?hand|lieferbarkeit|verf(?:ü|ue)gbarkeit|lager(?:status|bestand)?|disponibilit[ée]|dispo\.?|disponibilidad|disponibilit[àa]|beschikbaarheid|voorraad|estoque|existencias?'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.webtables.validate_item_availability
+    needs_values: true
+    priority: 1
+  itemavailabilityvalue:
+    key: item_availability
+    name: 'Stock availability by value (In Stock, Out of Stock, Sold Out, Pre-order, Only 3 left, Auf Lager)'
+    rule: metacrafterext.rules.common.webtables.validate_item_availability_value
+    type: data
+    match: func
+    minlen: 5
+    maxlen: 40
+    priority: 1
+  itemconditionbyname:
+    key: item_condition
+    name: 'Condition of an item for sale by field name (condition, item condition, new/used, Zustand, état) with New, Used, Refurbished'
+    rule: '(?i)(?:item|product|book|media|sleeve|vinyl|record|box|card|car|vehicle|equipment|machine|unit)?[ _]?condition|new[ _]*(?:/|or|&)[ _]*(?:used|pre-?owned|refurb(?:ished)?)|new|used|zustand|[ée]tat|condici[oó]n|condizioni?|staat|estado|stan'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.webtables.validate_item_condition
+    needs_values: true
+    priority: 1
+  itemconditionvalue:
+    key: item_condition
+    name: 'Condition of an item for sale by value (Used, Refurbished, Pre-Owned, Like New, Open Box)'
+    rule: metacrafterext.rules.common.webtables.validate_item_condition_value
+    type: data
+    match: func
+    minlen: 3
+    maxlen: 30
+    priority: 1
