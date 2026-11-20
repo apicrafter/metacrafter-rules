@@ -477,3 +477,42 @@ rules:
     validator: metacrafterext.rules.common.manyeyes.validate_part_of_day
     needs_values: true
     priority: 1
+  # Found in six more segments of the WDC Web Tables Corpus 2015 (tables of HTML pages of the Common Crawl of
+  # July 2015; 4 978 140 relational tables of 2 555 031 pages on 98 133 hosts): time ranges of schedules and opening hours, times of forum
+  # posts relative to the visit, and holidays of calendars; metacrafter-testdata.
+  timerangevalue:
+    key: timerange
+    name: 'Time range by value (10:00 - 11:00, 9:00am - 5:00pm, 8:30 a.m. - 4:30 p.m., 12–4:00 pm)'
+    rule: metacrafterext.rules.common.webtables.validate_time_range
+    type: data
+    match: func
+    minlen: 7
+    maxlen: 40
+    priority: 1
+  relativetimevalue:
+    key: relative_time
+    name: 'Time relative to now by value (2 days ago, an hour ago, 2 years 38 weeks ago, 1h 35min ago)'
+    rule: metacrafterext.rules.common.webtables.validate_relative_time
+    type: data
+    match: func
+    minlen: 6
+    maxlen: 50
+    priority: 1
+  holidaybyname:
+    key: holiday
+    name: 'Holiday by field name (Holiday, Holidays, Bank Holiday, Feiertag, Fête) with Labor Day, Christmas'
+    rule: '(?i)(?:public[ _]|bank[ _]|federal[ _]|national[ _]|school[ _]|observed[ _]|legal[ _])?holidays?(?:[ _](?:name|observed|type))?|feiertage?|f[eê]tes?|jours?[ _]f[eé]ri[eé]s?|festivos?|festivit[aà]|feestdag(?:en)?'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.webtables.validate_holiday
+    needs_values: true
+    priority: 1
+  holidayvalue:
+    key: holiday
+    name: 'Holiday by value (Labor Day, Memorial Day, Thanksgiving Day, Christmas Day, Good Friday, Boxing Day)'
+    rule: metacrafterext.rules.common.webtables.validate_holiday_value
+    type: data
+    match: func
+    minlen: 6
+    maxlen: 60
+    priority: 1

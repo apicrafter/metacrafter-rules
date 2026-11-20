@@ -898,3 +898,15 @@ rules:
     minlen: 8
     maxlen: 60
     priority: 1
+  # Found in six more segments of the WDC Web Tables Corpus 2015 (tables of HTML pages of the Common Crawl of
+  # July 2015; 4 978 140 relational tables of 2 555 031 pages on 98 133 hosts): nationalities of athletes in results of the Olympics,
+  # world championships and other international events; metacrafter-testdata.
+  ioccountrycodebyname:
+    key: ioc_country_code
+    name: 'IOC country code by field name (NOC, IOC, Nat, Nat., Nation) with USA, GER, NED, SUI'
+    rule: '(?i)noc|ioc(?:[ _]code)?|nat\.?|nation|natl\.?|country[ _]\(?ioc\)?|noc[ _]code'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.webtables.validate_ioc_country_code
+    needs_values: true
+    priority: 1

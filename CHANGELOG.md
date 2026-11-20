@@ -9,6 +9,41 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Rules for six more segments of the WDC Web Tables Corpus 2015** (4 978 140 relational tables of 2 555 031 pages
+  on 98 133 hosts; files of metacrafter-testdata taken from them). Validators added to
+  `metacrafterext/rules/common/webtables.py`; as before, words that are as common in other columns as in the type
+  count only in a field named after the type:
+  - Sports (`common/sports.yaml`): the venue of a game under H/A, Home/Away, Site, Location (`home_away`: Home,
+    Away, Neutral by value; H, A, N, @, vs. by name), bats and throws of baseball players (`bats_throws`: R/R, L/R,
+    S/R by value; R-R under B/T, Bats/Throws), winning and losing streaks under Streak, Strk, Stk
+    (`win_loss_streak`: W3, L1, Won 2), penalties of ice hockey, lacrosse and football (`sports_penalty`:
+    Slashing, Tripping, Cross-Checking, Yellow Card by value; Holding, Interference and Boarding under Offense,
+    Infraction, Penalty) and conferences of US college sports (`athletic_conference`: Big Ten, Big 12, Pac-12 by
+    value; SEC, ACC, MAC, WAC, PSAC and Independent under Conference, Conf, since acronyms are also tickers and
+    other codes: PSAC is a participant status of the directory of the Bank of Russia).
+  - Television networks (`tv_network` in `common/media.yaml`: ESPN, ESPN2/ESPN3, NBCSN, HBO by value; ABC, CBS,
+    NBC, FOX, USA, History, FXX and BTN under Network, Net, TV, Channel, since they are also tickers, words and
+    codes of places; A&E keeps its ampersand, so the course sections AE and BE are no network).
+  - Dates and times (`common/dateandtime.yaml`): time ranges of schedules and opening hours (`timerange`, which had
+    a rule for 10:00-15:00 only: 9:00am - 5:00pm, 8:30 a.m. - 4:30 p.m., 10:00 – 10:10, 12–4:00 pm; both times need
+    minutes, or one needs am, pm or noon, so 9-5 and the period-times 1-1:00 of box scores do not count), times
+    relative to the visit (`relative_time`: 2 days ago, 2 years 38 weeks ago, 1h 35min ago) and holidays
+    (`holiday`: Labor Day, Thanksgiving Day, Boxing Day by value; Christmas, Easter and Halloween, also titles,
+    under Holiday, Holidays, Feiertag).
+  - Education (`common/education.yaml`): grade spans of schools (`grade_span`: K-5, PK-8, KG - 12 by value; 9-12
+    and 06 - 08 under Grades, Grade Span) and meeting days of classes under Days, Day(s), Meeting Days
+    (`class_meeting_days`: MWF, TR, TTh, M W F).
+  - Heights of players in feet and inches (`height_feet_inches` in `common/common.yaml`, a pattern of `height`:
+    6'2" and 6 ft 2 in by value and under Height; 6-2 under Ht., Ht, Hgt only, since it is also a score and the
+    height class 6-10 m of a tree register), relationships to the head of
+    a household in census transcriptions (`household_relationship` in `common/persons.yaml`: Wife, Son, Dau,
+    Servant, Lodger by value; Head and the abbreviations hus and bro under Relationship, Relation; Brother alone is
+    also a brand of printers), the nutrients of nutrition labels and food composition tables (`nutrient` in
+    `common/medical.yaml`: Protein, Total Fat, Saturated Fat, Cholesterol, Vitamin C by value; minerals, sugars,
+    amino acids and the fatty acids of the USDA tables, 18:1 undifferentiated, under Nutrient, Nutrition, Typical
+    Values; Fibre alone is also a shape of microplastics), IOC country codes under NOC, IOC, Nat, Nation (`ioc_country_code` in `common/geo.yaml`, which had no
+    rules: USA, GER, NED, SUI, URS) and POSIX errno names (`errno_name` in `common/software.yaml`, which had no
+    rules: ENOENT, EACCES, EAGAIN).
 - **Rules for the tables of the WDC Web Tables Corpus 2015** (tables of HTML pages that Web Data Commons extracted
   from the Common Crawl of July 2015; 4 963 794 relational tables of 2 571 606 pages on 98 249 hosts in six
   segments; files of metacrafter-testdata taken from it). Validators in `metacrafterext/rules/common/webtables.py`;

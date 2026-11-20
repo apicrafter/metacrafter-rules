@@ -85,3 +85,24 @@ rules:
     validator: metacrafterext.rules.common.epidemiology.validate_case_classification_or_none
     needs_values: true
     priority: 1
+  # Found in six more segments of the WDC Web Tables Corpus 2015 (tables of HTML pages of the Common Crawl of
+  # July 2015; 4 978 140 relational tables of 2 555 031 pages on 98 133 hosts): nutrition facts labels of shops and food composition
+  # tables; metacrafter-testdata.
+  nutrientbyname:
+    key: nutrient
+    name: 'Nutrient by field name (Nutrient, Nutrients, Nutrition, Typical Values, Nährwerte) with Protein, Total Fat, Sodium'
+    rule: '(?i)(?:macro|micro)?nutri(?:ents?|tion(?:al)?(?:[ _](?:information|info|facts|values?))?)|typical[ _]values?|(?:nutrition|nutrient)[ _](?:name|facts)|amount[ _]per[ _]serving|vitamins?(?:[ _](?:and|&)[ _]minerals)?|n[aä]hr(?:werte?|stoffe?)|valeurs?[ _]nutritionnelles?|nutrientes?|valori[ _]nutrizionali'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.webtables.validate_nutrient
+    needs_values: true
+    priority: 1
+  nutrientvalue:
+    key: nutrient
+    name: 'Nutrient by value (Protein, Total Fat, Saturated Fat, Cholesterol, Dietary Fiber, Sugars, Vitamin C)'
+    rule: metacrafterext.rules.common.webtables.validate_nutrient_value
+    type: data
+    match: func
+    minlen: 3
+    maxlen: 40
+    priority: 1

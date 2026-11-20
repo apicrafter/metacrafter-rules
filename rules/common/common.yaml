@@ -291,3 +291,34 @@ rules:
     validator: metacrafterext.rules.common.webtables.validate_priority_level
     needs_values: true
     priority: 1
+  # Found in six more segments of the WDC Web Tables Corpus 2015 (tables of HTML pages of the Common Crawl of
+  # July 2015; 4 978 140 relational tables of 2 555 031 pages on 98 133 hosts): heights of players on rosters in feet and inches;
+  # metacrafter-testdata.
+  heightfeetinchesbyname:
+    key: height_feet_inches
+    name: 'Height in feet and inches by field name (Ht., Ht, Hgt, Height (ft-in)) with 6-2, 5-11, 6''2"'
+    rule: '(?i)ht\.?|hgt\.?|(?:player[ _])?(?:height|ht)[ _]?\((?:ft\.?(?:[ _/-]?in\.?)?|feet)\)'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.webtables.validate_height_feet_inches
+    needs_values: true
+    priority: 1
+  heightfeetinchesmarkedbyname:
+    key: height_feet_inches
+    # 6-10 under Height alone is also a class of tree heights in metres (3-6, 6-10, 10-15 of a tree register)
+    name: 'Height in feet and inches by field name (Height, Player Height) with 6''2", 5'' 10", 6 ft 2 in'
+    rule: '(?i)(?:player[ _])?height'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.webtables.validate_height_feet_inches_value
+    needs_values: true
+    priority: 1
+  heightfeetinchesvalue:
+    key: height_feet_inches
+    name: 'Height in feet and inches by value (6''2", 5'' 10", 6''1, 6 ft 2 in)'
+    rule: metacrafterext.rules.common.webtables.validate_height_feet_inches_value
+    type: data
+    match: func
+    minlen: 2
+    maxlen: 12
+    priority: 1

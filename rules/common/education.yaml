@@ -106,3 +106,33 @@ rules:
     minlen: 6
     maxlen: 40
     priority: 1
+  # Found in six more segments of the WDC Web Tables Corpus 2015 (tables of HTML pages of the Common Crawl of
+  # July 2015; 4 978 140 relational tables of 2 555 031 pages on 98 133 hosts): grade spans of schools in real estate listings and school
+  # directories, and meeting days of course schedules; metacrafter-testdata.
+  gradespanbyname:
+    key: grade_span
+    name: 'Grade span by field name (Grades, Grade Span, Grade Levels, Grades Served) with K-5, 6-8, 9-12, PK-8'
+    rule: '(?i)(?:school[ _])?grades?(?:[ _](?:span|range|levels?|served|offered|taught|band))?|grade[ _]?(?:span|range)|gr\.?[ _]?(?:span|range)|grades?[ _]?\(?k-12\)?'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.webtables.validate_grade_span
+    needs_values: true
+    priority: 1
+  gradespanvalue:
+    key: grade_span
+    name: 'Grade span by value (K-5, PK-8, KG - 12, Pre-K - 5)'
+    rule: metacrafterext.rules.common.webtables.validate_grade_span_value
+    type: data
+    match: func
+    minlen: 3
+    maxlen: 20
+    priority: 1
+  classmeetingdaysbyname:
+    key: class_meeting_days
+    name: 'Meeting days of a class by field name (Days, Day(s), Meeting Days, Class Days, Days Met) with MWF, TR, TTh'
+    rule: '(?i)days?(?:[ _]?\(s\))?|meeting[ _]days?|class[ _]?days?|days?[ _](?:met|of[ _](?:class(?:es)?|week))|mtg\.?[ _]days?|days?[ _]?/[ _]?times?|day[ _]?/[ _]?time|meets|meeting[ _]pattern'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.webtables.validate_class_meeting_days
+    needs_values: true
+    priority: 1

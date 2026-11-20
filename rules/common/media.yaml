@@ -131,3 +131,24 @@ rules:
     validator: metacrafterext.rules.common.urban.validate_youtube_video_id
     needs_values: true
     priority: 1
+  # Found in six more segments of the WDC Web Tables Corpus 2015 (tables of HTML pages of the Common Crawl of
+  # July 2015; 4 978 140 relational tables of 2 555 031 pages on 98 133 hosts): television networks of game schedules and TV listings;
+  # metacrafter-testdata.
+  tvnetworkbyname:
+    key: tv_network
+    name: 'Television network by field name (Network, Net, TV, Channel, Broadcast, Televised) with ESPN, ABC, NBC, CBS'
+    rule: '(?i)(?:tv|t\.v\.|television)(?:[ _/](?:network|channel|station|radio|coverage|info|broadcast))?|(?:tv[ _])?networks?|net\.?|channels?|broadcasts?|broadcaster|televised|cadena|cha[iî]ne|sender'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.webtables.validate_tv_network
+    needs_values: true
+    priority: 1
+  tvnetworkvalue:
+    key: tv_network
+    name: 'Television network by value (ESPN, ESPN2, ABC, NBC, CBS, NBCSN, TNT, HBO, ESPN2/ESPN3)'
+    rule: metacrafterext.rules.common.webtables.validate_tv_network_value
+    type: data
+    match: func
+    minlen: 2
+    maxlen: 40
+    priority: 1
