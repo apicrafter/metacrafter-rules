@@ -6,6 +6,13 @@ database documentation, priorities of issue trackers, screen resolutions, curren
 repository browsers, ordinal numbers of ranks and places, athletics and swimming events, HTTP header names and
 DNS record types of website statistics pages.
 
+Six more segments of the same crawl (4 978 140 tables of 2 555 031 pages on 98 133 hosts) added the venue of
+games (home, away, neutral), how players bat and throw (R/R, L/R), winning and losing streaks, penalties of ice
+hockey, lacrosse and football, conferences of US college sports, television networks, heights of players in feet
+and inches (6-2), time ranges of schedules (9:00am - 5:00pm), times relative to now (2 days ago), the nutrients
+of nutrition labels, holidays, relationships to the head of a household in census transcriptions, grade spans of
+schools (K-5, PK-8), meeting days of classes (MWF, TR), IOC country codes and POSIX errno names.
+
 Each function takes one value and returns True when it has the form of the type. Words are compared folded, as in
 the validators of the Many Eyes archive: lower case, without accents, spaces and punctuation (R-Fr. is rfr,
 X-Large is xlarge).
@@ -514,3 +521,487 @@ def validate_dns_record_type(value):
     """A DNS resource record type in upper case: MX, NS, SOA, TXT, CNAME, AAAA, PTR, SRV, SPF, CAA (not A alone,
     mx, MAIL or Type)."""
     return text(value) in DNS_RECORD_TYPES
+
+
+# ================================================================== second six segments of the crawl
+# ------------------------------------------------------------------ home or away
+HOME_AWAY = _words("home,away,neutral,neutral site,road,h,a,n,vs,v,at,heim,auswarts,domicile,exterieur,casa,fuera,"
+                   "visitante,visitor,visiting")
+HOME_AWAY_SPECIFIC = _words("home,away,neutral,neutral site")
+_VS = re.compile(r"(?i)^(?:@|vs\.?|v\.?|at)$")
+
+
+def validate_home_away(value):
+    """Where a team plays a game: Home, Away, Neutral, H, A, N, @, vs., at, Road, Heim, Domicile (H (9) is H; not
+    Home Run, Chicago or 3-2)."""
+    v = _clean(value)
+    return bool(_VS.match(v)) or fold(v) in HOME_AWAY
+
+
+def validate_home_away_value(value):
+    """Home, Away or Neutral in words (not H, A, N, @ or at, which count only in a field named after the venue)."""
+    return fold(_clean(value)) in HOME_AWAY_SPECIFIC
+
+
+# ------------------------------------------------------------------ bats and throws
+_BATS_THROWS = re.compile(r"^([LRSB])\s?[/-]\s?([LR])$")
+_BATS_THROWS_WORDS = re.compile(r"(?i)^(left|right|switch|both)\s?[/-]\s?(left|right)$")
+_BATS_THROWS_SLASH = re.compile(r"^[LRSB]\s?/\s?[LR]$")
+
+
+def validate_bats_throws(value):
+    """How a baseball or softball player bats and throws: R/R, L/R, S/R (switch hitter), B/L, R-R, Left/Right (not
+    R, 6-2 or L/XL)."""
+    v = _clean(value)
+    return bool(_BATS_THROWS.match(v) or _BATS_THROWS_WORDS.match(v))
+
+
+def validate_bats_throws_value(value):
+    """Bats and throws as two capital letters with a slash: R/R, L/R, S/R, B/R (R-R and Left/Right count only in a
+    field named B/T or Bats/Throws)."""
+    return bool(_BATS_THROWS_SLASH.match(_clean(value)))
+
+
+# ------------------------------------------------------------------ winning and losing streaks
+_STREAK = re.compile(r"(?i)^(?:[WLTD]\s?-?\s?\d{1,3}|\d{1,3}\s?[WLTD]|(?:won|lost|tied|drew|win|loss|lose)\s+\d{1,3})$")
+
+
+def validate_win_loss_streak(value):
+    """The current run of wins or losses of a team in a standings table: W3, L1, W 2, 1L, Won 4, Lost 2, T1 (not
+    W, 3-2 or L/R)."""
+    return bool(_STREAK.match(_clean(value)))
+
+
+# ------------------------------------------------------------------ penalties of games
+PENALTIES = _words(
+    "slashing,tripping,hooking,holding,interference,roughing,cross-checking,cross-check,high sticking,high-sticking,"
+    "boarding,charging,elbowing,spearing,butt-ending,kneeing,clipping,head-butting,unsportsmanlike conduct,"
+    "unsportsmanlike,too many men,too many men on the ice,too many players,too many players on ice,"
+    "too many players on the field,delay of game,illegal body check,illegal body checking,body checking,checking,"
+    "checking from behind,hitting from behind,hitting after whistle,hitting after the whistle,contact to the head,"
+    "head contact,illegal check to the head,illegal hit,illegal equipment,illegal stick,illegal crosse,"
+    "illegal procedure,illegal substitution,illegal screen,illegal formation,illegal use of hands,illegal motion,"
+    "unnecessary roughness,pushing,warding off,offside,offsides,holding the stick,crease violation,"
+    "goaltender interference,goalie interference,embellishment,diving,fighting,instigator,game misconduct,"
+    "misconduct,10-minute misconduct,10 minute misconduct,gross misconduct,match penalty,bench minor,double minor,"
+    "conduct foul,technical foul,personal foul,flagrant foul,yellow card,red card,green card,false start,"
+    "pass interference,face mask,facemask,encroachment,neutral zone infraction,intentional grounding,"
+    "roughing the passer,roughing the kicker,running into the kicker,horse collar,targeting,disqualification,"
+    "dangerous play,obstruction,handball,hand ball,time wasting,dissent,simulation,abuse of officials,"
+    "crosse in face,roughing atw,interference with the goalkeeper"
+)
+# Holding, Interference, Pushing, Charging, Boarding, Fighting, Diving and Checking are also ordinary words (a
+# holding company, boarding of a flight, a checking account): they count only in a field named after the penalty.
+PENALTIES_SPECIFIC = PENALTIES - _words(
+    "holding,interference,pushing,offside,offsides,fighting,charging,boarding,clipping,diving,checking,misconduct,"
+    "obstruction,handball,hand ball,dissent,simulation,targeting,disqualification,encroachment,instigator,"
+    "time wasting,dangerous play,unsportsmanlike"
+)
+_PENALTY_PREFIX = re.compile(r"(?i)^(?:[OD]\s?-\s?|(?:minor|major|double minor|bench minor)\s*[-–:]\s*|"
+                             r"\d{1,2}\s?(?:min\.?|mins\.?|minutes?|:00)\s*[-–:]?\s*)")
+_PENALTY_SUFFIX = re.compile(r"(?i)\s*[-–,]\s*(?:\d{1,2}(?::\d{2})?\s?(?:min\.?|mins\.?|minutes?)?|minor|major)$")
+
+
+def _penalty(value):
+    return fold(_PENALTY_SUFFIX.sub("", _PENALTY_PREFIX.sub("", _clean(value))))
+
+
+def validate_sports_penalty(value):
+    """A penalty or foul of a game: Slashing, Tripping, Hooking, Holding, Cross-Checking, High Sticking, Delay of
+    Game, Unsportsmanlike Conduct, Yellow Card, Offside, Pass Interference, Slashing (2 min), O-HOOKING (not 2:00,
+    Robbery or Penalty)."""
+    return _penalty(value) in PENALTIES
+
+
+def validate_sports_penalty_value(value):
+    """A penalty that is no ordinary word: Slashing, Tripping, Hooking, Cross-Checking, Yellow Card, Delay of Game
+    (not Holding, Interference, Boarding or Fighting, which count only in a field named after the penalty)."""
+    return _penalty(value) in PENALTIES_SPECIFIC
+
+
+# ------------------------------------------------------------------ conferences of US college sports
+CONFERENCES = _words(
+    "acc,atlantic coast,atlantic coast conference,sec,southeastern,southeastern conference,big 12,big xii,"
+    "big twelve,big ten,big 10,b1g,big east,pac-12,pac 12,pac-10,pac-8,pacific-10,conference usa,c-usa,cusa,wac,"
+    "western athletic,mac,mid-american,mountain west,mwc,sun belt,american,aac,the american,american athletic,"
+    "missouri valley,mvc,mvfc,missouri valley football,atlantic 10,a-10,colonial,caa,colonial athletic,horizon,"
+    "horizon league,ivy,ivy league,patriot,patriot league,southern,socon,southern conference,southland,swac,"
+    "southwestern athletic,meac,mid-eastern athletic,big sky,big south,big west,summit,summit league,america east,"
+    "atlantic sun,a-sun,asun,maac,metro atlantic,nec,northeast,northeast conference,ovc,ohio valley,west coast,"
+    "wcc,independent,ind,independents,big eight,big 8,southwest,swc,pioneer,pioneer league,metro,great west,"
+    "great midwest,midwestern collegiate,trans america,ecac,ecac hockey,hockey east,nchc,wcha,ccha,"
+    "atlantic hockey,big ten hockey,gnac,gliac,glvc,psac,ne-10,northeast-10,ciaa,siac,sac,south atlantic,"
+    "gulf south,gsc,lone star,lsc,rmac,miaa,nsic,pacwest,ccaa,gac,great american,mec,nescac,uaa,centennial,"
+    "liberty league,ncac,odac,oac,miac,wiac,cciw,sciac,nwc,hcac,iiac,american southwest,asc,naia,"
+    "heartland,usa south,capital athletic,cac,empire 8,sunyac,njac,mascac,little east,cunyac,skyline,"
+    "landmark,mac commonwealth,mac freedom,presidents' athletic,pac,sliac,umac,nacc,cconf,mid-south,kcac,"
+    "sooner athletic,golden state,cal pac,frontier,crossroads,wolverine-hoosier,gpac,red river,sun conference,"
+    "appalachian,ssac,river states,chicagoland"
+)
+# ACC, SEC, MAC and WAC are also abbreviations of other things (the SEC of the stock market, a MAC address, the
+# ticker WAC), and American, Southern, Independent, Ivy, Summit and Metro are also words: they count only in a
+# field named after the conference.
+# The acronyms of conferences are codes of other things too (PSAC is a participant status of the directory of
+# the Bank of Russia): only names in words count by value.
+CONFERENCES_SPECIFIC = _words(
+    "atlantic coast conference,southeastern conference,big 12,big xii,big ten,big east,pac-12,pac-10,"
+    "conference usa,mountain west,sun belt,american athletic,missouri valley,atlantic 10,colonial athletic,"
+    "horizon league,ivy league,patriot league,southern conference,southland,big sky,big south,big west,"
+    "summit league,america east,atlantic sun,big eight,pioneer league,hockey east,ecac hockey,atlantic hockey,"
+    "northeast-10,gulf south,lone star,pacwest,liberty league"
+)
+
+
+def validate_athletic_conference(value):
+    """An athletic conference of US college sports: SEC, ACC, Big Ten, Big 12, Pac-12, Big East, Conference USA,
+    Mountain West, Sun Belt, Ivy, MAC, WAC, Independent, NESCAC, GLIAC (not 6-2, Conference or NFC)."""
+    v = re.sub(r"(?i)\s+conference$", "", _clean(value)) or _clean(value)
+    return fold(v) in CONFERENCES or fold(value) in CONFERENCES
+
+
+def validate_athletic_conference_value(value):
+    """A conference that is no other abbreviation or word: Big Ten, Big 12, Pac-12, Big East, Mountain West, Sun
+    Belt, Ivy League, WAC (not SEC, ACC, MAC, American or Independent alone)."""
+    return fold(_clean(value)) in CONFERENCES_SPECIFIC
+
+
+# ------------------------------------------------------------------ television networks
+TV_NETWORKS = _words(
+    "abc,nbc,cbs,fox,cw,the cw,pbs,upn,wb,the wb,mynetworktv,ion,espn,espn2,espnu,espn3,espnews,espn classic,"
+    "espn deportes,espn+,espn plus,espn-fc,espnfc,longhorn network,lhn,sec network,secn,secn+,acc network,accn,"
+    "acc network extra,big ten network,btn,btn2go,btn plus,pac-12 network,pac-12 networks,p12n,cbs sports network,"
+    "cbssn,cbs sports,cbss,nbc sports,nbcsn,nbc sports network,versus,fox sports 1,fs1,fox sports 2,fs2,fsn,"
+    "fox sports net,fox college sports,fox sports,root sports,root,csn,comcast sportsnet,mlb network,mlbn,"
+    "nfl network,nfln,nba tv,nhl network,golf channel,golf,tennis channel,tnt,tbs,trutv,usa,usa network,hbo,"
+    "showtime,cinemax,starz,amc,fx,fxx,a&e,history,history channel,discovery,discovery channel,tlc,bravo,e!,syfy,"
+    "lifetime,hallmark channel,comedy central,mtv,vh1,bet,nickelodeon,nick,disney channel,abc family,freeform,"
+    "cartoon network,adult swim,food network,hgtv,travel channel,animal planet,national geographic,nat geo,ifc,"
+    "sundance,oxygen,we tv,own,spike,tv land,cmt,cnn,hln,msnbc,cnbc,fox news,fox business,c-span,univision,"
+    "telemundo,unimas,galavision,wgn,wgn america,tsn,tsn2,sportsnet,cbc,ctv,bbc one,bbc two,bbc three,bbc four,"
+    "itv,itv2,channel 4,channel 5,e4,sky sports,sky one,sky atlantic,bt sport,eurosport,rte one,tg4,bein sport,"
+    "bein sports,nesn,masn,sny,yes,csn chicago,prime ticket,altitude,sun sports,fox sports net north"
+)
+# Words, countries and the letters of other things (USA, YES, History, Discovery, Golf, Root, Own, ION) count only
+# in a field named after the network, and so do ABC, CBS, NBC, TBS and TNT, which are also stock tickers
+# (AmerisourceBergen is ABC in the insider trades of a stock site), and short codes such as FXX (the code of
+# metropolitan France in French commune tables) and BTN (Bhutan).
+TV_NETWORKS_SPECIFIC = TV_NETWORKS - _words(
+    "fox,cw,the cw,wb,the wb,ion,usa,root,history,discovery,golf,own,nick,oxygen,spike,bravo,lifetime,starz,"
+    "versus,sundance,yes,altitude,e!,amc,bet,tlc,ifc,cmt,fx,itv,e4,sac,csn,global,abc,cbs,nbc,pbs,tbs,tnt,upn,"
+    "cbc,ctv,bbc,fxx,btn,secn,accn,lhn,p12n,mlbn,nfln,hln,tsn,tsn2,sny,nesn,masn,wgn,fsn,cbss"
+)
+_NETWORK_SPLIT = re.compile(r"\s*(?:/|,|;|\bor\b|\band\b|\+(?=\s))\s*")
+
+
+def _networks(value):
+    v = re.sub(r"(?i)\.com$", "", _clean(value))
+    # A&E folds to ae: AE without the ampersand is a code of other things (sections AE and BE of a course)
+    return [fold(p) if fold(p) != "ae" or "&" in p else p for p in _NETWORK_SPLIT.split(v) if p.strip()]
+
+
+def validate_tv_network(value):
+    """A television network or channel that carries a game or a show: ESPN, ABC, NBC, CBS, ESPN2, FOX, NBCSN, TNT,
+    FS1, BTN, SEC Network, HBO, ESPN2/ESPN3, ESPN or ESPN2 (not 8, TBA or Channel 9)."""
+    parts = _networks(value)
+    return bool(parts) and all(p in TV_NETWORKS for p in parts)
+
+
+def validate_tv_network_value(value):
+    """A network that is no word, country or ticker: ESPN, ESPN2, ESPNU, NBCSN, CBSSN, FS1, HBO, ESPN2/ESPN3 (not
+    USA, YES, History, FOX, ABC or CBS alone, which count only in a field named after the network)."""
+    parts = _networks(value)
+    return bool(parts) and all(p in TV_NETWORKS_SPECIFIC for p in parts)
+
+
+# ------------------------------------------------------------------ heights of persons in feet and inches
+_FEET_INCHES = re.compile(
+    r"""^([3-8])\s?(?:-|'|’|′|ft\.?|feet|foot)\s?(?:(\d|1[01])(?:\.\d{1,2}|\s?[¼½¾])?\s?(?:"|''|”|″|in\.?|inch(?:es)?)?)?$"""
+)
+_FEET_INCHES_MARKED = re.compile(r"""^[3-8]\s?(?:'|’|′|ft\.?)\s?(?:(?:\d|1[01])(?:\.\d{1,2}|\s?[¼½¾])?\s?(?:"|''|”|″|in\.?)?)?$""")
+
+
+def validate_height_feet_inches(value):
+    """The height of a person in feet and inches: 6-2, 5-11, 6'2", 5' 10", 6'1, 6 ft 2 in, 6' (not 2-1, 6-12, 72
+    or 180 cm)."""
+    v = _clean(value)
+    return bool(_FEET_INCHES.match(v)) and v[-1] != "-"
+
+
+def validate_height_feet_inches_value(value):
+    """A height in feet and inches with the foot mark: 6'2", 5' 10", 6'1, 6 ft 2 in (6-2 counts only in a field
+    named Ht. or Hgt, since it is also a score, a record and a range of metres: the height classes 3-6 and 6-10 of
+    a tree register are no feet and inches, so a field named Height alone takes the marked forms only)."""
+    return bool(_FEET_INCHES_MARKED.match(_clean(value)))
+
+
+# ------------------------------------------------------------------ time ranges
+_CLOCK = r"(?:(?:[01]?\d|2[0-4])(?::[0-5]\d)?\s?(?:[ap]\.?\s?m\.?)?|noon|midnight)"
+_TIME_RANGE = re.compile(rf"(?i)^({_CLOCK})\s*(?:[-–—~]|to|until|till|thru|bis)\s*({_CLOCK})"
+                         r"(?:\s*\(?(?:[ecmp][sd]?t|gmt|utc|local time)\)?)?$")
+_MERIDIEM = re.compile(r"(?i)[ap]\.?\s?m\.?$|noon|midnight")
+
+
+def validate_time_range(value):
+    """A range of clock times: 10:00 - 11:00, 9:00am - 5:00pm, 8:30 a.m. - 4:30 p.m., 12–4:00 pm, 17:00-18:30, 9am to
+    noon (not 9-5, 1-1:00, 2015-2016 or Mon-Fri 9-5): both times have minutes, or one says am, pm or noon."""
+    m = _TIME_RANGE.match(_clean(value))
+    if not m:
+        return False
+    start, end = m.group(1).strip(), m.group(2).strip()
+    if _MERIDIEM.search(start) or _MERIDIEM.search(end):
+        return True
+    return ":" in start and ":" in end
+
+
+# ------------------------------------------------------------------ times relative to now
+_REL_UNIT = r"(?:seconds?|secs?|s|minutes?|mins?|m|hours?|hrs?|h|days?|d|weeks?|wks?|w|months?|mos?|years?|yrs?|y)"
+_RELATIVE_TIME = re.compile(
+    rf"(?i)^(?:(?:posted|updated|added|joined|modified|edited|active)\s+)?(?:about |over |almost |nearly |"
+    rf"less than |more than |just )?(?:(?:\d+|an?|one)\s?{_REL_UNIT}\.?,?\s+(?:and\s+)?)*(?:\d+|an?|one|few)\s?"
+    rf"{_REL_UNIT}\.?\s+ago$|^(?:a\s+)?(?:few\s+)?(?:moments?|seconds?)\s+ago$"
+)
+
+
+def validate_relative_time(value):
+    """A time given as the span back from now: 2 days ago, 1 hour ago, an hour ago, 2 years 38 weeks ago, 1h 35min
+    ago, about 3 months ago, 5 mins ago, posted 3 days ago (not 2 days, Jul 22, 2015 or ago)."""
+    return bool(_RELATIVE_TIME.match(_clean(value)))
+
+
+# ------------------------------------------------------------------ nutrients
+NUTRIENTS = _words(
+    "energy,calories,calorie,kcal,kilocalories,kilojoules,protein,proteins,fat,fats,total fat,lipids,total lipid,"
+    "saturated fat,saturated fats,saturates,saturated fatty acids,trans fat,trans fatty acids,fatty acids,"
+    "monounsaturated fat,monounsaturates,polyunsaturated fat,polyunsaturates,omega-3,omega-6,cholesterol,"
+    "carbohydrate,carbohydrates,total carbohydrate,total carbohydrates,carbs,net carbs,sugar,sugars,total sugars,"
+    "added sugars,starch,polyols,fibre,fiber,dietary fiber,dietary fibre,total dietary fiber,crude fiber,crude fibre,"
+    "crude protein,crude fat,sodium,salt,potassium,calcium,iron,magnesium,phosphorus,zinc,copper,manganese,selenium,"
+    "iodine,chloride,fluoride,chromium,molybdenum,vitamin a,vitamin b1,vitamin b2,vitamin b3,vitamin b5,"
+    "vitamin b6,vitamin b7,vitamin b9,vitamin b12,vitamin c,vitamin d,vitamin d2,vitamin d3,vitamin e,vitamin k,"
+    "vitamin k1,vitamin k2,thiamin,thiamine,riboflavin,niacin,pantothenic acid,biotin,folate,folic acid,folacin,"
+    "choline,lactose,water,moisture,ash,caffeine,calories from fat,of which saturates,of which sugars,"
+    "of which sugar,of which polyols,of which starch,salt equivalent,beta carotene,retinol,lycopene,lutein,"
+    "proximates,eiweiss,fett,kohlenhydrate,ballaststoffe,zucker,salz,brennwert,glucides,lipides,proteines,"
+    "fibres,sucres,matieres grasses,valeur energetique,grassi,carboidrati,proteine,zuccheri,grasas,"
+    "hidratos de carbono,proteinas,azucares,"
+    # the components of the USDA food composition tables (National Nutrient Database for Standard Reference)
+    "sucrose,glucose,dextrose,fructose,maltose,galactose,minerals,vitamins,lipids,amino acids,betaine,carotene,"
+    "cryptoxanthin,lutein + zeaxanthin,lutein zeaxanthin,tocopherol,tocotrienol,phytosterols,stigmasterol,"
+    "campesterol,beta-sitosterol,menaquinone-4,dihydrophylloquinone,phylloquinone,tryptophan,threonine,isoleucine,"
+    "leucine,lysine,methionine,cystine,phenylalanine,tyrosine,valine,arginine,histidine,alanine,aspartic acid,"
+    "glutamic acid,glycine,proline,serine,hydroxyproline,alcohol,theobromine,folate dfe,food folate,"
+    "retinol activity equivalents"
+)
+# Minerals and elements (Sodium, Calcium, Iron, Zinc) are also the analytes of water and soil samples, sugars and
+# amino acids (Glucose, Glycine) the compounds of chemistry tables, Fibre a shape of microplastics, and Energy,
+# Water, Salt and Fat are words of other columns: a column needs the names of the label itself (Protein, Total Fat, Sugars, Vitamin C) to be one of
+# nutrients by its values.
+NUTRIENTS_SPECIFIC = NUTRIENTS - _words(
+    "energy,fat,fats,lipids,sugar,starch,sodium,salt,potassium,calcium,iron,magnesium,phosphorus,zinc,copper,"
+    "manganese,selenium,iodine,chloride,fluoride,chromium,molybdenum,lactose,water,moisture,ash,caffeine,"
+    "proximates,fett,zucker,salz,grassi,kcal,sucrose,glucose,dextrose,fructose,maltose,galactose,minerals,"
+    "vitamins,amino acids,betaine,carotene,tocopherol,tryptophan,threonine,isoleucine,leucine,lysine,methionine,"
+    "cystine,phenylalanine,tyrosine,valine,arginine,histidine,alanine,aspartic acid,glutamic acid,glycine,"
+    "proline,serine,hydroxyproline,alcohol,theobromine,phytosterols,stigmasterol,campesterol,fibre,fiber,fibres"
+)
+# A fatty acid in the shorthand of food composition tables: carbons and double bonds (16:0, 18:1 undifferentiated,
+# 20:5 n-3 (EPA)); it counts only in a field named after the nutrient.
+_FATTY_ACID = re.compile(r"(?i)^(?:[4-9]|1\d|2[0-6]):[0-6](?:\s?(?:n-\d{1,2}|[ct]|undifferentiated))*$")
+_NUTRIENT_LEAD = re.compile(r"^[-–—•·\s]+")
+
+
+def _nutrient(value):
+    v = _NUTRIENT_LEAD.sub("", _clean(value)).rstrip(":*").strip()
+    return fold(v), fold(v.split(",")[0])
+
+
+def validate_nutrient(value):
+    """A nutrient of a nutrition facts label or a food composition table: Protein, Total Fat, Saturated Fat,
+    Sodium, Total Carbohydrate, Dietary Fiber, Sugars, Vitamin C, Calcium, Iron, of which saturates, Iron, Fe,
+    Carbohydrate, by difference, Riboflavin (B2), Ballaststoffe, Glucose (dextrose), Leucine, 18:1 undifferentiated
+    (not 5 g, Apple or Nutrition Facts)."""
+    full, head = _nutrient(value)
+    return full in NUTRIENTS or head in NUTRIENTS or bool(_FATTY_ACID.match(_clean(value)))
+
+
+def validate_nutrient_value(value):
+    """A nutrient named on nutrition labels and nowhere else as often: Protein, Total Fat, Saturated Fat,
+    Cholesterol, Dietary Fiber, Sugars, Vitamin C, Niacin (not Sodium, Iron, Calcium, Energy or Water alone)."""
+    full, head = _nutrient(value)
+    return full in NUTRIENTS_SPECIFIC or head in NUTRIENTS_SPECIFIC
+
+
+# ------------------------------------------------------------------ holidays
+HOLIDAYS = _words(
+    "new year's day,new years day,new year's eve,new years eve,martin luther king jr. day,martin luther king day,"
+    "martin luther king, jr. day,martin luther king jr. birthday,mlk day,inauguration day,lincoln's birthday,"
+    "presidents' day,presidents day,president's day,washington's birthday,mardi gras,ash wednesday,"
+    "st. patrick's day,saint patrick's day,good friday,holy thursday,maundy thursday,holy saturday,easter,"
+    "easter sunday,easter monday,passover,patriots' day,cesar chavez day,memorial day,juneteenth,"
+    "independence day,fourth of july,4th of july,july 4th,july fourth,canada day,civic holiday,labor day,"
+    "labour day,columbus day,indigenous peoples' day,thanksgiving,thanksgiving day,day after thanksgiving,"
+    "black friday,veterans day,veterans' day,remembrance day,armistice day,election day,christmas,christmas day,"
+    "christmas eve,boxing day,st. stephen's day,kwanzaa,hanukkah,chanukah,rosh hashanah,yom kippur,eid al-fitr,"
+    "eid al-adha,diwali,chinese new year,lunar new year,victoria day,family day,islander day,louis riel day,"
+    "saint-jean-baptiste day,st. jean baptiste day,national aboriginal day,australia day,anzac day,"
+    "queen's birthday,king's birthday,melbourne cup day,waitangi day,bank holiday,early may bank holiday,"
+    "spring bank holiday,summer bank holiday,august bank holiday,may day,whit monday,whitsun,pentecost,"
+    "whit sunday,ascension day,corpus christi,assumption day,assumption of mary,all saints' day,all souls' day,"
+    "immaculate conception,epiphany,three kings day,valentine's day,mother's day,father's day,halloween,"
+    "groundhog day,earth day,flag day,arbor day,emancipation day,constitution day,national day,reformation day,"
+    "german unity day,bastille day,shrove tuesday,international women's day,women's day,workers' day,"
+    "children's day,teachers' day,st. andrew's day,st. david's day,st. george's day,burns night,guy fawkes night,"
+    "neujahr,karfreitag,ostermontag,pfingstmontag,christi himmelfahrt,tag der arbeit,tag der deutschen einheit,"
+    "fronleichnam,allerheiligen,weihnachten,heiligabend,silvester,jour de l'an,lundi de paques,fete du travail,"
+    "fete nationale,toussaint,noel,armistice,ano nuevo,viernes santo,dia del trabajo,navidad,capodanno,"
+    "pasquetta,ferragosto,natale,santo stefano,epifania"
+)
+# Halloween, Christmas, Easter and Epiphany are also titles of films, songs and books, and Assumption, Corpus
+# Christi and Armistice are places and treaties: they count only in a field named after the holiday.
+HOLIDAYS_SPECIFIC = HOLIDAYS - _words(
+    "halloween,christmas,easter,epiphany,pentecost,passover,assumption,corpus christi,armistice,noel,natale,"
+    "navidad,weihnachten,toussaint,silvester,may day,national day,family day,women's day,children's day,"
+    "teachers' day,mardi gras,black friday,earth day,kwanzaa,diwali,whitsun"
+)
+_OBSERVED = re.compile(r"(?i)\s*[-–(]?\s*(?:observed|obs\.?|\(observed\))\s*\)?$")
+
+
+def _holiday(value):
+    v = _OBSERVED.sub("", _clean(value))
+    return fold(v.replace("’", "'"))
+
+
+def validate_holiday(value):
+    """The name of a public holiday or an observance: New Year's Day, Martin Luther King, Jr. Day, Memorial Day,
+    Independence Day, Labor Day, Thanksgiving Day, Christmas Day, Good Friday, Boxing Day, Victoria Day, Easter
+    Monday, Labor Day (observed), Tag der Arbeit (not Monday, July 4 or Spring Break)."""
+    return _holiday(value) in HOLIDAYS
+
+
+def validate_holiday_value(value):
+    """A holiday that is no title or place: Labor Day, Memorial Day, Thanksgiving Day, Christmas Day, Good Friday
+    (not Christmas, Easter or Halloween alone, which count only in a field named after the holiday)."""
+    return _holiday(value) in HOLIDAYS_SPECIFIC
+
+
+# ------------------------------------------------------------------ relationship to the head of a household
+HOUSEHOLD_RELATIONS = _words(
+    "head,head of household,householder,self,wife,husband,spouse,partner,unmarried partner,son,daughter,dau,"
+    "child,stepson,step-son,step son,stepdaughter,step-daughter,step daughter,stepchild,adopted son,"
+    "adopted daughter,adopted child,foster son,foster daughter,foster child,son-in-law,son in law,"
+    "daughter-in-law,daughter in law,father,mother,father-in-law,father in law,mother-in-law,mother in law,"
+    "stepfather,stepmother,brother,sister,brother-in-law,brother in law,bro-in-law,sister-in-law,sister in law,"
+    "grandson,granddaughter,granddau,grandchild,grandfather,grandmother,grandparent,great grandson,"
+    "great granddaughter,uncle,aunt,nephew,niece,cousin,servant,boarder,lodger,visitor,roomer,inmate,patient,"
+    "employee,apprentice,hired man,hired girl,hired hand,housekeeper,nurse,companion,ward,roommate,"
+    "other relative,nonrelative,stepbrother,stepsister,half brother,half sister,gr son,gr dau,niece-in-law,"
+    "nephew-in-law,step grandson,step granddaughter,parent,"
+    # abbreviations and spellings of census takers and transcribers
+    "daur,hus,husb,gdau,gson,grandau,granddaur,stepdau,step dau,dau-in-law,dau in law,s-in-law,d-in-law,neice,"
+    "serv,servt,svt,sis,bro,bdr,brdr"
+)
+# Head, Self, Partner, Patient, Employee and Nurse are as common in other columns as in a household, and
+# Brother is a brand of printers: they count only in a field named after the relationship.
+HOUSEHOLD_RELATIONS_SPECIFIC = HOUSEHOLD_RELATIONS - _words(
+    "head,self,partner,child,visitor,patient,employee,nurse,companion,ward,inmate,apprentice,housekeeper,roommate,"
+    "head of household,brother,parent,hus,serv,sis,bro,bdr"
+)
+
+
+def validate_household_relationship(value):
+    """The relationship of a person to the head of the household, as census records and their transcriptions give
+    it: Head, Wife, Son, Daughter, Dau, Servant, Boarder, Lodger, Son-in-law, Granddaughter, Nephew (not Director,
+    Friendship or 32)."""
+    return fold(_clean(value).rstrip(".")) in HOUSEHOLD_RELATIONS
+
+
+def validate_household_relationship_value(value):
+    """A relationship that is a word of kinship or of a household: Wife, Son, Daughter, Servant, Boarder, Lodger,
+    Mother-in-law (not Head, Self or Partner, which count only in a field named after the relationship)."""
+    return fold(_clean(value).rstrip(".")) in HOUSEHOLD_RELATIONS_SPECIFIC
+
+
+# ------------------------------------------------------------------ grade spans of schools
+_GRADE = r"(?:pk|p-?k|pre-?k|pre-?kindergarten|prek|tk|ee|k|kg|kn|k4|k5|kindergarten|0?[1-9]|1[0-3])"
+_GRADE_SPAN = re.compile(rf"(?i)^(?:grades?\s+|gr\.?\s*)?({_GRADE})\s*(?:[-–—]|to|through|thru)\s*({_GRADE})$")
+_GRADE_LETTER = re.compile(r"(?i)[a-z]")
+
+
+def _grade_rank(grade):
+    g = grade.lower().replace("-", "")
+    return -1 if g in ("pk", "prek", "prekindergarten", "tk", "ee", "k4") else 0 if g.startswith("k") else int(g)
+
+
+def validate_grade_span(value):
+    """The grades a school teaches, from the lowest to the highest: K-5, 6-8, 9-12, PK-8, KG - 05, K-12, Pre-K to
+    5, Grades 7-12 (not 12-9, 5-6-7 or A-F)."""
+    m = _GRADE_SPAN.match(_clean(value))
+    return bool(m) and _grade_rank(m.group(1)) <= _grade_rank(m.group(2))
+
+
+def validate_grade_span_value(value):
+    """A grade span that starts or ends with a kindergarten grade: K-5, PK-8, KG - 12, Pre-K - 5 (9-12 and 6-8
+    count only in a field named Grades, since they are also scores and ranges)."""
+    m = _GRADE_SPAN.match(_clean(value))
+    return bool(m) and validate_grade_span(value) and bool(
+        _GRADE_LETTER.search(m.group(1)) or _GRADE_LETTER.search(m.group(2)))
+
+
+# ------------------------------------------------------------------ meeting days of classes
+_DAY_LETTER = r"(?:M|Tu|TU|T|W|R|Th|TH|F|Sa|SA|Su|SU|S|U)"
+_MEETING_DAYS = re.compile(rf"^{_DAY_LETTER}(?:[\s,/&-]*{_DAY_LETTER}){{0,6}}$")
+
+
+def validate_class_meeting_days(value):
+    """The days of the week a class meets, in the letters of US college schedules: MWF, TR, TTh, MW, MTWRF, M W F,
+    Tu, Th, M, T (not Monday, Mon, TBA or 13)."""
+    v = _clean(value)
+    return bool(_MEETING_DAYS.match(v))
+
+
+# ------------------------------------------------------------------ IOC country codes
+IOC_CODES = set(
+    "AFG ALB ALG AND ANG ANT ARG ARM ARU ASA AUS AUT AZE BAH BAN BAR BDI BEL BEN BER BHU BIH BIZ BLR BOL BOT BRA BRN "
+    "BRU BUL BUR CAF CAM CAN CAY CGO CHA CHI CHN CIV CMR COD COK COL COM CPV CRC CRO CUB CYP CZE DEN DJI DMA DOM ECU "
+    "EGY ERI ESA ESP EST ETH FIJ FIN FRA FSM GAB GAM GBR GBS GEO GEQ GER GHA GRE GRN GUA GUI GUM GUY HAI HKG HON HUN "
+    "INA IND IRI IRL IRQ ISL ISR ISV ITA IVB JAM JOR JPN KAZ KEN KGZ KIR KOR KOS KSA KUW LAO LAT LBA LBN LBR LCA LES "
+    "LIE LTU LUX MAD MAR MAS MAW MDA MDV MEX MGL MHL MKD MLI MLT MNE MON MOZ MRI MTN MYA NAM NCA NED NEP NGR NIG NOR "
+    "NRU NZL OMA PAK PAN PAR PER PHI PLE PLW PNG POL POR PRK PUR QAT ROU RSA RUS RWA SAM SEN SEY SGP SKN SLE SLO SMR "
+    "SOL SOM SRB SRI SSD STP SUD SUI SUR SVK SWE SWZ SYR TAN TGA THA TJK TKM TLS TOG TPE TTO TUN TUR TUV UAE UGA UKR "
+    "URU USA UZB VAN VEN VIE VIN YEM ZAM ZIM "
+    # codes of former and of special teams: the Soviet Union, the Unified Team, East and West Germany,
+    # Czechoslovakia, Yugoslavia, Serbia and Montenegro, Romania and Singapore before 2006 and 2016, the Netherlands
+    # Antilles, Lebanon before 2016, independent and refugee athletes
+    "URS EUN GDR FRG TCH YUG SCG ROM SIN AHO LIB IOA EOR ROC OAR AIN ZAI BIR CEY RHO ANZ BOH TMP".split()
+)
+
+
+def validate_ioc_country_code(value):
+    """The three-letter code of a National Olympic Committee: USA, GER, NED, SUI, RSA, CRO, TPE, INA, URS (not Ger,
+    DEU, NLD or USSR)."""
+    return text(value) in IOC_CODES
+
+
+# ------------------------------------------------------------------ errno names
+ERRNO_NAMES = set(
+    "E2BIG EACCES EADDRINUSE EADDRNOTAVAIL EAFNOSUPPORT EAGAIN EALREADY EBADF EBADMSG EBUSY ECANCELED ECHILD "
+    "ECONNABORTED ECONNREFUSED ECONNRESET EDEADLK EDESTADDRREQ EDOM EDQUOT EEXIST EFAULT EFBIG EHOSTUNREACH EIDRM "
+    "EILSEQ EINPROGRESS EINTR EINVAL EIO EISCONN EISDIR ELOOP EMFILE EMLINK EMSGSIZE EMULTIHOP ENAMETOOLONG ENETDOWN "
+    "ENETRESET ENETUNREACH ENFILE ENOBUFS ENODATA ENODEV ENOENT ENOEXEC ENOLCK ENOLINK ENOMEM ENOMSG ENOPROTOOPT "
+    "ENOSPC ENOSR ENOSTR ENOSYS ENOTCONN ENOTDIR ENOTEMPTY ENOTRECOVERABLE ENOTSOCK ENOTSUP ENOTTY ENXIO EOPNOTSUPP "
+    "EOVERFLOW EOWNERDEAD EPERM EPIPE EPROTO EPROTONOSUPPORT EPROTOTYPE ERANGE EROFS ESPIPE ESRCH ESTALE ETIME "
+    "ETIMEDOUT ETXTBSY EWOULDBLOCK EXDEV "
+    # Linux and BSD
+    "ENOTBLK ECHRNG EL2NSYNC EL3HLT EL3RST ELNRNG EUNATCH ENOCSI EL2HLT EBADE EBADR EXFULL ENOANO EBADRQC EBADSLT "
+    "EBFONT ENONET ENOPKG EREMOTE EADV ESRMNT ECOMM EDOTDOT ENOTUNIQ EBADFD EREMCHG ELIBACC ELIBBAD ELIBSCN ELIBMAX "
+    "ELIBEXEC ERESTART ESTRPIPE EUSERS ESOCKTNOSUPPORT EPFNOSUPPORT ESHUTDOWN ETOOMANYREFS EHOSTDOWN EUCLEAN ENOTNAM "
+    "ENAVAIL EISNAM EREMOTEIO ENOMEDIUM EMEDIUMTYPE ENOKEY EKEYEXPIRED EKEYREVOKED EKEYREJECTED ERFKILL EHWPOISON "
+    "EDEADLOCK EPROCLIM EBADRPC ERPCMISMATCH EPROGUNAVAIL EPROGMISMATCH EPROCUNAVAIL EFTYPE EAUTH ENEEDAUTH ENOATTR "
+    "EDOOFUS ENOTCAPABLE ECAPMODE EINTEGRITY".split()
+)
+
+
+def validate_errno_name(value):
+    """A symbolic name of errno.h: ENOENT, EACCES, EAGAIN, EINVAL, ETIMEDOUT, E2BIG, ECONNREFUSED (not enoent,
+    ERROR or EOF)."""
+    return text(value).rstrip(":") in ERRNO_NAMES

@@ -110,3 +110,24 @@ rules:
     type: field
     rule: avatar_url
     priority: 1
+  # Found in six more segments of the WDC Web Tables Corpus 2015 (tables of HTML pages of the Common Crawl of
+  # July 2015; 4 978 140 relational tables of 2 555 031 pages on 98 133 hosts): census transcriptions and family trees with the relationship
+  # of each person to the head of the household; metacrafter-testdata.
+  householdrelationshipbyname:
+    key: household_relationship
+    name: 'Relationship to the head of the household by field name (Relationship, Relation, Rel., Relation to Head) with Head, Wife, Son, Servant'
+    rule: '(?i)rel(?:ation(?:ship)?)?\.?(?:[ _]to[ _](?:the[ _])?head(?:[ _]of[ _](?:the[ _])?(?:house(?:hold)?|family))?)?|relationship|kinship|relation[ _]to[ _](?:head|householder)|verwandtschaft(?:sverh[aä]ltnis)?|parentesco|lien[ _]de[ _]parent[eé]'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.webtables.validate_household_relationship
+    needs_values: true
+    priority: 1
+  householdrelationshipvalue:
+    key: household_relationship
+    name: 'Relationship to the head of the household by value (Wife, Son, Daughter, Servant, Boarder, Lodger)'
+    rule: metacrafterext.rules.common.webtables.validate_household_relationship_value
+    type: data
+    match: func
+    minlen: 3
+    maxlen: 25
+    priority: 1

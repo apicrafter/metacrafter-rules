@@ -82,3 +82,87 @@ rules:
     minlen: 6
     maxlen: 50
     priority: 1
+  # Found in six more segments of the WDC Web Tables Corpus 2015 (tables of HTML pages of the Common Crawl of
+  # July 2015; 4 978 140 relational tables of 2 555 031 pages on 98 133 hosts): schedules, game logs, rosters, standings and box scores of
+  # college and professional teams; metacrafter-testdata.
+  homeawaybyname:
+    key: home_away
+    name: 'Venue of a game by field name (H/A, Home/Away, Site, Loc, Location, Venue) with Home, Away, Neutral, H, A, N, @'
+    rule: '(?i)h\s?[/-]?\s?a(?:\s?[/-]?\s?n)?|h\s?/\s?v|home(?:\s?[/-]\s?|[ _]or[ _]|[ _]?&[ _]?)away(?:\s?[/-]\s?neutral)?|(?:game[ _])?site|loc\.?|location|venue|heim[ _/]?ausw[aä]rts'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.webtables.validate_home_away
+    needs_values: true
+    priority: 1
+  homeawayvalue:
+    key: home_away
+    name: 'Venue of a game by value (Home, Away, Neutral)'
+    rule: metacrafterext.rules.common.webtables.validate_home_away_value
+    type: data
+    match: func
+    minlen: 4
+    maxlen: 12
+    priority: 1
+  batsthrowsbyname:
+    key: bats_throws
+    name: 'Bats and throws by field name (B/T, Bats/Throws, B-T, Bat/Throw) with R/R, L/R, S/R'
+    rule: '(?i)b\s?[/-]\s?t|t\s?[/-]\s?b|bats?\s?[/-]\s?throws?|bat(?:s|ting)?[ _]?(?:/|and|&)[ _]?throw(?:s|ing)?|bt|handedness'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.webtables.validate_bats_throws
+    needs_values: true
+    priority: 1
+  batsthrowsvalue:
+    key: bats_throws
+    name: 'Bats and throws by value (R/R, L/R, S/R, B/L)'
+    rule: metacrafterext.rules.common.webtables.validate_bats_throws_value
+    type: data
+    match: func
+    minlen: 3
+    maxlen: 5
+    priority: 1
+  winlossstreakbyname:
+    key: win_loss_streak
+    name: 'Winning or losing streak by field name (Streak, Strk, Stk) with W3, L1, Won 2, Lost 1'
+    rule: '(?i)(?:current[ _]|win(?:ning)?[ _]|los(?:ing|s)[ _]|last[ _]|active[ _])?(?:streak|strk|stk)\.?'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.webtables.validate_win_loss_streak
+    needs_values: true
+    priority: 1
+  sportspenaltybyname:
+    key: sports_penalty
+    name: 'Penalty of a game by field name (Offense, Infraction, Penalty, Foul) with Slashing, Holding, Yellow Card'
+    rule: '(?i)(?:penalty|penalties|infractions?|fouls?|offen[cs]e|violations?|cards?)(?:[ _](?:type|name|description|desc|call|committed))?'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.webtables.validate_sports_penalty
+    needs_values: true
+    priority: 1
+  sportspenaltyvalue:
+    key: sports_penalty
+    name: 'Penalty of a game by value (Slashing, Tripping, Cross-Checking, Delay of Game, Yellow Card)'
+    rule: metacrafterext.rules.common.webtables.validate_sports_penalty_value
+    type: data
+    match: func
+    minlen: 5
+    maxlen: 40
+    priority: 1
+  athleticconferencebyname:
+    key: athletic_conference
+    name: 'Athletic conference by field name (Conference, Conf, Current Conference) with SEC, ACC, Big Ten, Pac-12'
+    rule: '(?i)(?:current[ _]|athletic[ _]|college[ _])?conf(?:erence)?\.?(?:[ _](?:name|affiliation|affil\.?))?|conf[ _]?affil(?:iation)?'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.webtables.validate_athletic_conference
+    needs_values: true
+    priority: 1
+  athleticconferencevalue:
+    key: athletic_conference
+    name: 'Athletic conference by value (Big Ten, Big 12, Pac-12, Big East, Mountain West, Ivy League, WAC)'
+    rule: metacrafterext.rules.common.webtables.validate_athletic_conference_value
+    type: data
+    match: func
+    minlen: 3
+    maxlen: 30
+    priority: 1

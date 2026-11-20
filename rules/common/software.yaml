@@ -548,3 +548,14 @@ rules:
     minlen: 10
     maxlen: 11
     priority: 1
+  # Found in six more segments of the WDC Web Tables Corpus 2015 (tables of HTML pages of the Common Crawl of
+  # July 2015; 4 978 140 relational tables of 2 555 031 pages on 98 133 hosts): error tables of system call manuals; metacrafter-testdata.
+  errnonamevalue:
+    key: errno_name
+    name: 'POSIX errno name by value (ENOENT, EACCES, EAGAIN, EINVAL, ETIMEDOUT)'
+    rule: metacrafterext.rules.common.webtables.validate_errno_name
+    type: data
+    match: func
+    minlen: 3
+    maxlen: 16
+    priority: 1
