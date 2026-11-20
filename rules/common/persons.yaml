@@ -131,3 +131,24 @@ rules:
     minlen: 3
     maxlen: 25
     priority: 1
+  # Found in seven more segments of the WDC Web Tables Corpus 2015 (tables of HTML pages of the Common Crawl of July
+  # 2015; 5 778 000 relational tables of 2 963 718 pages on 109 005 hosts): veterans, casualties and service records
+  # of genealogy, memorial and recruiting sites; metacrafter-testdata.
+  militarybranchbyname:
+    key: military_branch
+    name: 'Branch of the armed forces by field name (Branch, Service, Branch of Service, Military Branch, Component) with Army, Navy, Air Force'
+    rule: '(?i)(?:military[ _]|armed[ _]forces[ _])?(?:branch(?:es)?|service)(?:[ _]of[ _](?:the[ _])?(?:service|military|armed[ _]forces))?|military[ _](?:affiliation|component)|service[ _]branch|armed[ _](?:forces|services?)|component|teilstreitkraft'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.webtables.validate_military_branch
+    needs_values: true
+    priority: 1
+  militarybranchvalue:
+    key: military_branch
+    name: 'Branch of the armed forces by value (Marine Corps, Coast Guard, USMC, USAF, U.S. Navy, Army National Guard, Royal Navy)'
+    rule: metacrafterext.rules.common.webtables.validate_military_branch_value
+    type: data
+    match: func
+    minlen: 3
+    maxlen: 40
+    priority: 1

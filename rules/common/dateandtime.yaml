@@ -516,3 +516,15 @@ rules:
     minlen: 6
     maxlen: 60
     priority: 1
+  # Found in seven more segments of the WDC Web Tables Corpus 2015 (tables of HTML pages of the Common Crawl of July
+  # 2015; 5 778 000 relational tables of 2 963 718 pages on 109 005 hosts): seasons of leagues in the statistics of
+  # players and teams; metacrafter-testdata.
+  sportsseasonbyname:
+    key: sports_season
+    name: 'Season of a sports league by field name (Season, Seasons, Saison, Temporada, Stagione) with 2013-14, 1999-00, 2015'
+    rule: '(?i)(?:sports?[ _]|league[ _]|regular[ _]|playing[ _]|nhl[ _]|nba[ _]|nfl[ _]|mlb[ _])?seasons?(?:[ _/](?:year|years|yr))?|saisons?|temporadas?|stagion[ei]|seizoen(?:en)?|sezon[uy]?'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.webtables.validate_sports_season
+    needs_values: true
+    priority: 1

@@ -166,3 +166,33 @@ rules:
     minlen: 3
     maxlen: 30
     priority: 1
+  # Found in seven more segments of the WDC Web Tables Corpus 2015 (tables of HTML pages of the Common Crawl of July
+  # 2015; 5 778 000 relational tables of 2 963 718 pages on 109 005 hosts): age groups of youth leagues and
+  # tournaments, and the odds of race cards and betting tables; metacrafter-testdata.
+  sportsagegroupbyname:
+    key: sports_age_group
+    name: 'Age group of youth sports by field name (Age Group, Division, Div, Age, Category, Altersklasse) with U12, U-14, 12U, Under 16'
+    rule: '(?i)age[ _]?(?:groups?|grp|divisions?|div\.?|class(?:es)?|categor(?:y|ies)|cat\.?|brackets?|levels?)|age|div\.?|divisions?|groups?|categor(?:y|ies)|class|levels?|altersklassen?|categor[ií]as?|cat[eé]gories?|cat[eé]gorie'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.webtables.validate_sports_age_group
+    needs_values: true
+    priority: 1
+  sportsagegroupvalue:
+    key: sports_age_group
+    name: 'Age group of youth sports by value (U10 to U23, 12U, U12 Boys, U14 Girls)'
+    rule: metacrafterext.rules.common.webtables.validate_sports_age_group_value
+    type: data
+    match: func
+    minlen: 3
+    maxlen: 16
+    priority: 1
+  bettingoddsbyname:
+    key: betting_odds
+    name: 'Betting odds by field name (Odds, ML, M/L, Morning Line, SP, Starting Price, Moneyline) with 9-2, 5/1, Evs, +150'
+    rule: '(?i)(?:win[ _]|morning[ _]line[ _]|ml[ _]|current[ _]|opening[ _]|open[ _]|closing[ _]|fixed[ _]|starting[ _]|early[ _]|best[ _]|final[ _]|latest[ _]|fav(?:ou?rite)?[ _]|tote[ _])?odds(?:[ _](?:to[ _]win|against|of[ _]winning))?|m\.?[ _/]?l\.?|morning[ _]line|money[ _]?lines?|s\.?p\.?|starting[ _]price|cotes?|cuotas?|quoten?'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.webtables.validate_betting_odds
+    needs_values: true
+    priority: 1

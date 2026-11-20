@@ -13,6 +13,12 @@ and inches (6-2), time ranges of schedules (9:00am - 5:00pm), times relative to 
 of nutrition labels, holidays, relationships to the head of a household in census transcriptions, grade spans of
 schools (K-5, PK-8), meeting days of classes (MWF, TR), IOC country codes and POSIX errno names.
 
+Seven more segments (5 778 000 tables of 2 963 718 pages on 109 005 hosts) added the seasons of sports leagues
+(2013-14), types of dwellings (Semi-detached, Condo), age groups of youth sports (U12, 12U), the names of Dublin
+Core elements in repository records (dc.date.issued), keyboard shortcuts (Ctrl+C), the Exif tags of photos,
+branches of the armed forces, stock market indexes, stock exchanges, betting odds (9-2, 5/1), types of crimes and
+crops.
+
 Each function takes one value and returns True when it has the form of the type. Words are compared folded, as in
 the validators of the Many Eyes archive: lower case, without accents, spaces and punctuation (R-Fr. is rfr,
 X-Large is xlarge).
@@ -1005,3 +1011,460 @@ def validate_errno_name(value):
     """A symbolic name of errno.h: ENOENT, EACCES, EAGAIN, EINVAL, ETIMEDOUT, E2BIG, ECONNREFUSED (not enoent,
     ERROR or EOF)."""
     return text(value).rstrip(":") in ERRNO_NAMES
+
+
+# ================================================================== seven more segments of the corpus
+# Seven more segments of the crawl (5 778 000 tables of pages on 109 005 hosts): seasons of sports leagues (2013-14),
+# types of dwellings, age groups of youth sports (U12), names of Dublin Core elements (dc.date.issued), keyboard
+# shortcuts (Ctrl+C), Exif tags of photos, branches of the armed forces, stock market indexes, stock exchanges,
+# betting odds (9-2, 5/1), types of crimes and crops.
+
+# The word lists are split at commas, so no entry holds one ("coffee, green" would add green), and an entry folds to
+# its letters and digits (b&e would be be, a code of Belgium).
+
+# ------------------------------------------------------------------ seasons of sports leagues
+_SEASON = re.compile(r"^((?:18|19|20)\d{2})(?:\s?[-–—/]\s?((?:18|19|20)?\d{2}))?$")
+
+
+def validate_sports_season(value):
+    """The season of a league or a competition: 2013-14, 1999-00, 2014–15, 2013/2014, 2013/14, or one year, 2015
+    (not 2013-15, 2015-14, Summer, Career or 13-14)."""
+    m = _SEASON.match(_clean(value))
+    if not m:
+        return False
+    start, end = int(m.group(1)), m.group(2)
+    if end is None:
+        return True
+    if len(end) == 2:
+        return int(end) == (start + 1) % 100
+    return int(end) == start + 1
+
+
+# ------------------------------------------------------------------ types of dwellings
+DWELLING_TYPES = _words(
+    "detached,semi-detached,semi detached,semidetached,semi,terraced,terrace,terraced house,terrace house,"
+    "mid terrace,mid-terrace,mid terraced,end terrace,end-terrace,end of terrace,end terraced,link detached,"
+    "link-detached,flat,flats,flat/maisonette,maisonette,flat/apartment,apartment,apartments,apartment/condo,"
+    "bungalow,detached bungalow,semi-detached bungalow,detached house,semi-detached house,house,houses,"
+    "townhouse,townhouses,town house,townhome,townhomes,condo,condos,condominium,condominiums,condo/townhouse,"
+    "condo/townhome,townhouse/condo,co-op,coop,cooperative,single family,single-family,single family home,"
+    "single-family home,single family residence,single family residential,single family detached,"
+    "single-family detached,single family attached,sfr,sfh,multi-family,multifamily,multi family,multi-family home,"
+    "duplex,triplex,fourplex,quadplex,mobile home,mobile homes,manufactured home,manufactured,mobile/manufactured,"
+    "manufactured/mobile,park home,studio,loft,penthouse,villa,villas,cottage,chalet,cabin,farmhouse,row house,"
+    "rowhouse,rowhome,row home,patio home,cluster home,multi storey flat,multi-storey flat,high rise flat,"
+    "low rise flat,bedsit,bedsits,maison,appartement,wohnung,einfamilienhaus,reihenhaus,"
+    "doppelhaushalfte,vrijstaand,twee-onder-een-kap,tussenwoning,hoekwoning,appartamento,villetta,piso,chalet adosado"
+)
+# House, Flat, Apartment, Studio, Villa, Cottage, Cabin, Loft and Semi are also other things (the House of a
+# legislature, a flat finish, film studios, football clubs, a cabin class) and Detached and Duplex are also states
+# of processes and printers: they count only in a field named after the dwelling.
+DWELLING_TYPES_SPECIFIC = DWELLING_TYPES - _words(
+    "detached,semi,terrace,flat,flats,apartment,apartments,house,houses,studio,loft,penthouse,villa,villas,cottage,"
+    "chalet,cabin,farmhouse,duplex,triplex,manufactured,co-op,coop,cooperative,condo,condos,maison,appartement,"
+    "wohnung,piso,appartamento,sfr,sfh"
+)
+
+
+def validate_dwelling_type(value):
+    """The type of a dwelling: Detached, Semi-detached, Terraced, Flat/Maisonette, Bungalow, Single Family, Condo,
+    Townhouse, Apartment, Mobile Home, Duplex, House (not Commercial, Residential, Land or 3 Bedroom)."""
+    return fold(_clean(value)) in DWELLING_TYPES
+
+
+def validate_dwelling_type_value(value):
+    """A type of dwelling that is no other word: Semi-detached, Terraced, End Terrace, Flat/Maisonette, Townhouse,
+    Condominium, Single Family, Mobile Home (not House, Flat, Apartment, Studio, Villa, Detached or Duplex alone)."""
+    return fold(_clean(value)) in DWELLING_TYPES_SPECIFIC
+
+
+# ------------------------------------------------------------------ age groups of youth sports
+_SEX = r"(?:boys|girls|men|women|men's|women's|mens|womens|male|female|mixed|coed|co-ed|b|g)"
+_AGE_GROUP_U = re.compile(rf"(?i)^(?:{_SEX}\s?)?u\s?-?\s?(\d{{1,2}})(?:\s?{_SEX})?$|^(\d{{1,2}})\s?u(?:\s?{_SEX})?$")
+_AGE_GROUP_WORDS = re.compile(rf"(?i)^(?:{_SEX}\s)?(?:under|under-)\s?-?\s?(\d{{1,2}})s?(?:\s{_SEX})?$|"
+                              r"^(\d{1,2})\s?(?:&|and)\s?(?:under|u)$")
+
+
+def validate_sports_age_group(value):
+    """The age group of a youth team or competition: U12, U-14, U 8, 12U, U12 Boys, Girls U14, BU10, Under 16,
+    Under-12, 10 & Under (not U, 12, 18-24, U2B or Under 200)."""
+    v = _clean(value)
+    m = _AGE_GROUP_U.match(v) or _AGE_GROUP_WORDS.match(v)
+    if not m:
+        return False
+    age = int(next(g for g in m.groups() if g))
+    return 4 <= age <= 23
+
+
+def validate_sports_age_group_value(value):
+    """An age group with the U of youth sports: U10 to U23, U12 Boys, U19 Girls, and 10U to 19U (not U6 to U9,
+    which are also lines of an underground, U2, Under 16, also an age band of surveys, or 22U and 42U, the heights
+    of racks in rack units)."""
+    m = _AGE_GROUP_U.match(_clean(value))
+    if not m:
+        return False
+    if m.group(1):
+        return 10 <= int(m.group(1)) <= 23
+    return 10 <= int(m.group(2)) <= 19
+
+
+# ------------------------------------------------------------------ Dublin Core elements
+DUBLIN_CORE_ELEMENTS = {
+    "title", "creator", "subject", "description", "publisher", "contributor", "date", "type", "format", "identifier",
+    "source", "language", "relation", "coverage", "rights",
+    # the terms of the DCMI namespace (dcterms) that are not among the fifteen elements, in lower case
+    "abstract", "accessrights", "accrualmethod", "accrualperiodicity", "accrualpolicy", "alternative", "audience",
+    "available", "bibliographiccitation", "conformsto", "created", "dateaccepted", "datecopyrighted",
+    "datesubmitted", "educationlevel", "extent", "hasformat", "haspart", "hasversion", "instructionalmethod",
+    "isformatof", "ispartof", "isreferencedby", "isreplacedby", "isrequiredby", "issued", "isversionof", "license",
+    "mediator", "medium", "modified", "provenance", "references", "replaces", "requires", "rightsholder", "spatial",
+    "tableofcontents", "temporal", "valid",
+    # elements that DSpace adds to its dc schema
+    "embargo", "thesis",
+}
+_DUBLIN_CORE = re.compile(r"^(?i:dc|dcterms|dct)[.:]([A-Za-z]+)((?:\.[A-Za-z]+){0,2})(?:\[[A-Za-z_-]*\])?$")
+
+
+def validate_dublin_core_element(value):
+    """The name of a Dublin Core element, in the dotted notation of DSpace and other repositories or with a
+    namespace prefix: dc.title, dc.date.issued, dc.contributor.author, dc.identifier.uri, dc.description.abstract,
+    dc:creator, dcterms:created, dc.title[en_US] (not dc, dc.foo, Title or dc_title)."""
+    m = _DUBLIN_CORE.match(text(value))
+    return bool(m) and m.group(1).lower() in DUBLIN_CORE_ELEMENTS
+
+
+# ------------------------------------------------------------------ keyboard shortcuts
+_MODIFIER = (r"(?:ctrl|control|ctl|strg|alt|alt\s?gr|option|opt|shift|umschalt|cmd|command|meta|super|win|windows|"
+             r"fn|⌘|⌥|⇧|⌃|⎇)")
+_KEY = (r"(?:f(?:[1-9]|1\d|2[0-4])|enter|return|tab|esc|escape|space|spacebar|space\s?bar|delete|del|backspace|"
+        r"home|end|pg\s?up|pg\s?dn|page\s?up|page\s?down|insert|ins|(?:up|down|left|right)(?:\s?arrow)?|"
+        r"(?:arrow\s?)?(?:up|down|left|right)|print\s?screen|prt\s?sc|pause|break|caps\s?lock|num\s?lock|"
+        r"scroll\s?lock|plus|minus|comma|period|menu|click|left\s?click|right\s?click|drag|scroll|wheel|"
+        r"mouse\s?wheel|num\s?[0-9+*/-]|[^\s+])")
+_SHORTCUT = re.compile(rf"(?i)^(?:{_MODIFIER}\s?[+-]\s?)+{_KEY}$|^[⌘⌥⇧⌃]+\s?{_KEY}$")
+_EMACS = re.compile(r"^(?:(?:[CMs]-)+(?:[^\s]|<?[a-z]+>?))(?:\s(?:[CMs]-)*(?:[^\s]|<?[a-z]+>?))?$")
+_SINGLE_KEY = re.compile(rf"(?i)^{_KEY}$")
+_SEQUENCE = re.compile(r"\s*(?:,|\bthen\b|\bfollowed by\b|;)\s*|(?<![+\-\s])\s+(?=(?:ctrl|alt|shift|cmd)\b)", re.I)
+
+
+def _combos(value):
+    return [p for p in _SEQUENCE.split(_clean(value)) if p and p.strip()]
+
+
+def validate_keyboard_shortcut(value):
+    """A key or a combination of keys: Ctrl+C, Alt+F4, Shift + Tab, Cmd+Shift+S, ⌘S, Ctrl-X, Ctrl+K, Ctrl+C, C-x
+    C-f and M-x of Emacs, F1, Esc, Home (not Copy, Ctrl or +)."""
+    parts = _combos(value)
+    return bool(parts) and all(_SHORTCUT.match(p) or _EMACS.match(p) or _SINGLE_KEY.match(p) for p in parts)
+
+
+def validate_keyboard_shortcut_value(value):
+    """A combination with a modifier key named in words or by its symbol: Ctrl+C, Alt + F4, Shift+Tab, Cmd-Shift-S,
+    ⌘⇧S, Ctrl+K, Ctrl+C (not C-x, M-F or F1 alone, which count only in a field named Shortcut or Hotkey)."""
+    parts = _combos(value)
+    return bool(parts) and all(_SHORTCUT.match(p) for p in parts)
+
+
+# ------------------------------------------------------------------ Exif tags
+EXIF_TAGS = _words(
+    "make,model,camera make,camera model,camera model name,camera,lens,lens model,lens make,lens info,"
+    "lens specification,lens id,software,artist,copyright,orientation,x resolution,y resolution,xresolution,"
+    "yresolution,resolution unit,date/time,datetime,date time,date and time,date/time original,date time original,"
+    "datetimeoriginal,date/time digitized,date time digitized,datetimedigitized,date and time (original),"
+    "date and time (digitized),date taken,create date,modify date,exposure time,exposure,shutter speed,"
+    "shutter speed value,shutterspeedvalue,f-number,fnumber,f number,f-stop,aperture,aperture value,aperturevalue,"
+    "max aperture value,max aperture,maximum lens aperture,exposure program,exposureprogram,iso,iso speed,"
+    "iso speed ratings,iso speed rating,isospeedratings,photographic sensitivity,exif version,exifversion,"
+    "flashpix version,components configuration,compressed bits per pixel,brightness value,brightness,"
+    "exposure bias,exposure bias value,exposurebiasvalue,exposure compensation,metering mode,meteringmode,"
+    "light source,lightsource,flash,flash used,focal length,focallength,focal length in 35mm film,"
+    "focal length in 35mm format,focal length (35mm format),focal length (35mm),focal length 35mm,"
+    "focallengthin35mmfilm,35mm focal length,subject distance,subject distance range,subject area,color space,"
+    "colour space,colorspace,pixel x dimension,pixel y dimension,exif image width,exif image height,"
+    "exif image length,image width,image height,image length,sensing method,file source,scene type,custom rendered,"
+    "exposure mode,exposuremode,white balance,whitebalance,digital zoom ratio,digital zoom,scene capture type,"
+    "scenecapturetype,gain control,contrast,saturation,sharpness,ycbcr positioning,ycbcrpositioning,compression,"
+    "interoperability index,interoperability version,gps latitude,gps longitude,gps altitude,gps latitude ref,"
+    "gps longitude ref,gps altitude ref,gps version id,gps time stamp,gps date stamp,gps img direction,"
+    "image description,user comment,maker note,makernote,sub sec time,subsec time original,"
+    "focal plane x resolution,focal plane y resolution,focal plane resolution unit,exposure index,cfa pattern,"
+    "image unique id,body serial number,camera serial number,serial number,owner name,camera owner name,"
+    "flash energy,spectral sensitivity,subject location,thumbnail offset,thumbnail length,exif offset,"
+    "exif ifd pointer,gps info ifd pointer"
+)
+# Make, Model, Software, Artist, Copyright, Orientation, Flash, ISO, Contrast, Saturation, Sharpness and the
+# dates are also the names of other fields: a column of Exif tags needs the tags of photography itself.
+EXIF_TAGS_SPECIFIC = EXIF_TAGS - _words(
+    "make,model,camera,lens,software,artist,copyright,orientation,date/time,datetime,date time,date and time,"
+    "date taken,create date,modify date,exposure,shutter speed,aperture,iso,brightness,flash,contrast,saturation,"
+    "sharpness,compression,image width,image height,image length,image description,serial number,digital zoom,"
+    "camera make,camera model,lens model,lens make,owner name,user comment"
+)
+
+
+def _exif_tag(value):
+    return fold(_clean(text(value).rstrip(":")))
+
+
+def validate_exif_tag(value):
+    """The name of a tag of the Exif metadata of a photo: Make, Model, Exposure Time, F-Number, ISO Speed Ratings,
+    Focal Length, Metering Mode, Flash, Exposure Bias Value, Color Space, Date/Time Original, White Balance (not
+    1/60 sec, f/5.6 or Canon)."""
+    return _exif_tag(value) in EXIF_TAGS
+
+
+def validate_exif_tag_value(value):
+    """An Exif tag that is no other field name: Exposure Time, Exposure Program, Metering Mode, Focal Length,
+    Shutter Speed Value, Aperture Value, Exposure Bias Value, Color Space, White Balance (not Make, Model, Flash,
+    ISO, Software or Date/Time alone)."""
+    return _exif_tag(value) in EXIF_TAGS_SPECIFIC
+
+
+# ------------------------------------------------------------------ branches of the armed forces
+MILITARY_BRANCHES = _words(
+    "army,navy,air force,marine corps,marines,marine,usmc,coast guard,uscg,space force,ussf,national guard,"
+    "army national guard,air national guard,arng,ang,army reserve,usar,navy reserve,naval reserve,usnr,"
+    "air force reserve,usafr,marine corps reserve,usmcr,coast guard reserve,uscgr,us army,u.s. army,united states army,"
+    "us navy,u.s. navy,united states navy,us air force,u.s. air force,united states air force,us marine corps,"
+    "u.s. marine corps,united states marine corps,us coast guard,u.s. coast guard,united states coast guard,usa,usn,"
+    "usaf,merchant marine,us merchant marine,u.s. merchant marine,army air forces,army air corps,usaaf,"
+    "us army air forces,public health service,noaa corps,royal navy,royal air force,raf,british army,royal marines,"
+    "royal canadian navy,royal canadian air force,rcaf,canadian army,royal australian navy,ran,"
+    "royal australian air force,raaf,australian army,royal new zealand navy,royal new zealand air force,"
+    "new zealand army,bundeswehr,heer,luftwaffe,marine nationale,armee de terre,armee de l'air,"
+    "army/navy,navy/marine corps,army & navy,air force reserve command,army nat'l guard,air nat'l guard"
+)
+# Army, Navy, Air Force and Marines are also teams of the service academies in college sports, USA, RAN and ANG
+# are also codes of countries, and Marine and Heer are also words: they count only in a field named Branch.
+MILITARY_BRANCHES_SPECIFIC = MILITARY_BRANCHES - _words(
+    "army,navy,air force,marines,marine,usa,ran,ang,raf,heer,luftwaffe,army/navy,army & navy,arng"
+)
+
+
+def validate_military_branch(value):
+    """A branch of the armed forces: Army, Navy, Air Force, Marine Corps, Coast Guard, USMC, USN, USAF, Army
+    National Guard, Navy Reserve, U.S. Army, Royal Navy, RAF (not Police, Fire or Infantry)."""
+    return fold(_clean(value)) in MILITARY_BRANCHES
+
+
+def validate_military_branch_value(value):
+    """A branch of the armed forces that is no team or other word: Marine Corps, Coast Guard, USMC, USAF, USCG,
+    Army National Guard, U.S. Navy, Royal Navy (not Army, Navy, Air Force, Marines or USA alone)."""
+    return fold(_clean(value)) in MILITARY_BRANCHES_SPECIFIC
+
+
+# ------------------------------------------------------------------ stock market indexes
+STOCK_INDEXES = _words(
+    "s&p 500,s&p500,s&p 500 index,sp500,s&p 400,s&p midcap 400,s&p 600,s&p smallcap 600,s&p 100,s&p 1500,"
+    "s&p/tsx composite,s&p/tsx composite index,s&p/tsx,s&p/tsx 60,tsx composite,s&p/asx 200,asx 200,s&p/asx 50,"
+    "all ordinaries,s&p/nzx 50,nzx 50,dow jones industrial average,dow jones industrials,dow jones industrial,"
+    "dow jones industrial avg,djia,dow,the dow,dow 30,dow jones,dow jones transportation average,"
+    "dow jones transportation,dow jones transports,dow jones utilities,dow jones utility average,dow jones composite,"
+    "dow jones us total stock market,nasdaq composite,nasdaq composite index,nasdaq,nasdaq 100,nasdaq-100,"
+    "nasdaq 100 index,nyse composite,nyse composite index,amex composite,russell 1000,russell 2000,russell 3000,"
+    "russell 2000 index,wilshire 5000,value line,vix,cboe volatility index,ftse 100,ftse 250,ftse 350,"
+    "ftse all-share,ftse all share,ftse mib,ftse 100 index,dax,dax 30,dax index,mdax,sdax,tecdax,cac 40,cac40,"
+    "ibex 35,ibex,aex,bel 20,smi,swiss market index,atx,psi 20,psi-20,omx stockholm 30,omxs30,omx copenhagen 20,"
+    "omxc20,omx helsinki 25,omxh25,obx,iseq,iseq overall,wig,wig20,wig 20,px,bux,rts,rts index,micex,moex,"
+    "moex russia index,bist 100,xu100,ise 100,ta-35,ta-25,nikkei 225,nikkei,nikkei 225 index,topix,hang seng,"
+    "hang seng index,hsi,shanghai composite,shanghai composite index,sse composite,sse composite index,"
+    "shenzhen component,szse component,csi 300,kospi,kospi composite,kosdaq,taiex,sti,straits times,"
+    "straits times index,klci,ftse bursa malaysia klci,set,set index,jci,jakarta composite,psei,sensex,"
+    "s&p bse sensex,bse sensex,bse 30,nifty 50,nifty,cnx nifty,s&p cnx nifty,bovespa,ibovespa,ipc,s&p/bmv ipc,"
+    "merval,ipsa,igbvl,colcap,euro stoxx 50,euro stoxx,stoxx 50,stoxx europe 50,stoxx europe 600,stoxx 600,"
+    "msci world,msci eafe,msci emerging markets,msci em,msci acwi,msci all country world,msci europe,"
+    "jse top 40,ftse/jse all share,jse all share,egx 30,tasi,qe index,dfm general index,ads index"
+)
+# Dow, Nasdaq, DAX, SMI, AEX, ATX, IPC, SET, STI, PX, WIG, RTS, VIX, OBX, BUX, HSI, JCI, IBEX and Nifty alone are
+# also a company, exchanges, tickers and words: they count only in a field named Index.
+STOCK_INDEXES_SPECIFIC = STOCK_INDEXES - _words(
+    "dow,the dow,dow jones,nasdaq,dax,smi,aex,atx,ipc,set,sti,px,wig,rts,vix,obx,bux,hsi,jci,ibex,nifty,value line,"
+    "moex,micex,kosdaq,euro stoxx,iseq,bovespa"
+)
+
+
+def validate_stock_market_index(value):
+    """A stock market index: S&P 500, Dow Jones Industrial Average, DJIA, Dow, Nasdaq Composite, Nasdaq-100, Russell
+    2000, FTSE 100, DAX, CAC 40, Nikkei 225, Hang Seng, Euro Stoxx 50, Bovespa (not AAPL, NYSE or 2,093.25)."""
+    return fold(_clean(value)) in STOCK_INDEXES
+
+
+def validate_stock_market_index_value(value):
+    """A stock market index named with its number or in words: S&P 500, Dow Jones Industrials, Nasdaq Composite,
+    FTSE 100, CAC 40, Nikkei 225, Hang Seng, Russell 2000 (not Dow, Nasdaq, DAX, SMI or SET alone)."""
+    return fold(_clean(value)) in STOCK_INDEXES_SPECIFIC
+
+
+# ------------------------------------------------------------------ stock exchanges
+STOCK_EXCHANGES = _words(
+    "nyse,new york stock exchange,new york stock exchange inc.,nyse mkt,nyse american,nyse amex,amex,"
+    "american stock exchange,nyse arca,nysearca,nyse euronext,nasdaq,nasdaqgs,nasdaqgm,nasdaqcm,nasdaq gs,nasdaq gm,"
+    "nasdaq cm,nasdaq global select,nasdaq global select market,nasdaq global market,nasdaq capital market,"
+    "nasdaq stock market,nasdaq omx,nasdaq nms,nasdaq smallcap,otc,otcbb,otc bb,otc markets,otcqx,otcqb,otc pink,"
+    "otc pink sheets,pink sheets,pink,pnk,otcmkts,otc markets group,bats,bats europe,bats global markets,cboe,"
+    "chicago board options exchange,cbot,chicago board of trade,cme,chicago mercantile exchange,cme group,nymex,"
+    "comex,ice,ice futures,ice futures us,ice futures europe,lse,london stock exchange,aim,lse aim,tsx,"
+    "toronto stock exchange,tsxv,tsx-v,tsx venture,tsx venture exchange,cse,canadian securities exchange,cnsx,asx,"
+    "australian securities exchange,australian stock exchange,nzx,jse,johannesburg stock exchange,bse,"
+    "bombay stock exchange,nse,national stock exchange,national stock exchange of india,sgx,singapore exchange,hkex,"
+    "hkse,hong kong stock exchange,hong kong exchanges,sehk,sse,shanghai stock exchange,szse,shenzhen stock exchange,"
+    "tse,tokyo stock exchange,jpx,japan exchange group,osaka securities exchange,krx,korea exchange,"
+    "korea exchange (stock market),kosdaq,twse,taiwan stock exchange,euronext,euronext paris,euronext amsterdam,"
+    "euronext brussels,euronext lisbon,nyse euronext - euronext paris,xetra,frankfurt,frankfurt stock exchange,fwb,"
+    "deutsche borse,borse frankfurt,boerse frankfurt,berlin,stuttgart,munich,muenchen,munchen,dusseldorf,hamburg,"
+    "six,six swiss exchange,swx,swiss exchange,borsa italiana,borsa italiana s.p.a.,bme,madrid stock exchange,"
+    "bolsa de madrid,omx,nasdaq stockholm,nasdaq copenhagen,nasdaq helsinki,nasdaq omx stockholm,oslo bors,"
+    "oslo stock exchange,wse,warsaw stock exchange,gpw,moex,micex,moscow exchange,bist,borsa istanbul,"
+    "istanbul stock exchange,tase,tel aviv stock exchange,bmv,mexican stock exchange,bolsa mexicana de valores,"
+    "bovespa,b3,bm&fbovespa,bcba,buenos aires stock exchange,eurex,lme,london metal exchange,ise,irish stock exchange"
+)
+# OTC, AIM, ICE, CSE, BSE, NSE, TSE, SSE, ISE, SIX, Pink, AMEX, LSE, BATS, CME and the names of cities are also
+# words, cards, schools, courses and places, ASX and TSX are also models of cars (Mitsubishi ASX, Acura TSX), and
+# Bovespa, MOEX and KOSDAQ are also indexes: they count only in a field named Exchange.
+STOCK_EXCHANGES_SPECIFIC = STOCK_EXCHANGES - _words(
+    "otc,aim,ice,cse,bse,nse,tse,sse,ise,six,pink,pnk,amex,lse,bats,kosdaq,frankfurt,berlin,stuttgart,munich,muenchen,"
+    "munchen,dusseldorf,hamburg,omx,b3,bme,bist,cme,wse,fwb,bovespa,moex,micex,jse,bmv,bcba,gpw,swx,krx,jpx,tase,asx,"
+    "tsx"
+)
+
+
+def validate_stock_exchange(value):
+    """A stock, futures or options exchange: NYSE, NASDAQ, NYSE MKT, NYSE Arca, OTCBB, OTC Markets, London Stock
+    Exchange, AIM, TSX, ASX, Xetra, Euronext Paris, CME, NYMEX, Frankfurt (not New York, S&P 500 or Bitstamp)."""
+    return fold(_clean(value)) in STOCK_EXCHANGES
+
+
+def validate_stock_exchange_value(value):
+    """An exchange that is no word, city or other code: NYSE, NASDAQ, NYSE MKT, NYSE Arca, OTCBB, OTCQB, London
+    Stock Exchange, Toronto Stock Exchange, Euronext Paris (not OTC, AIM, ICE, BSE, AMEX or Frankfurt alone)."""
+    return fold(_clean(value)) in STOCK_EXCHANGES_SPECIFIC
+
+
+# ------------------------------------------------------------------ betting odds
+_ODDS = re.compile(r"(?i)^(?:(\d{1,3})\s?[/-]\s?(\d{1,3})|evs|evens|even|evn|ev)(?:\s?(?:f|jf|cf|fav|\*))?$")
+_MONEYLINE = re.compile(r"^[+-]\d{3,5}$")
+# Odds on, where the stake is larger than the win, are a short list of fractions; other fractions with the larger
+# number second are sizes of clothes and socks (12/14, 35-38, 9-13 under M/L).
+ODDS_ON = {(1, 100), (1, 50), (1, 33), (1, 25), (1, 20), (1, 16), (1, 14), (1, 12), (1, 10), (1, 9), (1, 8),
+           (1, 7), (1, 6), (1, 5), (2, 11), (2, 9), (1, 4), (2, 7), (3, 10), (1, 3), (4, 11), (2, 5), (4, 9), (1, 2),
+           (8, 15), (4, 7), (8, 13), (4, 6), (8, 11), (4, 5), (5, 6), (10, 11), (3, 5), (3, 4), (5, 8), (2, 3),
+           (5, 7), (9, 10), (7, 10), (5, 9), (3, 8)}
+
+
+def validate_betting_odds(value):
+    """The odds of a bet: fractional odds of race cards and bookmakers (9-2, 5/1, 100/30, 11/10, 2-5, Evs, 9/4F) or
+    the American moneyline (+150, -110) (not 0-0, 2015-16, 1/0 or 2.50)."""
+    v = _clean(value)
+    m = _ODDS.match(v)
+    if m:
+        if m.group(1) is None:
+            return True
+        num, den = int(m.group(1)), int(m.group(2))
+        if num >= den:
+            return den > 0 and den <= 100
+        return (num, den) in ODDS_ON
+    return bool(_MONEYLINE.match(v)) and abs(int(v)) >= 100
+
+
+# ------------------------------------------------------------------ types of crimes
+CRIME_TYPES = _words(
+    "murder,homicide,criminal homicide,murder and nonnegligent manslaughter,murder/nonnegligent manslaughter,"
+    "murder & nonnegligent manslaughter,murder/manslaughter,manslaughter,negligent manslaughter,"
+    "manslaughter by negligence,rape,forcible rape,rape (legacy definition),rape (revised definition),"
+    "sexual assault,sex offenses,sex offences,forcible sex offenses,sex offenses - forcible,non-forcible sex offenses,"
+    "sex offenses - non-forcible,fondling,incest,statutory rape,sodomy,sexual battery,robbery,armed robbery,"
+    "strong-arm robbery,aggravated assault,agg assault,agg. assault,simple assault,assault,battery,"
+    "assault and battery,assault & battery,domestic violence,domestic assault,intimidation,burglary,"
+    "breaking and entering,breaking & entering,residential burglary,commercial burglary,burglary - residential,"
+    "burglary - commercial,burglary dwelling,burglary other,larceny,larceny-theft,larceny/theft,larceny theft,"
+    "theft,petty theft,grand theft,grand larceny,petit larceny,petty larceny,shoplifting,pocket-picking,"
+    "pickpocketing,purse-snatching,theft from building,theft from motor vehicle,theft from vehicle,theft from auto,"
+    "larceny from auto,auto burglary,vehicle burglary,theft of motor vehicle parts,motor vehicle theft,"
+    "motor vehicle theft (mvt),vehicle theft,auto theft,car theft,grand theft auto,stolen vehicle,bicycle theft,"
+    "bike theft,theft from the person,arson,vandalism,criminal mischief,criminal damage,criminal damage and arson,"
+    "criminal damage & arson,destruction of property,destruction/damage/vandalism of property,damage to property,"
+    "property damage,graffiti,fraud,forgery,counterfeiting,forgery and counterfeiting,forgery/counterfeiting,"
+    "embezzlement,identity theft,credit card fraud,wire fraud,bribery,extortion,blackmail,kidnapping,"
+    "kidnapping/abduction,abduction,human trafficking,stolen property,receiving stolen property,"
+    "stolen property offenses,possession of stolen property,drug abuse violations,drug law violations,drug violations,"
+    "drug offenses,drug offences,drug offense,drugs,drug/narcotic violations,drug/narcotic offenses,narcotics,"
+    "narcotic drug laws,drug possession,possession of drugs,drug trafficking,drug equipment violations,weapons,"
+    "weapons violations,weapon law violations,weapons law violations,weapons offenses,weapon offenses,"
+    "weapons offences,possession of weapons,weapons possession,carrying concealed weapon,"
+    "liquor law violations,liquor law,liquor violations,drunkenness,"
+    "public intoxication,drunk and disorderly,dui,dwi,driving under the influence,driving while intoxicated,"
+    "disorderly conduct,public order,public order offences,harassment,stalking,trespassing,trespass,"
+    "criminal trespass,prostitution,prostitution and commercialized vice,gambling,curfew and loitering,"
+    "curfew and loitering law violations,curfew,loitering,runaway,runaways,vagrancy,hate crime,hate crimes,"
+    "dating violence,anti-social behaviour,antisocial behaviour,anti social behaviour,anti-social behavior,"
+    "violence and sexual offences,violent crime,violent crimes,property crime,property crimes,violence with injury,"
+    "violence without injury,other crime,other crimes,other theft,vehicle crime,sexual offences,animal cruelty,"
+    "child abuse,offenses against family and children,offenses against the family and children,"
+    "all other offenses,all other offenses (except traffic),other assaults,suspicion,cybercrime,cyber crime,"
+    "homicide - murder,robbery - armed,obstructing justice,resisting arrest,violation of protective order"
+)
+# Assault, Battery, Theft, Drugs, Weapons, Gambling, Curfew, Runaway, Suspicion and Intimidation are also batteries,
+# words and parts of other names: they count only in a field named Crime or Offense.
+CRIME_TYPES_SPECIFIC = CRIME_TYPES - _words(
+    "assault,battery,theft,drugs,narcotics,weapons,gambling,curfew,runaway,runaways,suspicion,intimidation,fondling,"
+    "trespass,graffiti,fraud,harassment,extortion,blackmail,abduction,vagrancy,loitering,incest,sodomy,public order"
+)
+_CRIME_SPLIT = re.compile(r"\s+[-–:]\s+|\s*/\s*(?=[A-Z])")
+
+
+def _crime_keys(value):
+    v = _clean(value)
+    return [fold(v)] + [fold(p) for p in _CRIME_SPLIT.split(v)[:1] if p.strip()]
+
+
+def validate_crime_type(value):
+    """A type of crime or offence: Murder, Rape, Robbery, Aggravated Assault, Burglary, Larceny-Theft, Motor
+    Vehicle Theft, Arson, Simple Assault, Vandalism, DUI, Anti-social behaviour, Burglary - Residential (not
+    Slashing, Holding, Felony or 2)."""
+    return any(k in CRIME_TYPES for k in _crime_keys(value))
+
+
+def validate_crime_type_value(value):
+    """A type of crime that is no other word: Burglary, Robbery, Larceny-Theft, Aggravated Assault, Motor Vehicle
+    Theft, Arson, Vandalism, Criminal Mischief, Shoplifting (not Assault, Battery, Theft, Drugs or Fraud alone)."""
+    return any(k in CRIME_TYPES_SPECIFIC for k in _crime_keys(value))
+
+
+# ------------------------------------------------------------------ crops
+CROPS = _words(
+    "wheat,winter wheat,spring wheat,durum,durum wheat,all wheat,other spring wheat,hard red winter wheat,hrw wheat,"
+    "soft red winter wheat,srw wheat,hard red spring wheat,white wheat,soft white wheat,corn,maize,grain corn,"
+    "corn for grain,corn grain,field corn,sweet corn,corn silage,silage corn,maize (corn),"
+    "soybeans,soybean,soya,soya beans,soyabeans,soy,soybeans for beans,barley,malting barley,feed barley,"
+    "spring barley,winter barley,oats,oat,rye,triticale,sorghum,grain sorghum,sorghum for grain,milo,millet,"
+    "proso millet,pearl millet,rice,paddy,paddy rice,rough rice,long grain rice,medium grain rice,buckwheat,quinoa,"
+    "canola,rapeseed,oilseed rape,winter rape,spring rape,rape seed,sunflower,sunflowers,sunflower seed,"
+    "oil sunflower,flax,flaxseed,linseed,safflower,peanuts,peanut,groundnuts,groundnut,groundnut (in shell),"
+    "cotton,upland cotton,pima cotton,cottonseed,seed cotton,sugar beets,sugarbeets,sugar beet,sugarbeet,sugarcane,"
+    "sugar cane,sugarcane for sugar,tobacco,potatoes,potato,irish potatoes,sweet potatoes,sweet potato,cassava,"
+    "yams,taro,dry beans,dry edible beans,beans,peas,dry peas,field peas,lentils,chickpeas,chick peas,"
+    "alfalfa,lucerne,alfalfa hay,hay,other hay,hay & haylage,haylage,clover,silage,pasture,hops,tea,coffee,cocoa,"
+    "cacao,cocoa beans,oil palm,palm oil,oil palm fruit,rubber,natural rubber,jute,sisal,hemp,"
+    "mustard,mustard seed,sesame,sesame seed,castor beans,castor bean,mung beans,pigeon peas,cowpeas,fava beans,"
+    "faba beans,broad beans,lupins,vetch,canary seed,camelina,oilseeds,pulses,cereals"
+)
+# Corn, Rice, Cotton, Hay, Tobacco, Potatoes, Beans, Peas, Rye, Tea, Coffee, Cocoa, Rubber, Flax, Hemp, Mustard
+# and Soy are also a university, fabrics, foods and materials: they count only in a field named Crop.
+CROPS_SPECIFIC = CROPS - _words(
+    "corn,rice,cotton,hay,tobacco,potatoes,potato,beans,peas,rye,tea,coffee,cocoa,cacao,rubber,natural rubber,flax,"
+    "hemp,mustard,soy,soya,silage,pasture,clover,oil palm,palm oil,jute,sisal,sesame,yams,taro,hops,oat,peanut,"
+    "peanuts,sweet potato,sweet potatoes,cereals,pulses,oilseeds,lupins,vetch,durum,milo,sunflower,sunflowers,"
+    "paddy,quinoa,lentils,chickpeas"
+)
+
+
+def validate_crop(value):
+    """A crop: Corn, Wheat, Winter Wheat, Soybeans, Barley, Oats, Rice, Sorghum, Cotton, Canola, Sugar Beets,
+    Potatoes, Alfalfa, Hay, Maize, Cassava (not Gold, Crude Oil, Cattle or Apples)."""
+    return fold(_clean(value)) in CROPS
+
+
+def validate_crop_value(value):
+    """A crop that is no food, fabric or other word: Wheat, Winter Wheat, Soybeans, Barley, Oats, Sorghum, Canola,
+    Sugar Beets, Alfalfa, Maize, Cassava (not Corn, Rice, Cotton, Hay or Potatoes alone)."""
+    return fold(_clean(value)) in CROPS_SPECIFIC

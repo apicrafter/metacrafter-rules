@@ -92,4 +92,24 @@ rules:
     fieldrulematch: text
     imprecise: 1
     priority: 3
-
+  # Found in seven more segments of the WDC Web Tables Corpus 2015 (tables of HTML pages of the Common Crawl of July
+  # 2015; 5 778 000 relational tables of 2 963 718 pages on 109 005 hosts): property types of house price tables,
+  # estate agents and rental listings; metacrafter-testdata.
+  dwellingtypebyname:
+    key: dwelling_type
+    name: 'Type of dwelling by field name (Property Type, Dwelling Type, Home Type, Type of Property, Boligtype) with Detached, Condo, Townhouse'
+    rule: '(?i)(?:property|dwelling|home|house|housing|residence|residential|building|unit|structure)[ _]?(?:types?|styles?|kinds?|categor(?:y|ies)|class(?:es)?)|type[ _]of[ _](?:property|dwelling|home|house|housing|residence|building)|property|dwelling|boligtype|bostadstyp|wohnungstyp|haustyp|geb[aä]udeart|objektart|woningtype|type[ _]de[ _](?:bien|logement)|tipo[ _]de[ _](?:vivienda|inmueble|propiedad|im[oó]vel)'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.webtables.validate_dwelling_type
+    needs_values: true
+    priority: 1
+  dwellingtypevalue:
+    key: dwelling_type
+    name: 'Type of dwelling by value (Semi-detached, Terraced, Flat/Maisonette, Townhouse, Single Family, Mobile Home)'
+    rule: metacrafterext.rules.common.webtables.validate_dwelling_type_value
+    type: data
+    match: func
+    minlen: 4
+    maxlen: 40
+    priority: 1

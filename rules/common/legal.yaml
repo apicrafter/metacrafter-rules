@@ -86,3 +86,24 @@ rules:
     minlen: 9
     maxlen: 17
     priority: 1
+  # Found in seven more segments of the WDC Web Tables Corpus 2015 (tables of HTML pages of the Common Crawl of July
+  # 2015; 5 778 000 relational tables of 2 963 718 pages on 109 005 hosts): crime statistics of campus security
+  # reports, police logs and newspapers; metacrafter-testdata.
+  crimetypebyname:
+    key: crime_type
+    name: 'Type of crime by field name (Crime, Offense, Offence Type, Crime Category, Incident Type, Primary Type, Nature, Charge, Delito, Straftat) with Burglary, Theft'
+    rule: '(?i)(?:type[ _]of[ _])?(?:crimes?|offen[cs]es?)(?:[ _](?:types?|categor(?:y|ies)|class(?:ification)?|descriptions?|desc|names?|groups?|committed|reported|titles?))?|(?:crime|offen[cs]e|incident|ucr|nibrs)[ _]?(?:types?|categor(?:y|ies)|class|descriptions?|desc|groups?)|ucr[ _]offen[cs]es?|crime[ _]index[ _]offen[cs]es?|nature(?:[ _]of[ _](?:crime|offen[cs]e|incident|call))?|charges?(?:[ _](?:descriptions?|desc|types?))?|primary[ _]type|delitos?|tipo[ _]de[ _]delito|infracci[oó]n|straftat(?:en)?|deliktsart|d[eé]lits?|crimen|reati?|misdrijf'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.webtables.validate_crime_type
+    needs_values: true
+    priority: 1
+  crimetypevalue:
+    key: crime_type
+    name: 'Type of crime by value (Burglary, Robbery, Larceny-Theft, Aggravated Assault, Motor Vehicle Theft, Arson, Anti-social behaviour)'
+    rule: metacrafterext.rules.common.webtables.validate_crime_type_value
+    type: data
+    match: func
+    minlen: 3
+    maxlen: 60
+    priority: 1

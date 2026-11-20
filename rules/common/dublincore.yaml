@@ -162,4 +162,15 @@ rules:
     type: field
     match: text
     priority: 1
-
+  # Found in seven more segments of the WDC Web Tables Corpus 2015 (tables of HTML pages of the Common Crawl of July
+  # 2015; 5 778 000 relational tables of 2 963 718 pages on 109 005 hosts): the full item records of DSpace
+  # repositories, with the names of the elements as values; metacrafter-testdata.
+  dublincoreelementvalue:
+    key: dublin_core_element
+    name: 'Dublin Core element name by value (dc.title, dc.date.issued, dc.contributor.author, dc.identifier.uri, dcterms:created)'
+    rule: metacrafterext.rules.common.webtables.validate_dublin_core_element
+    type: data
+    match: func
+    minlen: 5
+    maxlen: 60
+    priority: 1
