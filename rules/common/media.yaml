@@ -152,3 +152,24 @@ rules:
     minlen: 2
     maxlen: 40
     priority: 1
+  # Found in seven more segments of the WDC Web Tables Corpus 2015 (tables of HTML pages of the Common Crawl of July
+  # 2015; 5 778 000 relational tables of 2 963 718 pages on 109 005 hosts): the Exif metadata of photos in galleries
+  # and photo pages, written as tables of tags and values; metacrafter-testdata.
+  exiftagbyname:
+    key: exif_tag
+    name: 'Exif tag by field name (Exif Tag, Tag, Tag Name, Exif, Camera, Photo Info) with Make, Model, Exposure Time, ISO'
+    rule: '(?i)exif(?:[ _](?:tags?|fields?|names?|data|info(?:rmation)?|properties|attributes?|parameters?))?|(?:tag|metadata|camera|photo|image)[ _](?:names?|tags?|fields?|properties|data|info(?:rmation)?|settings?|details?)|tags?|camera'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.webtables.validate_exif_tag
+    needs_values: true
+    priority: 1
+  exiftagvalue:
+    key: exif_tag
+    name: 'Exif tag by value (Exposure Time, Exposure Program, Metering Mode, Focal Length, Aperture Value, Color Space)'
+    rule: metacrafterext.rules.common.webtables.validate_exif_tag_value
+    type: data
+    match: func
+    minlen: 3
+    maxlen: 40
+    priority: 1

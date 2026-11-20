@@ -559,3 +559,24 @@ rules:
     minlen: 3
     maxlen: 16
     priority: 1
+  # Found in seven more segments of the WDC Web Tables Corpus 2015 (tables of HTML pages of the Common Crawl of July
+  # 2015; 5 778 000 relational tables of 2 963 718 pages on 109 005 hosts): keyboard shortcuts of application and
+  # browser documentation; metacrafter-testdata.
+  keyboardshortcutbyname:
+    key: keyboard_shortcut
+    name: 'Keyboard shortcut by field name (Shortcut, Keyboard Shortcut, Shortcut Keys, Hotkey, Keystroke, Key Combination, Tastenkombination) with Ctrl+C, F1, C-x'
+    rule: '(?i)(?:keyboard[ _])?(?:short[ _]?cuts?|shortcut[ _]keys?)|(?:windows|mac|mac[ _]os|os[ _]x|linux|pc|default)[ _](?:short[ _]?cuts?|keys?|keystrokes?)|keystrokes?|hot[ _]?keys?|key[ _](?:combinations?|combos?|bindings?|strokes?|sequences?|press(?:es)?)|keybindings?|keymaps?|accelerators?|tastenkombination(?:en)?|tastenk[uü]rzel|raccourcis?(?:[ _]clavier)?|atajos?(?:[ _]de[ _]teclado)?|sneltoets(?:en)?|scorciatoi[ae]'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.webtables.validate_keyboard_shortcut
+    needs_values: true
+    priority: 1
+  keyboardshortcutvalue:
+    key: keyboard_shortcut
+    name: 'Keyboard shortcut by value (Ctrl+C, Alt + F4, Shift+Tab, Cmd-Shift-S, ⌘⇧S)'
+    rule: metacrafterext.rules.common.webtables.validate_keyboard_shortcut_value
+    type: data
+    match: func
+    minlen: 3
+    maxlen: 30
+    priority: 1

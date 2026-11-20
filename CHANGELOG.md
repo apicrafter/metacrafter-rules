@@ -9,6 +9,40 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Rules for seven more segments of the WDC Web Tables Corpus 2015** (5 778 000 relational tables of 2 963 718 pages
+  on 109 005 hosts; files of metacrafter-testdata taken from them). Validators added to
+  `metacrafterext/rules/common/webtables.py`; as before, words that are as common in other columns as in the type
+  count only in a field named after the type:
+  - Seasons of leagues in the career statistics of players and the histories of teams under Season, Saison,
+    Temporada, Stagione, Seizoen (`sports_season` in `common/dateandtime.yaml`: 2013-14, 1999-00, 2013/2014, 2015;
+    the same shapes are fiscal and school years, so only by name).
+  - Property types of house price tables and listings (`dwelling_type` in `common/realestate.yaml`: Semi-detached,
+    Terraced, Flat/Maisonette, Townhouse, Single Family, Mobile Home by value; House, Flat, Apartment, Studio, Villa,
+    Detached and Duplex under Property Type, Dwelling Type, Home Type).
+  - Sports (`common/sports.yaml`): age groups of youth sports (`sports_age_group`: U10 to U23, 12U, U12 Boys by
+    value; U6 to U9, Under 16 and 22U under Age Group, Division, Age, since U6 to U9 are also lines of an
+    underground, Under 16 an age band of surveys and 22U and 42U heights of racks) and betting odds under Odds, SP,
+    ML, Morning Line (`betting_odds`: 9-2, 5/1, 100/30, Evs, 9/4F, +150; odds on only as the fractions bookmakers
+    offer, so 12/14 and 35-38, sizes of clothes and socks under M/L, are no odds).
+  - Names of Dublin Core elements in the full item records of DSpace repositories (`dublin_core_element` in
+    `common/dublincore.yaml`: dc.title, dc.date.issued, dc.contributor.author, dcterms:created).
+  - Keyboard shortcuts (`keyboard_shortcut` in `common/software.yaml`: Ctrl+C, Alt + F4, Cmd-Shift-S, ⌘⇧S by value;
+    single keys and the C-x and M-x of Emacs under Shortcut, Hotkey, Keystroke, Tastenkombination).
+  - Exif tags of photo pages (`exif_tag` in `common/media.yaml`: Exposure Time, Metering Mode, Aperture Value,
+    Color Space by value; Make, Model, Flash, ISO and Software, also other field names, under Exif Tag or Tag).
+  - Branches of the armed forces (`military_branch` in `common/persons.yaml`: Marine Corps, Coast Guard, USMC,
+    U.S. Navy, Royal Navy by value; Army, Navy, Air Force and Marines, also the teams of the service academies,
+    under Branch, Service, Branch of Service).
+  - Finance (`common/crossborder_finance.yaml`): stock market indexes (`stock_market_index`: S&P 500, Dow Jones
+    Industrials, FTSE 100, CAC 40, Nikkei 225 by value; Dow, Nasdaq, DAX, SMI and SET under Index, Indices) and
+    stock exchanges (`stock_exchange`: NYSE, NASDAQ, NYSE Arca, OTCBB, London Stock Exchange by value; OTC, AIM,
+    ICE, BSE, AMEX, TSX, ASX and cities under Exchange, Market, Listed On; TSX and ASX are also models of cars).
+  - Types of crimes of crime statistics and police logs (`crime_type` in `common/legal.yaml`: Burglary, Robbery,
+    Larceny-Theft, Aggravated Assault, Motor Vehicle Theft, Anti-social behaviour by value; Assault, Battery, Theft
+    and Drugs under Crime, Offense, Primary Type, Nature).
+  - Crops of crop reports and farm tables (`crop` in `common/soils.yaml`: Wheat, Soybeans, Barley, Oats, Sorghum,
+    Canola, Sugar Beets, Alfalfa by value; Corn, Rice, Cotton, Hay and Potatoes, also foods, fabrics and a
+    university, under Crop, Commodity, Cultivo, Gewas).
 - **Rules for six more segments of the WDC Web Tables Corpus 2015** (4 978 140 relational tables of 2 555 031 pages
   on 98 133 hosts; files of metacrafter-testdata taken from them). Validators added to
   `metacrafterext/rules/common/webtables.py`; as before, words that are as common in other columns as in the type

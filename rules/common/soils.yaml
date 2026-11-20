@@ -72,3 +72,24 @@ rules:
     validator: metacrafterext.rules.common.soils.validate_land_cover_class
     needs_values: true
     priority: 1
+  # Found in seven more segments of the WDC Web Tables Corpus 2015 (tables of HTML pages of the Common Crawl of July
+  # 2015; 5 778 000 relational tables of 2 963 718 pages on 109 005 hosts): crop reports, farm statistics and
+  # agricultural tables; metacrafter-testdata.
+  cropbyname:
+    key: crop
+    name: 'Crop by field name (Crop, Crops, Crop Type, Commodity, Cultivo, Culture, Kulturart, Gewas) with Corn, Wheat, Soybeans'
+    rule: '(?i)(?:main[ _]|principal[ _]|major[ _]|field[ _]|cash[ _]|cover[ _]|current[ _]|previous[ _]|prior[ _]|planted[ _]|harvested[ _])?crops?(?:[ _](?:types?|names?|groups?|kinds?|species|planted|grown|commodity|description))?|crop[ _]?type|commodit(?:y|ies)(?:[ _](?:names?|descriptions?|desc))?|cultivos?|cultures?|kulturart|feldfrucht|fruchtart|culturas?|coltur[ae]|gewas(?:sen)?|uprawa|plodina'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.webtables.validate_crop
+    needs_values: true
+    priority: 1
+  cropvalue:
+    key: crop
+    name: 'Crop by value (Wheat, Winter Wheat, Soybeans, Barley, Oats, Sorghum, Canola, Sugar Beets, Alfalfa, Maize)'
+    rule: metacrafterext.rules.common.webtables.validate_crop_value
+    type: data
+    match: func
+    minlen: 3
+    maxlen: 40
+    priority: 1

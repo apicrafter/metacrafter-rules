@@ -161,3 +161,42 @@ rules:
     validator: metacrafterext.rules.common.plotly.validate_credit_rating
     needs_values: true
     priority: 1
+  # Found in seven more segments of the WDC Web Tables Corpus 2015 (tables of HTML pages of the Common Crawl of July
+  # 2015; 5 778 000 relational tables of 2 963 718 pages on 109 005 hosts): quotes, market summaries and listings of
+  # financial sites; metacrafter-testdata.
+  stockmarketindexbyname:
+    key: stock_market_index
+    name: 'Stock market index by field name (Index, Indices, Index Name, Benchmark, Market, Indizes, Indeks) with S&P 500, Dow, DAX'
+    rule: '(?i)(?:stock[ _](?:market[ _])?|market[ _]|equity[ _]|benchmark[ _])?ind(?:ex|ices|exes)(?:[ _](?:names?|tickers?))?|benchmarks?|ticker[ _]name|markets?|indizes|indeks[iy]?|[ií]ndices?|indice|indici|aktienindex'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.webtables.validate_stock_market_index
+    needs_values: true
+    priority: 1
+  stockmarketindexvalue:
+    key: stock_market_index
+    name: 'Stock market index by value (S&P 500, Dow Jones Industrials, Nasdaq Composite, FTSE 100, CAC 40, Nikkei 225, Hang Seng)'
+    rule: metacrafterext.rules.common.webtables.validate_stock_market_index_value
+    type: data
+    match: func
+    minlen: 3
+    maxlen: 50
+    priority: 1
+  stockexchangebyname:
+    key: stock_exchange
+    name: 'Stock exchange by field name (Exchange, Stock Exchange, Exch, Listed On, Listing, Market, Börse, Handelsplatz) with NYSE, NASDAQ, OTC'
+    rule: '(?i)(?:stock[ _]|securities[ _]|primary[ _]|listing[ _])?exchanges?(?:[ _](?:names?|codes?|listed|listing))?|exch\.?|listed[ _](?:on|at|in)|listings?(?:[ _](?:exchange|venue|market|place))?|primary[ _](?:listing|market)|trading[ _](?:venue|place|market)|markets?|b[oö]rsen?(?:platz)?|boerse|handelsplatz|bourse|bolsa|borsa|mercado'
+    type: field
+    match: regex
+    validator: metacrafterext.rules.common.webtables.validate_stock_exchange
+    needs_values: true
+    priority: 1
+  stockexchangevalue:
+    key: stock_exchange
+    name: 'Stock exchange by value (NYSE, NASDAQ, NYSE MKT, NYSE Arca, OTCBB, OTCQB, London Stock Exchange, TSX)'
+    rule: metacrafterext.rules.common.webtables.validate_stock_exchange_value
+    type: data
+    match: func
+    minlen: 3
+    maxlen: 50
+    priority: 1
